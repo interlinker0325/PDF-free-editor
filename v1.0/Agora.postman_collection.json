@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "be54177f-3dc0-41d3-81b8-d42c7b2d0080",
+		"name": "Agora",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all item types",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/types",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"types"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create entry",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Titulo de Entrada\",\n    \"coverimage\": \"20092409\",\n    \"description\": \"Esto es una descripción de la entrada\",\n    \"category\": \"46611518\",\n    \"files\": [\n        \"20155935\",\n        \"20156292\"\n    ],\n    \"showathome\": true,\n    \"notice\": false,\n    \"author\": \"46976786\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/entry",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"entry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish record",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"recordId\": \"49260589\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/record",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"record"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update entry",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"49260589\",\n    \"title\": \"Titulo de Entrada Actualizado\",\n    \"coverimage\": \"20092409\",\n    \"description\": \"Esto es una descripción de la entrada Actualizado\",\n    \"category\": \"46611518\",\n    \"showathome\": false,\n    \"notice\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/entry",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"entry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add section",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"49260589\",\n    \"sections\": [\n        \"49261188\",\n        \"49261194\"\n    ],\n    \"title\": \"Peanut Butter Crunch Banana Bread\",\n    \"text\": \"Burritos fig arugula cashew salad roasted peanuts coconut milk main course chocolate cookie dill ultra creamy avocado pesto walnut pesto tart sesame soba noodles potato onion shaved almonds crumbled lentils cozy cinnamon oatmeal morning smoothie bowl almonds green papaya salad cinnamon toast summer fruit salad portobello mushrooms blood orange smash mediterranean vegetables. Caribbean red habanero hearts of palm farro platter balsamic vinaigrette almond milk red grapes red pepper earl grey latte sparkling pomegranate punch bruschetta kung pao pepper black bean chili dip blueberry chia seed jam shallots vitamin glow.\",\n    \"image\": \"20092409\",\n    \"monograph\": \"<html><p>test</p></html>\",\n    \"index\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/section",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"section"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update section",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"49260589\",\n    \"sections\": [\n        \"49261188\"\n    ],\n    \"sectionId\": \"49261194\",\n    \"title\": \"Peanut Butter Crunch Banana Bread Actualizado\",\n    \"text\": \"Burritos fig arugula cashew salad roasted peanuts coconut milk main course chocolate cookie dill ultra creamy avocado pesto walnut pesto tart sesame soba noodles potato onion shaved almonds crumbled lentils cozy cinnamon oatmeal morning smoothie bowl almonds green papaya salad cinnamon toast summer fruit salad portobello mushrooms blood orange smash mediterranean vegetables. Caribbean red habanero hearts of palm farro platter balsamic vinaigrette almond milk red grapes red pepper earl grey latte sparkling pomegranate punch bruschetta kung pao pepper black bean chili dip blueberry chia seed jam shallots vitamin glow.\",\n    \"image\": \"20092409\",\n    \"monograph\": \"<html><p>test</p></html>\",\n    \"index\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/section",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"section"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload files",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/upload",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
