@@ -1,43 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { request, GET_ENTRY_BY_ID, GET_COURSE } from 'utils/graphqlRequest';
-// import Layout from 'components/Layout/Layout';
-// import ViewPostContent from 'components/Post/ViewPost/ViewPostContent';
-// import ViewPostSidebar from 'components/Post/ViewPost/ViewPostSidebar';
+import React, { useEffect } from 'react';
+import { request, GET_ENTRY_BY_ID } from 'utils/graphqlRequest';
 import { getHTML } from 'handlers/bll';
 import { useRouter } from 'next/router';
 import Post from 'components/Posts/Post';
 
 const Posts = (props) => {
     const router = useRouter();
-    const [activeSection, setActiveSection] = useState(null);
-    const mainRef = useRef();
-    const onScroll = () => {
-        props.entry?.content?.forEach((content, index) => {
-            if (!content?.ref?.current) {
-                return;
-            }
-            const docViewTop = mainRef.current.scrollTop;
-            const docViewBottom = docViewTop + mainRef.current.scrollHeight;
-
-            const elemTop = content.ref.current.offsetTop - 300;
-            const elemBottom = elemTop + content.ref.current.scrollHeight;
-
-            if (index === 0 && (docViewTop === 0 || docViewTop < elemTop)) {
-                setActiveSection(content.ref);
-            } else if (docViewTop >= elemTop && docViewTop <= elemBottom && docViewBottom > elemBottom) {
-                setActiveSection(content.ref);
-            }
-        });
-    }
-
     useEffect(() => {
-        document.addEventListener('scroll', onScroll, true);
-        return () => document.removeEventListener('scroll', onScroll, true);
-    }, []);
-
-    // useEffect(() => {
-        // if (!props.entry) router.push('/');
-    // }, [props]);
+        if (!props.entry) router.push('/');
+    }, [props]);
 
     return (
         <Post {...props} />
@@ -45,22 +16,15 @@ const Posts = (props) => {
 }
 
 export async function getServerSideProps({ params: { postId } }) {
-    let { entry, course } = await request([GET_ENTRY_BY_ID(postId), GET_COURSE]);
+    let { entry } = await request(GET_ENTRY_BY_ID(postId));
 
-    if (entry?.content?.length) {
-        for (let i = 0; i < entry.content.length; i++) {
-            if (entry.content[i].monograph) {
-                let c = entry.content[i];
-                c.monograph = await getHTML(c.monograph?.url);
-                c.ref = React.createRef();
-                entry.content[i] = c
-            }
-        }
+    if (entry?.monografia) {
+        entry.monografia = await getHTML(entry.monografia.url);
     }
 
-    console.log('OVER HERE!!!', entry, course);
+    console.log('OVER HERE!!!', entry);
     return {
-        props: { entry, course }
+        props: { entry }
     };
 }
 

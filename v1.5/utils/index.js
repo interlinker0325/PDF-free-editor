@@ -35,3 +35,5 @@ export const downloadToCSV = (fileName, data, isBlob = true) => {
 
     a.click();
 };
+
+export const isOdd = (num) => num % 2;

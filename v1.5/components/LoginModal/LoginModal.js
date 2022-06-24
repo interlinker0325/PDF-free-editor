@@ -36,7 +36,7 @@ const LoginModal = ({ onClose, display }) => {
     return (
         <Modal onClose={onClose} display={display}>
             <form onSubmit={handleSubmit} className='py-10 px-16 grid grid-cols-1 gap-6 text-lg w-full p-8'>
-                <h3 class="text-2xl font-bold justify-self-center">Iniciar Sesión</h3>
+                <h3 className="text-2xl font-bold justify-self-center">Iniciar Sesión</h3>
                 <input
                     type='email'
                     name='email'

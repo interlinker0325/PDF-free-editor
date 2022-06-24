@@ -2,6 +2,7 @@ import { request, GET_USER_BY_EMAIL } from 'utils/graphqlRequest';
 import withSession from 'utils/withSession';
 import Cors from 'cors'
 import initMiddleware from 'utils/initMiddleware'
+import { query } from 'gql';
 
 // Initialize the cors middleware
 const cors = initMiddleware(
@@ -17,7 +18,7 @@ export default withSession(async (req, res) => {
     await cors(req, res);
     const { email, password } = await req.body;
     try {
-        const { user: userData } = await request([GET_USER_BY_EMAIL(email)]);
+        const { user: userData } = await request([query.user.GET_USER_LOGIN_DATA(email)]);
         if (userData.password === password) {
             delete userData.password;
             const user = { isLoggedIn: true, ...userData };

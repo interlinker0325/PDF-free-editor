@@ -2,7 +2,7 @@
 
 const HeroCards = () => {
     return (
-        <section className='grid grid-cols-7 gap-4'>
+        <section className='grid grid-cols-7 gap-4 h-40'>
             <article className='card col-start-1 col-end-4 flex'>
                 <figure><img src='logo_ucr.png'/></figure>
             </article>

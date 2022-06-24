@@ -1,56 +1,45 @@
 export const GET_ENTRY_BY_ID = (entryId) => `
     entry(filter: { id: { eq: ${entryId} } }) {
         author {
-            email
+            name
             lastname
-            name
             id
-            phone
         }
-        category {
+        coAutores {
             name
+            lastname
             id
-            description
-        }
-        content {
-            title
-            description(markdown: false)
-            monograph {
-                id
-                filename
-                format
-                url
-                title
-            }
-            updatedAt
-            createdAt
-            id
-            image {
-                id
-                filename
-                format
-                url
-                title
-            }
         }
         coverimage {
             id
             filename
-            format
+            title
+            url
+        }
+        curso {
+            id
+            title
+        }
+        createdAt
+        description(markdown: false)
+        files {
+            filename
+            id
             title
             url
         }
         id
-        title
-        showathome
-        notice
-        description(markdown: false)
-        files {
-            id
+        monografia {
             filename
-            format
-            url
+            id
             title
+            url
         }
+        title
+        tags {
+            id
+            tag
+        }
+        updatedAt
     }
 `;

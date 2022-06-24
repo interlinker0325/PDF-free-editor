@@ -5,13 +5,17 @@ import HeroCards from 'components/HeroCards/HeroCards';
 import PostCard from 'components/PostCard/PostCard';
 import useUser from 'utils/useUser';
 
-const Home = ({ contentData, currentPage, ...props }) => {
+import { selector, query } from 'gql';
+
+const Home = ({ posts, currentPage, ...props }) => {
 	const { user = {} } = useUser();
     const [state, setState] = useState({
 		showMore: true,
 		currentPage,
-		...contentData,
+		posts,
 	})
+
+	console.log('OVER HERE !$!@$!@$@!', selector.user.PUBLIC_USER_PROFILE, query.user.GET_USER_LOGIN_DATA);
 
 	const getNextPage = async () => {
 		const nextPage = state.currentPage + 1;
@@ -32,7 +36,7 @@ const Home = ({ contentData, currentPage, ...props }) => {
 		})
 	};
 
-	console.log('OVER HERE POSTS!', state.posts);
+	console.log('OVER HERE POSTS!', state);
     return (
         <Main>
 			{user.isLoggedIn &&
@@ -50,16 +54,12 @@ const Home = ({ contentData, currentPage, ...props }) => {
 
 export async function getServerSideProps() {
 	const CURRENT_PAGE = 1;
-	const { allEntries } = await request(GET_ALL_ENTRIES(false, CURRENT_PAGE));
-	// const { allEntries: allAlerts } = await request(GET_ALL_ENTRIES(true, CURRENT_PAGE, 3));
+	const { allEntries } = await request(GET_ALL_ENTRIES(CURRENT_PAGE));
 
 	return {
 		props: {
 			currentPage: CURRENT_PAGE,
-			contentData: {
-				posts: allEntries,
-				// alerts: allAlerts
-			}
+			posts: allEntries
 		}
 	};
 }

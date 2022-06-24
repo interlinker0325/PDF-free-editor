@@ -17,7 +17,6 @@ function MyApp({ Component, pageProps }) {
     const sessionText = `${user.isLoggedIn ? 'Cerrar' : 'Iniciar'} Sesión`;
     const doLogout = async (e) => {
         e.preventDefault();
-        console.log('OVER HERE!!');
         mutateUser(
             await fetchJson('/api/logout', { method: 'POST' }),
             false,
@@ -32,7 +31,7 @@ function MyApp({ Component, pageProps }) {
         { name: 'Mi Perfil', action: '/profile/me' },
         { name: sessionText, onClick: sessionAction }
     ]
-    console.log('OVER HERE!!!', user, navItems);
+
     return (
         <React.Fragment>
             <SWRConfig

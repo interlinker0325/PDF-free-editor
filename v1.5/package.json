@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "fetch": "^1.1.0",
     "graphql": "latest",
     "graphql-request": "^3.7.0",
     "next": "latest",

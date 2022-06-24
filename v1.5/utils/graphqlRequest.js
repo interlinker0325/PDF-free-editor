@@ -32,3 +32,5 @@ export * from 'gql/getAllEntries';
 export * from 'gql/getEntryById';
 export * from 'gql/getAllCategories';
 export * from 'gql/getAllAdvertisement';
+export * from 'gql/getAllCourses';
+export * from 'gql/getAllStudents';
