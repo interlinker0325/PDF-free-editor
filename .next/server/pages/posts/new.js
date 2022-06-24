@@ -5,7 +5,7 @@ exports.id = 566;
 exports.ids = [566];
 exports.modules = {
 
-/***/ 7092:
+/***/ 92:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -20,13 +20,13 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external "react/jsx-runtime"
 var jsx_runtime_ = __webpack_require__(997);
 // EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
+var external_react_ = __webpack_require__(689);
 // EXTERNAL MODULE: ./components/Main/Main.js
-var Main = __webpack_require__(2765);
+var Main = __webpack_require__(765);
 // EXTERNAL MODULE: external "@fortawesome/react-fontawesome"
-var react_fontawesome_ = __webpack_require__(7197);
+var react_fontawesome_ = __webpack_require__(197);
 // EXTERNAL MODULE: external "@fortawesome/free-solid-svg-icons"
-var free_solid_svg_icons_ = __webpack_require__(6466);
+var free_solid_svg_icons_ = __webpack_require__(466);
 ;// CONCATENATED MODULE: ./components/Posts/CreatePost.js
 
 
@@ -288,7 +288,7 @@ const styles = {
 /* harmony default export */ const Posts_CreatePost = (CreatePost);
 
 // EXTERNAL MODULE: ./utils/graphqlRequest.js + 5 modules
-var graphqlRequest = __webpack_require__(5825);
+var graphqlRequest = __webpack_require__(825);
 ;// CONCATENATED MODULE: ./pages/posts/new.js
 
 
@@ -375,28 +375,28 @@ async function getServerSideProps() {
 
 /***/ }),
 
-/***/ 6466:
+/***/ 466:
 /***/ ((module) => {
 
 module.exports = require("@fortawesome/free-solid-svg-icons");
 
 /***/ }),
 
-/***/ 7197:
+/***/ 197:
 /***/ ((module) => {
 
 module.exports = require("@fortawesome/react-fontawesome");
 
 /***/ }),
 
-/***/ 5805:
+/***/ 805:
 /***/ ((module) => {
 
 module.exports = require("graphql-request");
 
 /***/ }),
 
-/***/ 6689:
+/***/ 689:
 /***/ ((module) => {
 
 module.exports = require("react");
@@ -417,7 +417,7 @@ module.exports = require("react/jsx-runtime");
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [765,825], () => (__webpack_exec__(7092)));
+var __webpack_exports__ = __webpack_require__.X(0, [765,825], () => (__webpack_exec__(92)));
 module.exports = __webpack_exports__;
 
 })();

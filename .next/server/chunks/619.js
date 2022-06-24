@@ -3,7 +3,7 @@ exports.id = 619;
 exports.ids = [619];
 exports.modules = {
 
-/***/ 7619:
+/***/ 619:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -15,7 +15,7 @@ exports.modules = {
 /* harmony export */   "vn": () => (/* binding */ getRecord)
 /* harmony export */ });
 /* unused harmony exports listAllTypes, getField */
-/* harmony import */ var datocms_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5342);
+/* harmony import */ var datocms_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(342);
 /* harmony import */ var datocms_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(datocms_client__WEBPACK_IMPORTED_MODULE_0__);
 
 const API_TOKEN = process.env.DATOCMS_API_TOKEN;

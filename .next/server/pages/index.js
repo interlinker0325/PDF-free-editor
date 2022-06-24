@@ -5,7 +5,7 @@ exports.id = 405;
 exports.ids = [405];
 exports.modules = {
 
-/***/ 1456:
+/***/ 456:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -20,11 +20,11 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external "react/jsx-runtime"
 var jsx_runtime_ = __webpack_require__(997);
 // EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
+var external_react_ = __webpack_require__(689);
 // EXTERNAL MODULE: ./utils/graphqlRequest.js + 5 modules
-var graphqlRequest = __webpack_require__(5825);
+var graphqlRequest = __webpack_require__(825);
 // EXTERNAL MODULE: ./components/Main/Main.js
-var Main = __webpack_require__(2765);
+var Main = __webpack_require__(765);
 ;// CONCATENATED MODULE: ./components/HeroCards/HeroCards.js
 
 // import HeroCard from 'components/HeroCards/HeroCard';
@@ -106,7 +106,7 @@ function Card({ id , title , description , curso , coverimage , notice  }) {
 // EXTERNAL MODULE: ./utils/useUser.js
 var useUser = __webpack_require__(888);
 // EXTERNAL MODULE: ./gql/index.js + 8 modules
-var gql = __webpack_require__(7271);
+var gql = __webpack_require__(271);
 ;// CONCATENATED MODULE: ./pages/index.js
 
 
@@ -183,21 +183,21 @@ async function getServerSideProps() {
 
 /***/ }),
 
-/***/ 5805:
+/***/ 805:
 /***/ ((module) => {
 
 module.exports = require("graphql-request");
 
 /***/ }),
 
-/***/ 1853:
+/***/ 853:
 /***/ ((module) => {
 
 module.exports = require("next/router");
 
 /***/ }),
 
-/***/ 6689:
+/***/ 689:
 /***/ ((module) => {
 
 module.exports = require("react");
@@ -225,7 +225,7 @@ module.exports = require("swr");
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [765,271,825,256], () => (__webpack_exec__(1456)));
+var __webpack_exports__ = __webpack_require__.X(0, [765,825,271,256], () => (__webpack_exec__(456)));
 module.exports = __webpack_exports__;
 
 })();

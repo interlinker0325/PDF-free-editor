@@ -5,7 +5,7 @@ exports.id = 475;
 exports.ids = [475];
 exports.modules = {
 
-/***/ 3463:
+/***/ 463:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -20,9 +20,9 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external "react/jsx-runtime"
 var jsx_runtime_ = __webpack_require__(997);
 // EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
+var external_react_ = __webpack_require__(689);
 // EXTERNAL MODULE: ./utils/graphqlRequest.js + 5 modules
-var graphqlRequest = __webpack_require__(5825);
+var graphqlRequest = __webpack_require__(825);
 ;// CONCATENATED MODULE: external "axios"
 const external_axios_namespaceObject = require("axios");
 var external_axios_default = /*#__PURE__*/__webpack_require__.n(external_axios_namespaceObject);
@@ -191,7 +191,7 @@ const getHTML = async (url)=>(await get(url, true)).text
 ;
 
 // EXTERNAL MODULE: external "next/router"
-var router_ = __webpack_require__(1853);
+var router_ = __webpack_require__(853);
 ;// CONCATENATED MODULE: ./components/IFrame/IFrame.js
 
 
@@ -218,7 +218,7 @@ const IFrame = ({ url , ...props })=>{
 /* harmony default export */ const IFrame_IFrame = (IFrame);
 
 // EXTERNAL MODULE: ./components/Main/Main.js
-var Main = __webpack_require__(2765);
+var Main = __webpack_require__(765);
 // EXTERNAL MODULE: ./utils/useUser.js
 var useUser = __webpack_require__(888);
 ;// CONCATENATED MODULE: ./components/Posts/Post.js
@@ -356,21 +356,21 @@ async function getServerSideProps({ params: { postId  }  }) {
 
 /***/ }),
 
-/***/ 5805:
+/***/ 805:
 /***/ ((module) => {
 
 module.exports = require("graphql-request");
 
 /***/ }),
 
-/***/ 1853:
+/***/ 853:
 /***/ ((module) => {
 
 module.exports = require("next/router");
 
 /***/ }),
 
-/***/ 6689:
+/***/ 689:
 /***/ ((module) => {
 
 module.exports = require("react");
@@ -398,7 +398,7 @@ module.exports = require("swr");
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [765,825,256], () => (__webpack_exec__(3463)));
+var __webpack_exports__ = __webpack_require__.X(0, [765,825,256], () => (__webpack_exec__(463)));
 module.exports = __webpack_exports__;
 
 })();

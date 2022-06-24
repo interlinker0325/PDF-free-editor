@@ -5,21 +5,21 @@ exports.id = 404;
 exports.ids = [404];
 exports.modules = {
 
-/***/ 5342:
+/***/ 342:
 /***/ ((module) => {
 
 module.exports = require("datocms-client");
 
 /***/ }),
 
-/***/ 1867:
+/***/ 867:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var utils_server_dato__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7619);
+/* harmony import */ var utils_server_dato__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(619);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (async (req, res)=>{
     let result = {
@@ -71,7 +71,7 @@ __webpack_require__.r(__webpack_exports__);
 var __webpack_require__ = require("../../webpack-api-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [619], () => (__webpack_exec__(1867)));
+var __webpack_exports__ = __webpack_require__.X(0, [619], () => (__webpack_exec__(867)));
 module.exports = __webpack_exports__;
 
 })();

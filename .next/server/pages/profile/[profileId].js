@@ -20,7 +20,7 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external "react/jsx-runtime"
 var jsx_runtime_ = __webpack_require__(997);
 // EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
+var external_react_ = __webpack_require__(689);
 ;// CONCATENATED MODULE: external "next-iron-session"
 const external_next_iron_session_namespaceObject = require("next-iron-session");
 ;// CONCATENATED MODULE: ./utils/withSession.js
@@ -39,17 +39,17 @@ function withSession(handler) {
 };
 
 // EXTERNAL MODULE: ./utils/graphqlRequest.js + 5 modules
-var graphqlRequest = __webpack_require__(5825);
+var graphqlRequest = __webpack_require__(825);
 // EXTERNAL MODULE: ./gql/index.js + 8 modules
-var gql = __webpack_require__(7271);
+var gql = __webpack_require__(271);
 // EXTERNAL MODULE: ./components/Main/Main.js
-var Main = __webpack_require__(2765);
+var Main = __webpack_require__(765);
 // EXTERNAL MODULE: external "next/router"
-var router_ = __webpack_require__(1853);
+var router_ = __webpack_require__(853);
 // EXTERNAL MODULE: external "@fortawesome/react-fontawesome"
-var react_fontawesome_ = __webpack_require__(7197);
+var react_fontawesome_ = __webpack_require__(197);
 // EXTERNAL MODULE: external "@fortawesome/free-solid-svg-icons"
-var free_solid_svg_icons_ = __webpack_require__(6466);
+var free_solid_svg_icons_ = __webpack_require__(466);
 ;// CONCATENATED MODULE: ./components/Profile/UserInfo.js
 
 const UserInfo = ({ name , email , lastname , phone , birthdate , residencia , genero , nivel , experiencia  })=>{
@@ -596,35 +596,35 @@ const getServerSideProps = withSession(async function({ req , res  }) {
 
 /***/ }),
 
-/***/ 6466:
+/***/ 466:
 /***/ ((module) => {
 
 module.exports = require("@fortawesome/free-solid-svg-icons");
 
 /***/ }),
 
-/***/ 7197:
+/***/ 197:
 /***/ ((module) => {
 
 module.exports = require("@fortawesome/react-fontawesome");
 
 /***/ }),
 
-/***/ 5805:
+/***/ 805:
 /***/ ((module) => {
 
 module.exports = require("graphql-request");
 
 /***/ }),
 
-/***/ 1853:
+/***/ 853:
 /***/ ((module) => {
 
 module.exports = require("next/router");
 
 /***/ }),
 
-/***/ 6689:
+/***/ 689:
 /***/ ((module) => {
 
 module.exports = require("react");
@@ -645,7 +645,7 @@ module.exports = require("react/jsx-runtime");
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [765,271,825], () => (__webpack_exec__(248)));
+var __webpack_exports__ = __webpack_require__.X(0, [765,825,271], () => (__webpack_exec__(248)));
 module.exports = __webpack_exports__;
 
 })();

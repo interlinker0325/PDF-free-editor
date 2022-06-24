@@ -5,7 +5,7 @@ exports.id = 888;
 exports.ids = [888];
 exports.modules = {
 
-/***/ 8740:
+/***/ 740:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -19,7 +19,7 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external "react/jsx-runtime"
 var jsx_runtime_ = __webpack_require__(997);
 // EXTERNAL MODULE: external "react"
-var external_react_ = __webpack_require__(6689);
+var external_react_ = __webpack_require__(689);
 var external_react_default = /*#__PURE__*/__webpack_require__.n(external_react_);
 ;// CONCATENATED MODULE: external "next/head"
 const head_namespaceObject = require("next/head");
@@ -299,14 +299,14 @@ function MyApp({ Component , pageProps  }) {
 
 /***/ }),
 
-/***/ 1853:
+/***/ 853:
 /***/ ((module) => {
 
 module.exports = require("next/router");
 
 /***/ }),
 
-/***/ 6689:
+/***/ 689:
 /***/ ((module) => {
 
 module.exports = require("react");
@@ -334,7 +334,7 @@ module.exports = require("swr");
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [256], () => (__webpack_exec__(8740)));
+var __webpack_exports__ = __webpack_require__.X(0, [256], () => (__webpack_exec__(740)));
 module.exports = __webpack_exports__;
 
 })();

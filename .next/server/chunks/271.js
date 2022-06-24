@@ -3,16 +3,17 @@ exports.id = 271;
 exports.ids = [271];
 exports.modules = {
 
-/***/ 7271:
+/***/ 271:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "T$": () => (/* reexport */ gqlConfig),
   "IO": () => (/* reexport */ queries_namespaceObject),
   "nZ": () => (/* reexport */ selectors_namespaceObject)
 });
+
+// UNUSED EXPORTS: gqlConfig
 
 // NAMESPACE OBJECT: ./gql/selectors/user.js
 var user_namespaceObject = {};
@@ -266,11 +267,6 @@ const GET_PROFESOR_COURSES_POSTS = (coursesIds)=>`
 
 
 ;// CONCATENATED MODULE: ./gql/index.js
-// export * as MONKEYS from './queries/Monkeys';
-// export * as ROLES from './queries/Roles';
-// export * as ORGS from './queries/Orgs';
-// export * as GROUPS from './queries/Groups';
-// export * as SESSIONS from './queries/Sessions';
 
 
 

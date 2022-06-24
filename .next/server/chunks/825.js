@@ -3,7 +3,7 @@ exports.id = 825;
 exports.ids = [825];
 exports.modules = {
 
-/***/ 5825:
+/***/ 825:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 
@@ -20,7 +20,7 @@ __webpack_require__.d(__webpack_exports__, {
 // UNUSED EXPORTS: GET_ALL_CATEGORIES, GET_COURSE, GET_USER_BY_EMAIL
 
 // EXTERNAL MODULE: external "graphql-request"
-var external_graphql_request_ = __webpack_require__(5805);
+var external_graphql_request_ = __webpack_require__(805);
 ;// CONCATENATED MODULE: ./gql/getAllEntries.js
 const GET_ALL_ENTRIES = (page = 1, limit = 11)=>`
     allEntries(

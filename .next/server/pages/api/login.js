@@ -5,7 +5,7 @@ exports.id = 994;
 exports.ids = [994];
 exports.modules = {
 
-/***/ 8942:
+/***/ 942:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -59,7 +59,7 @@ const request = (queries, preview = false)=>{
 
 
 // EXTERNAL MODULE: ./utils/withSession.js + 1 modules
-var withSession = __webpack_require__(4612);
+var withSession = __webpack_require__(612);
 ;// CONCATENATED MODULE: external "cors"
 const external_cors_namespaceObject = require("cors");
 var external_cors_default = /*#__PURE__*/__webpack_require__.n(external_cors_namespaceObject);
@@ -258,11 +258,6 @@ const GET_USER_POSTS = (id)=>`
 
 
 ;// CONCATENATED MODULE: ./gql/index.js
-// export * as MONKEYS from './queries/Monkeys';
-// export * as ROLES from './queries/Roles';
-// export * as ORGS from './queries/Orgs';
-// export * as GROUPS from './queries/Groups';
-// export * as SESSIONS from './queries/Sessions';
 
 
 
@@ -315,7 +310,7 @@ external_cors_default()({
 
 /***/ }),
 
-/***/ 4612:
+/***/ 612:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 
@@ -351,7 +346,7 @@ function withSession(handler) {
 var __webpack_require__ = require("../../webpack-api-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = (__webpack_exec__(8942));
+var __webpack_exports__ = (__webpack_exec__(942));
 module.exports = __webpack_exports__;
 
 })();
