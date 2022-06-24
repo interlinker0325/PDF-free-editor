@@ -7,15 +7,14 @@
   },
   "dependencies": {
     "fetch": "^1.1.0",
-    "graphql": "latest",
+    "graphql": "^15.5.0",
     "graphql-request": "^3.7.0",
     "next": "latest",
     "next-connect": "^0.12.2",
     "next-iron-session": "^4.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-full-page": "^0.1.12",
-    "react-hls-player": "^3.0.7"
+    "react-full-page": "^0.1.12"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
