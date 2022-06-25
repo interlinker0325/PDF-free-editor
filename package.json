@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT"
+    "start": "./node_modules/.bin/next start"
   },
   "dependencies": {
     "fetch": "^1.1.0",
