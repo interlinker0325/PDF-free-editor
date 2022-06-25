@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "rm -rf .next && next build",
     "start": "next start -p $PORT"
   },
   "dependencies": {
@@ -14,7 +14,8 @@
     "next-iron-session": "^4.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-full-page": "^0.1.12"
+    "react-full-page": "^0.1.12",
+    "swr": "^0.5.7"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -34,7 +35,6 @@
     "prop-types": "^15.7.2",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
-    "swr": "^0.5.7",
     "tailwindcss": "^2.1.3",
     "tailwindcss-textshadow": "^2.1.3",
     "web-vitals": "^0.2.4"
