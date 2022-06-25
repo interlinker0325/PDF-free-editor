@@ -1,7 +1,8 @@
 {
   "engines": {
     "node": "14.17.6",
-    "npm": "6.14.15"
+    "npm": "6.14.15",
+    "next": "12.1.6"
   },
   "private": true,
   "scripts": {
@@ -13,7 +14,7 @@
     "fetch": "^1.1.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.7.0",
-    "next": "latest",
+    "next": "12.1.6",
     "next-connect": "^0.12.2",
     "next-iron-session": "^4.2.0",
     "react": "^17.0.2",
