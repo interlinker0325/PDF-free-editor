@@ -72,7 +72,6 @@ export const Input = React.forwardRef((props, ref) => {
         file: File,
         checkbox: Checkbox
     };
-    console.log('OVER HERE!!!', props, ref);
     const Component = components[props.type];
 
     return props.icon ? (

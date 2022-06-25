@@ -11,7 +11,7 @@ const CreatePost = ({
     onChange,
     refs
 }) => {
-    console.log('OVER HEre!!', courses, students);
+    // console.log('OVER HEre!!', courses, students);
     return (
         <Main>
             <form className='grid auto-rows-auto gap-6' onSubmit={doSubmit}>

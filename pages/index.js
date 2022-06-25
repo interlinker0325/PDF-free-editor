@@ -15,7 +15,7 @@ const Home = ({ posts, currentPage, ...props }) => {
 		posts,
 	})
 
-	console.log('OVER HERE !$!@$!@$@!', selector.user.PUBLIC_USER_PROFILE, query.user.GET_USER_LOGIN_DATA);
+	// console.log('OVER HERE !$!@$!@$@!', selector.user.PUBLIC_USER_PROFILE, query.user.GET_USER_LOGIN_DATA);
 
 	const getNextPage = async () => {
 		const nextPage = state.currentPage + 1;
@@ -36,7 +36,7 @@ const Home = ({ posts, currentPage, ...props }) => {
 		})
 	};
 
-	console.log('OVER HERE POSTS!', state);
+	// console.log('OVER HERE POSTS!', state);
     return (
         <Main>
 			{user.isLoggedIn &&

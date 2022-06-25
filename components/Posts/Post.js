@@ -13,7 +13,7 @@ const Post = ({ entry, course }) => {
     const files = entry?.files?.map(file =>
         <a target='_blank' key={`file_attachment_${file.id}`} href={file.url} className='text-primary ml-4 text-xs underline underline-offset-1'>{file.title || file.filename}</a>
     );
-    console.log('OVER HEre!!', entry, isCurrentUserAuthor);
+    // console.log('OVER HEre!!', entry, isCurrentUserAuthor);
     return (
         <Main className=''>
             <article className='flex flex-col gap-4 p-4'>

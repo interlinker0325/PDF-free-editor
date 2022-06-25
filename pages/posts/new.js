@@ -33,11 +33,11 @@ const NewPost = (props) => {
         monografia: useRef(),
         acceptedTerms: useRef()
     };
-    console.log('OVER HERE', props);
+    // console.log('OVER HERE', props);
 
     const doSubmit = (e) => {
         e.preventDefault();
-        console.log('over here form', formState);
+        // console.log('over here form', formState);
         Object.keys(formState).forEach(key => console.log('over here form', key, typeof key));
     };
 

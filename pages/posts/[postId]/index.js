@@ -22,7 +22,7 @@ export async function getServerSideProps({ params: { postId } }) {
         entry.monografia = await getHTML(entry.monografia.url);
     }
 
-    console.log('OVER HERE!!!', entry);
+    // console.log('OVER HERE!!!', entry);
     return {
         props: { entry }
     };

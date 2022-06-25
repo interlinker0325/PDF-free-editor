@@ -34,7 +34,7 @@ export default class Login extends React.Component {
 
     doLogin(e, data) {
         e.preventDefault();
-        console.log('OVER HERE!!! form', data);
+        // console.log('OVER HERE!!! form', data);
     }
 
     render() {
@@ -45,7 +45,7 @@ export default class Login extends React.Component {
         } = this.state;
         const isLoginPage = activeTab === 'login';
 
-        console.log('OVER HERE!!!', session, this.props);
+        // console.log('OVER HERE!!!', session, this.props);
         return (
             <Main>
                 <div className={styles.wrapper}>

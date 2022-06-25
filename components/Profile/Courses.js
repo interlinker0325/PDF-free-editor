@@ -1,7 +1,7 @@
 import { isOdd } from 'utils';
 
 const Courses = ({ items }) => {
-    console.log('OVER HERE!!!', items);
+    // console.log('OVER HERE!!!', items);
     return (
         <div className='overflow-x-auto'>
             <table className='w-full'>

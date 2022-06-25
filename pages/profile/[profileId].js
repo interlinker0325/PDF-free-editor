@@ -32,7 +32,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
 
 
 
-    console.log('OVER HERE!!!', archivePosts, isCurrentUserProfile, profile, isProfessor, posts);
+    // console.log('OVER HERE!!!', archivePosts, isCurrentUserProfile, profile, isProfessor, posts);
     return (
         <Main>
             <div className={styles.mainContainer}>
@@ -138,7 +138,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
     let archivePosts = {};
     if (isProfessor && isCurrentUserProfile) {
         const profesorCourses = allCourses.map(course => course.id);
-        console.log('OVER HERE SADSA!!', profesorCourses);
+        // console.log('OVER HERE SADSA!!', profesorCourses);
         archivePosts = await request(
             query.posts.GET_PROFESOR_COURSES_POSTS(profesorCourses)
         );
