@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }) {
     ]
 
     return (
-        <React.Fragment>
+        <div className='flex flex-col items-start content-start justify-between'>
             <SWRConfig
                 value={{
                     fetcher: fetchJson,
@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }) {
 
                 {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
             </SWRConfig>
-        </React.Fragment>
+        </div>
     );
 }
 
