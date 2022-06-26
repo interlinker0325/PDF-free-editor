@@ -73,9 +73,12 @@ const MyApp = ({ Component, pageProps }) => {
                         console.error(err);
                     },
                 }}>
-                <Header items={navItems} />
-                <Component {...pageProps} />
-                <Footer items={navItems} />
+
+                <div className='flex flex-col items-start content-start justify-between'>
+                    <Header items={navItems} />
+                    <Component {...pageProps} />
+                    <Footer items={navItems} />
+                </div>
 
                 {modalState &&
                     <LoginModal
