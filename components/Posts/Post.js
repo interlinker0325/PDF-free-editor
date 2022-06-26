@@ -15,15 +15,15 @@ const Post = ({ entry, course }) => {
     );
     // console.log('OVER HEre!!', entry, isCurrentUserAuthor);
     return (
-        <Main className=''>
-            <article className='flex flex-col gap-4 p-4'>
+        <Main>
+            <article className='flex flex-col gap-4 p-4 h-full'>
                 <div className='flex flex-row items-center justify-between pb-2 border-2 border-transparent rounded-none border-b-black'>
                     <h2 className="col-span-4 text-4xl">{entry.title}</h2>
                     {isCurrentUserAuthor &&
                         <a href={`/posts/${entry.id}/edit`} className='text-primary text-lg'>{'Editar Publicación >'}</a>
                     }
                 </div>
-                <div className='grid grid-cols-4 gap-4'>
+                <div className='grid grid-cols-4 gap-4 h-full'>
                     <section className='col-span-3'>
                         {entry.monografia &&
                             <IFrame srcDoc={entry.monografia} />

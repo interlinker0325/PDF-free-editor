@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }) {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700;900&family=bigCaslon+Two+Text&display=swap" rel="stylesheet" />
             </Head>
-            <div className='flex flex-col items-start content-start justify-between'>
+            <div className='flex flex-col items-start content-start justify-between h-screen'>
                 {!Component.hideNav ?
                     <Header items={navItems}/> : null}
                 <Component {...pageProps} />

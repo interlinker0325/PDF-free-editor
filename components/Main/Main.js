@@ -26,7 +26,7 @@ export default function Main({ title, actionItems, children, ...props }) {
 }
 
 const styles = {
-    main: 'flex flex-col p-4',
+    main: 'flex flex-col p-4 h-full',
     titleSection: 'flex flex-row justify-between py-4',
     title: 'text-4xl font-bold lowercase',
     btnGroup: 'btn-group shadow-xl',

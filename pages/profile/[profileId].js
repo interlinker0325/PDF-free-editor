@@ -119,11 +119,11 @@ const styles = {
 };
 
 export const getServerSideProps = withSession(async function ({ req, res }) {
-    const currentUser = req.session.get('user');
+    const currentUser = req.session.get('user') || {};
     const urlSplit = req.url.split('/');
     const userIdParam = urlSplit[urlSplit.length - 1];
     const isCurrentUserProfile = userIdParam === CURRENT_USER_PROFILE_ID && currentUser;
-    const isProfessor = userUtils.isProfessor(currentUser.tipo.id);
+    const isProfessor = userUtils.isProfessor(currentUser.tipo?.id);
     const profileId = isCurrentUserProfile ? currentUser.id : userIdParam
     const profileQuery = isCurrentUserProfile ?
         query.user.GET_PRIVATE_USER_PROFILE : query.user.GET_PUBLIC_USER_PROFILE;
