@@ -16,19 +16,15 @@ const Post = ({ entry, course }) => {
     // console.log('OVER HEre!!', entry, isCurrentUserAuthor);
     return (
         <Main>
-            <article className='flex flex-col gap-4 p-4 h-full'>
+            <article className='flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap'>
                 <div className='flex flex-row items-center justify-between pb-2 border-2 border-transparent rounded-none border-b-black'>
                     <h2 className="col-span-4 text-4xl">{entry.title}</h2>
                     {isCurrentUserAuthor &&
-                        <a href={`/posts/${entry.id}/edit`} className='text-primary text-lg'>{'Editar Publicación >'}</a>
+                        <a href={`/posts/${entry.id}/edit`} className='align-self-end text-primary text-lg'>{'Editar Publicación >'}</a>
                     }
                 </div>
-                <div className='grid grid-cols-4 gap-4 h-full'>
-                    <section className='col-span-3 overflow-auto'>
-                        {entry.monografia &&
-                            <IFrame srcDoc={entry.monografia} />
-                        }
-                    </section>
+                <div className='grid grid-cols-4 gap-4'>
+                    <IFrame className='min-h-[70vh] col-span-3' srcDoc={entry.monografia} />
                     <aside className='col-span-1 flex flex-col gap-2 pl-4 border-2 border-transparent rounded-none border-l-black'>
                         {entry.curso &&
                             <h3 className='text-lg'><span className='text-primary pr-2'>Curso:</span>{entry.curso.title}</h3>

@@ -1,6 +1,6 @@
 export default function Footer({ items }) {
     return (
-        <footer className="footer items-center p-4 bg-secondary text-black">
+        <footer className="footer items-center p-4 bg-secondary text-black flex-initial">
             <div className="flex-initial">
                 <a className="">Copyright</a>
             </div>

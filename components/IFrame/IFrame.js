@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const IFrame = ({ url, ...props }) => {
+const IFrame = ({ url, className = '', ...props }) => {
     const iFrameRef = useRef();
     const [frameHeight, setFrameHeight] = useState('100vh');
 
@@ -13,8 +13,7 @@ const IFrame = ({ url, ...props }) => {
         <iframe
             ref={iFrameRef}
             src={url}
-            className='border-none w-full my-4 overflow-unset h-full overflow-auto'
-            scrolling='no'
+            className={`border-none w-full my-4 overflow-unset h-full overflow-none ${className}`}
             height={frameHeight}
             {...props} />
     );
