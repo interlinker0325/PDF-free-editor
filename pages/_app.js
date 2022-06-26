@@ -33,27 +33,31 @@ function MyApp({ Component, pageProps }) {
     ]
 
     return (
-        <div className='flex flex-col items-start content-start justify-between'>
-            <SWRConfig
-                value={{
-                    fetcher: fetchJson,
-                    onError: (err) => {
-                        console.error(err);
-                    },
-                }}>
-                <Head>
-                    <title>{Component.pageTitle ? `${Component.pageTitle} | ` : ''}ADLYCEUM</title>
-                    <link rel="icon" href="/favicon.ico" />
-                </Head>
+        <SWRConfig
+            value={{
+                fetcher: fetchJson,
+                onError: (err) => {
+                    console.error(err);
+                },
+            }}>
+            <Head>
+                <title>{Component.pageTitle ? `${Component.pageTitle} | ` : ''}ADLYCEUM</title>
+                <link rel="icon" href="/favicon.ico" />
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                <meta name="robots" content="noindex"></meta>
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700;900&family=bigCaslon+Two+Text&display=swap" rel="stylesheet" />
+            </Head>
+            <div className='flex flex-col items-start content-start justify-between'>
                 {!Component.hideNav ?
                     <Header items={navItems}/> : null}
                 <Component {...pageProps} />
                 {!Component.hideFooter ?
                     <Footer items={navItems} /> : null}
-
-                {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
-            </SWRConfig>
-        </div>
+            </div>
+            {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
+        </SWRConfig>
     );
 }
 
