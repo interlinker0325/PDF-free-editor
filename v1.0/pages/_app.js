@@ -63,6 +63,15 @@ const MyApp = ({ Component, pageProps }) => {
                     lineHeight: '1.5',
                     maxWidth: '1280px'
                 },
+                'body div': {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexWrap: 'nowrap',
+                    alignContent: 'flex-start',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    height: '100vh'
+                },
                 'svg path': { transition: 'fill ease .5s' },
                 '::-webkit-scrollbar': { display: 'none' }
             })} />
