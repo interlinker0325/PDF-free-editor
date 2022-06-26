@@ -24,7 +24,7 @@ const Post = ({ entry, course }) => {
                     }
                 </div>
                 <div className='grid grid-cols-4 gap-4 h-full'>
-                    <section className='col-span-3'>
+                    <section className='col-span-3 overflow-auto'>
                         {entry.monografia &&
                             <IFrame srcDoc={entry.monografia} />
                         }

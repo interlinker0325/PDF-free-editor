@@ -13,7 +13,7 @@ const IFrame = ({ url, ...props }) => {
         <iframe
             ref={iFrameRef}
             src={url}
-            className='border-none w-full my-4 overflow-unset h-full'
+            className='border-none w-full my-4 overflow-unset h-full overflow-auto'
             scrolling='no'
             height={frameHeight}
             {...props} />
