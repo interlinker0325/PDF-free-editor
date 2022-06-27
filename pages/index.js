@@ -4,10 +4,9 @@ import Main from 'components/Main/Main';
 import HeroCards from 'components/HeroCards/HeroCards';
 import PostCard from 'components/PostCard/PostCard';
 import useUser from 'utils/useUser';
+import { query } from 'gql';
 
-import { selector, query } from 'gql';
-
-const Home = ({ posts, currentPage, ...props }) => {
+const Home = ({ posts, currentPage, banners, ...props }) => {
 	const { user = {} } = useUser();
     const [state, setState] = useState({
 		showMore: true,
@@ -36,13 +35,13 @@ const Home = ({ posts, currentPage, ...props }) => {
 	// 	})
 	// };
 
-	console.log('OVER HERE POSTS!', user);
+	// console.log('OVER HERE POSTS!', banners);
     return (
         <Main>
 			{user.isLoggedIn &&
 				<h3 className='text-primary self-end pb-4'>Bienvenid@ {user.fullname}</h3>
 			}
-			<HeroCards />
+			<HeroCards banners={banners} />
             <div className="my-8 grid grid-cols-4 gap-4">
                 {state.posts && state.posts.map(post =>
                     <PostCard key={`Post-Home-${post.id}`} {...post} />
@@ -54,12 +53,13 @@ const Home = ({ posts, currentPage, ...props }) => {
 
 export async function getServerSideProps() {
 	const CURRENT_PAGE = 1;
-	const { allPosts } = await request(GET_ALL_ENTRIES(CURRENT_PAGE));
+	const { allPosts, allBanners } = await request([GET_ALL_ENTRIES(CURRENT_PAGE), query.banners.GET_ACTIVE_BANNERS]);
 
 	return {
 		props: {
 			currentPage: CURRENT_PAGE,
-			posts: allPosts
+			posts: allPosts,
+			banners: allBanners
 		}
 	};
 }
