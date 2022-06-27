@@ -1,10 +1,10 @@
 export const GET_ALL_ENTRIES = (page = 1, limit = 11) => `
-    allEntries(
+    allPosts(
         orderBy: _createdAt_DESC,
         first: "${limit}",
         skip: "${page > 1 ? ((page - 1) * 11) : 0}"
         filter: {
-            aprobacion: {eq: "Aprobado"}
+            review: {eq: "Aprobado"}
         }
     ) {
         title
@@ -15,9 +15,9 @@ export const GET_ALL_ENTRIES = (page = 1, limit = 11) => `
             title
             url
         }
-        curso {
+        course {
             id
-            title
+            name
         }
     }
 `;

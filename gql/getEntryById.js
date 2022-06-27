@@ -1,13 +1,11 @@
 export const GET_ENTRY_BY_ID = (entryId) => `
-    entry(filter: { id: { eq: ${entryId} } }) {
+    post(filter: { id: { eq: ${entryId} } }) {
         author {
-            name
-            lastname
+            fullname
             id
         }
-        coAutores {
-            name
-            lastname
+        coauthors {
+            fullname
             id
         }
         coverimage {
@@ -16,20 +14,20 @@ export const GET_ENTRY_BY_ID = (entryId) => `
             title
             url
         }
-        curso {
+        course {
             id
-            title
+            name
         }
         createdAt
         description(markdown: false)
-        files {
+        attachments {
             filename
             id
             title
             url
         }
         id
-        monografia {
+        monograph {
             filename
             id
             title

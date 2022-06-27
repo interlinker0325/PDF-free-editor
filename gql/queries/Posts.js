@@ -1,6 +1,6 @@
 export const GET_PROFESOR_COURSES_POSTS = (coursesIds) => `
-    allEntries(filter: {curso: {in: "${coursesIds.join(',')}"}}) {
-        aprobacion
+    allPosts(filter: {course: {in: "${coursesIds.join(',')}"}}) {
+        review
         createdAt
         id
         title

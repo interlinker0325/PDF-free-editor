@@ -2,7 +2,37 @@ import Main from 'components/Main/Main';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPeopleGroup, faTags, faFileCode, faImages } from '@fortawesome/free-solid-svg-icons'
 
+const formBaseState = {
+
+};
+
 const EditProfile = () => {
+    // const [formState, setFormState] = useState(formBaseState);
+    // const [errorState, setErrorState] = useState(baseErrorState);
+    // const clearSubmitForm = () => useState(formBaseState);
+    // const refs = {
+    //     files: useRef(),
+    //     coverimage: useRef(),
+    //     monografia: useRef(),
+    //     acceptedTerms: useRef()
+    // };
+    // console.log('OVER HERE', props);
+
+    const doSubmit = (e) => {
+        e.preventDefault();
+        // console.log('over here form', formState);
+        Object.keys(formState).forEach(key => console.log('over here form', key, typeof key));
+    };
+
+    const onChange = (e, name) => {
+        delete formState[name];
+        const hasRef = refs[name];
+        if (hasRef) {
+            setFormState({ [name]: refs[name].current.files || refs[name].current.checked, ...formState })
+        } else {
+            setFormState({ [name]: e.target.value , ...formState })
+        }
+    };
     return (
         <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
             <section className="flex flex-col border-b-black border-b-2 pb-8 gap-1">

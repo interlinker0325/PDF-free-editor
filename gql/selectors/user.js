@@ -10,20 +10,18 @@ const AVATAR = `avatar {
 const SYSTEM = `createdAt
     updatedAt
     id
-    tipo {
-        nombre
+    role {
+        name
         id
     }`;
 
-const FULLNAME = `lastname
-    name`;
+const FULLNAME = `fullname`;
 
-const DETAILS = `experiencia
-    genero
-    nivel
+const DETAILS = `experience
+    gender
+    level
     phone
-    residencia
-    username`;
+    residence`;
 
 const BIRTHDAY = `birthdate`;
 

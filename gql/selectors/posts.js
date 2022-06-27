@@ -3,19 +3,17 @@ const DEFAULT = `id
     updatedAt
     description
     createdAt
-    aprobacion`;
+    review`;
 
 const AUTHOR = `author {
         id
-        name
-        lastname
+        fullname
         email
     }`;
 
-const COAUTORS = `coAutores {
+const COAUTORS = `coauthors {
         email
-        name
-        lastname
+        fullname
         id
     }`;
 
@@ -30,18 +28,18 @@ const COVERIMAGE = `coverimage {
         filename
     }`;
 
-const MONOGRAPH = `monografia {
+const MONOGRAPH = `monograph {
         url
         title
         filename
     }`;
 
-const COURSE = `curso {
+const COURSE = `course {
         id
-        title
+        name
     }`;
 
-const FILES = `files {
+const FILES = `attachments {
         filename
         url
     }`;

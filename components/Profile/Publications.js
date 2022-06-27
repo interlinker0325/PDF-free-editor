@@ -11,8 +11,8 @@ const Publications = ({ items }) => (
                         <tr
                             className={`${styles.tableRow} ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
                             <td className={styles.title}>{item.title}</td>
-                            <td className={`${styles.status} ${styles[item.aprobacion]}`}>
-                                {item.aprobacion}
+                            <td className={`${styles.status} ${styles[item.review]}`}>
+                                {item.review}
                             </td>
                         </tr>
                     </a>

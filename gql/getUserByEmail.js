@@ -9,25 +9,17 @@ export const GET_USER_BY_EMAIL = (email) => `
         }
         createdAt
         birthdate
-        experiencia
-        genero
+        experience
+        gender
         id
-        lastname
-        name
-        nivel
+        fullname
+        level
         phone
-        residencia
-        tipo {
-            nombre
+        residence
+        role {
+            name
             id
         }
-        username
         updatedAt
-        cursos {
-            id
-            title
-            description
-            enabled
-        }
     }
 `;

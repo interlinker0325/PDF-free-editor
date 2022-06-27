@@ -2,19 +2,17 @@ const DEFAULT = `createdAt
     description
     enabled
     id
-    title
+    name
     updatedAt`;
 
-const STUDENTS = `estudiantes {
+const STUDENTS = `students {
         id
-        lastname
-        name
+        fullname
     }`;
 
-const PROFESOR = `profesor {
-        name
-        lastname
+const PROFESOR = `professor {
         id
+        fullname
     }`;
 
 

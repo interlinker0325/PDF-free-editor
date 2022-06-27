@@ -26,11 +26,8 @@ export const request = (queries, preview = false) => {
     }
 };
 
-export * from 'gql/getCourse';
 export * from 'gql/getUserByEmail';
 export * from 'gql/getAllEntries';
 export * from 'gql/getEntryById';
-export * from 'gql/getAllCategories';
-export * from 'gql/getAllAdvertisement';
 export * from 'gql/getAllCourses';
 export * from 'gql/getAllStudents';

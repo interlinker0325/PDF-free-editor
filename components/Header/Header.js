@@ -3,13 +3,14 @@ export default function Header({ items = [] }) {
         <nav className="navbar bg-primary shadow-md flex-initial">
             <div className="flex-initial">
                 <a href='/' className="
-                    btn text-white btn-ghost normal-case text-4xl tracking-widest">Adlyceum</a>
+                    btn text-white btn-ghost normal-case text-4xl tracking-widest font-caslon uppercase">ADLYCEUM</a>
             </div>
-            <div className="flex-auto justify-end sm:justify-end gap-2">
+            <div className="flex-auto justify-end sm:justify-end gap-2 font-roboto">
                 <ul className="menu menu-horizontal text-white p-0">
                     {items.map((item, index) => (
                         <li key={`Header-nav-item-${index}`}>
                             <a
+                                className='hover:underline hover:underline-offset-1'
                                 {...item.onClick ?
                                     { onClick: item.onClick } : { href: item.action }
                                 }>

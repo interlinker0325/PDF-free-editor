@@ -7,7 +7,7 @@ import Post from 'components/Posts/Post';
 const Posts = (props) => {
     const router = useRouter();
     useEffect(() => {
-        if (!props.entry) router.push('/');
+        if (!props.post) router.push('/');
     }, [props]);
 
     return (
@@ -16,15 +16,15 @@ const Posts = (props) => {
 }
 
 export async function getServerSideProps({ params: { postId } }) {
-    let { entry } = await request(GET_ENTRY_BY_ID(postId));
+    let { post } = await request(GET_ENTRY_BY_ID(postId));
 
-    if (entry?.monografia) {
-        entry.monografia = await getHTML(entry.monografia.url);
+    if (post?.monograph) {
+        post.monograph = await getHTML(post.monograph.url);
     }
 
     // console.log('OVER HERE!!!', entry);
     return {
-        props: { entry }
+        props: { post }
     };
 }
 

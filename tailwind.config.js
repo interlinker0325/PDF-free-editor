@@ -3,8 +3,10 @@ module.exports = {
   darkMode: true, // or 'media' or 'class'
   theme: {
     extend: {
-      minHeight: {
-        '80': '80vh'
+      fontFamily: {
+        caslon: ['big_caslonmedium'],
+        roboto: ['Roboto', 'sans-serif'],
+        stix: ['bigCaslon Two Text', 'serif']
       },
       colors: {
         textYellow: '#F5B300',

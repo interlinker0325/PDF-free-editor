@@ -1,6 +1,6 @@
 export const GET_ALL_COURSES = `
     allCourses {
         id
-        title
+        name
     }
 `;

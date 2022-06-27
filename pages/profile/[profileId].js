@@ -30,8 +30,6 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     const mainRef = useRef();
     const isCurrentUserProfile = profileId === CURRENT_USER_PROFILE_ID;
 
-
-
     // console.log('OVER HERE!!!', archivePosts, isCurrentUserProfile, profile, isProfessor, posts);
     return (
         <Main>
@@ -78,15 +76,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                     <div className={styles.tabContent}>
                         {activeView === VIEW_STATES.USER &&
                             <UserInfo
-                                name={profile.name}
-                                lastname={profile.lastname}
-                                email={profile.email}
-                                genero={profile.genero}
-                                phone={profile.phone}
-                                birthdate={profile.birthdate}
-                                residencia={profile.residencia}
-                                nivel={profile.nivel}
-                                experiencia={profile.experiencia} />
+                                {...profile} />
                         }
                         {activeView === VIEW_STATES.COURSE &&
                             <Courses items={courses} />
@@ -118,17 +108,17 @@ const styles = {
     tabContent: 'border-b-black border-b-2 pb-4'
 };
 
-export const getServerSideProps = withSession(async function ({ req, res }) {
+export const getServerSideProps = withSession(async function ({ req }) {
     const currentUser = req.session.get('user') || {};
     const urlSplit = req.url.split('/');
     const userIdParam = urlSplit[urlSplit.length - 1];
     const isCurrentUserProfile = userIdParam === CURRENT_USER_PROFILE_ID && currentUser;
-    const isProfessor = userUtils.isProfessor(currentUser.tipo?.id);
+    const isProfessor = userUtils.isProfessor(currentUser.role?.id);
     const profileId = isCurrentUserProfile ? currentUser.id : userIdParam
     const profileQuery = isCurrentUserProfile ?
         query.user.GET_PRIVATE_USER_PROFILE : query.user.GET_PUBLIC_USER_PROFILE;
 
-    const { user: profile, allCourses, allEntries: posts } = await request([
+    const { user: profile, allCourses, allPosts: posts } = await request([
         profileQuery(profileId),
         (isProfessor && isCurrentUserProfile) ?
             query.user.GET_PROFESOR_COURSES(profileId) : query.user.GET_USER_COURSES(profileId),

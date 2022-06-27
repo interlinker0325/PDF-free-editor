@@ -19,19 +19,19 @@ export const GET_PUBLIC_USER_PROFILE = (id) => `
 `;
 
 export const GET_USER_COURSES = (id) => `
-    allCourses(filter: {estudiantes: {eq: "${id}"}}) {
+    allCourses(filter: {students: {eq: "${id}"}}) {
         ${selector.courses.USER_COURSES}
     }
 `;
 
 export const GET_PROFESOR_COURSES = (id) => `
-    allCourses(filter: {profesor: {eq: "${id}"}}) {
+    allCourses(filter: {professor: {eq: "${id}"}}) {
         ${selector.courses.PROFESOR_COURSES}
     }
 `;
 
 export const GET_USER_POSTS = (id) => `
-    allEntries(filter: { author: { eq: "${id}" } }) {
+    allPosts(filter: { author: { eq: "${id}" } }) {
         ${selector.posts.POSTS_OF_USER}
     }
 `;
