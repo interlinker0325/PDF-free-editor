@@ -77,10 +77,6 @@ function MyApp({ Component, pageProps }) {
                     svg path {
                         transition: fill ease .5s;
                     };
-
-                    ::-webkit-scrollbar {
-                        display: none;
-                    };
                 `}</style>
             </Head>
             <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>
@@ -88,7 +84,7 @@ function MyApp({ Component, pageProps }) {
                     <Header items={navItems}/> : null}
                 <Component {...pageProps} />
                 {!Component.hideFooter ?
-                    <Footer items={navItems} /> : null}
+                    <Footer /> : null}
             </div>
             {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
         </SWRConfig>

@@ -36,7 +36,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
             <div className={styles.mainContainer}>
                 <div className={styles.leftContainer}>
                     <div className={styles.avatarCard}>
-                        <FontAwesomeIcon className='py- min-w-fit text-2xl' icon={faCircleUser} />
+                        <FontAwesomeIcon className='p-8 min-w-fit text-2xl' icon={faCircleUser} />
                     </div>
                 </div>
                 <div className={styles.rightContainer}>
@@ -103,7 +103,7 @@ const styles = {
     rightContainer: 'col-span-3 flex flex-col gap-4',
     avatarCard: 'card text-gray-400 bg-secondary rounded-none h-60',
     tabs: 'tabs border-transparent border-b-black border-b-2 w-full justify-between',
-    tabItem: 'tab pl-0',
+    tabItem: 'tab pl-0 hover:text-primary hover:underline hover:underline-offset-1',
     activeTab: 'tab tab-active text-primary pl-0',
     tabContent: 'border-b-black border-b-2 pb-4'
 };
