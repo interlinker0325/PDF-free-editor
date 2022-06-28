@@ -2,8 +2,8 @@
 
 const HeroCards = ({ banners }) => {
     return (
-        <section className='grid grid-cols-7 gap-4 h-[142px]'>
-            <article className='card rounded-none col-span-3 flex'>
+        <section className='grid grid-cols-7 gap-6 h-[142px]'>
+            <article className='card shadow-lg rounded-none col-span-3 flex'>
                 <figure>
                     <img
                         className='h-[142px] w-full'
@@ -11,7 +11,7 @@ const HeroCards = ({ banners }) => {
                 </figure>
             </article>
             {banners.map(banner => (
-                <article key={`HeroBanner_${banner.id}`} className='card rounded-none col-span-2 bg-secondary text-center text-black flex'>
+                <article key={`HeroBanner_${banner.id}`} className='card shadow-lg rounded-none col-span-2 bg-secondary text-center text-black flex'>
                     <figure>
                         <img
                             className='h-[142px] w-full'
