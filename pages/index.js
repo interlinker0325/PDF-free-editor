@@ -37,10 +37,7 @@ const Home = ({ posts, currentPage, banners, ...props }) => {
 
 	// console.log('OVER HERE POSTS!', banners);
     return (
-        <Main>
-			{user.isLoggedIn &&
-				<h3 className='text-primary self-end pb-4'>Bienvenid@ {user.fullname}</h3>
-			}
+        <Main user={user}>
 			<HeroCards banners={banners} />
 			<div className='flex flex-row items-center justify-between pt-20 pb-2 border-2 border-transparent rounded-none border-b-black'>
                 <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>

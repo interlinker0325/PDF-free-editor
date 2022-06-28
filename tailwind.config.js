@@ -20,10 +20,11 @@ module.exports = {
       },
       colors: {
         textYellow: '#F5B300',
-        backdrop: "rgba(0, 0, 0, 0.5)",
+        backdrop: "rgba(0, 0, 0, 0.1)",
         other: "#3D7DFF",
         gradientt: "#4137FE",
-        gradientb: "#0F089F"
+        gradientb: "#0F089F",
+        inputBorder: "#9E9E9E"
       }
     },
   },

@@ -35,15 +35,20 @@ const LoginModal = ({ onClose, display }) => {
 
     return (
         <Modal onClose={onClose} display={display}>
-            <form onSubmit={handleSubmit} className='py-10 px-16 grid grid-cols-1 gap-6 text-lg w-full p-8'>
-                <h3 className="text-2xl font-bold justify-self-center">Iniciar Sesión</h3>
+            {/* <!-- Modal header --> */}
+            <div class="flex flex-col justify-center items-center w-full">
+                <h3 className="text-4xl text-center py-11 w-full">Iniciar sesión</h3>
+            </div>
+            <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center w-[255px]'>
                 <input
+                    className={styles.input}
                     type='email'
                     name='email'
                     role='email'
                     placeholder='Correo Electrónico' />
 
                 <input
+                    className={styles.input}
                     type='password'
                     name='password'
                     role='password'
@@ -51,12 +56,16 @@ const LoginModal = ({ onClose, display }) => {
 
                 <button
                     type='submit'
-                    className='btn btn-primary rounded-full'>
-                    login
+                    className='btn capitalize btn-ghost my-6 w-full text-white bg-other rounded-full'>
+                    Iniciar sesión
                 </button>
             </form>
         </Modal>
     )
+}
+
+const styles = {
+    input: 'bg-secondary text-black border-[1px] border-inputBorder my-2.5 p-2.5 w-full'
 }
 
 export default LoginModal;

@@ -3,11 +3,12 @@ export default function Main({
     actionItems,
     children,
     className = '',
+    user = {},
     ...props
 }) {
     return (
-        <main className={`${styles.main} ${className}`} {...props}>
-            {title &&
+        <main className={`${styles.main} ${user.isLoggedIn ? 'py-0' : 'py-14'} ${className}`} {...props}>
+            {/* {title &&
                 <div className={styles.titleSection}>
                     <h1 className={styles.title}>{title}</h1>
                     {actionItems &&
@@ -25,14 +26,17 @@ export default function Main({
                         </div>
                     }
                 </div>
-            }
+            } */}
+            {user.isLoggedIn &&
+				<h3 className='text-primary text-2xl self-end pt-3 pb-8'>Bienvenid@ {user.fullname}</h3>
+			}
             {children}
         </main>
     );
 }
 
 const styles = {
-    main: 'flex flex-col py-14 px-8 flex-auto font-roboto',
+    main: 'flex flex-col px-8 flex-auto font-roboto',
     titleSection: 'flex flex-row justify-between py-4',
     title: 'text-4xl font-bold lowercase',
     btnGroup: 'btn-group shadow-xl',
