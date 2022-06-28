@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }) {
     const closeModal = () => setDisplayModal(false);
     const { mutateUser, user = {} } = useUser();
 
-    const sessionText = `${user.isLoggedIn ? 'Cerrar' : 'Iniciar'} Sesión`;
+    const sessionText = `${user.isLoggedIn ? 'Cerrar' : 'Iniciar'} sesión`;
     const doLogout = async (e) => {
         e.preventDefault();
         mutateUser(
@@ -25,12 +25,15 @@ function MyApp({ Component, pageProps }) {
     };
 
     const sessionAction = user.isLoggedIn ? doLogout : () => setDisplayModal(true);
-    const navItems = [
+    const navItems = user.isLoggedIn ? [
         { name: 'Inicio', action: '/' },
-        { name: 'Crear Publicación', action: '/posts/new' },
-        { name: 'Mi Perfil', action: '/profile/me' },
+        { name: 'Mi perfil', action: '/profile/me' },
+        { name: 'Crear publicación', action: '/posts/new' },
         { name: sessionText, onClick: sessionAction }
-    ]
+    ] : [
+        { name: 'Inicio', action: '/' },
+        { name: sessionText, onClick: sessionAction }
+    ];
 
     return (
         <SWRConfig
@@ -67,7 +70,6 @@ function MyApp({ Component, pageProps }) {
                     html, body {
                         width: 100vw;
                         margin: 0 auto;
-                        font-size: 15px;
                         overflow: auto;
                         overflow-x: hidden;
                         font-family: system-ui, sans-serif;

@@ -1,6 +1,12 @@
-export default function Main({ title, actionItems, children, ...props }) {
+export default function Main({
+    title,
+    actionItems,
+    children,
+    className = '',
+    ...props
+}) {
     return (
-        <main className={styles.main} {...props}>
+        <main className={`${styles.main} ${className}`} {...props}>
             {title &&
                 <div className={styles.titleSection}>
                     <h1 className={styles.title}>{title}</h1>
@@ -26,7 +32,7 @@ export default function Main({ title, actionItems, children, ...props }) {
 }
 
 const styles = {
-    main: 'flex flex-col py-2 px-8 flex-auto font-roboto',
+    main: 'flex flex-col py-14 px-8 flex-auto font-roboto',
     titleSection: 'flex flex-row justify-between py-4',
     title: 'text-4xl font-bold lowercase',
     btnGroup: 'btn-group shadow-xl',

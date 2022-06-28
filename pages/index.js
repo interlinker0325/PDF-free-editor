@@ -42,7 +42,10 @@ const Home = ({ posts, currentPage, banners, ...props }) => {
 				<h3 className='text-primary self-end pb-4'>Bienvenid@ {user.fullname}</h3>
 			}
 			<HeroCards banners={banners} />
-            <div className="my-8 grid grid-cols-4 gap-4">
+			<div className='flex flex-row items-center justify-between pt-20 pb-2 border-2 border-transparent rounded-none border-b-black'>
+                <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>
+			</div>
+            <div className="my-8 grid grid-cols-4 gap-6">
                 {state.posts && state.posts.map(post =>
                     <PostCard key={`Post-Home-${post.id}`} {...post} />
                 )}

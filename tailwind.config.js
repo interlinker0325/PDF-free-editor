@@ -2,6 +2,16 @@ module.exports = {
   purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   darkMode: true, // or 'media' or 'class'
   theme: {
+    fontSize: {
+      sm: ['12px', '14px'],
+      base: ['14px', '17px'],
+      lg: ['16px', '19px'],
+      xl: ['18px', '21px'],
+      '2xl': ['20px', '24px'],
+      '3xl': ['26px', '30px'],
+      '4xl': ['30px', '35px'],
+      logo: ['45px', '55px']
+    },
     extend: {
       fontFamily: {
         caslon: ['big_caslonmedium'],
@@ -10,8 +20,11 @@ module.exports = {
       },
       colors: {
         textYellow: '#F5B300',
-        backdrop: "rgba(0, 0, 0, 0.5)"
-      },
+        backdrop: "rgba(0, 0, 0, 0.5)",
+        other: "#3D7DFF",
+        gradientt: "#4137FE",
+        gradientb: "#0F089F"
+      }
     },
   },
   variants: {
