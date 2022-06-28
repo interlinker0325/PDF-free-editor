@@ -36,7 +36,7 @@ export default function Main({
 }
 
 const styles = {
-    main: 'flex flex-col px-8 flex-auto font-roboto',
+    main: 'flex flex-col px-14 flex-auto font-roboto',
     titleSection: 'flex flex-row justify-between py-4',
     title: 'text-4xl font-bold lowercase',
     btnGroup: 'btn-group shadow-xl',
