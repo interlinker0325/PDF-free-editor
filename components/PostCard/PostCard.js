@@ -6,7 +6,7 @@ export default function Card({
     coverimage
 }) {
     return (
-        <a href={`/posts/${id}`} className="group card cursor-pointer bg-base-100 shadow-lg hover:shadow-xl border-2 border-transparent rounded-none border-b-black hover:border-b-transparent">
+        <a href={`/posts/${id}`} className="group card cursor-pointer bg-base-100 shadow-lg hover:shadow-xl border-[1px] border-transparent rounded-none border-b-black hover:border-b-transparent">
             {coverimage &&
                 <figure><img className="h-[150px] w-full" src={coverimage.url} alt={coverimage.title} /></figure>
             }

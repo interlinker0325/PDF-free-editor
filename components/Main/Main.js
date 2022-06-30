@@ -7,7 +7,7 @@ export default function Main({
     ...props
 }) {
     return (
-        <main className={`${styles.main} ${user.isLoggedIn ? 'py-0' : 'py-14'} ${className}`} {...props}>
+        <main className={`${styles.main} ${user.isLoggedIn ? 'py-0' : 'py-12'} ${className}`} {...props}>
             {/* {title &&
                 <div className={styles.titleSection}>
                     <h1 className={styles.title}>{title}</h1>
