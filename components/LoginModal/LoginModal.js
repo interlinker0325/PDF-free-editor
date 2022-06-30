@@ -37,7 +37,7 @@ const LoginModal = ({ onClose, display }) => {
         <Modal onClose={onClose} display={display}>
             {/* <!-- Modal header --> */}
             <div class="flex flex-col justify-center items-center w-full">
-                <h3 className="text-4xl text-center py-11 w-full">Iniciar sesión</h3>
+                <h3 className="text-4xl font-roboto text-center py-11 w-full">Iniciar sesión</h3>
             </div>
             <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center w-[255px]'>
                 <input
@@ -56,7 +56,7 @@ const LoginModal = ({ onClose, display }) => {
 
                 <button
                     type='submit'
-                    className='btn capitalize btn-ghost my-6 w-full text-white bg-other rounded-full'>
+                    className='btn font-roboto text-xl capitalize btn-ghost my-6 w-full text-white bg-other rounded-full'>
                     Iniciar sesión
                 </button>
             </form>
@@ -65,7 +65,7 @@ const LoginModal = ({ onClose, display }) => {
 }
 
 const styles = {
-    input: 'bg-secondary text-black border-[1px] border-inputBorder my-2.5 p-2.5 w-full'
+    input: 'bg-secondary font-caslon text-black border-[1px] border-inputBorder my-2.5 p-2.5 w-full'
 }
 
 export default LoginModal;
