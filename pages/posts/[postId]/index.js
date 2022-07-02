@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { request, GET_ENTRY_BY_ID } from 'utils/graphqlRequest';
 import { getHTML } from 'handlers/bll';
 import { useRouter } from 'next/router';
@@ -11,18 +11,17 @@ const Posts = (props) => {
     }, [props]);
 
     return (
-        <Post {...props} />
+        <Post post={props.post} />
     );
 }
 
-export async function getServerSideProps({ params: { postId } }) {
-    let { post } = await request(GET_ENTRY_BY_ID(postId));
+export const getServerSideProps = async function ({ params }) {
+    let { post } = await request(GET_ENTRY_BY_ID(params.postId));
 
     if (post?.monograph) {
         post.monograph = await getHTML(post.monograph.url);
     }
 
-    // console.log('OVER HERE!!!', entry);
     return {
         props: { post }
     };

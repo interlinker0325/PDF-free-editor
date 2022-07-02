@@ -9,33 +9,23 @@ import { query } from 'gql';
 const Home = ({ posts, currentPage, banners, ...props }) => {
 	const { user = {} } = useUser();
     const [state, setState] = useState({
-		showMore: true,
+		showMore: false,
 		currentPage,
 		posts,
-	})
+	});
 
-	// console.log('OVER HERE !$!@$!@$@!', selector.user.PUBLIC_USER_PROFILE, query.user.GET_USER_LOGIN_DATA);
+	const getNextPage = async () => {
+		const nextPage = state.currentPage + 1;
+		const { allPosts } = await request([GET_ALL_ENTRIES(nextPage)]);
+		const showMore = !(allPosts.length < 11);
 
-	// const getNextPage = async () => {
-	// 	const nextPage = state.currentPage + 1;
-	// 	const { allEntries } = await request(GET_ALL_ENTRIES(false, nextPage));
-	// 	const showMore = !(allEntries.length < 11);
+		setState({
+			showMore,
+			currentPage: nextPage,
+			posts: [...state.posts, ...allPosts]
+		})
+	};
 
-
-	// 	if (showMore) {
-	// 		const { allAdvertisements } = await request(GET_ALL_ADS(nextPage));
-	// 		allEntries.splice(1, 0, { ...allAdvertisements[0], isAd: true });
-	// 	}
-
-	// 	setState({
-	// 		showMore,
-	// 		currentPage: nextPage,
-	// 		posts: [...state.posts, ...allEntries],
-	// 		alerts: state.alerts
-	// 	})
-	// };
-
-	// console.log('OVER HERE POSTS!', banners);
     return (
         <Main user={user}>
 			<HeroCards banners={banners} />
@@ -47,6 +37,9 @@ const Home = ({ posts, currentPage, banners, ...props }) => {
                     <PostCard key={`Post-Home-${post.id}`} {...post} />
                 )}
             </div>
+			{state.showMore &&
+				<a onClick={getNextPage} className='text-other cursor-pointer hover:text-primary underline underline-offset-1 mt-4 mb-20'>Cargar más publicaciones ></a>
+			}
         </Main>
     );
 }
@@ -59,7 +52,8 @@ export async function getServerSideProps() {
 		props: {
 			currentPage: CURRENT_PAGE,
 			posts: allPosts,
-			banners: allBanners
+			banners: allBanners,
+			showMore: !(allPosts.length < 11)
 		}
 	};
 }

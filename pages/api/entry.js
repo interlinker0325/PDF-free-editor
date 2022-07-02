@@ -29,32 +29,18 @@ export default async (req, res) => {
             result.error = record.error;
         }
     } else if (req.method === 'PUT') {
-        let { id, coverimage, files, sections, ...rest } = req.body;
+        let { id, coverimage, attachments, ...rest } = req.body;
 
         if (coverimage) {
             rest.coverimage = { uploadId: coverimage };
         }
 
-        if (files) {
-            if (!Array.isArray(files)) files = [files];
-            rest.files = files.map(file => ({ uploadId: file }))
+        if (attachments) {
+            if (!Array.isArray(attachments)) attachments = [attachments];
+            rest.attachments = attachments.map(file => ({ uploadId: file }))
         }
 
-        if (sections) {
-            rest.content = sections.map((section, index) => {
-                let block = { itemType: process.env.SECTION_MODEL_ID };
-
-                if (section.id) block.id = section.id;
-                block.title = section.title || '';
-                block.description = section.description || '';
-                block.image = section.image ? { uploadId: section.image } : null;
-                block.monograph = section.monograph ? { uploadId: section.monograph } : null;
-                block.index = section.index || index;
-
-                return buildBlock(block);
-            });
-        }
-
+        console.log('OVER HERE!!!', rest);
         const record = await updateRecord(id, rest);
 
         if (!record.error) {

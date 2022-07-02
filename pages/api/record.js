@@ -19,14 +19,14 @@ export default async (req, res) => {
                 const record = await publish(id);
                 results.push(record);
 
-                let category = await getRecord(record.category);
-                const categoryExists = category.entries.some(rid => record.id === rid);
+                // let category = await getRecord(record.category);
+                // const categoryExists = category.entries.some(rid => record.id === rid);
 
-                if (!categoryExists) {
-                    category.entries = [...category.entries, id];
+                // if (!categoryExists) {
+                //     category.entries = [...category.entries, id];
 
-                    await updateRecord(record.category, category);
-                }
+                //     await updateRecord(record.category, category);
+                // }
             }
 
             result.success = true;

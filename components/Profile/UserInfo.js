@@ -1,5 +1,3 @@
-
-
 const UserInfo = ({
     fullname,
     email,
@@ -11,25 +9,30 @@ const UserInfo = ({
     experience
 }) => {
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex flex-col border-b-black border-b-2 pb-4">
-                <h4 className='text-black text-md'><span className='text-primary text-lg'>Nombre completo:</span> {fullname}</h4>
-                <h4 className='text-black text-md'><span className='text-primary text-lg'>Correo:</span> {email}</h4>
-                <h4 className='text-black text-md'><span className='text-primary text-lg'>Número Telefónico:</span> {phone}</h4>
-                <h4 className='text-black text-md'><span className='text-primary text-lg'>Fecha de nacimiento:</span> {birthdate}</h4>
-                <h4 className='text-black text-md'><span className='text-primary text-lg'>Género:</span> {gender}</h4>
-                <h4 className='text-black text-md'><span className='text-primary text-lg'>Residencia:</span> {residence}</h4>
+        <div className="flex flex-col gap-6">
+            <div className="flex flex-col border-b-black border-b-2 pb-12 gap-2">
+                <h4 className={styles.label}>Nombre completo: <span className={styles.span}>{fullname}</span></h4>
+                <h4 className={styles.label}>Correo: <span className={styles.span}>{email}</span></h4>
+                <h4 className={styles.label}>Número Telefónico: <span className={styles.span}>{phone}</span></h4>
+                <h4 className={styles.label}>Fecha de nacimiento: <span className={styles.span}>{birthdate}</span></h4>
+                <h4 className={styles.label}>Género: <span className={styles.span}>{gender}</span></h4>
+                <h4 className={styles.label}>Residencia: <span className={styles.span}>{residence}</span></h4>
             </div>
-            <div className="flex flex-col gap-0">
-                <h4 className='text-md text-primary text-lg'>Carrera/Universidad/Nivel:</h4>
-                <p>{level}</p>
+            <div className="flex flex-col gap-1">
+                <h4 className={styles.label}>Carrera/Universidad/Nivel:</h4>
+                <p className={styles.span}>{level}</p>
             </div>
-            <div className="flex flex-col gap-0">
-                <h4 className='text-md text-primary text-lg'>Experiencia laboral:</h4>
-                <p>{experience}</p>
+            <div className="flex flex-col gap-1">
+                <h4 className={styles.label}>Experiencia laboral:</h4>
+                <p className={styles.span}>{experience}</p>
             </div>
         </div>
     );
 };
+
+const styles = {
+    label: 'font-roboto text-primary text-2xl',
+    span: 'font-caslon text-black text-lg'
+}
 
 export default UserInfo;

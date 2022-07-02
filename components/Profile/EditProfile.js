@@ -1,13 +1,11 @@
-import Main from 'components/Main/Main';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPeopleGroup, faTags, faFileCode, faImages } from '@fortawesome/free-solid-svg-icons'
+// import { useState, useCallback } from 'react';
+// import { updateProfile } from 'handlers/profile';
+// import Main from 'components/Main/Main';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faPeopleGroup, faTags, faFileCode, faImages } from '@fortawesome/free-solid-svg-icons'
 
-const formBaseState = {
-
-};
-
-const EditProfile = () => {
-    // const [formState, setFormState] = useState(formBaseState);
+const EditProfile = (props) => {
+    // const [formState, setFormState] = useState(props.profile);
     // const [errorState, setErrorState] = useState(baseErrorState);
     // const clearSubmitForm = () => useState(formBaseState);
     // const refs = {
@@ -17,33 +15,19 @@ const EditProfile = () => {
     //     acceptedTerms: useRef()
     // };
     // console.log('OVER HERE', props);
+    
 
-    const doSubmit = (e) => {
-        e.preventDefault();
-        // console.log('over here form', formState);
-        Object.keys(formState).forEach(key => console.log('over here form', key, typeof key));
-    };
-
-    const onChange = (e, name) => {
-        delete formState[name];
-        const hasRef = refs[name];
-        if (hasRef) {
-            setFormState({ [name]: refs[name].current.files || refs[name].current.checked, ...formState })
-        } else {
-            setFormState({ [name]: e.target.value , ...formState })
-        }
-    };
     return (
-        <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
-            <section className="flex flex-col border-b-black border-b-2 pb-8 gap-1">
+        <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()}>
+            <section className="flex flex-col border-b-black border-b-2 pb-8 mb-5 gap-1">
                 <div className='form-control'>
                     <input
                         className={styles.titleInput}
                         type='text'
                         name='fullname'
                         placeholder='Nombre completo *'
-                        value={''}
-                        onChange={(e) => onChange(e, 'fullname')}/>
+                        value={props.profile.fullname}
+                        onChange={(e) => props.onChange(e, 'fullname')}/>
                 </div>
                 <div className='form-control'>
                     <input
@@ -51,8 +35,8 @@ const EditProfile = () => {
                         type='email'
                         name='email'
                         placeholder='Correo *'
-                        value={''}
-                        onChange={(e) => onChange(e, 'email')}/>
+                        value={props.profile.email}
+                        onChange={(e) => props.onChange(e, 'email')}/>
                 </div>
                 <div className='form-control'>
                     <input
@@ -60,69 +44,66 @@ const EditProfile = () => {
                         type='tel'
                         name='phone'
                         placeholder='Número telefónico'
-                        value={''}
-                        onChange={(e) => onChange(e, 'phone')}/>
+                        value={props.profile.phone}
+                        onChange={(e) => props.onChange(e, 'phone')}/>
                 </div>
                 <div className='form-control'>
                     <input
                         className={styles.titleInput}
                         type='date'
-                        name='birthday'
+                        name='birthdate'
                         placeholder='Fecha de nacimiento'
-                        value={''}
-                        onChange={(e) => onChange(e, 'birthday')}/>
+                        value={props.profile.birthdate}
+                        onChange={(e) => props.onChange(e, 'birthdate')}/>
                 </div>
                 <div className='form-control'>
                     <select
                         className={styles.select}
-                        value={''}
-                        onChange={(e) => onChange(e, 'genero')}>
-                        <option value='default'>Género</option>
-                        <option value='Masculino'>Masculino</option>
-                        <option value='Femenino'>Femenino</option>
-                        <option value='Otro'>Otro</option>
+                        value={props.profile.gender}
+                        onChange={(e) => props.onChange(e, 'gender')}>
+                        <option className={styles.option} value='default'>Género</option>
+                        <option className={styles.option} value='masculino'>Masculino</option>
+                        <option className={styles.option} value='femenino'>Femenino</option>
+                        <option className={styles.option} value='otro'>Otro</option>
                     </select>
                 </div>
                 <div className='form-control'>
                     <input
                         className={styles.titleInput}
                         type='text'
-                        name='residencia'
+                        name='residence'
                         placeholder='Residencia (provincia/canton/distrito)'
-                        value={''}
-                        onChange={(e) => onChange(e, 'residencia')}/>
+                        value={props.profile.residence}
+                        onChange={(e) => props.onChange(e, 'residence')}/>
                 </div>
             </section>
-            <div className="flex flex-col gap-0">
-                <h4 className='text-md text-primary text-lg'>Carrera/Universidad/Nivel:</h4>
+            <div className="flex flex-col gap-2">
+                <h4 className='text-2xl text-primary'>Carrera/Universidad/Nivel:</h4>
                 <textarea
                     className={styles.textarea}
-                    placeholder='Agregar descripción de la publicación'
-                    value={''}
-                    onChange={(e) => onChange(e, 'description')} />
+                    placeholder='Agregar descripción de: Carrera/Universidad/Nivel'
+                    value={props.profile.level}
+                    onChange={(e) => props.onChange(e, 'level')} />
             </div>
-            <div className="flex flex-col gap-0">
-                <h4 className='text-md text-primary text-lg'>Experiencia laboral:</h4>
+            <div className="flex flex-col gap-2">
+                <h4 className='text-2xl text-primary'>Experiencia laboral:</h4>
                 <textarea
                     className={styles.textarea}
-                    placeholder='Agregar descripción de la publicación'
-                    value={''}
-                    onChange={(e) => onChange(e, 'description')} />
+                    placeholder='Agregar descripción de: Experiencia laboral'
+                    value={props.profile.experience}
+                    onChange={(e) => props.onChange(e, 'experience')} />
             </div>
         </form>
     );
 };
 
 const styles = {
-    titleInput: 'input input-sm input-ghost border-transparent rounded-none w-full border-b-black',
+    titleInput: 'font-normal text-lg font-caslon input input-sm input-ghost border-transparent rounded-none w-full border-b-black',
     label: 'cursor-pointer label justify-start gap-4',
     icon: 'label-text w-8 h-8 text-sm',
-    select: 'select input-ghost text-sm h-8 min-h-8 w-full pl-3 border-1 border-transparent rounded-none border-b-black',
-    fileInput: 'input hidden input-ghost w-full',
-    fileLabel: 'label-text border-2 border-transparent py-2 rounded-none border-b-black',
-    textarea: 'textarea rounded-none resize-none bg-secondary w-full h-1/2',
-    checkbox: 'checkbox checkbox-secondary',
-    button: (type) => `btn btn-${type} rounded-full`
+    select: 'font-normal text-lg font-caslon select input-ghost text-sm h-8 min-h-8 w-full pl-3 border-1 border-transparent rounded-none border-b-black',
+    option: 'font-normal text-lg font-caslon',
+    textarea: 'font-normal mb-4 h-[143px] text-lg font-caslon textarea rounded-none resize-none bg-secondary w-full h-1/2'
 };
 
 export default EditProfile;

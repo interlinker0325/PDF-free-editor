@@ -17,3 +17,14 @@ export const USER_TYPE_BY_ID = {
 export const isProfessor = (typeId) =>
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.PROFESOR ||
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.SUPLENTE;
+
+export const isStudent = (typeId) =>
+    USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.ESTUDIANTE;
+
+export const userHasCourse = (user, courseId) => {
+    console.log('over here!!', user, courseId);
+}
+
+export const isUserTeacherOfCourse = (user, courses) => {
+    console.log('isUserTeacherOfCourse', user, courses);
+}

@@ -18,7 +18,7 @@ export const GET_PUBLIC_USER_PROFILE = (id) => `
     }
 `;
 
-export const GET_USER_COURSES = (id) => `
+export const GET_STUDENT_COURSES = (id) => `
     allCourses(filter: {students: {eq: "${id}"}}) {
         ${selector.courses.USER_COURSES}
     }

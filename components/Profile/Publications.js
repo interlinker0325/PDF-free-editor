@@ -23,8 +23,8 @@ const Publications = ({ items }) => (
 );
 
 const styles = {
-    tableRow: 'flex flex-row justify-between w-full py-2 px-4 hover:text-primary hover:underline hover:underline-offset-1',
-    title: 'rounded-l-none rounded-r-none w-full',
+    tableRow: 'flex flex-row justify-between w-full py-2 px-4',
+    title: 'rounded-l-none rounded-r-none w-full hover:text-primary hover:underline hover:underline-offset-1',
     status: 'rounded-l-none rounded-r-none',
     Aprobado: 'text-success',
     Denegado: 'text-error',

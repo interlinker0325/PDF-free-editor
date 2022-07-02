@@ -37,3 +37,6 @@ export const downloadToCSV = (fileName, data, isBlob = true) => {
 };
 
 export const isOdd = (num) => num % 2;
+
+export * from './user';
+export * from './post';

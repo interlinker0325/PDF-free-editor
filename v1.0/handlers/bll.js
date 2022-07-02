@@ -35,7 +35,6 @@ export const updateEntry = async (
     id,
     data
 ) => {
-    data.sections = data.sections.map(({ imageRef, monographRef, ...rest }) => rest);
     const requestData = { id, ...data };
     const response = await put('/api/entry', requestData);
 

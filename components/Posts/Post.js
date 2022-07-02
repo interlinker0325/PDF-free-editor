@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import useUser from 'utils/useUser';
 import IFrame from 'components/IFrame/IFrame';
 import Main from 'components/Main/Main';
-import useUser from 'utils/useUser';
+import PostStatusBar from 'components/Posts/PostStatusBar';
 
-const Post = ({ post }) => {
+const Post = ({ post,  updatePost }) => {
     const { user } = useUser();
     const [showFiles, setshowFiles] = useState(false);
     const toggleShowFiles = () => setshowFiles(!showFiles);
@@ -13,9 +14,9 @@ const Post = ({ post }) => {
     const files = post?.attachments?.map(file =>
         <a target='_blank' key={`file_attachment_${file.id}`} href={file.url} className='text-primary ml-4 text-xs underline underline-offset-1'>{file.title || file.filename}</a>
     );
-    // console.log('OVER HEre!!', post, isCurrentUserAuthor);
     return (
         <Main>
+            <PostStatusBar user={user} post={post} updatePost={updatePost} />
             <article className='flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap'>
                 <div className='flex flex-row items-center justify-between pb-2 border-2 border-transparent rounded-none border-b-black'>
                     <h2 className="col-span-4 text-4xl">{post.title}</h2>

@@ -17,6 +17,9 @@ export const GET_ENTRY_BY_ID = (entryId) => `
         course {
             id
             name
+            professor {
+                id
+            }
         }
         createdAt
         description(markdown: false)
@@ -39,5 +42,6 @@ export const GET_ENTRY_BY_ID = (entryId) => `
             tag
         }
         updatedAt
+        review
     }
 `;
