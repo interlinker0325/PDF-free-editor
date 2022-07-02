@@ -4,7 +4,7 @@ const EMAIL_PASSWORD = `email
 const AVATAR = `avatar {
         url
         title
-        filename
+        id
     }`;
 
 const SYSTEM = `createdAt

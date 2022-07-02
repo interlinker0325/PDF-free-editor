@@ -30,7 +30,7 @@ const PostStatusBar = ({ post, user }) => {
 
     return (
         <div className={styles.bar}>
-            <a className={styles.link}>{'< Volver a archivo'}</a>
+            <a className={styles.link} href={`/posts/${post.id}`}>{'< Volver a archivo'}</a>
             <div>
                 <button
                     id={POST_REVIEW_STATUS.APPROVED}

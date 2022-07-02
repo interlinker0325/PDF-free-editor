@@ -22,6 +22,7 @@ function MyApp({ Component, pageProps }) {
             false,
         );
         closeModal();
+        location.href = '/';
     };
 
     const sessionAction = user.isLoggedIn ? doLogout : () => setDisplayModal(true);

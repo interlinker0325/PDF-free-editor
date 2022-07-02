@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { updateProfile } from 'handlers/profile';
 import withSession from 'utils/withSession';
 import { request } from 'utils/graphqlRequest';
@@ -14,7 +14,7 @@ import EditProfile from 'components/Profile/EditProfile';
 
 import { isProfessor as isUserProfessor} from 'utils';
 
-const CURRENT_USER_PROFILE_ID = 'me'
+const DEFAULT_USER_ID = 'me'
 
 const VIEW_STATES = {
     USER: 'userInfo',
@@ -25,10 +25,15 @@ const VIEW_STATES = {
 }
 
 const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
+    const router = useRouter();
+    useEffect(() => {
+        if (!profile) router.push('/');
+    }, [profile]);
+
     const [formState, setFormState] = useState(profile);
     const [activeView, setActiveView] = useState(VIEW_STATES.USER);
     const { query: { profileId } } = useRouter();
-    const isCurrentUserProfile = profileId === CURRENT_USER_PROFILE_ID;
+    const isCurrentUserProfile = profileId === DEFAULT_USER_ID;
 
     const onChange = (e, name) => {
         delete formState[name];
@@ -37,8 +42,9 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
 
     const submitUpdateProfile = useCallback(async (e) => {
         e.preventDefault();
-        const { id, role, ...profileData } = formState;
+        const { id, role, avatar, ...profileData } = formState;
         profileData.role = role.id;
+        if (avatar) profileData.avatar = avatar.id;
         const entry = await updateProfile(id, {
             ...profileData
         });
@@ -92,7 +98,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                         </div>
                         {isCurrentUserProfile &&
                             <a
-                                className={activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.tabItem}
+                                className={`${styles.editTab} ${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.tabItem}`}
                                 onClick={() => setActiveView(VIEW_STATES.EDIT)}>
                                 Editar Perfil >
                             </a>
@@ -130,15 +136,19 @@ const styles = {
     tabs: 'tabs border-transparent border-b-black border-b-2 w-full justify-between',
     tabItem: 'tab text-2xl pl-0 hover:text-primary hover:underline hover:underline-offset-1',
     activeTab: 'tab text-2xl tab-active text-primary pl-0',
+    editTab: 'text-other pr-0',
     tabContent: 'border-b-black border-b-2 pb-4',
     btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full'
 };
 
-export const getServerSideProps = withSession(async function ({ req }) {
-    const currentUser = req.session.get('user') || {};
+export const getServerSideProps = withSession(async function ({ req, res }) {
+    const currentUser = req.session.get('user');
+    if (!currentUser) {
+        return { props: {} };
+    }
     const urlSplit = req.url.split('/');
     const userIdParam = urlSplit[urlSplit.length - 1];
-    const isCurrentUserProfile = userIdParam === CURRENT_USER_PROFILE_ID && currentUser;
+    const isCurrentUserProfile = userIdParam === DEFAULT_USER_ID && currentUser;
     const isProfessor = isUserProfessor(currentUser.role?.id);
     const profileId = isCurrentUserProfile ? currentUser.id : userIdParam
     const profileQuery = isCurrentUserProfile ?
@@ -147,8 +157,8 @@ export const getServerSideProps = withSession(async function ({ req }) {
     const { user: profile, allCourses, allPosts: posts } = await request([
         profileQuery(profileId),
         (isProfessor && isCurrentUserProfile) ?
-            query.user.GET_PROFESOR_COURSES(profileId) : query.user.GET_USER_COURSES(profileId),
-        query.user.GET_USER_POSTS(profileId),
+            query.user.GET_PROFESOR_COURSES(profileId) : query.user.GET_STUDENT_COURSES(profileId),
+        query.user.GET_USER_POSTS(profileId)
     ]);
 
     let archivePosts = {};
@@ -164,7 +174,7 @@ export const getServerSideProps = withSession(async function ({ req }) {
             profile,
             courses: allCourses,
             posts: posts,
-            archivePosts: archivePosts.allEntries || [],
+            archivePosts: archivePosts.allPosts || [],
             isProfessor
         }
     };
