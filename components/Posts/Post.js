@@ -34,7 +34,7 @@ const Post = ({ post,  updatePost }) => {
                         {post?.coauthors?.length > 0 && post.coauthors.map(coauthor =>
                             <h4 key={`co-autor_${coauthor.id}`} className='text-xs'>{coauthor.fullname}</h4>
                         )}
-                        <a onClick={toggleShowFiles} className='text-primary underline underline-offset-1'>Contenido Adjunto ></a>
+                        <a onClick={toggleShowFiles} className='text-other hover:text-primary underline underline-offset-1'>Contenido Adjunto ></a>
                         {showFiles && files}
                     </aside>
                 </div>
