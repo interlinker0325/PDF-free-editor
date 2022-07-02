@@ -4,8 +4,6 @@ export default async (req, res) => {
     let result = { success: false, data: {} };
     if (req.method === 'PUT') {
         let { id, avatar, ...profileData } = req.body;
-        console.log('OVER HERE!!! SERVER', id, profileData);
-
         if (avatar) {
             profileData.avatar = { uploadId: avatar };
         }

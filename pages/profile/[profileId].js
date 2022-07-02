@@ -58,7 +58,6 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
             itemValue = e.target.value;
         }
         delete formState[name];
-        console.log('OVER HERE!!!', refs.avatar?.current, refs.avatar?.target, avatarImage);
         setFormState({ [name]: itemValue , ...formState })
     }, [formState]);
 
@@ -82,8 +81,6 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     ) : (
         <FontAwesomeIcon htmlFor='avatar' className='p-8 min-w-fit text-2xl' icon={faCircleUser} />
     );
-
-    console.log('OVER HERE!!!', refs.avatar);
 
     return (
         <Main>
