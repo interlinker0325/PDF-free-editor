@@ -1,8 +1,8 @@
 import { publishEntry, updateEntry } from 'handlers/bll';
-import { POST_REVIEW_STATUS, isPostPending, isUserTeacherOfCourse } from 'utils';
+import { POST_REVIEW_STATUS, isPostApproved, isUserTeacherOfCourse } from 'utils';
 
 const PostStatusBar = ({ post, user }) => {
-    if (!isPostPending(post) && post.course?.professor?.id === user?.id) {
+    if (isPostApproved(post) || post.course?.professor?.id !== user?.id) {
         return null;
     }
 
