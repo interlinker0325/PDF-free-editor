@@ -1,5 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { updateProfile } from 'handlers/profile';
+import { upload } from 'handlers/bll';
 import withSession from 'utils/withSession';
 import { request } from 'utils/graphqlRequest';
 import { query } from 'gql';
@@ -31,20 +32,40 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     }, [profile]);
 
     const [formState, setFormState] = useState(profile);
+    const [avatarImage, setAvatarImage] = useState(null);
     const [activeView, setActiveView] = useState(VIEW_STATES.USER);
     const { query: { profileId } } = useRouter();
     const isCurrentUserProfile = profileId === DEFAULT_USER_ID;
 
-    const onChange = (e, name) => {
-        delete formState[name];
-        setFormState({ [name]: e.target.value , ...formState })
+    const refs = {
+        avatar: useRef()
     };
+
+    const onChange = useCallback(async (e, name) => {
+        let itemValue;
+        if (refs[name]) {
+            const _files = refs[name]?.current?.files;
+            const files = await upload(_files);
+            itemValue = files;
+            if (FileReader && _files && _files.length) {
+                var fr = new FileReader();
+                fr.onload = function () {
+                    setAvatarImage(fr.result);
+                }
+                fr.readAsDataURL(_files[0]);
+            }
+        } else {
+            itemValue = e.target.value;
+        }
+        delete formState[name];
+        console.log('OVER HERE!!!', refs.avatar?.current, refs.avatar?.target, avatarImage);
+        setFormState({ [name]: itemValue , ...formState })
+    }, [formState]);
 
     const submitUpdateProfile = useCallback(async (e) => {
         e.preventDefault();
-        const { id, role, avatar, ...profileData } = formState;
+        const { id, role, ...profileData } = formState;
         profileData.role = role.id;
-        if (avatar) profileData.avatar = avatar.id;
         const entry = await updateProfile(id, {
             ...profileData
         });
@@ -56,12 +77,31 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         }
     }, [formState]);
 
+    const avatarView = avatarImage || formState.avatar?.url ? (
+        <img htmlFor='avatar' className='h-full w-full' src={avatarImage || formState.avatar.url} />
+    ) : (
+        <FontAwesomeIcon htmlFor='avatar' className='p-8 min-w-fit text-2xl' icon={faCircleUser} />
+    );
+
+    console.log('OVER HERE!!!', refs.avatar);
+
     return (
         <Main>
             <div className={styles.mainContainer}>
                 <div className={styles.leftContainer}>
                     <div className={styles.avatarCard}>
-                        <FontAwesomeIcon className='p-8 min-w-fit text-2xl' icon={faCircleUser} />
+                        {activeView === VIEW_STATES.EDIT ? (
+                            <label className='h-full w-full cursor-pointer'>
+                                <input
+                                    className={styles.fileInput}
+                                    type='file'
+                                    name='avatar'
+                                    id='avatar'
+                                    ref={refs.avatar}
+                                    onChange={(e) => onChange(e, 'avatar')}/>
+                                {avatarView}
+                            </label>
+                        ) : avatarView}
                     </div>
                     {activeView === VIEW_STATES.EDIT &&
                         <div className='flex flex-row justify-start item-center gap-2 my-5'>
@@ -138,10 +178,12 @@ const styles = {
     activeTab: 'tab text-2xl tab-active text-primary pl-0',
     editTab: 'text-other pr-0',
     tabContent: 'border-b-black border-b-2 pb-4',
-    btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full'
+    btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
+    fileInput: 'input hidden input-ghost w-full',
+    fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',
 };
 
-export const getServerSideProps = withSession(async function ({ req, res }) {
+export const getServerSideProps = withSession(async function ({ req }) {
     const currentUser = req.session.get('user');
     if (!currentUser) {
         return { props: {} };

@@ -3,8 +3,13 @@ import { publish, createRecord, updateRecord, buildBlock } from 'utils/server/da
 export default async (req, res) => {
     let result = { success: false, data: {} };
     if (req.method === 'PUT') {
-        let { id, ...profileData } = req.body;
-        console.log('OVER HERE!!!', id, profileData);
+        let { id, avatar, ...profileData } = req.body;
+        console.log('OVER HERE!!! SERVER', id, profileData);
+
+        if (avatar) {
+            profileData.avatar = { uploadId: avatar };
+        }
+
         const record = await updateRecord(id, profileData);
 
         if (!record.error) {
