@@ -4,20 +4,22 @@ export default async (req, res) => {
     let result = { success: false, data: {} };
 
     if (req.method === 'POST') {
-        let { coverimage, files, category, ...rest } = req.body;
+        let { coverimage, coauthors, monograph, attachments, ...rest } = req.body;
 
         let entry = {
             ...rest,
-            content: [],
             itemType: process.env.ENTRY_MODEL_ID,
         };
 
-        entry.category = category || null;
         entry.coverimage = coverimage ? { uploadId: coverimage } : null;
+        entry.monograph = monograph ? { uploadId: monograph } : null;
 
-        if (files) {
-            if (!Array.isArray(files)) files = [files];
-            entry.files = files.map(file => ({ uploadId: file }))
+        // TEMP
+        entry.coauthors = [coauthors];
+
+        if (attachments) {
+            if (!Array.isArray(attachments)) attachments = [attachments];
+            entry.attachments = attachments.map(file => ({ uploadId: file }))
         }
 
         const record = await createRecord(entry);

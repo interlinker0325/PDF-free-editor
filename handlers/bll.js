@@ -3,24 +3,28 @@ import { get, post, put } from 'utils/axios';
 export const createEntry = async (
     {
         title,
-        coverimage,
         description,
-        category,
-        files = [],
-        showathome = false,
-        notice = false,
-        author
+        coverimage,
+        course,
+        attachments = [],
+        monograph,
+        author,
+        coauthors,
+        review,
+        agreedterms
     }
 ) => {
     const requestData = {
         title,
-        coverimage,
         description,
-        category,
-        files,
-        showathome,
-        notice,
-        author
+        coverimage,
+        course,
+        attachments,
+        monograph,
+        author,
+        coauthors,
+        review,
+        agreedterms
     };
 
     const response = await post('/api/entry', requestData);

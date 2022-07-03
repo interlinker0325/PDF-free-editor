@@ -19,12 +19,14 @@ module.exports = {
         stix: ['bigCaslon Two Text', 'serif']
       },
       colors: {
-        textYellow: '#F5B300',
+        textYellow: "#F5B300",
         backdrop: "rgba(0, 0, 0, 0.1)",
         other: "#3D7DFF",
         gradientt: "#4137FE",
         gradientb: "#0F089F",
-        inputBorder: "#9E9E9E"
+        inputBorder: "#9E9E9E",
+        titleInput: "#6C6C6C",
+        checkbox: "#313131"
       }
     },
   },

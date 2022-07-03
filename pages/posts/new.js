@@ -1,19 +1,22 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
+import { createEntry, upload, publishEntry, updateEntry } from 'handlers/bll';
 import CreatePost from 'components/Posts/CreatePost';
 import { request, GET_ALL_COURSES, GET_ALL_STUDENTS } from 'utils/graphqlRequest';
+import useUser from 'utils/useUser';
+import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from 'utils';
 
 const formBaseState = {
-    isGeneralFilled: false,
     title: '',
     description: '',
     coverimage: '',
-    course: 'Curso',
-    files: [],
-    monografia: null,
+    course: null,
+    attachments: [],
+    monograph: null,
     error: false,
     tags: '',
-    coAutores: 'Co-Autores',
-    acceptedTerms: false
+    coauthors: null,
+    agreedterms: false,
+    review: POST_REVIEW_STATUS.PENDING
 };
 
 const baseErrorMessage = (key) => `${key} es requerido. Por favor ingresar ${key}`
@@ -24,33 +27,56 @@ const baseErrorState = {
 }
 
 const NewPost = (props) => {
+    const { user } = useUser({ redirectTo: '/' });
     const [formState, setFormState] = useState(formBaseState);
     const [errorState, setErrorState] = useState(baseErrorState);
     const clearSubmitForm = () => useState(formBaseState);
     const refs = {
-        files: useRef(),
+        attachments: useRef(),
         coverimage: useRef(),
-        monografia: useRef(),
-        acceptedTerms: useRef()
+        monograph: useRef(),
+        agreedterms: useRef()
     };
-    // console.log('OVER HERE', props);
 
-    const doSubmit = (e) => {
+    const doSubmit = useCallback(async (e) => {
         e.preventDefault();
-        // console.log('over here form', formState);
-        Object.keys(formState).forEach(key => console.log('over here form', key, typeof key));
-    };
+        const { id, error, ...postData } = formState;
 
-    const onChange = (e, name) => {
-        delete formState[name];
-        const hasRef = refs[name];
-        if (hasRef) {
-            setFormState({ [name]: refs[name].current.files || refs[name].current.checked, ...formState })
-        } else {
-            setFormState({ [name]: e.target.value , ...formState })
+        if (isUserTeacherOfCourse(user, postData.course)) {
+            postData.review = POST_REVIEW_STATUS.APPROVED;
         }
-    };
 
+        const entry = await createEntry({
+            author: user.id,
+            ...postData
+        });
+        await publishEntry(entry.id);
+
+        if (entry.error) {
+            alert('No se pudo actualizar la entrada');
+        } else {
+            setFormState({ ...entry, ...postData});
+        }
+    }, [formState]);
+
+    const onChange = useCallback(async (e, name) => {
+        let itemValue;
+        if (refs[name]) {
+            const _files = refs[name]?.current?.files;
+            console.log('FILEs!', _files);
+            if (_files) {
+                const files = await upload(_files);
+                console.log('FILE UPLOADED!', files);
+                itemValue = files;
+            } else {
+                itemValue = refs[name].current.checked;
+            }
+        } else {
+            itemValue = e.target.value;
+        }
+        delete formState[name];
+        setFormState({ [name]: itemValue , ...formState })
+    }, [formState]);
 
     return (
         <CreatePost

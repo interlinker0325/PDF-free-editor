@@ -1,22 +1,4 @@
-// import { useState, useCallback } from 'react';
-// import { updateProfile } from 'handlers/profile';
-// import Main from 'components/Main/Main';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faPeopleGroup, faTags, faFileCode, faImages } from '@fortawesome/free-solid-svg-icons'
-
 const EditProfile = (props) => {
-    // const [formState, setFormState] = useState(props.profile);
-    // const [errorState, setErrorState] = useState(baseErrorState);
-    // const clearSubmitForm = () => useState(formBaseState);
-    // const refs = {
-    //     files: useRef(),
-    //     coverimage: useRef(),
-    //     monografia: useRef(),
-    //     acceptedTerms: useRef()
-    // };
-    // console.log('OVER HERE', props);
-    
-
     return (
         <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()}>
             <section className="flex flex-col border-b-black border-b-2 pb-8 mb-5 gap-1">
