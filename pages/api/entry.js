@@ -31,15 +31,17 @@ export default async (req, res) => {
             result.error = record.error;
         }
     } else if (req.method === 'PUT') {
-        let { id, coverimage, attachments, ...rest } = req.body;
+        let { id, author = null, coverimage, coauthors, monograph, attachments, ...rest } = req.body;
 
-        if (coverimage) {
-            rest.coverimage = { uploadId: coverimage };
-        }
+        rest.coverimage = coverimage ? { uploadId: coverimage.id } : null;
+        rest.monograph = monograph ? { uploadId: monograph.id } : null;
+        rest.author = author.id;
+        // TEMP
+        rest.coauthors = [coauthors];
 
         if (attachments) {
             if (!Array.isArray(attachments)) attachments = [attachments];
-            rest.attachments = attachments.map(file => ({ uploadId: file }))
+            rest.attachments = attachments.map(file => ({ uploadId: file.id }))
         }
 
         console.log('OVER HERE!!!', rest);

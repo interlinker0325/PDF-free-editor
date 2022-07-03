@@ -35,11 +35,7 @@ export const createEntry = async (
     }
 };
 
-export const updateEntry = async (
-    id,
-    data
-) => {
-    const requestData = { id, ...data };
+export const updateEntry = async (requestData) => {
     const response = await put('/api/entry', requestData);
 
     if (response?.success) {

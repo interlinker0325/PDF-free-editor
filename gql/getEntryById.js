@@ -43,5 +43,6 @@ export const GET_ENTRY_BY_ID = (entryId) => `
         }
         updatedAt
         review
+        agreedterms
     }
 `;

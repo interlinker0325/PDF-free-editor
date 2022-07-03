@@ -1,9 +1,12 @@
 import { useState, useRef, useCallback } from 'react';
-import { createEntry, upload, publishEntry, updateEntry } from 'handlers/bll';
-import CreatePost from 'components/Posts/CreatePost';
-import { request, GET_ALL_COURSES, GET_ALL_STUDENTS } from 'utils/graphqlRequest';
 import useUser from 'utils/useUser';
+import { createEntry, upload, publishEntry, updateEntry } from 'handlers/bll';
+import { request, GET_ALL_COURSES, GET_ALL_STUDENTS } from 'utils/graphqlRequest';
 import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from 'utils';
+
+import Main from 'components/Main/Main';
+import PostForm from 'components/Posts/PostForm';
+import PostView from 'components/Posts/PostView';
 
 const formBaseState = {
     title: '',
@@ -28,6 +31,7 @@ const baseErrorState = {
 
 const NewPost = (props) => {
     const { user } = useUser({ redirectTo: '/' });
+    const [showPreview, setShowPreview] = useState(false);
     const [formState, setFormState] = useState(formBaseState);
     const [errorState, setErrorState] = useState(baseErrorState);
     const clearSubmitForm = () => { setFormState(formBaseState); }
@@ -81,18 +85,26 @@ const NewPost = (props) => {
         await publishEntry(formState.id);
     }, [formState]);
 
-    const showPreview = formState !== formBaseState;
+    const formHasChanged = formState !== formBaseState;
     return (
-        <CreatePost
-            refs={refs}
-            form={formState}
-            error={errorState}
-            doSubmit={doSubmit}
-            clearForm={clearSubmitForm}
-            onChange={onChange}
-            requestApproval={requestApproval}
-            showPreview={showPreview}
-            {...props} />
+        <Main>
+            {showPreview ? (
+                <PostView post={formState} user={user} />
+            ) : (
+                <PostForm
+                    refs={refs}
+                    form={formState}
+                    error={errorState}
+                    doSubmit={doSubmit}
+                    clearForm={clearSubmitForm}
+                    onChange={onChange}
+                    requestApproval={requestApproval}
+                    formHasChanged={formHasChanged}
+                    setShowPreview={setShowPreview}
+                    user={user}
+                    {...props} />
+            )}
+        </Main>
     );
 }
 
