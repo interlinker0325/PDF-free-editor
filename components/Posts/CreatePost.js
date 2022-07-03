@@ -9,6 +9,8 @@ const CreatePost = ({
     clearForm,
     onChange,
     doSubmit,
+    requestApproval,
+    showPreview,
     refs
 }) => {
     console.log('OVER HERE!!', form, courses, students);
@@ -67,7 +69,7 @@ const CreatePost = ({
                             </div>
                         </label>
                         <label className={styles.label}>
-                            <FontAwesomeIcon className={styles.icon(form.attachments.lenght)} icon={faTags} />
+                            <FontAwesomeIcon className={styles.icon(form.attachments)} icon={faTags} />
                             <div>
                                 <input
                                     className={styles.fileInput}
@@ -77,7 +79,7 @@ const CreatePost = ({
                                     multiple
                                     ref={refs.attachments}
                                     onChange={(e) => onChange(e, 'attachments')}/>
-                                <span className={styles.fileLabel(form.attachments.lenght)}>Agregar contenido adjunto ></span>
+                                <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto ></span>
                             </div>
                         </label>
                         <label className={styles.label}>
@@ -134,11 +136,11 @@ const CreatePost = ({
                 </section>
                 <section className='row-auto items-center flex flex-row w-full justify-between'>
                     <div className='form-control flex flex-row gap-2'>
-                        <button type='submit' disabled={form.agreedterms ? '' : 'disabled'} className={styles.button('secondary')}>Guardar</button>
-                        <button type='button' onClick={clearForm} className={styles.button('secondary')}>Cancelar</button>
-                        <button type='button' disabled={form.agreedterms ? '' : 'disabled'} className={styles.button('warning')}>Solicitar Aprobación</button>
+                        <button type='submit' disabled={form.agreedterms ? '' : 'disabled'} className={styles.button('btn-primary text-white')}>Guardar</button>
+                        <button type='button' onClick={clearForm} className={styles.button('btn-primary text-white')}>Cancelar</button>
+                        <button type='button' onClick={requestApproval} disabled={form.id ? '' : 'disabled'} className={styles.button('btn-warning')}>Solicitar Aprobación</button>
                     </div>
-                    <button type='button' disabled={form.agreedterms ? '' : 'disabled'} className={styles.button('primary')}>Vista Previa</button>
+                    <button type='button' disabled={showPreview ? '' : 'disabled'} className={styles.button('btn-primary text-white')}>Vista Previa</button>
                 </section>
             </form>
         </Main>
@@ -158,7 +160,7 @@ const styles = {
     fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text font-normal text-lg border-2 border-transparent py-2 rounded-none`,
     textarea: 'textarea font-normal p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full',
     checkbox: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} checkbox font-normal checkbox-secondary`,
-    button: (type) => `btn btn-${type} rounded-full`,
+    button: (type) => `btn btn-md ${type} rounded-full`,
     link: 'text-other cursor-pointer hover:text-primary underline underline-offset-1'
 };
 

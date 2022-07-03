@@ -10,7 +10,7 @@ const formBaseState = {
     description: '',
     coverimage: '',
     course: null,
-    attachments: [],
+    attachments: null,
     monograph: null,
     error: false,
     tags: '',
@@ -50,7 +50,6 @@ const NewPost = (props) => {
             author: user.id,
             ...postData
         });
-        await publishEntry(entry.id);
 
         if (entry.error) {
             alert('No se pudo actualizar la entrada');
@@ -78,6 +77,11 @@ const NewPost = (props) => {
         setFormState({ [name]: itemValue , ...formState })
     }, [formState]);
 
+    const requestApproval = useCallback(async () => {
+        await publishEntry(formState.id);
+    }, [formState]);
+
+    const showPreview = formState !== formBaseState;
     return (
         <CreatePost
             refs={refs}
@@ -86,6 +90,8 @@ const NewPost = (props) => {
             doSubmit={doSubmit}
             clearForm={clearSubmitForm}
             onChange={onChange}
+            requestApproval={requestApproval}
+            showPreview={showPreview}
             {...props} />
     );
 }
