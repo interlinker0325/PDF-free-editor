@@ -30,7 +30,7 @@ const NewPost = (props) => {
     const { user } = useUser({ redirectTo: '/' });
     const [formState, setFormState] = useState(formBaseState);
     const [errorState, setErrorState] = useState(baseErrorState);
-    const clearSubmitForm = () => useState(formBaseState);
+    const clearSubmitForm = () => { setFormState(formBaseState); }
     const refs = {
         attachments: useRef(),
         coverimage: useRef(),
