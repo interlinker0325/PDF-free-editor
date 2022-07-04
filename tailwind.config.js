@@ -26,7 +26,8 @@ module.exports = {
         gradientb: "#0F089F",
         inputBorder: "#9E9E9E",
         titleInput: "#6C6C6C",
-        checkbox: "#313131"
+        checkbox: "#313131",
+        inputbg: "#FAFAFA"
       }
     },
   },

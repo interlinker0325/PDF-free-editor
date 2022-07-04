@@ -56,7 +56,7 @@ const LoginModal = ({ onClose, display }) => {
 
                 <button
                     type='submit'
-                    className='btn font-roboto text-xl capitalize btn-ghost my-6 w-full text-white bg-other rounded-full'>
+                    className='btn h-min font-normal font-roboto text-xl capitalize btn-ghost my-6 w-full text-white bg-other rounded-full'>
                     Iniciar sesión
                 </button>
             </form>
@@ -65,7 +65,7 @@ const LoginModal = ({ onClose, display }) => {
 }
 
 const styles = {
-    input: 'bg-secondary font-caslon text-black border-[1px] border-inputBorder my-2.5 p-2.5 w-full'
+    input: 'bg-inputbg valid:border-other font-caslon text-black border-[1px] border-inputBorder my-2.5 p-2.5 w-full'
 }
 
 export default LoginModal;
