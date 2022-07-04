@@ -32,70 +32,83 @@ const PostForm = ({
             </section>
             <section className='row-span-3 grid lg:grid-cols-2 auto-rows-auto gap-3.5'>
                 <div className='flex flex-col form-control gap-4 pt-4'>
-                    <label className={styles.label}>
+                    <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faTags} />
-                        <select
-                            className={styles.select(form.course)}
-                            value={form.course || 'default'}
-                            onChange={(e) => onChange(e, 'course')}>
-                            <option value='default'>Curso de la publicación</option>
-                            {courses.map(course =>
-                                <option key={`select_course_${course.id}`} value={course.id}>{course.name}</option>
-                            )}
-                        </select>
-                    </label>
-                    <label className={styles.label}>
+                        <label className={styles.label}>
+                            <select
+                                className={styles.select(form.course)}
+                                value={form.course || 'default'}
+                                onChange={(e) => onChange(e, 'course')}>
+                                <option value='default'>Curso de la publicación</option>
+                                {courses.map(course =>
+                                    <option key={`select_course_${course.id}`} value={course.id}>{course.name}</option>
+                                )}
+                            </select>
+                        </label>
+                    </div>
+                    <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faFileCode} />
-                        <div>
-                            <input
-                                className={styles.fileInput}
-                                type='file'
-                                name='monograph'
-                                id='monograph'
-                                ref={refs.monograph}
-                                onChange={(e) => onChange(e, 'monograph')}/>
-                            <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento HTML ></span>
-                        </div>
-                    </label>
-                    <label className={styles.label}>
+                        <label className={styles.label}>
+                            <div>
+                                <input
+                                    className={styles.fileInput}
+                                    type='file'
+                                    name='monograph'
+                                    id='monograph'
+                                    ref={refs.monograph}
+                                    onChange={(e) => onChange(e, 'monograph')}/>
+                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento HTML ></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faImages} />
-                        <div>
-                            <input
-                                className={styles.fileInput}
-                                type='file'
-                                name='coverimage'
-                                id='coverimage'
-                                ref={refs.coverimage}
-                                onChange={(e) => onChange(e, 'coverimage')}/>
-                            <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado ></span>
-                        </div>
-                    </label>
-                    <label className={styles.label}>
+                        <label className={styles.label}>
+                            <div>
+                                <input
+                                    className={styles.fileInput}
+                                    type='file'
+                                    name='coverimage'
+                                    id='coverimage'
+                                    ref={refs.coverimage}
+                                    onChange={(e) => onChange(e, 'coverimage')}/>
+                                <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado ></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} />
-                        <div>
-                            <input
-                                className={styles.fileInput}
-                                type='file'
-                                name='attachments'
-                                id='attachments'
-                                multiple
-                                ref={refs.attachments}
-                                onChange={(e) => onChange(e, 'attachments')}/>
-                            <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto ></span>
-                        </div>
-                    </label>
-                    <label className={styles.label}>
+                        <label className={styles.label}>
+                            <div>
+                                <input
+                                    className={styles.fileInput}
+                                    type='file'
+                                    name='attachments'
+                                    id='attachments'
+                                    multiple
+                                    ref={refs.attachments}
+                                    onChange={(e) => onChange(e, 'attachments')}/>
+                                <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto ></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} />
-                        <select
-                            className={styles.select(form.coauthors)}
-                            value={form.coauthors || 'default'}
-                            onChange={(e) => onChange(e, 'coauthors')}>
-                            <option value='default'>Co-autores</option>
-                            {students.map(student =>
-                                <option key={`select_student_${student.id}`} value={student.id}>{student.fullname}</option>
-                            )}
-                        </select>
-                    </label>
+                        <label className={`w-3/4 ${styles.label}`}>
+                            <select
+                                className={styles.select(form.coauthors)}
+                                value={form.coauthors || 'default'}
+                                onChange={(e) => onChange(e, 'coauthors')}>
+                                <option value='default'>Co-autores</option>
+                                {students.map(student =>
+                                    <option key={`select_student_${student.id}`} value={student.id}>{student.fullname}</option>
+                                )}
+                            </select>
+                        </label>
+                    </div>
 
                     <div>
                         <h4 className='text-base font-normal font-roboto mb-2'>Autor(a) original: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
@@ -158,6 +171,7 @@ const STYLE_ACTIVE = 'text-other border-b-other';
 const STYLE_INACTIVE =  'text-titleInput border-b-black';
 
 const styles = {
+    formControl: 'form-control flex flex-row gap-3.5',
     titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input drop-shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
     label: 'cursor-pointer font-normal label justify-start gap-3.5 p-0',
     labelNoCursor: 'font-normal label justify-start gap-3.5 p-0',
