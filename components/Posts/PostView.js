@@ -29,9 +29,9 @@ const PostView = ({
                     <a href={`/posts/${post.id}/edit`} className='align-self-end text-primary text-2xl'>{'Editar Publicación >'}</a>
                 }
             </div>
-            <div className='grid grid-cols-4 gap-4'>
-                <IFrame className='min-h-[70vh] col-span-3' srcDoc={post.monographView} />
-                <aside className='col-span-1 flex flex-col gap-4 pl-4 border-2 border-transparent rounded-none border-l-black'>
+            <div className='grid grid-cols-7 gap-5'>
+                <IFrame className='min-h-[70vh] col-span-5 pr-5' srcDoc={post.monographView} />
+                <aside className='col-span-2 flex flex-col gap-4 pl-5 border-2 border-transparent rounded-none border-l-black'>
                     {post.course &&
                         <h3 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Curso:</span>{post.course.name}</h3>
                     }
