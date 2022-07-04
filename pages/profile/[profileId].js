@@ -12,6 +12,7 @@ import UserInfo from 'components/Profile/UserInfo';
 import Courses from 'components/Profile/Courses';
 import Publications from 'components/Profile/Publications';
 import EditProfile from 'components/Profile/EditProfile';
+import StatusBar from 'components/StatusBar/StatusBar';
 
 import { isProfessor as isUserProfessor} from 'utils';
 
@@ -82,9 +83,17 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         <FontAwesomeIcon htmlFor='avatar' className='p-8 min-w-fit text-2xl' icon={faCircleUser} />
     );
 
+    const showStatusBar = (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
     return (
         <Main>
-            <div className={styles.mainContainer}>
+            {showStatusBar &&
+                <StatusBar>
+                    <h4
+                        className='text-primary text-2xl cursor-pointer'
+                        children='Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento' />
+                </StatusBar>
+            }
+            <div className={`${showStatusBar ? 'mb-8' : 'my-5'} ${styles.mainContainer}`}>
                 <div className={styles.leftContainer}>
                     <div className={styles.avatarCard}>
                         {activeView === VIEW_STATES.EDIT ? (
@@ -109,7 +118,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                 </div>
                 <div className={styles.rightContainer}>
                     <div className={styles.tabs}>
-                        <div>
+                        <div className='flex gap-8'>
                             <a
                                 className={activeView === VIEW_STATES.USER ? styles.activeTab : styles.tabItem}
                                 onClick={() => setActiveView(VIEW_STATES.USER)}>
@@ -137,7 +146,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                             <a
                                 className={`${styles.editTab} ${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.tabItem}`}
                                 onClick={() => setActiveView(VIEW_STATES.EDIT)}>
-                                Editar Perfil >
+                                Editar perfil >
                             </a>
                         }
                     </div>
@@ -166,15 +175,15 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
 }
 
 const styles = {
-    mainContainer: 'my-8 grid grid-cols-4 gap-8',
+    mainContainer: 'mb-8 grid grid-cols-4 gap-8',
     leftContainer: 'flex flex-col justify-between item-center',
     rightContainer: 'col-span-3 flex flex-col gap-6',
     avatarCard: 'card text-gray-400 bg-secondary rounded-none h-60',
-    tabs: 'tabs border-transparent border-b-black border-b-2 w-full justify-between',
-    tabItem: 'tab text-2xl pl-0 hover:text-primary hover:underline hover:underline-offset-1',
-    activeTab: 'tab text-2xl tab-active text-primary pl-0',
+    tabs: 'tabs border-transparent border-b-black border-b-[1px] w-full justify-between',
+    tabItem: 'tab text-2xl px-0 hover:text-primary hover:underline hover:underline-offset-1',
+    activeTab: 'tab text-2xl tab-active text-primary px-0',
     editTab: 'text-other pr-0',
-    tabContent: 'border-b-black border-b-2 pb-4',
+    tabContent: 'border-none pb-4',
     btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
     fileInput: 'input hidden input-ghost w-full',
     fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',

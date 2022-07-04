@@ -25,7 +25,7 @@ const EditProfile = (props) => {
                         className={styles.titleInput(props.profile.phone)}
                         type='tel'
                         name='phone'
-                        placeholder='Número telefónico'
+                        placeholder='Número telefónico *'
                         value={props.profile.phone}
                         onChange={(e) => props.onChange(e, 'phone')}/>
                 </div>
@@ -34,7 +34,7 @@ const EditProfile = (props) => {
                         className={styles.titleInput(props.profile.birthdate)}
                         type='date'
                         name='birthdate'
-                        placeholder='Fecha de nacimiento'
+                        placeholder='Fecha de nacimiento *'
                         value={props.profile.birthdate}
                         onChange={(e) => props.onChange(e, 'birthdate')}/>
                 </div>
@@ -59,18 +59,18 @@ const EditProfile = (props) => {
                         onChange={(e) => props.onChange(e, 'residence')}/>
                 </div>
             </section>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mb-2">
                 <h4 className='text-2xl text-primary'>Carrera/Universidad/Nivel:</h4>
                 <textarea
-                    className={styles.textarea}
+                    className={styles.textarea(props.profile.level)}
                     placeholder='Agregar descripción de: Carrera/Universidad/Nivel'
                     value={props.profile.level}
                     onChange={(e) => props.onChange(e, 'level')} />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mt-2">
                 <h4 className='text-2xl text-primary'>Experiencia laboral:</h4>
                 <textarea
-                    className={styles.textarea}
+                    className={styles.textarea(props.profile.experience)}
                     placeholder='Agregar descripción de: Experiencia laboral'
                     value={props.profile.experience}
                     onChange={(e) => props.onChange(e, 'experience')} />
@@ -79,13 +79,16 @@ const EditProfile = (props) => {
     );
 };
 
+const STYLE_ACTIVE = 'text-other border-b-other';
+const STYLE_INACTIVE =  'text-titleInput border-b-black';
+
 const styles = {
-    titleInput: 'font-normal text-lg font-caslon input input-sm input-ghost border-transparent rounded-none w-full border-b-black',
+    titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} w-1/2 font-normal text-xl font-caslon input input-sm input-ghost border-transparent rounded-none`,
     label: 'cursor-pointer label justify-start gap-4',
     icon: 'label-text w-8 h-8 text-sm',
-    select: 'font-normal text-lg font-caslon select input-ghost text-sm h-8 min-h-8 w-full pl-3 border-1 border-transparent rounded-none border-b-black',
-    option: 'font-normal text-lg font-caslon',
-    textarea: 'font-normal mb-4 h-[143px] text-lg font-caslon textarea rounded-none resize-none bg-secondary w-full h-1/2'
+    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} w-1/2 font-normal text-xl font-caslon select input-ghost h-8 min-h-8 pl-3 border-[1px] border-transparent rounded-none`,
+    option: 'font-normal text-xl font-caslon',
+    textarea: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} w-full font-normal mb-4 h-[143px] text-xl font-caslon textarea rounded-none resize-none bg-secondary h-1/2`
 };
 
 export default EditProfile;

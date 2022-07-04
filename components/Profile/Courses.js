@@ -9,9 +9,9 @@ const Courses = ({ items }) => {
                     {items && items.map((item, itemIndex) =>
                         <tr
                             key={`User_courses_${itemIndex}`}
-                            className={`flex flex-row justify-between w-full py-2 px-4 ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
+                            className={`flex flex-row justify-between w-full py-2 px-4 text-2xl font-normal ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
                             <td className='rounded-l-none rounded-r-none w-full'>{item.name}</td>
-                            <td className={`rounded-l-none rounded-r-none ${item.enabled ? 'text-success' : 'text-secondary'}`}>
+                            <td className={`rounded-l-none rounded-r-none font-thin ${item.enabled ? 'text-success' : 'text-secondary'}`}>
                                 {item.enabled ? 'Activo' : 'Inactivo'}
                             </td>
                         </tr>

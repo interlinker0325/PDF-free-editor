@@ -25,9 +25,9 @@ const Publications = ({ items }) => (
 );
 
 const styles = {
-    tableRow: 'flex flex-row justify-between w-full py-2 px-4',
+    tableRow: 'flex flex-row justify-between w-full py-2 px-4 text-2xl font-normal',
     title: 'rounded-l-none rounded-r-none w-full hover:text-primary hover:underline hover:underline-offset-1',
-    status: 'rounded-l-none rounded-r-none',
+    status: 'rounded-l-none rounded-r-none font-thin',
     Aprobado: 'text-success',
     Denegado: 'text-error',
     Pendiente: 'text-black'

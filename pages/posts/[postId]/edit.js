@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import Main from 'components/Main/Main';
 import PostForm from 'components/Posts/PostForm';
 import PostView from 'components/Posts/PostView';
+import StatusBar from 'components/Statusbar/StatusBar';
 
 const baseErrorMessage = (key) => `${key} es requerido. Por favor ingresar ${key}`
 const baseErrorState = {
@@ -84,9 +85,12 @@ const EditPost = ({ post, ...props }) => {
     return (
         <Main>
             {showPreview &&
-                <div className={styles.bar}>
-                    <a className={styles.link} onClick={hidePreview}>{'< Volver a archivo'}</a>
-                </div>
+                <StatusBar>
+                    <a
+                        className='text-other text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'
+                        onClick={hidePreview}
+                        children='< Volver a archivo' />
+                </StatusBar>
             }
             {showPreview ? (
                 <PostView
@@ -111,11 +115,6 @@ const EditPost = ({ post, ...props }) => {
             )}
         </Main>
     );
-}
-
-const styles = {
-    bar: 'bg-neutral w-full py-3 flex flex-row justify-between items-center px-16 mt-[-48px] mx-[-56px] w-screen mb-5',
-    link: 'text-other text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'
 }
 
 export async function getServerSideProps({ params }) {
