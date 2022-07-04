@@ -1,4 +1,4 @@
-import StatusBar from 'components/StatusBar/StatusBar';
+import TopBar from 'components/TopBar/TopBar';
 import { publishEntry, updateEntry } from 'handlers/bll';
 import { POST_REVIEW_STATUS, isPostApproved, isUserTeacherOfCourse } from 'utils';
 
@@ -25,7 +25,7 @@ const PostStatusBar = ({ post, user }) => {
     };
 
     return (
-        <StatusBar>
+        <TopBar>
             <a className={styles.link} href={`/posts/${post.id}`}>{'< Volver a archivo'}</a>
             <div>
                 <button
@@ -42,7 +42,7 @@ const PostStatusBar = ({ post, user }) => {
                     className={`${styles.btn} ${styles.btnDenied}`}
                     children='Denegar' />
             </div>
-        </StatusBar>
+        </TopBar>
     );
 };
 

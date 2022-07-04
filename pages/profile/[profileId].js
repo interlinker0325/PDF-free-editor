@@ -12,7 +12,7 @@ import UserInfo from 'components/Profile/UserInfo';
 import Courses from 'components/Profile/Courses';
 import Publications from 'components/Profile/Publications';
 import EditProfile from 'components/Profile/EditProfile';
-import StatusBar from 'components/StatusBar/StatusBar';
+import TopBar from 'components/TopBar/TopBar';
 
 import { isProfessor as isUserProfessor} from 'utils';
 
@@ -87,11 +87,11 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     return (
         <Main>
             {showStatusBar &&
-                <StatusBar>
+                <TopBar>
                     <h4
                         className='text-primary text-2xl cursor-pointer'
                         children='Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento' />
-                </StatusBar>
+                </TopBar>
             }
             <div className={`${showStatusBar ? 'mb-8' : 'my-5'} ${styles.mainContainer}`}>
                 <div className={styles.leftContainer}>

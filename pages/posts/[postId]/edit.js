@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import Main from 'components/Main/Main';
 import PostForm from 'components/Posts/PostForm';
 import PostView from 'components/Posts/PostView';
-import StatusBar from 'components/Statusbar/StatusBar';
+import TopBar from 'components/TopBar/TopBar';
 
 const baseErrorMessage = (key) => `${key} es requerido. Por favor ingresar ${key}`
 const baseErrorState = {
@@ -85,12 +85,12 @@ const EditPost = ({ post, ...props }) => {
     return (
         <Main>
             {showPreview &&
-                <StatusBar>
+                <TopBar>
                     <a
                         className='text-other text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'
                         onClick={hidePreview}
                         children='< Volver a archivo' />
-                </StatusBar>
+                </TopBar>
             }
             {showPreview ? (
                 <PostView
