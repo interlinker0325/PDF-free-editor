@@ -90,6 +90,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
             setFormState({ ...entry, ...profileData});
         }
         triggerLoading(false);
+        setActiveView(VIEW_STATES.USER);
     }, [formState]);
 
     const doCancel = useCallback(async (e) => {

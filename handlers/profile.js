@@ -5,6 +5,9 @@ export const updateProfile = async (
     data
 ) => {
     const requestData = { id, ...data };
+    if (data.avatar && data.avatar.id) {
+        requestData.avatar = data.avatar.id;
+    }
     const response = await put('/api/profile', requestData);
 
     if (response?.success) {

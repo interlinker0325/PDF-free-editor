@@ -56,7 +56,7 @@ function MyApp({ Component, pageProps }) {
                     .htmlBackgroundBackdrop {
                         overflow: hidden;
                         background-color: rgba(0, 0, 0, 0.1);
-                    }
+                    }               
                 `}</style>
             </Head>
             <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>

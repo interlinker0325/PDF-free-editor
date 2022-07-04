@@ -102,7 +102,7 @@ const PostForm = ({
                 <div className='form-control gap-5'>
                     <div>
                         <textarea
-                            maxlength='200'
+                            maxLength='200'
                             className={styles.textarea(form.description)}
                             placeholder='Agregar sinopsis de la publicación (resumen)'
                             value={form.description}
@@ -112,7 +112,7 @@ const PostForm = ({
 
                     <div>
                         <textarea
-                            maxlength='200'
+                            maxLength='200'
                             className={styles.textarea(form.tags)}
                             placeholder='Palabras claves'
                             value={form.tags}

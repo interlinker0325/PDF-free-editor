@@ -34,7 +34,7 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
 					<h3 className='text-primary text-2xl self-center justify-self-end'>¡Bienvenid@ {user.fullname}!</h3>
 				</TopBar>
 			}
-			<HeroCards banners={banners} />
+			<HeroCards bannerGroups={banners} />
 			<div className='flex flex-row items-center justify-between pt-20 pb-2 border-[1px] border-transparent rounded-none border-b-black'>
                 <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>
 			</div>
@@ -54,11 +54,13 @@ export async function getServerSideProps() {
 	const CURRENT_PAGE = 1;
 	const { allPosts, allBanners } = await request([GET_ALL_ENTRIES(CURRENT_PAGE), query.banners.GET_ACTIVE_BANNERS]);
 
+	let banners = [];
+	for (let i = 0; i < allBanners.length; i += 3) banners.push(allBanners.slice(i, i + 3));
 	return {
 		props: {
 			currentPage: CURRENT_PAGE,
 			posts: allPosts,
-			banners: allBanners,
+			banners: banners,
 			showMore: !(allPosts.length < 8)
 		}
 	};
