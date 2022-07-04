@@ -121,7 +121,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                 <div className={styles.leftContainer}>
                     <div className={styles.avatarCard}>
                         {activeView === VIEW_STATES.EDIT ? (
-                            <label className='h-60 w-full cursor-pointer'>
+                            <label className='h-[300px] w-full cursor-pointer'>
                                 <input
                                     className={styles.fileInput}
                                     type='file'
