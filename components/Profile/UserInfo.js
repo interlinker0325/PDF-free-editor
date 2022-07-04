@@ -18,11 +18,11 @@ const UserInfo = ({
                 <h4 className={styles.label}>Género: <span className={styles.span}>{gender}</span></h4>
                 <h4 className={styles.label}>Residencia: <span className={styles.span}>{residence}</span></h4>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 mb-2">
                 <h4 className={styles.label}>Carrera/Universidad/Nivel:</h4>
                 <p className={styles.span}>{level}</p>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 mt-2">
                 <h4 className={styles.label}>Experiencia laboral:</h4>
                 <p className={styles.span}>{experience}</p>
             </div>

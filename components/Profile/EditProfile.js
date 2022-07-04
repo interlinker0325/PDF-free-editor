@@ -81,7 +81,7 @@ const EditProfile = (props) => {
     );
 };
 
-const STYLE_ACTIVE = 'text-other border-b-other';
+const STYLE_ACTIVE = 'text-primary border-b-other';
 const STYLE_INACTIVE =  'text-titleInput border-b-black';
 
 const styles = {
@@ -90,7 +90,7 @@ const styles = {
     icon: 'label-text w-8 h-8 text-sm',
     select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} w-1/2 font-normal text-xl font-caslon select input-ghost h-8 min-h-8 pl-3 border-[1px] border-transparent rounded-none`,
     option: 'font-normal text-xl font-caslon',
-    textarea: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} w-full font-normal mb-4 h-[143px] text-xl font-caslon textarea rounded-none resize-none bg-secondary h-1/2`
+    textarea: val => `${val ? 'text-black border-primary' : 'border-transparent text-titleInput'} w-full font-normal mb-4 h-[143px] text-xl font-caslon textarea rounded-none resize-none bg-secondary h-1/2`
 };
 
 export default EditProfile;
