@@ -98,7 +98,6 @@ const NewPost = (props) => {
 
     const doShowPreview = useCallback(async (e) => {
         e.preventDefault();
-        console.log('OVER HERE do show previe', !previewIframe, formState?.monograph);
         if (!previewIframe && formState?.monograph) {
             const loadedMonograph = await getHTML(
                 `/api/${formState?.monograph.url.replace('https://www.datocms-assets.com/', '')}`);

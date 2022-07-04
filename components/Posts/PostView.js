@@ -38,7 +38,7 @@ const PostView = ({
     //     getHTML(post.monograph.url).then(file => setMonographView(file));
     // }, [post.monograph])
 
-    console.log('OVER HERE!!', coAuthors, post.coauthors);
+    // console.log('OVER HERE!!', coAuthors, post.coauthors);
     return (
         <article className='flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap'>
             <div className='flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black'>
