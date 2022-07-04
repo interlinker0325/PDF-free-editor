@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 
 export default function Header({ items = [] }) {
     const router = useRouter();
+    console.log('HEADER', router, items);
     return (
         <nav className='navbar px-14 bg-gradient-to-b from-gradientt to-gradientb shadow-md flex-initial'>
             <div className="flex-initial">
@@ -13,7 +14,7 @@ export default function Header({ items = [] }) {
                     {items.map((item, index) => (
                         <li key={`Header-nav-item-${index}`}>
                             <a
-                                className={`${router.route === item.action ? 'underline underline-offset-4' : 'hover:underline hover:underline-offset-4'} font-light decoration-1 hover:bg-transparent text-2xl`}
+                                className={`${router.asPath === item.action ? 'underline underline-offset-4' : 'hover:underline hover:underline-offset-4'} font-light decoration-1 hover:bg-transparent text-2xl`}
                                 {...item.onClick ?
                                     { onClick: item.onClick } : { href: item.action }
                                 }>
