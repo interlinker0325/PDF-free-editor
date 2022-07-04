@@ -57,7 +57,7 @@ const PostForm = ({
                                     id='monograph'
                                     ref={refs.monograph}
                                     onChange={(e) => onChange(e, 'monograph')}/>
-                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento HTML ></span>
+                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento HTML <span className='font-thin'>{'>'}</span></span>
                             </div>
                         </label>
                     </div>
@@ -65,33 +65,29 @@ const PostForm = ({
                     <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faImages} />
                         <label className={styles.label}>
-                            <div>
-                                <input
-                                    className={styles.fileInput}
-                                    type='file'
-                                    name='coverimage'
-                                    id='coverimage'
-                                    ref={refs.coverimage}
-                                    onChange={(e) => onChange(e, 'coverimage')}/>
-                                <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado ></span>
-                            </div>
+                            <input
+                                className={styles.fileInput}
+                                type='file'
+                                name='coverimage'
+                                id='coverimage'
+                                ref={refs.coverimage}
+                                onChange={(e) => onChange(e, 'coverimage')}/>
+                            <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado <span className='font-thin'>{'>'}</span></span>
                         </label>
                     </div>
 
                     <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} />
                         <label className={styles.label}>
-                            <div>
-                                <input
-                                    className={styles.fileInput}
-                                    type='file'
-                                    name='attachments'
-                                    id='attachments'
-                                    multiple
-                                    ref={refs.attachments}
-                                    onChange={(e) => onChange(e, 'attachments')}/>
-                                <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto ></span>
-                            </div>
+                            <input
+                                className={styles.fileInput}
+                                type='file'
+                                name='attachments'
+                                id='attachments'
+                                multiple
+                                ref={refs.attachments}
+                                onChange={(e) => onChange(e, 'attachments')}/>
+                            <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto <span className='font-thin'>{'>'}</span></span>
                         </label>
                     </div>
 
@@ -176,7 +172,7 @@ const styles = {
     label: 'cursor-pointer font-normal label justify-start gap-3.5 p-0',
     labelNoCursor: 'font-normal label justify-start gap-3.5 p-0',
     icon: 'label-text w-[38px] h-[36px] p-1',
-    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent select drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
+    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',
     fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text drop-shadow-lg font-normal text-lg border-2 border-transparent py-2 rounded-none`,
     textarea: val => `${val ? 'border-other' : ''} textarea font-normal drop-shadow-lg p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full`,
