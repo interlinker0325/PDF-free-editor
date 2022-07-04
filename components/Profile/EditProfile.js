@@ -62,6 +62,7 @@ const EditProfile = (props) => {
             <div className="flex flex-col gap-2 mb-2">
                 <h4 className='text-2xl text-primary'>Carrera/Universidad/Nivel:</h4>
                 <textarea
+                    maxlength='200'
                     className={styles.textarea(props.profile.level)}
                     placeholder='Agregar descripción de: Carrera/Universidad/Nivel'
                     value={props.profile.level}
@@ -70,6 +71,7 @@ const EditProfile = (props) => {
             <div className="flex flex-col gap-2 mt-2">
                 <h4 className='text-2xl text-primary'>Experiencia laboral:</h4>
                 <textarea
+                    maxlength='200'
                     className={styles.textarea(props.profile.experience)}
                     placeholder='Agregar descripción de: Experiencia laboral'
                     value={props.profile.experience}

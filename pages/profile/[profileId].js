@@ -77,10 +77,17 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         }
     }, [formState]);
 
+    const doCancel = useCallback(async (e) => {
+        setFormState(profile);
+        setActiveView(VIEW_STATES.USER);
+    }, [formState])
+
     const avatarView = avatarImage || formState.avatar?.url ? (
         <img htmlFor='avatar' className='h-full w-full' src={avatarImage || formState.avatar.url} />
     ) : (
-        <FontAwesomeIcon htmlFor='avatar' className='p-8 min-w-fit text-2xl' icon={faCircleUser} />
+        <div htmlFor='avatar' className='h-full w-full flex flex-col justify-center items-center px-8 py-10'>
+            <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser} />
+        </div>
     );
 
     const showStatusBar = (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
@@ -97,7 +104,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                 <div className={styles.leftContainer}>
                     <div className={styles.avatarCard}>
                         {activeView === VIEW_STATES.EDIT ? (
-                            <label className='h-full w-full cursor-pointer'>
+                            <label className='h-60 w-full cursor-pointer'>
                                 <input
                                     className={styles.fileInput}
                                     type='file'
@@ -112,7 +119,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                     {activeView === VIEW_STATES.EDIT &&
                         <div className='flex flex-row justify-start item-center gap-2 my-5'>
                             <button type='button' className={styles.btn} onClick={submitUpdateProfile}>Guardar</button>
-                            <button type='button' className={styles.btn} onClick={() => setFormState(profile)}>Cancelar</button>
+                            <button type='button' className={styles.btn} onClick={doCancel}>Cancelar</button>
                         </div>
                     }
                 </div>
@@ -120,7 +127,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                     <div className={styles.tabs}>
                         <div className='flex gap-8'>
                             <a
-                                className={activeView === VIEW_STATES.USER ? styles.activeTab : styles.tabItem}
+                                className={showStatusBar ? styles.activeTab : styles.tabItem}
                                 onClick={() => setActiveView(VIEW_STATES.USER)}>
                                 Data personal
                             </a>
@@ -142,7 +149,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                                 </a>
                             }
                         </div>
-                        {isCurrentUserProfile &&
+                        {(isCurrentUserProfile && activeView !== VIEW_STATES.EDIT) &&
                             <a
                                 className={`${styles.editTab} ${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.tabItem}`}
                                 onClick={() => setActiveView(VIEW_STATES.EDIT)}>
@@ -178,7 +185,7 @@ const styles = {
     mainContainer: 'mb-8 grid grid-cols-4 gap-8',
     leftContainer: 'flex flex-col justify-between item-center',
     rightContainer: 'col-span-3 flex flex-col gap-6',
-    avatarCard: 'card text-gray-400 bg-secondary rounded-none h-60',
+    avatarCard: 'card text-gray-400 bg-secondary rounded-none h-60 flex flex-col justify-center items-center',
     tabs: 'tabs border-transparent border-b-black border-b-[1px] w-full justify-between',
     tabItem: 'tab text-2xl px-0 hover:text-primary hover:underline hover:underline-offset-1',
     activeTab: 'tab text-2xl tab-active text-primary px-0',
