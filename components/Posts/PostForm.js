@@ -158,14 +158,14 @@ const STYLE_ACTIVE = 'text-other border-b-other';
 const STYLE_INACTIVE =  'text-titleInput border-b-black';
 
 const styles = {
-    titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
+    titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input drop-shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
     label: 'cursor-pointer font-normal label justify-start gap-3.5 p-0',
     labelNoCursor: 'font-normal label justify-start gap-3.5 p-0',
     icon: 'label-text w-[38px] h-[36px] p-1',
-    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent select shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
+    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent select drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',
-    fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text shadow-lg font-normal text-lg border-2 border-transparent py-2 rounded-none`,
-    textarea: val => `${val ? 'border-other' : ''} textarea font-normal shadow-lg p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full`,
+    fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text drop-shadow-lg font-normal text-lg border-2 border-transparent py-2 rounded-none`,
+    textarea: val => `${val ? 'border-other' : ''} textarea font-normal drop-shadow-lg p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full`,
     checkbox: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} checkbox font-normal rounded-none checked:!bg-none checked:bg-other`,
     button: 'btn min-h-min h-min py-[10px] px-[20px] bg-other hover:btn-primary hover:text-white capitalize text-white rounded-full',
     link: 'text-other uppercase cursor-pointer hover:text-primary underline underline-offset-1'
