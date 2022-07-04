@@ -29,7 +29,7 @@ const Home = ({ posts, currentPage, banners, ...props }) => {
     return (
         <Main user={user}>
 			<HeroCards banners={banners} />
-			<div className='flex flex-row items-center justify-between pt-20 pb-2 border-2 border-transparent rounded-none border-b-black'>
+			<div className='flex flex-row items-center justify-between pt-20 pb-2 border-[1px] border-transparent rounded-none border-b-black'>
                 <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>
 			</div>
             <div className="my-8 grid grid-cols-4 gap-6">

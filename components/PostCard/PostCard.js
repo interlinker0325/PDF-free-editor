@@ -10,11 +10,11 @@ export default function Card({
             {coverimage &&
                 <figure><img className="h-[150px] w-full" src={coverimage.url} alt={coverimage.title} /></figure>
             }
-            <div className="card-body p-4 hover group-hover:bg-other pb-4 gap-4">
-                <h2 className="card-title text-2xl leading-5 group-hover:text-white">
+            <div className="card-body p-4 hover group-hover:bg-other pb-6 gap-4">
+                <h2 className="card-title line-clamp-1 font-roboto font-normal text-2xl leading-5 group-hover:text-white">
                     {title}
                 </h2>
-                <p className="text-base font-caslon max-w-prose text-ellipsis overflow-hidden line-clamp-2 group-hover:text-white">{description}</p>
+                <p className="text-base font-normal font-caslon max-w-prose text-ellipsis overflow-hidden line-clamp-2 group-hover:text-white">{description}</p>
             </div>
         </a>
     );
