@@ -6,10 +6,10 @@ import PostCard from 'components/PostCard/PostCard';
 import useUser from 'utils/useUser';
 import { query } from 'gql';
 
-const Home = ({ posts, currentPage, banners, ...props }) => {
+const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
 	const { user = {} } = useUser();
     const [state, setState] = useState({
-		showMore: false,
+		showMore: showMore,
 		currentPage,
 		posts,
 	});
@@ -17,7 +17,7 @@ const Home = ({ posts, currentPage, banners, ...props }) => {
 	const getNextPage = async () => {
 		const nextPage = state.currentPage + 1;
 		const { allPosts } = await request([GET_ALL_ENTRIES(nextPage)]);
-		const showMore = !(allPosts.length < 11);
+		const showMore = !(allPosts.length < 8);
 
 		setState({
 			showMore,
@@ -53,7 +53,7 @@ export async function getServerSideProps() {
 			currentPage: CURRENT_PAGE,
 			posts: allPosts,
 			banners: allBanners,
-			showMore: !(allPosts.length < 11)
+			showMore: !(allPosts.length < 8)
 		}
 	};
 }
