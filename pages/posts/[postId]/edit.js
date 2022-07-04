@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { createEntry, upload, publishEntry, updateEntry } from 'handlers/bll';
+import { getHTML, upload, publishEntry, updateEntry } from 'handlers/bll';
 import { request, GET_ALL_COURSES, GET_ALL_STUDENTS, GET_ENTRY_BY_ID } from 'utils/graphqlRequest';
 import useUser from 'utils/useUser';
 import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from 'utils';
@@ -75,11 +75,26 @@ const EditPost = ({ post, ...props }) => {
         await publishEntry(formState.id);
     }, [formState]);
 
+    const hidePreview = (e) => {
+        e.preventDefault();
+        setShowPreview(false);
+    }
+
     const formHasChanged = formState !== post;
     return (
         <Main>
+            {showPreview &&
+                <div className={styles.bar}>
+                    <a className={styles.link} onClick={hidePreview}>{'< Volver a archivo'}</a>
+                </div>
+            }
             {showPreview ? (
-                <PostView post={formState} user={user} />
+                <PostView
+                    post={formState}
+                    user={user}
+                    editMode={true}
+                    returnToEdit={hidePreview}
+                    {...props} />
             ) : (
                 <PostForm
                     refs={refs}
@@ -98,67 +113,32 @@ const EditPost = ({ post, ...props }) => {
     );
 }
 
+const styles = {
+    bar: 'bg-neutral w-full py-3 flex flex-row justify-between items-center px-16 mt-[-48px] mx-[-56px] w-screen mb-5',
+    link: 'text-other text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'
+}
+
 export async function getServerSideProps({ params }) {
     const { post, allUsers, allCourses } = await request([GET_ENTRY_BY_ID(params.postId), GET_ALL_COURSES, GET_ALL_STUDENTS]);
     const { course, coauthors, ...postData } = post;
 
     if (course) {
-        post.course = course.id;
+        postData.course = course.id;
     }
 
     if (coauthors) {
-        post.coauthors = coauthors[0].id;
+        postData.coauthors = coauthors[0].id;
+    }
+
+    if (postData?.monograph) {
+        postData.monographView = await getHTML(postData.monograph.url);
     }
 
     return {
-        props: { courses: allCourses, students: allUsers, post }
+        props: { courses: allCourses, students: allUsers, post: postData }
     };
 }
 
-
-    // const router = useRouter();
-    // const formState = useState(entry);
-    // const { user } = useUser();
-
-    // return (
-    //     <div>Drake</div>
-    //     // <Layout
-        //     content={{
-        //         main: <EditPostContent user={user} formState={formState} clearForm={() => null} {...props} />,
-        //         aside: <EditPostSidebar user={user} formState={formState} {...props} />
-        //     }} />
-    // );
-// }
-
-// export async function getServerSideProps({ params: { postId } }) {
-//     let { entry: { content, ...restOfEntry }, allCategories: categories } =
-//         await request([GET_ENTRY_BY_ID(postId), GET_ALL_CATEGORIES]);
-
-//     content = content.map(({ updatedAt, createdAt, monograph, image, ...rest }) => ({
-//         monograph: monograph && monograph.id,
-//         image: image && image.id,
-//         ...rest
-//     }));
-
-//     restOfEntry.author = restOfEntry.author?.id;
-//     restOfEntry.category = restOfEntry.category?.id;
-//     if (restOfEntry.coverimage) {
-
-//         restOfEntry.coverimage = restOfEntry.coverimage?.id;
-//     }
-//     restOfEntry.files = restOfEntry.files.map(f => f.id);
-
-//     return {
-//         props: {
-//             recordId: postId,
-//             entry: {
-//                 sections: content,
-//                 ...restOfEntry
-//             },
-//             categories
-//         }
-//     };
-// }
 
 EditPost.pageTitle = 'Editar contenido';
 
