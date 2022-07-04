@@ -17,10 +17,7 @@ const COAUTORS = `coauthors {
         id
     }`;
 
-const TAGS = `tags {
-        id
-        tag
-    }`;
+const TAGS = `tags`;
 
 const COVERIMAGE = `coverimage {
         url

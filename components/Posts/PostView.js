@@ -23,7 +23,7 @@ const PostView = ({
                 }
             </div>
             <div className='grid grid-cols-4 gap-4'>
-                <IFrame className='min-h-[70vh] col-span-3' srcDoc={post.monograph} />
+                <IFrame className='min-h-[70vh] col-span-3' srcDoc={post.monographView} />
                 <aside className='col-span-1 flex flex-col gap-2 pl-4 border-2 border-transparent rounded-none border-l-black'>
                     {post.course &&
                         <h3 className='text-lg'><span className='text-primary pr-2'>Curso:</span>{post.course.name}</h3>

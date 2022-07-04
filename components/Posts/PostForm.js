@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPeopleGroup, faTags, faFileCode, faImages } from '@fortawesome/free-solid-svg-icons'
+import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons'
 
 const PostForm = ({
     form,
@@ -69,7 +69,7 @@ const PostForm = ({
                         </div>
                     </label>
                     <label className={styles.label}>
-                        <FontAwesomeIcon className={styles.icon} icon={faTags} />
+                        <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} />
                         <div>
                             <input
                                 className={styles.fileInput}
@@ -101,7 +101,7 @@ const PostForm = ({
                 <div className='form-control gap-5'>
                     <div>
                         <textarea
-                            className={styles.textarea}
+                            className={styles.textarea(form.description)}
                             placeholder='Agregar sinopsis de la publicación (resumen)'
                             value={form.description}
                             onChange={(e) => onChange(e, 'description')} />
@@ -110,7 +110,7 @@ const PostForm = ({
 
                     <div>
                         <textarea
-                            className={styles.textarea}
+                            className={styles.textarea(form.tags)}
                             placeholder='Palabras claves'
                             value={form.tags}
                             onChange={(e) => onChange(e, 'tags')} />
@@ -127,7 +127,7 @@ const PostForm = ({
                             ref={refs.agreedterms}
                             checked={form.agreedterms}
                             onChange={(e) => onChange(e, 'agreedterms')}/>
-                        <span className='label-text text-checkbox font-thin italic'>
+                        <span className='label-text normal-case text-checkbox font-thin italic'>
                             <h4 className='not-italic text-black font-normal '>Los terminos y condiciones deben ser aceptados para publicar una publicación*</h4>
                             {' '}
                             consectetur adipiscing elit. Proin id dolor ut leo vehicula maximus. Sed tristique eleifend fermentum. Aenean sodales ligula at risus fringilla, et consequat nisl tristique. Cras id risus auctor, facilisis neque vitae, tempor ante. Ut fringilla augue a laoreet fermentum. Aliquam consectetur venenatis est non convallis. Nullam in massa odio.Vestibulum sit amet ligula a eros lobortis efficitur. In elementum iaculis ipsum ut pretium. Nunc vitae ultrices nisl, fringilla accumsan lectus. Vestibulum at eleifend dolor. Sed fermentum enim enim, in commodo ligula semper in. Ut eget est lacinia, convallis sapien vel, gravida diam.
@@ -153,14 +153,14 @@ const STYLE_ACTIVE = 'text-other border-b-other';
 const STYLE_INACTIVE =  'text-titleInput border-b-black';
 
 const styles = {
-    titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} input font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
+    titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} input shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
     label: 'cursor-pointer font-normal label justify-start gap-3.5 p-0',
     icon: 'label-text w-[38px] h-[36px] p-1',
-    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} select font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
+    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} select shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',
-    fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text font-normal text-lg border-2 border-transparent py-2 rounded-none`,
-    textarea: 'textarea font-normal p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full',
-    checkbox: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} checkbox font-normal checkbox-secondary`,
+    fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text shadow-lg font-normal text-lg border-2 border-transparent py-2 rounded-none`,
+    textarea: val => `${val ? 'border-other' : ''} textarea font-normal shadow-lg p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full`,
+    checkbox: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} checkbox font-normal rounded-none checked:!bg-none checked:bg-other`,
     button: 'btn min-h-min h-min py-[10px] px-[20px] bg-other hover:btn-primary hover:text-white capitalize text-white rounded-full',
     link: 'text-other uppercase cursor-pointer hover:text-primary underline underline-offset-1'
 };

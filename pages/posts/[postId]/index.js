@@ -19,7 +19,7 @@ export const getServerSideProps = async function ({ params }) {
     let { post } = await request(GET_ENTRY_BY_ID(params.postId));
 
     if (post?.monograph) {
-        post.monograph = await getHTML(post.monograph.url);
+        post.monographView = await getHTML(post.monograph.url);
     }
 
     return {

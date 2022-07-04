@@ -8,14 +8,9 @@ const PostStatusBar = ({ post, user }) => {
 
     const submitReview = async (e) => {
         e.preventDefault();
-
-        const { review, author, coverimage, course, attachments, ...postData } = post;
-        postData.author = author.id;
-        postData.coverimage = coverimage.id;
-        postData.course = course.id;
-        postData.attachments = attachments.map(file => file.id);
-
-        const entry = await updateEntry(post.id, {
+        const { review, monographView, ...postData } = post;
+        console.log('OVER HERE!!!', postData);
+        const entry = await updateEntry({
             review: e.target.id,
             ...postData
         });

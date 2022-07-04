@@ -37,10 +37,7 @@ export const GET_ENTRY_BY_ID = (entryId) => `
             url
         }
         title
-        tags {
-            id
-            tag
-        }
+        tags
         updatedAt
         review
         agreedterms

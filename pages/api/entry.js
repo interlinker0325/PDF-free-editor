@@ -31,13 +31,15 @@ export default async (req, res) => {
             result.error = record.error;
         }
     } else if (req.method === 'PUT') {
-        let { id, author = null, coverimage, coauthors, monograph, attachments, ...rest } = req.body;
+        let { id, author = null, course, coverimage, coauthors, monograph, attachments, ...rest } = req.body;
 
         rest.coverimage = coverimage ? { uploadId: coverimage.id } : null;
         rest.monograph = monograph ? { uploadId: monograph.id } : null;
         rest.author = author.id;
+        rest.course = course.id;
+
         // TEMP
-        rest.coauthors = [coauthors];
+        rest.coauthors = coauthors[0]?.id ? [coauthors[0]?.id] : coauthors;
 
         if (attachments) {
             if (!Array.isArray(attachments)) attachments = [attachments];

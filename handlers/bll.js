@@ -11,7 +11,8 @@ export const createEntry = async (
         author,
         coauthors,
         review,
-        agreedterms
+        agreedterms,
+        tags
     }
 ) => {
     const requestData = {
@@ -24,7 +25,8 @@ export const createEntry = async (
         author,
         coauthors,
         review,
-        agreedterms
+        agreedterms,
+        tags
     };
 
     const response = await post('/api/entry', requestData);
