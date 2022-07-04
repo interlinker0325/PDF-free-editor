@@ -118,7 +118,11 @@ const NewPost = (props) => {
                 </TopBar>
             }
             {showPreview ? (
-                <PostView post={formState} user={user} previewIframe={previewIframe} />
+                <PostView
+                    post={formState}
+                    user={user}
+                    previewIframe={previewIframe}
+                    {...props}/>
             ) : (
                 <PostForm
                     refs={refs}

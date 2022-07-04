@@ -109,7 +109,6 @@ const EditPost = ({ post, ...props }) => {
                     post={formState}
                     user={user}
                     editMode={true}
-                    returnToEdit={hidePreview}
                     previewIframe={previewIframe}
                     {...props} />
             ) : (
