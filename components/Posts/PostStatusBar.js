@@ -10,7 +10,6 @@ const PostStatusBar = ({ post, user }) => {
     const submitReview = async (e) => {
         e.preventDefault();
         const { review, monographView, ...postData } = post;
-        console.log('OVER HERE!!!', postData);
         const entry = await updateEntry({
             review: e.target.id,
             ...postData
@@ -20,13 +19,13 @@ const PostStatusBar = ({ post, user }) => {
             console.log(entry.error);
         } else {
             await publishEntry(entry.id);
-            location.reload();
+            location.href = '/profile/me';
         }
     };
 
     return (
         <TopBar>
-            <a className={styles.link} href={`/posts/${post.id}`}>{'< Volver a archivo'}</a>
+            <a className={styles.link} href='/profile/me'>{'< Volver a archivo'}</a>
             <div>
                 <button
                     id={POST_REVIEW_STATUS.APPROVED}
@@ -48,8 +47,8 @@ const PostStatusBar = ({ post, user }) => {
 
 const styles = {
     btn: 'btn text-white rounded-full btn-sm text-xl capitalize px-5 py-[2px]',
-    btnApproved: 'btn-success mr-1',
-    btnDenied: 'btn-error ml-1',
+    btnApproved: 'btn-success mr-1 hover:bg-lightSuccess',
+    btnDenied: 'btn-error ml-1 hover:bg-lightError',
     link: 'text-other cursor-pointer hover:text-primary underline underline-offset-1'
 };
 

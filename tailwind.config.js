@@ -27,7 +27,9 @@ module.exports = {
         inputBorder: "#9E9E9E",
         titleInput: "#6C6C6C",
         checkbox: "#313131",
-        inputbg: "#FAFAFA"
+        inputbg: "#FAFAFA",
+        lightSuccess: "#00C036",
+        lightError: "#FF3D3D"
       }
     },
   },

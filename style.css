@@ -1,0 +1,14 @@
+* {
+    box-sizing: border-box;
+};
+
+svg path {
+    transition: fill ease .5s;
+};
+
+.htmlBackgroundBackdrop {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background-color: #000000;
+}

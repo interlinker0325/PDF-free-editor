@@ -5,6 +5,7 @@ import HeroCards from 'components/HeroCards/HeroCards';
 import PostCard from 'components/PostCard/PostCard';
 import useUser from 'utils/useUser';
 import { query } from 'gql';
+import TopBar from 'components/TopBar/TopBar';
 
 const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
 	const { user = {} } = useUser();
@@ -27,7 +28,12 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
 	};
 
     return (
-        <Main user={user}>
+        <Main>
+			{user.isLoggedIn &&
+				<TopBar className='justify-end'>
+					<h3 className='text-primary text-2xl self-center justify-self-end'>¡Bienvenid@ {user.fullname}!</h3>
+				</TopBar>
+			}
 			<HeroCards banners={banners} />
 			<div className='flex flex-row items-center justify-between pt-20 pb-2 border-[1px] border-transparent rounded-none border-b-black'>
                 <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>

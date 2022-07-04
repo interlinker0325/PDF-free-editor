@@ -13,6 +13,7 @@ import Courses from 'components/Profile/Courses';
 import Publications from 'components/Profile/Publications';
 import EditProfile from 'components/Profile/EditProfile';
 import TopBar from 'components/TopBar/TopBar';
+import Loader from 'components/Loader/Loader';
 
 import { isProfessor as isUserProfessor} from 'utils';
 
@@ -31,7 +32,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     useEffect(() => {
         if (!profile) router.push('/');
     }, [profile]);
-
+    const [showLoadingScreen, setShowLoadingScreen] = useState(false);
     const [formState, setFormState] = useState(profile);
     const [avatarImage, setAvatarImage] = useState(null);
     const [activeView, setActiveView] = useState(VIEW_STATES.USER);
@@ -42,9 +43,20 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         avatar: useRef()
     };
 
+    const triggerLoading = (show) => {
+        if (show) {
+            document.getElementsByTagName('body')[0].classList.add('htmlBackgroundBackdrop');
+            setShowLoadingScreen(true);
+        } else {
+            document.getElementsByTagName('body')[0].classList.remove('htmlBackgroundBackdrop');
+            setShowLoadingScreen(false);
+        }
+    }
+
     const onChange = useCallback(async (e, name) => {
         let itemValue;
         if (refs[name]) {
+            triggerLoading(true);
             const _files = refs[name]?.current?.files;
             const files = await upload(_files);
             itemValue = files;
@@ -55,6 +67,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                 }
                 fr.readAsDataURL(_files[0]);
             }
+            triggerLoading(false);
         } else {
             itemValue = e.target.value;
         }
@@ -64,6 +77,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
 
     const submitUpdateProfile = useCallback(async (e) => {
         e.preventDefault();
+        triggerLoading(true);
         const { id, role, ...profileData } = formState;
         profileData.role = role.id;
         const entry = await updateProfile(id, {
@@ -75,10 +89,12 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         } else {
             setFormState({ ...entry, ...profileData});
         }
+        triggerLoading(false);
     }, [formState]);
 
     const doCancel = useCallback(async (e) => {
         setFormState(profile);
+        setAvatarImage(null);
         setActiveView(VIEW_STATES.USER);
     }, [formState])
 
@@ -151,7 +167,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                         </div>
                         {(isCurrentUserProfile && activeView !== VIEW_STATES.EDIT) &&
                             <a
-                                className={`${styles.editTab} ${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.tabItem}`}
+                                className={`${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.editTab}`}
                                 onClick={() => setActiveView(VIEW_STATES.EDIT)}>
                                 Editar perfil >
                             </a>
@@ -177,6 +193,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                     </div>
                 </div>
             </div>
+            <Loader show={showLoadingScreen} />
         </Main>
     );
 }
@@ -187,9 +204,9 @@ const styles = {
     rightContainer: 'col-span-3 flex flex-col gap-6',
     avatarCard: 'card text-gray-400 bg-secondary rounded-none h-60 flex flex-col justify-center items-center',
     tabs: 'tabs border-transparent border-b-black border-b-[1px] w-full justify-between',
-    tabItem: 'tab text-2xl px-0 hover:text-primary hover:underline hover:underline-offset-1',
-    activeTab: 'tab text-2xl tab-active text-primary px-0',
-    editTab: 'text-other pr-0',
+    tabItem: 'tab font-normal text-black text-2xl px-0 hover:text-primary',
+    activeTab: 'tab font-normal text-2xl tab-active text-other px-0',
+    editTab: 'text-other font-normal pr-0 tab text-2xl px-0 hover:text-primary',
     tabContent: 'border-none pb-4',
     btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
     fileInput: 'input hidden input-ghost w-full',

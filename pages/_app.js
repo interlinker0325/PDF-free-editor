@@ -53,33 +53,10 @@ function MyApp({ Component, pageProps }) {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;900&family=bigCaslon+Two+Text:wght@100;200;300;400;500;600;700;900&display=swap" rel="stylesheet" />
                 <style>{`
-                    @font-face {
-                        font-family: "big_caslonmedium";
-                        src: 'url("/fonts/bigCaslonmedium-webfont.woff2") format("woff2"), url("/fonts/bigCaslonmedium-webfont.woff") format("woff")';
-                        font-weight: normal;
-                        font-style: normal;
-                    };
-
-                    * {
-                        box-sizing: border-box;
-                    };
-
-                    i > svg {
-                        max-height: 2rem;
-                    };
-
-                    html, body {
-                        width: 100vw;
-                        margin: 0 auto;
-                        overflow: auto;
-                        overflow-x: hidden;
-                        font-family: system-ui, sans-serif;
-                        lineHeight: 1.5;
-                    };
-
-                    svg path {
-                        transition: fill ease .5s;
-                    };
+                    .htmlBackgroundBackdrop {
+                        overflow: hidden;
+                        background-color: rgba(0, 0, 0, 0.1);
+                    }
                 `}</style>
             </Head>
             <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>

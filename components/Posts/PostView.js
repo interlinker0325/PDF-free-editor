@@ -31,7 +31,6 @@ const PostView = ({
     if (students) coAuthors = students.find(student => student.id === coAuthors);
     if (courses) course = courses.find(someCourse => someCourse.id === course);
 
-    // console.log('OVER HERE!!', post);
     return (
         <article className='flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap'>
             <div className='flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black'>

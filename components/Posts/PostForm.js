@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons'
+import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
 
 const PostForm = ({
     form,
@@ -131,10 +132,9 @@ const PostForm = ({
                             onChange={(e) => onChange(e, 'agreedterms')}/>
                         <span className='label-text normal-case text-checkbox font-thin italic'>
                             <h4 className='not-italic text-black font-normal '>Los terminos y condiciones deben ser aceptados para publicar una publicación*</h4>
-                            {' '}
-                            consectetur adipiscing elit. Proin id dolor ut leo vehicula maximus. Sed tristique eleifend fermentum. Aenean sodales ligula at risus fringilla, et consequat nisl tristique. Cras id risus auctor, facilisis neque vitae, tempor ante. Ut fringilla augue a laoreet fermentum. Aliquam consectetur venenatis est non convallis. Nullam in massa odio.Vestibulum sit amet ligula a eros lobortis efficitur. In elementum iaculis ipsum ut pretium. Nunc vitae ultrices nisl, fringilla accumsan lectus. Vestibulum at eleifend dolor. Sed fermentum enim enim, in commodo ligula semper in. Ut eget est lacinia, convallis sapien vel, gravida diam.
-                            {' '}
-                            <a className={styles.link} >Acepto</a>
+                            <div className='w-full h-[85px] overflow-scroll'>
+                                {TERMS_AND_CONDITIONS_TEXT} <a className={styles.link} >Acepto</a>
+                            </div>
                         </span>
                     </label>
                 </div>

@@ -9,6 +9,7 @@ import Main from 'components/Main/Main';
 import PostForm from 'components/Posts/PostForm';
 import PostView from 'components/Posts/PostView';
 import TopBar from 'components/TopBar/TopBar';
+import Loader from 'components/Loader/Loader';
 
 const baseErrorMessage = (key) => `${key} es requerido. Por favor ingresar ${key}`
 const baseErrorState = {
@@ -25,10 +26,21 @@ const EditPost = ({ post, ...props }) => {
             router.push('/');
         }
     }, [user]);
+    const [showLoadingScreen, setShowLoadingScreen] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     const [formState, setFormState] = useState(post);
     const [errorState, setErrorState] = useState(baseErrorState);
     const [previewIframe, setPreviewIframe] = useState(post?.monographView);
+
+    const triggerLoading = (show) => {
+        if (show) {
+            document.getElementsByTagName('body')[0].classList.add('htmlBackgroundBackdrop');
+            setShowLoadingScreen(true);
+        } else {
+            document.getElementsByTagName('body')[0].classList.remove('htmlBackgroundBackdrop');
+            setShowLoadingScreen(false);
+        }
+    }
 
     const clearSubmitForm = () => { setFormState(post); }
     const refs = {
@@ -40,6 +52,7 @@ const EditPost = ({ post, ...props }) => {
 
     const doSubmit = useCallback(async (e) => {
         e.preventDefault();
+        triggerLoading(true);
         const { error, ...postData } = formState;
 
         if (isUserTeacherOfCourse(user, postData.course)) {
@@ -53,6 +66,7 @@ const EditPost = ({ post, ...props }) => {
         } else {
             setFormState({ ...entry, ...postData});
         }
+        triggerLoading(false);
     }, [formState]);
 
     const onChange = useCallback(async (e, name) => {
@@ -61,9 +75,11 @@ const EditPost = ({ post, ...props }) => {
             const _files = refs[name]?.current?.files;
             console.log('FILEs!', _files);
             if (_files) {
+                triggerLoading(true);
                 const files = await upload(_files);
                 console.log('FILE UPLOADED!', files);
                 itemValue = files;
+                triggerLoading(false);
             } else {
                 itemValue = refs[name].current.checked;
             }
@@ -75,7 +91,9 @@ const EditPost = ({ post, ...props }) => {
     }, [formState]);
 
     const requestApproval = useCallback(async () => {
+        triggerLoading(true);
         await publishEntry(formState.id);
+        triggerLoading(false);
     }, [formState]);
 
     const hidePreview = (e) => {
@@ -125,6 +143,7 @@ const EditPost = ({ post, ...props }) => {
                     user={user}
                     {...props} />
             )}
+            <Loader show={showLoadingScreen} />
         </Main>
     );
 }

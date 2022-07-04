@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import useUser from 'utils/useUser';
-import { createEntry, upload, publishEntry, getHTML } from 'handlers/bll';
+import { createEntry, updateEntry, upload, publishEntry, getHTML } from 'handlers/bll';
 import { request, GET_ALL_COURSES, GET_ALL_STUDENTS } from 'utils/graphqlRequest';
 import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from 'utils';
 
@@ -8,6 +8,7 @@ import Main from 'components/Main/Main';
 import PostForm from 'components/Posts/PostForm';
 import PostView from 'components/Posts/PostView';
 import TopBar from 'components/TopBar/TopBar';
+import Loader from 'components/Loader/Loader';
 
 const formBaseState = {
     title: '',
@@ -31,6 +32,7 @@ const baseErrorState = {
 }
 
 const NewPost = (props) => {
+    const [showLoadingScreen, setShowLoadingScreen] = useState(false);
     const { user } = useUser({ redirectTo: '/' });
     const [showPreview, setShowPreview] = useState(false);
     const [formState, setFormState] = useState(formBaseState);
@@ -44,24 +46,42 @@ const NewPost = (props) => {
         agreedterms: useRef()
     };
 
+    const triggerLoading = (show) => {
+        if (show) {
+            document.getElementsByTagName('body')[0].classList.add('htmlBackgroundBackdrop');
+            setShowLoadingScreen(true);
+        } else {
+            document.getElementsByTagName('body')[0].classList.remove('htmlBackgroundBackdrop');
+            setShowLoadingScreen(false);
+        }
+    }
+
     const doSubmit = useCallback(async (e) => {
         e.preventDefault();
+        triggerLoading(true);
         const { id, error, ...postData } = formState;
 
         if (isUserTeacherOfCourse(user, postData.course)) {
             postData.review = POST_REVIEW_STATUS.APPROVED;
         }
 
-        const entry = await createEntry({
-            author: user.id,
-            ...postData
-        });
+        let entry;
+        if (postData.id) {
+            entry = await updateEntry(postData);
+        } else {
+            entry = await createEntry({
+                author: user.id,
+                ...postData
+            });
+        }
 
-        if (entry.error) {
-            alert('No se pudo actualizar la entrada');
+        if (entry?.error) {
+            console.error('No se pudo actualizar la entrada');
         } else {
             setFormState({ ...entry, ...postData});
         }
+
+        triggerLoading(false);
     }, [formState]);
 
     const onChange = useCallback(async (e, name) => {
@@ -69,6 +89,7 @@ const NewPost = (props) => {
         if (refs[name]) {
             const _files = refs[name]?.current?.files;
             if (_files) {
+                triggerLoading(true);
                 const files = await upload(_files, true);
                 if (e.target.name === 'monograph') {
                     const loadedMonograph = await getHTML(
@@ -77,6 +98,7 @@ const NewPost = (props) => {
                 }
 
                 itemValue = files.id;
+                triggerLoading(false);
             } else {
                 itemValue = refs[name].current.checked;
             }
@@ -84,11 +106,13 @@ const NewPost = (props) => {
             itemValue = e.target.value;
         }
         delete formState[name];
-        setFormState({ [name]: itemValue , ...formState })
+        setFormState({ [name]: itemValue , ...formState });
     }, [formState]);
 
     const requestApproval = useCallback(async () => {
+        triggerLoading(true);
         await publishEntry(formState.id);
+        triggerLoading(false);
     }, [formState]);
 
     const hidePreview = (e) => {
@@ -137,6 +161,7 @@ const NewPost = (props) => {
                     user={user}
                     {...props} />
             )}
+            <Loader show={showLoadingScreen} />
         </Main>
     );
 }
