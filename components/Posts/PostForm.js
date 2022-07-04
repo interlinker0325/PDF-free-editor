@@ -161,7 +161,7 @@ const styles = {
     fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text font-normal text-lg border-2 border-transparent py-2 rounded-none`,
     textarea: 'textarea font-normal p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full',
     checkbox: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} checkbox font-normal checkbox-secondary`,
-    button: 'btn py-[10px] px-[20px] bg-other hover:btn-primary hover:text-white capitalize text-white rounded-full',
+    button: 'btn min-h-min h-min py-[10px] px-[20px] bg-other hover:btn-primary hover:text-white capitalize text-white rounded-full',
     link: 'text-other uppercase cursor-pointer hover:text-primary underline underline-offset-1'
 };
 
