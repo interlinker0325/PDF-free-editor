@@ -13,6 +13,7 @@ const PostForm = ({
     formHasChanged,
     setShowPreview,
     user,
+    setAgreedterms,
     refs
 }) => {
     const coAuthors = students.find(student => student.id === (form.coauthors?.id || form.coauthors));
@@ -96,8 +97,10 @@ const PostForm = ({
                         </select>
                     </label>
 
-                    <h4 className='text-base font-normal font-roboto'>Autor(a) original: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
-                    <h4 className='text-base font-normal font-roboto'>Co-autores: <span className='font-caslon text-base font-normal text-other'>{coAuthors?.fullname}</span></h4>
+                    <div>
+                        <h4 className='text-base font-normal font-roboto mb-2'>Autor(a) original: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
+                        <h4 className='text-base font-normal font-roboto mt-2'>Co-autores: <span className='font-caslon text-base font-normal text-other'>{coAuthors?.fullname}</span></h4>
+                    </div>
                 </div>
                 <div className='form-control gap-5'>
                     <div>
@@ -123,17 +126,17 @@ const PostForm = ({
             </section>
             <section className='row-auto'>
                 <div className='form-control'>
-                    <label className={styles.label}>
-                        <input
-                            type='checkbox'
-                            className={styles.checkbox(form.agreedterms)}
-                            ref={refs.agreedterms}
-                            checked={form.agreedterms}
-                            onChange={(e) => onChange(e, 'agreedterms')}/>
-                        <span className='label-text normal-case text-checkbox font-thin italic'>
+                    <label className={styles.labelNoCursor}>
+                        <div className='h-[23px] w-[23px] border-black border-[1px] flex flex-col justify-center items-center basis-6'>
+                            {form.agreedterms &&
+                                <div className='h-[20px] w-[20px] rounded-full bg-other' />
+                            }
+                        </div>
+                        <span className='label-text normal-case text-checkbox font-thin italic max-w-[97%]'>
                             <h4 className='not-italic text-black font-normal '>Los terminos y condiciones deben ser aceptados para publicar una publicación*</h4>
                             <div className='w-full h-[85px] overflow-scroll'>
-                                {TERMS_AND_CONDITIONS_TEXT} <a className={styles.link} >Acepto</a>
+                                {TERMS_AND_CONDITIONS_TEXT}
+                                <a onClick={setAgreedterms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
                             </div>
                         </span>
                     </label>
@@ -157,6 +160,7 @@ const STYLE_INACTIVE =  'text-titleInput border-b-black';
 const styles = {
     titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} input shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
     label: 'cursor-pointer font-normal label justify-start gap-3.5 p-0',
+    labelNoCursor: 'font-normal label justify-start gap-3.5 p-0',
     icon: 'label-text w-[38px] h-[36px] p-1',
     select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} select shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',

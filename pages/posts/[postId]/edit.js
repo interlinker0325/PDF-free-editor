@@ -111,6 +111,13 @@ const EditPost = ({ post, ...props }) => {
         setShowPreview(true);
     }, [formState]);
 
+    const setAgreedterms = useCallback(async (e) => {
+        e.preventDefault();
+        const { agreedterms, ...restFormState } = formState;
+        restFormState.agreedterms = !agreedterms;
+        setFormState(restFormState)
+    }, [formState]);
+
     const formHasChanged = formState !== post;
     return (
         <Main>
@@ -141,6 +148,7 @@ const EditPost = ({ post, ...props }) => {
                     formHasChanged={formHasChanged}
                     setShowPreview={doShowPreview}
                     user={user}
+                    setAgreedterms={setAgreedterms}
                     {...props} />
             )}
             <Loader show={showLoadingScreen} />
