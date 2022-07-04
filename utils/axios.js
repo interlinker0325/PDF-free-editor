@@ -57,7 +57,9 @@ const get = async (URL, asText) => {
         let headers = false;
 
         if (asText) {
-            headers = { "Content-Type": "text/html" }
+            headers = {
+                "Content-Type": "text/html"
+            }
         }
 
         const response = await request(METHODS.GET, URL, null, headers);

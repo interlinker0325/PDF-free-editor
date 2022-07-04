@@ -145,7 +145,7 @@ const PostForm = ({
                     <button type='button' onClick={clearForm} className={styles.button}>Cancelar</button>
                     <button type='button' onClick={requestApproval} disabled={(formHasChanged && form.id) ? '' : 'disabled'} className={styles.button}>Solicitar Aprobación</button>
                 </div>
-                <button type='button' onClick={() => setShowPreview(true)} className={styles.button}>Vista Previa</button>
+                <button type='button' onClick={setShowPreview} className={styles.button}>Vista Previa</button>
             </section>
         </form>
     );

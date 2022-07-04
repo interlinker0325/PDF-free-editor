@@ -1,12 +1,13 @@
 import { useState, useRef, useCallback } from 'react';
 import useUser from 'utils/useUser';
-import { createEntry, upload, publishEntry, updateEntry } from 'handlers/bll';
+import { createEntry, upload, publishEntry, getHTML } from 'handlers/bll';
 import { request, GET_ALL_COURSES, GET_ALL_STUDENTS } from 'utils/graphqlRequest';
 import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from 'utils';
 
 import Main from 'components/Main/Main';
 import PostForm from 'components/Posts/PostForm';
 import PostView from 'components/Posts/PostView';
+import TopBar from 'components/TopBar/TopBar';
 
 const formBaseState = {
     title: '',
@@ -34,6 +35,7 @@ const NewPost = (props) => {
     const [showPreview, setShowPreview] = useState(false);
     const [formState, setFormState] = useState(formBaseState);
     const [errorState, setErrorState] = useState(baseErrorState);
+    const [previewIframe, setPreviewIframe] = useState(null);
     const clearSubmitForm = () => { setFormState(formBaseState); }
     const refs = {
         attachments: useRef(),
@@ -66,11 +68,15 @@ const NewPost = (props) => {
         let itemValue;
         if (refs[name]) {
             const _files = refs[name]?.current?.files;
-            console.log('FILEs!', _files);
             if (_files) {
-                const files = await upload(_files);
-                console.log('FILE UPLOADED!', files);
-                itemValue = files;
+                const files = await upload(_files, true);
+                if (e.target.name === 'monograph') {
+                    const loadedMonograph = await getHTML(
+                        `/api/${files.url.replace('https://www.datocms-assets.com/', '')}`);
+                    setPreviewIframe(loadedMonograph);
+                }
+
+                itemValue = files.id;
             } else {
                 itemValue = refs[name].current.checked;
             }
@@ -85,11 +91,35 @@ const NewPost = (props) => {
         await publishEntry(formState.id);
     }, [formState]);
 
+    const hidePreview = (e) => {
+        e.preventDefault();
+        setShowPreview(false);
+    }
+
+    const doShowPreview = useCallback(async (e) => {
+        e.preventDefault();
+        console.log('OVER HERE do show previe', !previewIframe, formState?.monograph);
+        if (!previewIframe && formState?.monograph) {
+            const loadedMonograph = await getHTML(
+                `/api/${formState?.monograph.url.replace('https://www.datocms-assets.com/', '')}`);
+            setPreviewIframe(loadedMonograph);
+        }
+        setShowPreview(true);
+    }, [formState]);
+
     const formHasChanged = formState !== formBaseState;
     return (
         <Main>
+            {showPreview &&
+                <TopBar>
+                    <a
+                        className='text-other text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'
+                        onClick={hidePreview}
+                        children='< Volver a archivo' />
+                </TopBar>
+            }
             {showPreview ? (
-                <PostView post={formState} user={user} />
+                <PostView post={formState} user={user} previewIframe={previewIframe} />
             ) : (
                 <PostForm
                     refs={refs}
@@ -100,7 +130,7 @@ const NewPost = (props) => {
                     onChange={onChange}
                     requestApproval={requestApproval}
                     formHasChanged={formHasChanged}
-                    setShowPreview={setShowPreview}
+                    setShowPreview={doShowPreview}
                     user={user}
                     {...props} />
             )}

@@ -28,6 +28,8 @@ const EditPost = ({ post, ...props }) => {
     const [showPreview, setShowPreview] = useState(false);
     const [formState, setFormState] = useState(post);
     const [errorState, setErrorState] = useState(baseErrorState);
+    const [previewIframe, setPreviewIframe] = useState(post?.monographView);
+
     const clearSubmitForm = () => { setFormState(post); }
     const refs = {
         attachments: useRef(),
@@ -81,6 +83,16 @@ const EditPost = ({ post, ...props }) => {
         setShowPreview(false);
     }
 
+    const doShowPreview = useCallback(async (e) => {
+        e.preventDefault();
+        if (formState?.monograph) {
+            const loadedMonograph = await getHTML(
+                `/api/${formState?.monograph.url.replace('https://www.datocms-assets.com/', '')}`);
+            setPreviewIframe(loadedMonograph);
+        }
+        setShowPreview(true);
+    }, [formState]);
+
     const formHasChanged = formState !== post;
     return (
         <Main>
@@ -98,6 +110,7 @@ const EditPost = ({ post, ...props }) => {
                     user={user}
                     editMode={true}
                     returnToEdit={hidePreview}
+                    previewIframe={previewIframe}
                     {...props} />
             ) : (
                 <PostForm
@@ -109,7 +122,7 @@ const EditPost = ({ post, ...props }) => {
                     onChange={onChange}
                     requestApproval={requestApproval}
                     formHasChanged={formHasChanged}
-                    setShowPreview={setShowPreview}
+                    setShowPreview={doShowPreview}
                     user={user}
                     {...props} />
             )}

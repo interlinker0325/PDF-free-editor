@@ -77,7 +77,7 @@ export const newSection = async (
     }
 };
 
-export const upload = async (files) => {
+export const upload = async (files, returnUrl = false) => {
     if (!files) return { error: 'No file selected.' };
 
     let formData = new FormData();
@@ -89,7 +89,7 @@ export const upload = async (files) => {
     const response = await post('/api/upload', formData, true);
 
     if (response?.success) {
-        const data = response.data.uploads?.map(({ id }) => id);
+        const data = response.data.uploads?.map(({ id, url }) => returnUrl ? { id, url } : id);
         return (data.length === 1) ? data[0] : data;
     } else {
         return { error: response.error };
