@@ -51,7 +51,7 @@ function MyApp({ Component, pageProps }) {
                 <meta name="robots" content="noindex"></meta>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700;900&family=bigCaslon+Two+Text&display=swap" rel="stylesheet" />
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;900&family=bigCaslon+Two+Text:wght@100;200;300;400;500;600;700;900&display=swap" rel="stylesheet" />
                 <style>{`
                     @font-face {
                         font-family: "big_caslonmedium";

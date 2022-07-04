@@ -4,7 +4,7 @@ const EditProfile = (props) => {
             <section className="flex flex-col border-b-black border-b-2 pb-8 mb-5 gap-1">
                 <div className='form-control'>
                     <input
-                        className={styles.titleInput}
+                        className={styles.titleInput(props.profile.fullname)}
                         type='text'
                         name='fullname'
                         placeholder='Nombre completo *'
@@ -13,7 +13,7 @@ const EditProfile = (props) => {
                 </div>
                 <div className='form-control'>
                     <input
-                        className={styles.titleInput}
+                        className={styles.titleInput(props.profile.email)}
                         type='email'
                         name='email'
                         placeholder='Correo *'
@@ -22,7 +22,7 @@ const EditProfile = (props) => {
                 </div>
                 <div className='form-control'>
                     <input
-                        className={styles.titleInput}
+                        className={styles.titleInput(props.profile.phone)}
                         type='tel'
                         name='phone'
                         placeholder='Número telefónico'
@@ -31,7 +31,7 @@ const EditProfile = (props) => {
                 </div>
                 <div className='form-control'>
                     <input
-                        className={styles.titleInput}
+                        className={styles.titleInput(props.profile.birthdate)}
                         type='date'
                         name='birthdate'
                         placeholder='Fecha de nacimiento'
@@ -40,7 +40,7 @@ const EditProfile = (props) => {
                 </div>
                 <div className='form-control'>
                     <select
-                        className={styles.select}
+                        className={styles.select(props.profile.gender)}
                         value={props.profile.gender}
                         onChange={(e) => props.onChange(e, 'gender')}>
                         <option className={styles.option} value='default'>Género</option>
@@ -51,7 +51,7 @@ const EditProfile = (props) => {
                 </div>
                 <div className='form-control'>
                     <input
-                        className={styles.titleInput}
+                        className={styles.titleInput(props.profile.residence)}
                         type='text'
                         name='residence'
                         placeholder='Residencia (provincia/canton/distrito)'

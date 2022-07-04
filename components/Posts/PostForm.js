@@ -29,7 +29,7 @@ const PostForm = ({
                 </div>
             </section>
             <section className='row-span-3 grid lg:grid-cols-2 auto-rows-auto gap-3.5'>
-                <div className='flex flex-col form-control gap-2.5 pt-4'>
+                <div className='flex flex-col form-control gap-4 pt-4'>
                     <label className={styles.label}>
                         <FontAwesomeIcon className={styles.icon} icon={faTags} />
                         <select
@@ -139,11 +139,11 @@ const PostForm = ({
             </section>
             <section className='row-auto items-center flex flex-row w-full justify-between'>
                 <div className='form-control flex flex-row gap-2'>
-                    <button type='submit' disabled={(formHasChanged && form.agreedterms) ? '' : 'disabled'} className={styles.button('btn-primary text-white')}>Guardar</button>
-                    <button type='button' onClick={clearForm} className={styles.button('btn-primary text-white')}>Cancelar</button>
-                    <button type='button' onClick={requestApproval} disabled={(formHasChanged && form.id) ? '' : 'disabled'} className={styles.button('btn-warning')}>Solicitar Aprobación</button>
+                    <button type='submit' disabled={(formHasChanged && form.agreedterms) ? '' : 'disabled'} className={styles.button}>Guardar</button>
+                    <button type='button' onClick={clearForm} className={styles.button}>Cancelar</button>
+                    <button type='button' onClick={requestApproval} disabled={(formHasChanged && form.id) ? '' : 'disabled'} className={styles.button}>Solicitar Aprobación</button>
                 </div>
-                <button type='button' onClick={() => setShowPreview(true)} className={styles.button('btn-primary text-white')}>Vista Previa</button>
+                <button type='button' onClick={() => setShowPreview(true)} className={styles.button}>Vista Previa</button>
             </section>
         </form>
     );
@@ -161,8 +161,8 @@ const styles = {
     fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text font-normal text-lg border-2 border-transparent py-2 rounded-none`,
     textarea: 'textarea font-normal p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full',
     checkbox: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} checkbox font-normal checkbox-secondary`,
-    button: (type) => `btn btn-md ${type} rounded-full`,
-    link: 'text-other cursor-pointer hover:text-primary underline underline-offset-1'
+    button: 'btn py-[10px] px-[20px] bg-other hover:btn-primary hover:text-white capitalize text-white rounded-full',
+    link: 'text-other uppercase cursor-pointer hover:text-primary underline underline-offset-1'
 };
 
 export default PostForm;
