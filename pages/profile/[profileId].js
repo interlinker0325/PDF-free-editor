@@ -100,9 +100,9 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     }, [formState])
 
     const avatarView = avatarImage || formState.avatar?.url ? (
-        <img htmlFor='avatar' className='h-full w-full' src={avatarImage || formState.avatar.url} />
+        <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} />
     ) : (
-        <div htmlFor='avatar' className='h-full w-full flex flex-col justify-center items-center px-8 py-10'>
+        <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
             <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser} />
         </div>
     );
@@ -200,10 +200,10 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
 }
 
 const styles = {
-    mainContainer: 'mb-8 grid grid-cols-4 gap-8',
-    leftContainer: 'flex flex-col justify-between item-center',
-    rightContainer: 'col-span-3 flex flex-col gap-6',
-    avatarCard: 'card text-gray-400 bg-secondary rounded-none h-60 flex flex-col justify-center items-center',
+    mainContainer: 'mb-8 grid grid-cols-7 gap-8',
+    leftContainer: 'flex flex-col col-span-2 justify-between item-center',
+    rightContainer: 'col-span-5 flex flex-col gap-6',
+    avatarCard: 'card text-gray-400 bg-secondary rounded-none h-[300px] w-[300px] flex flex-col justify-center items-center',
     tabs: 'tabs border-transparent border-b-black border-b-[1px] w-full justify-between',
     tabItem: 'tab font-normal text-black text-2xl px-0 hover:text-primary',
     activeTab: 'tab font-normal text-2xl tab-active text-other px-0',
