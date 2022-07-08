@@ -32,6 +32,7 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-download-link": "^2.3.0",
     "react-full-page": "^0.1.12",
     "react-responsive-carousel": "^3.2.23",
     "remark": "^13.0.0",

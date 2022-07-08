@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import IFrame from 'components/IFrame/IFrame';
+import DownloadLink from "react-download-link";
 
 const PostView = ({
     user,
@@ -13,15 +14,22 @@ const PostView = ({
     const author = post?.author;
     const isCurrentUserAuthor = author?.id === user?.id;
 
+    const GetDataFromURL = (fileUrl) => new Promise((resolve, Reject) => {
+        setTimeout(() => {
+            fetch(fileUrl)
+                .then(response => response.text())
+                .then(data => {
+                    resolve(data);
+                });
+        }, 2000);
+    });
+
     const files = Array.isArray(post?.attachments) ? post?.attachments?.map(file =>
-        <a
-            target='_blank'
-            href={file.url}
-            download={file.title || file.filename}
-            key={`file_attachment_${file.id}`}
-            className='text-other hover:text-primary ml-4 underline underline-offset-1'>
-            {file.title || file.filename}
-        </a>
+        <DownloadLink
+            className='text-other hover:text-primary ml-4 underline underline-offset-1'
+            label={file.title || file.filename}
+            filename={file.filename}
+            exportFile={() => Promise.resolve(GetDataFromURL(file.url))} />
     ) : [];
 
     let course = post?.course;
