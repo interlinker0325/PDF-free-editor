@@ -202,7 +202,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
 const styles = {
     mainContainer: 'mb-8 flex flex-row gap-8',
     leftContainer: 'flex flex-col w-[300px] justify-between item-center',
-    rightContainer: 'flex flex-col gap-6',
+    rightContainer: 'flex flex-col gap-6 w-full',
     avatarCard: 'card text-gray-400 bg-secondary rounded-none h-[300px] w-[300px] flex flex-col justify-center items-center',
     tabs: 'tabs border-transparent border-b-black border-b-[1px] w-full justify-between',
     tabItem: 'tab font-normal text-black text-2xl px-0 hover:text-primary',
