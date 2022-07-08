@@ -97,7 +97,7 @@ const NewPost = (props) => {
                     setPreviewIframe(loadedMonograph);
                 }
 
-                itemValue = files.id;
+                itemValue = files;
                 triggerLoading(false);
             } else {
                 itemValue = refs[name].current.checked;
@@ -137,6 +137,16 @@ const NewPost = (props) => {
         setFormState(restFormState)
     }, [formState]);
 
+    const setCoAuthors = useCallback(async (e, selectedCoAuthor) => {
+        e.preventDefault();
+        const { coauthors, ...restFormState } = formState;
+        let selectedCoauthors = coauthors || [];
+        selectedCoauthors.push(selectedCoAuthor);
+        restFormState.coauthors = selectedCoauthors;
+        console.log('OVER HERE!!!', selectedCoauthors, selectedCoAuthor, restFormState);
+        setFormState(restFormState)
+    }, [formState]);
+
     const formHasChanged = formState !== formBaseState;
     return (
         <Main>
@@ -167,6 +177,7 @@ const NewPost = (props) => {
                     setShowPreview={doShowPreview}
                     user={user}
                     setAgreedterms={setAgreedterms}
+                    setCoAuthors={setCoAuthors}
                     {...props} />
             )}
             <Loader show={showLoadingScreen} />

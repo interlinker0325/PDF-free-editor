@@ -25,7 +25,7 @@ const PostView = ({
         </a>
     ) : [];
 
-    let coAuthors = Array.isArray(post?.coauthors) ? post?.coauthors[0] : post?.coauthors;
+    // let coAuthors = Array.isArray(post?.coauthors) ? post?.coauthors[0] : post?.coauthors;
     let course = post?.course;
 
     if (students) coAuthors = students.find(student => student.id === coAuthors);
@@ -46,11 +46,8 @@ const PostView = ({
                         <h3 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Curso:</span>{course.name}</h3>
                     }
                     <h4 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Autor(es):</span>{author?.fullname || user?.fullname}</h4>
-                    {coAuthors ?
-                        Array.isArray(coAuthors) ?
-                            <h4 className='text-lg font-caslon'>{coAuthors.map(coauthor => coauthor.fullname).join(', ')}</h4>
-                            : <h4 className='text-lg font-caslon'>{coAuthors.fullname}</h4>
-                        : null
+                    {Array.isArray(post?.coauthors) &&
+                        <h4 className='text-lg font-caslon'>{post?.coauthors.map(coauthor => coauthor.fullname).join(', ')}</h4>
                     }
                     <a onClick={toggleShowFiles} className='text-other hover:text-primary underline underline-offset-1'>Contenido Adjunto ></a>
                     {showFiles && files}

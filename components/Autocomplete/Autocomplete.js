@@ -95,13 +95,13 @@ class Autocomplete extends Component {
         if (showSuggestions && userInput) {
             if (filteredSuggestions.length) {
                 suggestionsListComponent = (
-                    <ul className="list-none mt-0 max-h-[143px] overflowy-auto pl-0 w-[calc(300px + 1rem)]">
+                    <ul className="list-none absolute bg-white ml-0 mt-15 mt-0 max-h-[143px] overflowy-auto pl-0 w-64">
                         {filteredSuggestions.map((suggestion, index) => (
                             <li
                                 key={index}
                                 className={index === activeSuggestion ?
-                                    'bg-[#008f68] text-[#fae042] cursor-pointer font-normal'
-                                    : 'p-2 hover:bg-[#008f68] hover:text-[#fae042] hover:cursor-pointer hover:font-normal'
+                                    'bg-other text-white cursor-pointer font-normal'
+                                    : 'p-2 hover:bg-primary hover:text-white hover:cursor-pointer hover:font-normal'
                                 }
                                 onClick={onClick}>
                                 {suggestion.fullname}
@@ -120,10 +120,13 @@ class Autocomplete extends Component {
         }
 
         return (
-            <div className='flex flex-col h-[36px] w-2/4 justify-center cursor-pointer font-normal gap-3.5 p-0'>
+            <div className='h-[36px] bg-transparent w-2/4 justify-center cursor-pointer font-normal gap-3.5 p-0'>
                 <input
                     type='text'
-                    className='input shadow-lg w-full text-titleInput border-b-black border-2 font-normal text-lg input-ghost border-transparent rounded-none w-full px-0'
+                    className={
+                        `${this.props.coAuthors?.length > 0 ?
+                            'placeholder:text-other text-other border-b-other' : 'placeholder:text-titleInput text-titleInput border-b-black'} 
+                            bg-transparent input placeholder:font-normal placeholder:text-lg h-[36px] drop-shadow-lg w-full border-2 font-normal text-lg input-ghost border-transparent rounded-none px-0`}
                     placeholder={this.props.placeholder}
                     onChange={onChange}
                     onKeyDown={onKeyDown}

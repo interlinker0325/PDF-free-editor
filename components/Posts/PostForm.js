@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons'
 import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
+import Autocomplete from 'components/Autocomplete/Autocomplete';
 
 const PostForm = ({
     form,
@@ -14,9 +15,11 @@ const PostForm = ({
     setShowPreview,
     user,
     setAgreedterms,
+    setCoAuthors,
     refs
 }) => {
-    const coAuthors = students.find(student => student.id === (form.coauthors?.id || form.coauthors));
+    console.log('OVER HERE POST FORM!!', form, form.coauthors);
+    const coAuthorsString = Array.isArray(form.coauthors) && form.coauthors.map(author => author.fullname).join(', ');
     return (
         <form className='font-roboto grid auto-rows-auto gap-8' onSubmit={doSubmit}>
             <section className='row-auto'>
@@ -93,22 +96,16 @@ const PostForm = ({
 
                     <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} />
-                        <label className={`w-3/4 ${styles.label}`}>
-                            <select
-                                className={styles.select(form.coauthors)}
-                                value={form.coauthors || 'default'}
-                                onChange={(e) => onChange(e, 'coauthors')}>
-                                <option value='default'>Co-autores</option>
-                                {students.map(student =>
-                                    <option key={`select_student_${student.id}`} value={student.id}>{student.fullname}</option>
-                                )}
-                            </select>
-                        </label>
+                        <Autocomplete
+                            coAuthors={form.coauthors}
+                            placeholder='Co-autores'
+                            onClick={setCoAuthors}
+                            suggestions={students} />
                     </div>
 
                     <div>
                         <h4 className='text-base font-normal font-roboto mb-2'>Autor(a) original: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
-                        <h4 className='text-base font-normal font-roboto mt-2'>Co-autores: <span className='font-caslon text-base font-normal text-other'>{coAuthors?.fullname}</span></h4>
+                        <h4 className='text-base font-normal font-roboto mt-2'>Co-autores: <span className='font-caslon text-base font-normal text-other'>{coAuthorsString}</span></h4>
                     </div>
                 </div>
                 <div className='form-control gap-5'>

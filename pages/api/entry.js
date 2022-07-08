@@ -11,15 +11,13 @@ export default async (req, res) => {
             itemType: process.env.ENTRY_MODEL_ID,
         };
 
-        entry.coverimage = coverimage ? { uploadId: coverimage } : null;
-        entry.monograph = monograph ? { uploadId: monograph } : null;
-
-        // TEMP
-        entry.coauthors = [coauthors];
+        entry.coverimage = coverimage ? { uploadId: coverimage.id } : null;
+        entry.monograph = monograph ? { uploadId: monograph.id } : null;
+        entry.coauthors = coauthors.map(coauthor => coauthor.id);
 
         if (attachments) {
             if (!Array.isArray(attachments)) attachments = [attachments];
-            entry.attachments = attachments.map(file => ({ uploadId: file }))
+            entry.attachments = attachments.map(file => ({ uploadId: file.id }))
         }
 
         const record = await createRecord(entry);
@@ -37,9 +35,8 @@ export default async (req, res) => {
         rest.monograph = monograph ? { uploadId: monograph.id } : null;
         rest.author = author.id;
         rest.course = course.id;
-
-        // TEMP
-        rest.coauthors = coauthors[0]?.id ? [coauthors[0]?.id] : coauthors;
+        rest.coauthors = coauthors.map(coauthor => coauthor.id);
+        authors = coauthors[0]?.id ? [coauthors[0]?.id] : coauthors;
 
         if (attachments) {
             if (!Array.isArray(attachments)) attachments = [attachments];

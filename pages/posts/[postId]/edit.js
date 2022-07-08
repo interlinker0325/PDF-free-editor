@@ -158,14 +158,10 @@ const EditPost = ({ post, ...props }) => {
 
 export async function getServerSideProps({ params }) {
     const { post, allUsers, allCourses } = await request([GET_ENTRY_BY_ID(params.postId), GET_ALL_COURSES, GET_ALL_STUDENTS]);
-    const { course, coauthors, ...postData } = post;
+    const { course, ...postData } = post;
 
     if (course) {
         postData.course = course.id;
-    }
-
-    if (coauthors) {
-        postData.coauthors = coauthors[0].id;
     }
 
     if (postData?.monograph) {
