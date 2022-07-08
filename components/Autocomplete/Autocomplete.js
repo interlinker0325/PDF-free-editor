@@ -21,11 +21,15 @@ class Autocomplete extends Component {
     }
 
     onChange = e => {
-        const { suggestions } = this.props;
+        const { suggestions, coAuthors = [] } = this.props;
         const userInput = e.currentTarget.value;
 
+        const coAuthorAlreadyAdded = coAuthors?.length > 0 ?
+            coAuthors.find(coauthor =>
+                coauthor.fullname.toLowerCase().indexOf(userInput.toLowerCase()) > -1) : false;
         const filteredSuggestions = suggestions.filter(
             suggestion =>
+                !coAuthorAlreadyAdded &&
                 suggestion.fullname.toLowerCase().indexOf(userInput.toLowerCase()) > -1
         );
         this.setState({
@@ -36,8 +40,13 @@ class Autocomplete extends Component {
         });
     };
 
-    onClick = e => {
-        this.props.onClick(e, this.props.suggestions.filter(sug => sug.fullname === e.currentTarget.innerText)[0]);
+    onClick = (e, userInput = false) => {
+        e.stopPropagation();
+        this.props.onClick(e, this.props.suggestions.filter(sug =>
+            userInput ?
+                sug.fullname === userInput
+                : sug.fullname === e.currentTarget.innerText)[0]
+        );
         this.setState({
             activeSuggestion: 0,
             filteredSuggestions: [],
@@ -51,11 +60,7 @@ class Autocomplete extends Component {
 
         // User pressed the enter key
         if (e.keyCode === 13) {
-        this.setState({
-            activeSuggestion: 0,
-            showSuggestions: false,
-            userInput: filteredSuggestions[activeSuggestion]
-        });
+            return;
         }
         // User pressed the up arrow
         else if (e.keyCode === 38) {
@@ -112,8 +117,8 @@ class Autocomplete extends Component {
                 console.log('OVER Render!!!', filteredSuggestions, suggestionsListComponent);
             } else {
                 suggestionsListComponent = (
-                    <div className="p-2 text-[#999]">
-                        <em>No suggestions, you're on your own!</em>
+                    <div className="p-2 text-other absolute bg-white ml-0 mt-15 mt-0 max-h-[143px] w-64">
+                        <em>No hay estudiantes</em>
                     </div>
                 );
             }

@@ -73,11 +73,9 @@ const EditPost = ({ post, ...props }) => {
         let itemValue;
         if (refs[name]) {
             const _files = refs[name]?.current?.files;
-            console.log('FILEs!', _files);
             if (_files) {
                 triggerLoading(true);
                 const files = await upload(_files);
-                console.log('FILE UPLOADED!', files);
                 itemValue = files;
                 triggerLoading(false);
             } else {
@@ -118,6 +116,15 @@ const EditPost = ({ post, ...props }) => {
         setFormState(restFormState)
     }, [formState]);
 
+    const setCoAuthors = useCallback(async (e, selectedCoAuthor) => {
+        e.preventDefault();
+        const { coauthors, ...restFormState } = formState;
+        let selectedCoauthors = coauthors || [];
+        selectedCoauthors.push(selectedCoAuthor);
+        restFormState.coauthors = selectedCoauthors;
+        setFormState(restFormState)
+    }, [formState]);
+
     const formHasChanged = formState !== post;
     return (
         <Main>
@@ -149,6 +156,7 @@ const EditPost = ({ post, ...props }) => {
                     setShowPreview={doShowPreview}
                     user={user}
                     setAgreedterms={setAgreedterms}
+                    setCoAuthors={setCoAuthors}
                     {...props} />
             )}
             <Loader show={showLoadingScreen} />

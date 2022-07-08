@@ -4,7 +4,6 @@ import IFrame from 'components/IFrame/IFrame';
 const PostView = ({
     user,
     post,
-    students,
     courses,
     editMode = false,
     previewIframe
@@ -25,10 +24,8 @@ const PostView = ({
         </a>
     ) : [];
 
-    // let coAuthors = Array.isArray(post?.coauthors) ? post?.coauthors[0] : post?.coauthors;
     let course = post?.course;
 
-    if (students) coAuthors = students.find(student => student.id === coAuthors);
     if (courses) course = courses.find(someCourse => someCourse.id === course);
 
     return (
