@@ -26,7 +26,7 @@ const PostView = ({
 
     const files = Array.isArray(post?.attachments) ? post?.attachments?.map(file =>
         <DownloadLink
-            className='text-other hover:text-primary ml-4 underline underline-offset-1'
+            className='!text-other hover:!text-primary !m-0 !no-underline'
             label={file.title || file.filename}
             filename={file.filename}
             exportFile={() => Promise.resolve(GetDataFromURL(file.url))} />
@@ -54,8 +54,10 @@ const PostView = ({
                     {Array.isArray(post?.coauthors) &&
                         <h4 className='text-lg font-caslon'>{post?.coauthors.map(coauthor => coauthor.fullname).join(', ')}</h4>
                     }
-                    <a onClick={toggleShowFiles} className='text-other hover:text-primary underline underline-offset-1'>Contenido Adjunto ></a>
-                    {showFiles && files}
+                    <a onClick={toggleShowFiles} className='text-other hover:text-primary underline underline-offset-2'>Contenido Adjunto ></a>
+                    <div className='w-full pl-4 flex flex-col gap-0'>
+                        {showFiles && files}
+                    </div>
                 </aside>
             </div>
         </article>
