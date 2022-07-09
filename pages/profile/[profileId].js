@@ -14,6 +14,8 @@ import Publications from 'components/Profile/Publications';
 import EditProfile from 'components/Profile/EditProfile';
 import TopBar from 'components/TopBar/TopBar';
 import Loader from 'components/Loader/Loader';
+import { verifyMutipleFields, INPUT_TYPES } from 'utils/form';
+import useUser from 'utils/useUser';
 
 import { isProfessor as isUserProfessor} from 'utils';
 
@@ -27,13 +29,17 @@ const VIEW_STATES = {
     ARCHIVE: 'ARCHIVE'
 }
 
+const DEFAULT_ERRORFORM = { field: null, msg: null };
+
 const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
+    const { user } = useUser({ redirectTo: '/' })
     const router = useRouter();
     useEffect(() => {
         if (!profile) router.push('/');
     }, [profile]);
     const [showLoadingScreen, setShowLoadingScreen] = useState(false);
-    const [formState, setFormState] = useState(profile);
+    const [formState, setFormState] = useState(profile || {});
+    const [errorForm, setErrorForm] = useState(DEFAULT_ERRORFORM);
     const [avatarImage, setAvatarImage] = useState(null);
     const [activeView, setActiveView] = useState(VIEW_STATES.USER);
     const { query: { profileId } } = useRouter();
@@ -78,16 +84,54 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     const submitUpdateProfile = useCallback(async (e) => {
         e.preventDefault();
         triggerLoading(true);
-        const { id, role, ...profileData } = formState;
-        profileData.role = role.id;
+        const {
+            id,
+            role,
+            fullname,
+            email,
+            phone,
+            birthdate,
+            gender,
+            residence,
+            level,
+            experience,
+        } = formState;
+
+        const fieldsStatus = verifyMutipleFields([
+            { field: INPUT_TYPES.FULLNAME, value: fullname, required: true },
+            { field: INPUT_TYPES.EMAIL, value: email, required: true },
+            { field: INPUT_TYPES.PHONE, value: phone, required: true },
+            { field: INPUT_TYPES.BIRTHDATE, value: birthdate, required: true },
+            { field: INPUT_TYPES.GENDER, value: gender },
+            { field: INPUT_TYPES.RESIDENCE, value: residence },
+            { field: INPUT_TYPES.LEVEL, value: level },
+            { field: INPUT_TYPES.EXPERIENCE, value: experience }
+        ]);
+
+        if (fieldsStatus) {
+            setErrorForm(fieldsStatus);
+            triggerLoading(false);
+            return;
+        } else {
+            setErrorForm(DEFAULT_ERRORFORM);
+        }
+
         const entry = await updateProfile(id, {
-            ...profileData
+            role: role.id,
+            fullname,
+            email,
+            phone,
+            birthdate,
+            gender,
+            residence,
+            level,
+            experience
         });
 
         if (entry.error) {
             alert('No se pudo actualizar la entrada');
         } else {
-            setFormState({ ...entry, ...profileData});
+            setFormState({ ...entry });
         }
         triggerLoading(false);
         setActiveView(VIEW_STATES.USER);
@@ -107,14 +151,17 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         </div>
     );
 
-    const showStatusBar = (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
+    const showStatusBar = errorForm.field || (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
     return (
         <Main>
             {showStatusBar &&
                 <TopBar>
                     <h4
-                        className='text-primary text-2xl cursor-pointer'
-                        children='Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento' />
+                        className={`${errorForm.msg ? 'text-error' : 'text-primary'} text-2xl cursor-pointer`}
+                        children={errorForm.msg ?
+                            errorForm.msg :
+                            'Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento'
+                        } />
                 </TopBar>
             }
             <div className={`${showStatusBar ? 'mb-8' : 'my-5'} ${styles.mainContainer}`}>
@@ -177,6 +224,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                     <div className={styles.tabContent}>
                         {activeView === VIEW_STATES.USER &&
                             <UserInfo
+                                isCurrentUserProfile={isCurrentUserProfile}
                                 {...formState} />
                         }
                         {activeView === VIEW_STATES.COURSE &&
@@ -189,7 +237,11 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                             <Publications items={archivePosts} />
                         }
                         {activeView === VIEW_STATES.EDIT &&
-                            <EditProfile profile={formState} onChange={onChange} setProfile={setFormState} />
+                            <EditProfile
+                                profile={formState}
+                                onChange={onChange}
+                                setProfile={setFormState}
+                                errorState={errorForm} />
                         }
                     </div>
                 </div>

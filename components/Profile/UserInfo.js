@@ -6,7 +6,8 @@ const UserInfo = ({
     residence,
     gender,
     level,
-    experience
+    experience,
+    isCurrentUserProfile
 }) => {
     return (
         <div className="flex flex-col gap-6">
@@ -14,7 +15,9 @@ const UserInfo = ({
                 <h4 className={styles.label}>Nombre completo: <span className={styles.span}>{fullname}</span></h4>
                 <h4 className={styles.label}>Correo: <span className={styles.span}>{email}</span></h4>
                 <h4 className={styles.label}>Número Telefónico: <span className={styles.span}>{phone}</span></h4>
-                <h4 className={styles.label}>Fecha de nacimiento: <span className={styles.span}>{birthdate}</span></h4>
+                {isCurrentUserProfile ?
+                    <h4 className={styles.label}>Fecha de nacimiento: <span className={styles.span}>{birthdate}</span></h4> : null
+                }
                 <h4 className={styles.label}>Género: <span className={styles.span}>{gender}</span></h4>
                 <h4 className={styles.label}>Residencia: <span className={styles.span}>{residence}</span></h4>
             </div>

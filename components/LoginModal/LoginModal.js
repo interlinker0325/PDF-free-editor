@@ -3,33 +3,45 @@ import { useState } from 'react';
 import fetchJson from 'utils/fetchJson';
 
 import Modal from '../Modal/Modal';
+import { verifyMutipleFields, INPUT_TYPES } from 'utils/form';
+const DEFAULT_ERRORFORM = { field: null, msg: null };
 
 const LoginModal = ({ onClose, display }) => {
     const { mutateUser } = useUser({
         callback: onClose
     });
 
-    const [errorMsg, setErrorMsg] = useState("");
+    const [errorForm, setErrorForm] = useState(DEFAULT_ERRORFORM);
 
     async function handleSubmit(e) {
         e.preventDefault();
+        const email = e.currentTarget.email.value;
+        const password = e.currentTarget.password.value;
+        const fieldsStatus = verifyMutipleFields([
+            { field: INPUT_TYPES.EMAIL, value: email, required: true },
+            { field: INPUT_TYPES.PASSWORD, value: password, required: true }
+        ]);
 
-        const body = {
-            email: e.currentTarget.email.value,
-            password: e.currentTarget.password.value
-        };
+        if (fieldsStatus) {
+            setErrorForm(fieldsStatus);
+            return;
+        } else {
+            setErrorForm(DEFAULT_ERRORFORM);
+        }
+
+        const body = { email, password };
 
         try {
-          mutateUser(
+        mutateUser(
             await fetchJson('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             }),
-          );
+        );
         } catch (error) {
-            console.error("An unexpected error happened:", error);
-            setErrorMsg(error.data);
+            console.log("An unexpected error happened:", error);
+            setErrorForm(error.data);
         }
     }
 
@@ -39,20 +51,33 @@ const LoginModal = ({ onClose, display }) => {
             <div class="flex flex-col justify-center items-center w-full">
                 <h3 className="text-4xl font-roboto text-center py-11 w-full">Iniciar sesión</h3>
             </div>
-            <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center w-[255px]'>
-                <input
-                    className={styles.input}
-                    type='email'
-                    name='email'
-                    role='email'
-                    placeholder='Correo Electrónico' />
+            <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center w-[255px]' noValidate={true}>
+                <div className='form-control w-full'>
+                    <input
+                        className={styles.input}
+                        type='email'
+                        name='email'
+                        role='email'
+                        required=""
+                        placeholder='Correo Electrónico' />
 
-                <input
-                    className={styles.input}
-                    type='password'
-                    name='password'
-                    role='password'
-                    placeholder='Contraseña' />
+                    {errorForm.field !== 'email' ? null :
+                        <p className='text-error text-sm -mt-2'>{errorForm.msg}</p>
+                    }
+                </div>
+
+                <div className='form-control w-full'>
+                    <input
+                        className={styles.input}
+                        type='password'
+                        name='password'
+                        role='password'
+                        placeholder='Contraseña' />
+
+                    {errorForm.field !== 'password' ? null :
+                        <p className='text-error text-sm -mt-2'>{errorForm.msg}</p>
+                    }
+                </div>
 
                 <button
                     type='submit'

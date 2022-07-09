@@ -3,6 +3,7 @@ import withSession from 'utils/withSession';
 import Cors from 'cors'
 import initMiddleware from 'utils/initMiddleware'
 import { query } from 'gql';
+import { verifyMutipleFields, INPUT_TYPES } from 'utils/form';
 
 // Initialize the cors middleware
 const cors = initMiddleware(
@@ -19,17 +20,21 @@ export default withSession(async (req, res) => {
     const { email, password } = await req.body;
     try {
         const { user: userData } = await request([query.user.GET_USER_LOGIN_DATA(email)]);
-        if (userData.password === password) {
-            delete userData.password;
-            const user = { isLoggedIn: true, ...userData };
-            req.session.set('user', user);
-            await req.session.save();
-            res.json(user);
+        if (userData) {
+            if (userData.password === password) {
+                delete userData.password;
+                const user = { isLoggedIn: true, ...userData };
+                req.session.set('user', user);
+                await req.session.save();
+                res.json(user);
+            } else {
+                res.status(401).json({ field: INPUT_TYPES.PASSWORD, msg: 'Contraseña incorrecta'});
+            }
         } else {
-            res.status(401).json({ msg: 'Contraseña incorrecta'});
+            res.status(401).json({ field: INPUT_TYPES.EMAIL, msg: 'No existe un usuario con esas credenciales'});
         }
     } catch (error) {
         console.error(error);
-        res.status(401).json({ msg: 'Contraseña incorrecta'});
+        res.status(401).json({ field: INPUT_TYPES.EMAIL, msg: 'No existe un usuario con esas credenciales'});
     }
 });

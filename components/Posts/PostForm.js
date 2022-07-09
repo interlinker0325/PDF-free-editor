@@ -18,7 +18,6 @@ const PostForm = ({
     setCoAuthors,
     refs
 }) => {
-    console.log('OVER HERE POST FORM!!', form, form.coauthors);
     const coAuthorsString = Array.isArray(form.coauthors) && form.coauthors.map(author => author.fullname).join(', ');
     return (
         <form className='font-roboto grid auto-rows-auto gap-8' onSubmit={doSubmit}>
