@@ -75,7 +75,13 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
             }
             triggerLoading(false);
         } else {
-            itemValue = e.target.value;
+            if (name === INPUT_TYPES.PHONE) {
+                if (/^\d*[.]?\d*$/.test(e.target.value)) {
+                    itemValue = e.target.value;
+                }
+            } else {
+                itemValue = e.target.value;
+            }
         }
         delete formState[name];
         setFormState({ [name]: itemValue , ...formState })
