@@ -108,11 +108,10 @@ const PostForm = ({
                         <h4 className='text-base font-normal font-roboto mt-2'>Co-autores:
                             {' '}
                             {form.coauthors?.map(coauth =>
-                                <span className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
+                                <span key={`coAuthor_${coauth.id}`} className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
                                     {coauth.fullname}
                                     <a
                                         className='underline cursor-pointer'
-                                        key={`coAuthor_${coauth.id}`}
                                         id={coauth.id}
                                         onClick={async (e) => removeCoAuthor(e, coauth.id)}>
                                         (-)
