@@ -24,10 +24,6 @@ const PostView = ({
         }, 2000);
     });
 
-    // const getFilesFromUrl = (files) => new Promise((resolve, rejeect) => {
-        
-    // });
-
     const files = Array.isArray(post?.attachments) ? post?.attachments?.map(file =>
         <DownloadLink
             key={`Attachment_${file.url}`}
@@ -37,23 +33,7 @@ const PostView = ({
             exportFile={() => Promise.resolve(GetDataFromURL(file.url))} />
     ) : [];
 
-    let downloadAll;
-    useEffect(() => {
-        downloadAll = (urls) => {
-            const link = document.createElement('a');
-            link.setAttribute('download', null);
-            link.style.display = 'none';
-            document?.body.appendChild(link);
-            for (var i = 0; i < urls.length; i++) {
-                link.setAttribute('href', urls[i]);
-                link.click();
-            }
-            document.body.removeChild(link);
-        }
-    }, [files])
-
     let course = post?.course;
-
     if (courses) course = courses.find(someCourse => someCourse.id === course);
 
     return (
@@ -77,9 +57,6 @@ const PostView = ({
                     <a onClick={toggleShowFiles} className='text-other hover:text-primary underline underline-offset-2'>Contenido Adjunto ></a>
                     <div className='w-full pl-4 flex flex-col gap-0'>
                         {showFiles && files}
-                        {downloadAll &&
-                            <a onclick={downloadAll(post?.attachments.map(at => at.url))}>Test me!</a>
-                        }
                     </div>
                 </aside>
             </div>
