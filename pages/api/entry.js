@@ -13,7 +13,7 @@ export default async (req, res) => {
 
         entry.coverimage = coverimage ? { uploadId: coverimage.id } : null;
         entry.monograph = monograph ? { uploadId: monograph.id } : null;
-        entry.coauthors = coauthors.map(coauthor => coauthor.id);
+        entry.coauthors = coauthors ? coauthors.map(coauthor => coauthor.id) : null;
 
         if (attachments) {
             if (!Array.isArray(attachments)) attachments = [attachments];
@@ -35,7 +35,7 @@ export default async (req, res) => {
         rest.monograph = monograph ? { uploadId: monograph.id } : null;
         rest.author = author.id;
         rest.course = course.id;
-        rest.coauthors = coauthors.map(coauthor => coauthor.id);
+        rest.coauthors = coauthors ? coauthors.map(coauthor => coauthor.id) : null;
 
         if (attachments) {
             if (!Array.isArray(attachments)) attachments = [attachments];

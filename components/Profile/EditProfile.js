@@ -61,7 +61,7 @@ const EditProfile = ({ errorState, ...props }) => (
                     )}
                     value={props.profile.gender || 'default'}
                     onChange={(e) => props.onChange(e, INPUT_TYPES.GENDER)}>
-                    <option className={styles.option} value='default'>Género</option>
+                    <option className={styles.option} value='default' selected='selected' disabled='disabled'>Género</option>
                     <option className={styles.option} value='masculino'>Masculino</option>
                     <option className={styles.option} value='femenino'>Femenino</option>
                     <option className={styles.option} value='otro'>Otro</option>
