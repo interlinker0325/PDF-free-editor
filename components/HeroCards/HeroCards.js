@@ -7,7 +7,7 @@ const HeroCards = ({ bannerGroups }) => {
         <Carousel
             autoPlay
             infiniteLoop={true}
-            interval='4000'
+            interval='10000'
             showArrows={false}
             showStatus={false}
             showIndicators={false}
