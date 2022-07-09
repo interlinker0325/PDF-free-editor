@@ -114,7 +114,7 @@ const PostForm = ({
                                         key={`coAuthor_${coauth.id}`}
                                         id={coauth.id}
                                         onClick={async (e) => removeCoAuthor(e, coauth.id)}>
-                                        {coauth.fullname}
+                                        {coauth.fullname} (-)
                                     </a>
                                 )}
                                 {/* {coAuthorsString} */}

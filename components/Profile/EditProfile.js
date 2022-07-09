@@ -36,6 +36,7 @@ const EditProfile = ({ errorState, ...props }) => (
                     )}
                     type='tel'
                     name={INPUT_TYPES.PHONE}
+                    maxLength='8'
                     placeholder='Número telefónico *'
                     value={props.profile.phone || ''}
                     onChange={(e) => props.onChange(e, INPUT_TYPES.PHONE)}/>
