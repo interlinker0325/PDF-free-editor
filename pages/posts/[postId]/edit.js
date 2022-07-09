@@ -53,9 +53,9 @@ const EditPost = ({ post, ...props }) => {
     const doSubmit = useCallback(async (e) => {
         e.preventDefault();
         triggerLoading(true);
-        const { error, ...postData } = formState;
+        const { error, monographView, ...postData } = formState;
 
-        if (isUserTeacherOfCourse(user, postData.course)) {
+        if (isUserTeacherOfCourse(user, props.courses)) {
             postData.review = POST_REVIEW_STATUS.APPROVED;
         }
 
@@ -125,6 +125,15 @@ const EditPost = ({ post, ...props }) => {
         setFormState(restFormState)
     }, [formState]);
 
+    const removeCoAuthor = useCallback(async (e, coAuthorId) => {
+        e.preventDefault();
+        const { coauthors, ...restFormState } = formState;
+        const removeCoAuthorIndex = coauthors.findIndex(coAuthor => coAuthor.id === coAuthorId);
+        coauthors.splice(removeCoAuthorIndex, 1);
+        restFormState.coauthors = coauthors;
+        setFormState(restFormState)
+    }, [formState])
+
     const formHasChanged = formState !== post;
     return (
         <Main>
@@ -157,6 +166,7 @@ const EditPost = ({ post, ...props }) => {
                     user={user}
                     setAgreedterms={setAgreedterms}
                     setCoAuthors={setCoAuthors}
+                    removeCoAuthor={removeCoAuthor}
                     {...props} />
             )}
             <Loader show={showLoadingScreen} />

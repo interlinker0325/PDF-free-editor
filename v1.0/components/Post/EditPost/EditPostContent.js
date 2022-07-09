@@ -80,7 +80,6 @@ const EditPostContent = ({ formState, course, categories, clearForm, recordId })
         let value, name;
 
         if (refName) {
-            console.log('Section ref for file inputs', section[`${refName}Ref`], refName)
             const _files = section[`${refName}Ref`]?.current?.files;
             const files = await upload(_files);
 

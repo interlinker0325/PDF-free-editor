@@ -36,14 +36,12 @@ export default async (req, res) => {
         rest.author = author.id;
         rest.course = course.id;
         rest.coauthors = coauthors.map(coauthor => coauthor.id);
-        authors = coauthors[0]?.id ? [coauthors[0]?.id] : coauthors;
 
         if (attachments) {
             if (!Array.isArray(attachments)) attachments = [attachments];
             rest.attachments = attachments.map(file => ({ uploadId: file.id }))
         }
 
-        console.log('OVER HERE!!!', rest);
         const record = await updateRecord(id, rest);
 
         if (!record.error) {

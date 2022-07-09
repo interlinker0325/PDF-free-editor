@@ -49,7 +49,6 @@ const validateEmail = (email) => {
 
 export const verifyField = (field = {}) => {
     const error = {};
-    console.log('OVER HERE VIRIFY', field)
     switch (field.field) {
         case INPUT_TYPES.EMAIL:
             if (field.required && field.value?.length <= 1) {

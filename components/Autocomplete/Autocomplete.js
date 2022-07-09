@@ -100,13 +100,13 @@ class Autocomplete extends Component {
         if (showSuggestions && userInput) {
             if (filteredSuggestions.length) {
                 suggestionsListComponent = (
-                    <ul className="list-none absolute bg-white ml-0 mt-15 mt-0 max-h-[143px] overflowy-auto pl-0 w-64">
+                    <ul className="list-none w-[18rem] p-2 border-b-black border-2 drop-shadow-lg absolute bg-white mt-15 mt-0 max-h-[143px] overflowy-auto">
                         {filteredSuggestions.map((suggestion, index) => (
                             <li
                                 key={index}
                                 className={index === activeSuggestion ?
-                                    'bg-other text-white cursor-pointer font-normal'
-                                    : 'p-2 hover:bg-primary hover:text-white hover:cursor-pointer hover:font-normal'
+                                    'text-other underline underline-offset-2 cursor-pointer font-normal w-full'
+                                    : 'p-2 hover:bg-primary hover:text-white hover:cursor-pointer hover:font-normal w-full'
                                 }
                                 onClick={onClick}>
                                 {suggestion.fullname}
@@ -114,7 +114,6 @@ class Autocomplete extends Component {
                         ))}
                     </ul>
                 );
-                console.log('OVER Render!!!', filteredSuggestions, suggestionsListComponent);
             } else {
                 suggestionsListComponent = (
                     <div className="p-2 text-other absolute bg-white ml-0 mt-15 mt-0 max-h-[143px] w-64">

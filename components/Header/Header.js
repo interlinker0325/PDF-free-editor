@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 
 export default function Header({ items = [] }) {
     const router = useRouter();
-    // console.log('HEADER', router, items);
     return (
         <nav className='navbar px-14 bg-gradient-to-b from-gradientt to-gradientb shadow-md flex-initial'>
             <div className="flex-initial">

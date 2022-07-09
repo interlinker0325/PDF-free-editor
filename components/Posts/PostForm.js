@@ -16,6 +16,7 @@ const PostForm = ({
     user,
     setAgreedterms,
     setCoAuthors,
+    removeCoAuthor,
     refs
 }) => {
     const coAuthorsString = Array.isArray(form.coauthors) && form.coauthors.map(author => author.fullname).join(', ');
@@ -104,7 +105,21 @@ const PostForm = ({
 
                     <div>
                         <h4 className='text-base font-normal font-roboto mb-2'>Autor(a) original: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
-                        <h4 className='text-base font-normal font-roboto mt-2'>Co-autores: <span className='font-caslon text-base font-normal text-other'>{coAuthorsString}</span></h4>
+                        <h4 className='text-base font-normal font-roboto mt-2'>Co-autores:
+                            {' '}
+                            <span className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
+                                {form.coauthors?.map(coauth =>
+                                    <a
+                                        className='underline'
+                                        key={`coAuthor_${coauth.id}`}
+                                        id={coauth.id}
+                                        onClick={async (e) => removeCoAuthor(e, coauth.id)}>
+                                        {coauth.fullname}
+                                    </a>
+                                )}
+                                {/* {coAuthorsString} */}
+                            </span>
+                        </h4>
                     </div>
                 </div>
                 <div className='form-control gap-5'>
