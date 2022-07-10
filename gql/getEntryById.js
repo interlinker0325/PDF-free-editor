@@ -28,6 +28,10 @@ export const GET_ENTRY_BY_ID = (entryId) => `
             id
             title
             url
+            format
+            mimeType
+            size
+            exifInfo
         }
         id
         monograph {
