@@ -28,7 +28,7 @@ const PostForm = ({
                         className={styles.titleInput(form.title)}
                         type='text'
                         name='title'
-                        placeholder='Titular de publicación'
+                        placeholder='Titular de publicación *'
                         value={form.title}
                         onChange={(e) => onChange(e, 'title')}/>
                 </div>
@@ -42,7 +42,7 @@ const PostForm = ({
                                 className={styles.select(form.course)}
                                 value={form.course || 'default'}
                                 onChange={(e) => onChange(e, 'course')}>
-                                <option value='default'>Curso de la publicación</option>
+                                <option value='default'>Curso de la publicación *</option>
                                 {courses.map(course =>
                                     <option key={`select_course_${course.id}`} value={course.id}>{course.name}</option>
                                 )}
@@ -60,7 +60,7 @@ const PostForm = ({
                                     id='monograph'
                                     ref={refs.monograph}
                                     onChange={(e) => onChange(e, 'monograph')}/>
-                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento HTML <span className='font-thin'>{'>'}</span></span>
+                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento HTML * <span className='font-thin'>{'>'}</span></span>
                             </div>
                         </label>
                     </div>
@@ -75,7 +75,7 @@ const PostForm = ({
                                 id='coverimage'
                                 ref={refs.coverimage}
                                 onChange={(e) => onChange(e, 'coverimage')}/>
-                            <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado <span className='font-thin'>{'>'}</span></span>
+                            <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado * <span className='font-thin'>{'>'}</span></span>
                         </label>
                     </div>
 
@@ -126,7 +126,7 @@ const PostForm = ({
                         <textarea
                             maxLength='200'
                             className={styles.textarea(form.description)}
-                            placeholder='Agregar sinopsis de la publicación (resumen)'
+                            placeholder='Agregar sinopsis de la publicación (resumen) *'
                             value={form.description}
                             onChange={(e) => onChange(e, 'description')} />
                         <p className='text-sm'>Máximo 200 caracteres*</p>
@@ -136,7 +136,7 @@ const PostForm = ({
                         <textarea
                             maxLength='200'
                             className={styles.textarea(form.tags)}
-                            placeholder='Palabras claves'
+                            placeholder='Palabras claves *'
                             value={form.tags}
                             onChange={(e) => onChange(e, 'tags')} />
                         <p className='text-sm'>Separadas por coma*</p>
@@ -163,9 +163,32 @@ const PostForm = ({
             </section>
             <section className='row-auto items-center flex flex-row w-full justify-between'>
                 <div className='form-control flex flex-row gap-2'>
-                    <button type='submit' disabled={(formHasChanged && form.agreedterms) ? '' : 'disabled'} className={styles.button}>Guardar</button>
-                    <button type='button' onClick={clearForm} className={styles.button}>Cancelar</button>
-                    <button type='button' onClick={requestApproval} disabled={(formHasChanged && form.id) ? '' : 'disabled'} className={styles.button}>Solicitar Aprobación</button>
+                    <button
+                        type='submit'
+                        disabled={(
+                            formHasChanged &&
+                                form.agreedterms &&
+                                    form.title &&
+                                    form.monograph &&
+                                    form.coverimage &&
+                                    form.description &&
+                                    form.tags
+                            ) ? '' : 'disabled'
+                        }
+                        className={styles.button}>
+                        Guardar
+                    </button>
+                    <button
+                        type='button'
+                        onClick={clearForm}
+                        className={styles.button}>
+                        Cancelar
+                    </button>
+                    <button
+                        type='button'
+                        onClick={requestApproval}
+                        disabled={(formHasChanged && form.id) ? '' : 'disabled'}
+                        className={styles.button}>Solicitar Aprobación</button>
                 </div>
                 <button type='button' onClick={setShowPreview} className={styles.button}>Vista Previa</button>
             </section>
