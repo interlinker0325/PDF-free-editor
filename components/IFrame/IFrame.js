@@ -1,13 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 
 const IFrame = ({ url, className = '', ...props }) => {
     const iFrameRef = useRef();
-
-    // useEffect(() => {
-    //     if (iFrameRef.current) {
-    //         setFrameHeight(iFrameRef.current?.contentWindow?.document?.body?.scrollHeight)
-    //     }
-    // }, [iFrameRef]);
     return (
         <iframe
             ref={iFrameRef}

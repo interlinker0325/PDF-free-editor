@@ -40,7 +40,7 @@ const LoginModal = ({ onClose, display }) => {
             }),
         );
         } catch (error) {
-            console.log("An unexpected error happened:", error);
+            console.log('An unexpected error happened:', error);
             setErrorForm(error.data);
         }
     }
@@ -48,8 +48,8 @@ const LoginModal = ({ onClose, display }) => {
     return (
         <Modal onClose={onClose} display={display}>
             {/* <!-- Modal header --> */}
-            <div class="flex flex-col justify-center items-center w-full">
-                <h3 className="text-4xl font-roboto text-center py-11 w-full">Iniciar sesión</h3>
+            <div class='flex flex-col justify-center items-center w-full'>
+                <h3 className='text-4xl font-roboto text-center py-11 w-full'>Iniciar sesión</h3>
             </div>
             <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center w-[255px]' noValidate={true}>
                 <div className='form-control w-full'>
@@ -58,7 +58,7 @@ const LoginModal = ({ onClose, display }) => {
                         type='email'
                         name='email'
                         role='email'
-                        required=""
+                        required=''
                         placeholder='Correo Electrónico' />
 
                     {errorForm.field !== 'email' ? null :

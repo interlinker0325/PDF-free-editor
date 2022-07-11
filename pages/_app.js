@@ -46,17 +46,17 @@ function MyApp({ Component, pageProps }) {
             }}>
             <Head>
                 <title>{Component.pageTitle ? `${Component.pageTitle} | ` : ''}ADLYCEUM</title>
-                <link rel="icon" href="/favicon.ico" />
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                <meta name="robots" content="noindex"></meta>
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;900&family=bigCaslon+Two+Text:wght@100;200;300;400;500;600;700;900&display=swap" rel="stylesheet" />
+                <link rel='icon' href='/favicon.ico' />
+                <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+                <meta name='robots' content='noindex'></meta>
+                <link rel='preconnect' href='https://fonts.googleapis.com' />
+                <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
+                <link href='https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;900&family=bigCaslon+Two+Text:wght@100;200;300;400;500;600;700;900&display=swap' rel='stylesheet' />
                 <style>{`
                     .htmlBackgroundBackdrop {
                         overflow: hidden;
                         background-color: rgba(0, 0, 0, 0.1);
-                    }               
+                    }
                 `}</style>
             </Head>
             <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>

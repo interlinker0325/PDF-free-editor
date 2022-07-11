@@ -11,7 +11,6 @@ import PostView from 'components/Posts/PostView';
 import TopBar from 'components/TopBar/TopBar';
 import Loader from 'components/Loader/Loader';
 
-const baseErrorMessage = (key) => `${key} es requerido. Por favor ingresar ${key}`
 const baseErrorState = {
     hasErrors: false,
     errorKey: null,
@@ -29,7 +28,7 @@ const EditPost = ({ post, ...props }) => {
     const [showLoadingScreen, setShowLoadingScreen] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     const [formState, setFormState] = useState(post);
-    const [errorState, setErrorState] = useState(baseErrorState);
+    const [errorState] = useState(baseErrorState);
     const [previewIframe, setPreviewIframe] = useState(post?.monographView);
 
     const triggerLoading = (show) => {

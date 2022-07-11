@@ -5,7 +5,7 @@ export default function Table({ items, columns }) {
             <tr key={`${item}_${itemIndex}`}>
                 <td>
                     <label>
-                        <input type="checkbox" className={styles.checkbox} />
+                        <input type='checkbox' className={styles.checkbox} />
                     </label>
                 </td>
                 {columns && columns.map((column, columnIndex) =>
@@ -13,9 +13,9 @@ export default function Table({ items, columns }) {
                         column === 'thumbnail' ?
                         <td key={`${item}_${column}_${columnIndex}`}>
                             <a href={itemUrl}>
-                                <div className="avatar">
-                                    <div className="mask mask-squircle w-12 h-12">
-                                        <img src={item.thumbnail.url} alt="Avatar user" />
+                                <div className='avatar'>
+                                    <div className='mask mask-squircle w-12 h-12'>
+                                        <img src={item.thumbnail.url} alt='Avatar user' />
                                     </div>
                                 </div>
                             </a>
@@ -36,7 +36,7 @@ export default function Table({ items, columns }) {
                     <tr>
                         <th>
                             <label>
-                                <input type="checkbox" className={styles.checkbox} />
+                                <input type='checkbox' className={styles.checkbox} />
                             </label>
                         </th>
                         {columns && columns.map((column, columnIndex) =>

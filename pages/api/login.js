@@ -1,9 +1,9 @@
-import { request, GET_USER_BY_EMAIL } from 'utils/graphqlRequest';
+import { request } from 'utils/graphqlRequest';
 import withSession from 'utils/withSession';
 import Cors from 'cors'
 import initMiddleware from 'utils/initMiddleware'
 import { query } from 'gql';
-import { verifyMutipleFields, INPUT_TYPES } from 'utils/form';
+import { INPUT_TYPES } from 'utils/form';
 
 // Initialize the cors middleware
 const cors = initMiddleware(

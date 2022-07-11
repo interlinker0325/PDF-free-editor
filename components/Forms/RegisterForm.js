@@ -2,11 +2,11 @@ export default function LoginForm (props) {
     return (
         <form className={styles.form} {...props}>
             <div className={styles.inputGroup}>
-                <input type="text" placeholder="first name" className={styles.inputGroupInput} />
-                <input type="text" placeholder="last name" className={styles.inputGroupInput} />
+                <input type='text' placeholder='first name' className={styles.inputGroupInput} />
+                <input type='text' placeholder='last name' className={styles.inputGroupInput} />
             </div>
-            <input type="email" placeholder="email" className={styles.input} />
-            <input type="password" placeholder="password" className={styles.input} />
+            <input type='email' placeholder='email' className={styles.input} />
+            <input type='password' placeholder='password' className={styles.input} />
             <button type='submit' className={styles.button}>register</button>
         </form>
     );

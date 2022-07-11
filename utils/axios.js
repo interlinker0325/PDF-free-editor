@@ -19,7 +19,7 @@ const post = async (URL, data, asFormData) => {
         let headers = false;
 
         if (asFormData) {
-            headers = { "Content-Type": "multipart/form-data" }
+            headers = { 'Content-Type': 'multipart/form-data' }
         }
 
         const response = await request(METHODS.POST, URL, data, headers);
@@ -58,7 +58,7 @@ const get = async (URL, asText) => {
 
         if (asText) {
             headers = {
-                "Content-Type": "text/html"
+                'Content-Type': 'text/html'
             }
         }
 

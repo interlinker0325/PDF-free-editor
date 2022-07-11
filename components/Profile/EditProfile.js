@@ -1,8 +1,8 @@
 import { INPUT_TYPES } from 'utils/form';
 
 const EditProfile = ({ errorState, ...props }) => (
-    <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()}>
-        <section className="flex flex-col border-b-black border-b-2 pb-8 mb-5 gap-1">
+    <form className='flex flex-col gap-4' onSubmit={e => e.preventDefault()}>
+        <section className='flex flex-col border-b-black border-b-2 pb-8 mb-5 gap-1'>
             <div className='form-control'>
                 <input
                     className={styles.titleInput(
@@ -80,7 +80,7 @@ const EditProfile = ({ errorState, ...props }) => (
                     onChange={(e) => props.onChange(e, INPUT_TYPES.RESIDENCE)}/>
             </div>
         </section>
-        <div className="flex flex-col gap-2 mb-2">
+        <div className='flex flex-col gap-2 mb-2'>
             <h4 className='text-2xl text-primary'>Carrera/Universidad/Nivel:</h4>
             <textarea
                 maxLength='200'
@@ -93,7 +93,7 @@ const EditProfile = ({ errorState, ...props }) => (
                 value={props.profile.level || ''}
                 onChange={(e) => props.onChange(e, INPUT_TYPES.LEVEL)} />
         </div>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className='flex flex-col gap-2 mt-2'>
             <h4 className='text-2xl text-primary'>Experiencia laboral:</h4>
             <textarea
                 maxLength='200'

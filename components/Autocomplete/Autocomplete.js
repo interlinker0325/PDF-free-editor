@@ -16,7 +16,7 @@ class Autocomplete extends Component {
             // Whether or not the suggestion list is shown
             showSuggestions: false,
             // What the user has entered
-            userInput: ""
+            userInput: ''
         };
     }
 
@@ -94,13 +94,13 @@ class Autocomplete extends Component {
         } = this;
 
         let suggestionsListComponent = (
-            <div className="p-2 text-[#999] zindex-1"></div>
+            <div className='p-2 text-[#999] zindex-1'></div>
         );
 
         if (showSuggestions && userInput) {
             if (filteredSuggestions.length) {
                 suggestionsListComponent = (
-                    <ul className="list-none w-[18rem] p-2 border-other border-[1px] drop-shadow-lg absolute bg-white mt-15 mt-0 max-h-[143px] overflowy-auto">
+                    <ul className='list-none w-[18rem] p-2 border-other border-[1px] drop-shadow-lg absolute bg-white mt-15 mt-0 max-h-[143px] overflowy-auto'>
                         {filteredSuggestions.map((suggestion, index) => (
                             <li
                                 key={index}
@@ -116,7 +116,7 @@ class Autocomplete extends Component {
                 );
             } else {
                 suggestionsListComponent = (
-                    <div className="w-[18rem] p-2 border-other border-[1px] drop-shadow-lg text-other absolute bg-white ml-0 mt-15 mt-0 max-h-[143px] w-64">
+                    <div className='w-[18rem] p-2 border-other border-[1px] drop-shadow-lg text-other absolute bg-white ml-0 mt-15 mt-0 max-h-[143px] w-64'>
                         <em>No hay estudiantes</em>
                     </div>
                 );
