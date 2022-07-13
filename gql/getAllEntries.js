@@ -1,8 +1,8 @@
-export const GET_ALL_ENTRIES = (page = 1, limit = 8) => `
+export const GET_ALL_ENTRIES = (page = 1, limit = 10) => `
     allPosts(
         orderBy: _createdAt_DESC,
         first: "${limit}",
-        skip: "${page > 1 ? ((page - 1) * 8) : 0}"
+        skip: "${page > 1 ? ((page - 1) * 10) : 0}"
         filter: {
             review: {eq: "Aprobado"}
         }

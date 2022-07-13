@@ -143,7 +143,6 @@ const NewPost = (props) => {
         let selectedCoauthors = coauthors || [];
         selectedCoauthors.push(selectedCoAuthor);
         restFormState.coauthors = selectedCoauthors;
-        console.log('OVER HERE!!!', selectedCoauthors, selectedCoAuthor, restFormState);
         setFormState(restFormState)
     }, [formState]);
 

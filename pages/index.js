@@ -38,7 +38,7 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
 			<div className='flex flex-row items-center justify-between pt-20 pb-2 border-[1px] border-transparent rounded-none border-b-black'>
                 <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>
 			</div>
-            <div className="my-8 grid grid-cols-4 gap-6">
+            <div className="my-8 grid grid-cols-5 gap-6">
                 {state.posts && state.posts.map(post =>
                     <PostCard key={`Post-Home-${post.id}`} {...post} />
                 )}
@@ -61,7 +61,7 @@ export async function getServerSideProps() {
 			currentPage: CURRENT_PAGE,
 			posts: allPosts,
 			banners: banners,
-			showMore: !(allPosts.length < 8)
+			showMore: !(allPosts.length < 10)
 		}
 	};
 }
