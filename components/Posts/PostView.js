@@ -41,7 +41,7 @@ const PostView = ({
                         <h3 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Curso:</span>{course.name}</h3>
                     }
                     <h4 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Autor(es):</span>{author?.fullname || user?.fullname}</h4>
-                    {Array.isArray(post?.coauthors) &&
+                    {Array.isArray(post?.coauthors) && post?.coauthors.length > 0 &&
                         <h4 className='text-lg font-caslon'>{post?.coauthors.map(coauthor => coauthor.fullname).join(', ')}</h4>
                     }
                     <h4 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Tutor(a):</span>{course?.professor?.fullname}</h4>
