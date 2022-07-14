@@ -19,6 +19,7 @@ export const GET_ENTRY_BY_ID = (entryId) => `
             name
             professor {
                 id
+                fullname
             }
         }
         createdAt

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import useUser from 'utils/useUser';
+import withSession from 'utils/withSession';
 import { createEntry, updateEntry, upload, publishEntry, getHTML } from 'handlers/bll';
 import { request, GET_ALL_COURSES, GET_ALL_STUDENTS } from 'utils/graphqlRequest';
 import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from 'utils';
@@ -24,19 +25,11 @@ const formBaseState = {
     review: POST_REVIEW_STATUS.PENDING
 };
 
-const baseErrorMessage = (key) => `${key} es requerido. Por favor ingresar ${key}`
-const baseErrorState = {
-    hasErrors: false,
-    errorKey: null,
-    errorMessage: null
-}
-
 const NewPost = (props) => {
     const [showLoadingScreen, setShowLoadingScreen] = useState(false);
     const { user } = useUser({ redirectTo: '/' });
     const [showPreview, setShowPreview] = useState(false);
     const [formState, setFormState] = useState(formBaseState);
-    const [errorState, setErrorState] = useState(baseErrorState);
     const [previewIframe, setPreviewIframe] = useState(null);
     const clearSubmitForm = () => { setFormState(formBaseState); }
     const refs = {
@@ -45,6 +38,11 @@ const NewPost = (props) => {
         monograph: useRef(),
         agreedterms: useRef()
     };
+
+    const [statusBarState, setStatusBarState] = useState({
+        error: null,
+        success: 'Los campos con (*) son requeridos. Debes guardar tu publicación para enviar a aprobación.'
+    });
 
     const triggerLoading = (show) => {
         if (show) {
@@ -76,9 +74,17 @@ const NewPost = (props) => {
         }
 
         if (entry?.error) {
-            console.error('No se pudo actualizar la entrada');
+            console.error('No se pudo actualizar la entrada', entry?.error);
+            setStatusBarState({
+                success: null,
+                error: 'No se pudo guardar la entrada'
+            });
         } else {
             setFormState({ ...entry, ...postData});
+            setStatusBarState({
+                error: null,
+                success: 'Publicación guardada. Debes "Solicitar aprobación" para ser enviada a aprobación'
+            });
         }
 
         triggerLoading(false);
@@ -112,6 +118,10 @@ const NewPost = (props) => {
     const requestApproval = useCallback(async () => {
         triggerLoading(true);
         await publishEntry(formState.id);
+        setStatusBarState({
+            error: null,
+            success: 'Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla'
+        });
         triggerLoading(false);
     }, [formState]);
 
@@ -166,6 +176,15 @@ const NewPost = (props) => {
                         children='< Volver a archivo' />
                 </TopBar>
             }
+            {!showPreview &&
+                <TopBar>
+                    {(statusBarState.error || statusBarState.success) &&
+                        <h5 className={statusBarState.error ? 'text-error text-2xl' : 'text-primary text-2xl'}>
+                            {statusBarState.error || statusBarState.success}
+                        </h5>
+                    }
+                </TopBar>
+            }
             {showPreview ? (
                 <PostView
                     post={formState}
@@ -176,7 +195,6 @@ const NewPost = (props) => {
                 <PostForm
                     refs={refs}
                     form={formState}
-                    error={errorState}
                     doSubmit={doSubmit}
                     clearForm={clearSubmitForm}
                     onChange={onChange}
@@ -193,14 +211,15 @@ const NewPost = (props) => {
         </Main>
     );
 }
+export default NewPost;
 
-export async function getServerSideProps() {
-    const { allUsers, allCourses } = await request([GET_ALL_COURSES, GET_ALL_STUDENTS]);
+export const getServerSideProps = withSession(async function ({ req }) {
+    const currentUser = req.session.get('user');
+    if (!currentUser) {
+        return { props: {} };
+    }
+    const { allUsers, allCourses } = await request([GET_ALL_COURSES(currentUser.id), GET_ALL_STUDENTS]);
     return {
         props: { courses: allCourses, students: allUsers }
     };
-}
-
-// NewPost.pageTitle = 'Crear contenido';
-
-export default NewPost;
+});

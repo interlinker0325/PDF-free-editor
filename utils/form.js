@@ -23,7 +23,8 @@ const ERROR_MSGS = {
         REQUIRED: 'El nombre completo es requerido. Por favor intentar nuevamente'
     },
     [INPUT_TYPES.PHONE]: {
-        REQUIRED: 'El teléfono es requerido. Por favor intentar nuevamente'
+        REQUIRED: 'El teléfono es requerido. Por favor intentar nuevamente',
+        LENGTH: 'El teléfono debe de ser de 8 dígitos. Por favor intentar nuevamente'
     },
     [INPUT_TYPES.BIRTHDATE]: {
         REQUIRED: 'La fecha de nacimiento es requerida. Por favor intentar nuevamente'
@@ -78,6 +79,9 @@ export const verifyField = (field = {}) => {
             if (field.required && field.value?.length <= 1) {
                 error.field = INPUT_TYPES.PHONE;
                 error.msg = ERROR_MSGS[error.field].REQUIRED;
+            } else if (field.value?.length < 8) {
+                error.field = INPUT_TYPES.PHONE;
+                error.msg = ERROR_MSGS[error.field].LENGTH;
             }
             break;
 

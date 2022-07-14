@@ -4,6 +4,7 @@ import { request, GET_ALL_COURSES, GET_ALL_STUDENTS, GET_ENTRY_BY_ID } from 'uti
 import useUser from 'utils/useUser';
 import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from 'utils';
 import { useRouter } from 'next/router';
+import withSession from 'utils/withSession';
 
 import Main from 'components/Main/Main';
 import PostForm from 'components/Posts/PostForm';
@@ -30,6 +31,11 @@ const EditPost = ({ post, ...props }) => {
     const [formState, setFormState] = useState(post);
     const [errorState] = useState(baseErrorState);
     const [previewIframe, setPreviewIframe] = useState(post?.monographView);
+
+    const [statusBarState, setStatusBarState] = useState({
+        error: null,
+        success: 'Los campos con (*) son requeridos. Debes guardar tu publicación para enviar a aprobación.'
+    });
 
     const triggerLoading = (show) => {
         if (show) {
@@ -61,9 +67,16 @@ const EditPost = ({ post, ...props }) => {
         const entry = await updateEntry(postData);
 
         if (entry.error) {
-            alert('No se pudo actualizar la entrada');
+            setStatusBarState({
+                success: null,
+                error: 'No se pudo actualizar la entrada'
+            });
         } else {
             setFormState({ ...entry, ...postData});
+            setStatusBarState({
+                error: null,
+                success: 'Publicación guardada. Debes "Solicitar aprobación" para ser enviada a aprobación'
+            });
         }
         triggerLoading(false);
     }, [formState]);
@@ -90,6 +103,10 @@ const EditPost = ({ post, ...props }) => {
     const requestApproval = useCallback(async () => {
         triggerLoading(true);
         await publishEntry(formState.id);
+        setStatusBarState({
+            error: null,
+            success: 'Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla'
+        });
         triggerLoading(false);
     }, [formState]);
 
@@ -144,6 +161,15 @@ const EditPost = ({ post, ...props }) => {
                         children='< Volver a archivo' />
                 </TopBar>
             }
+            {!showPreview &&
+                <TopBar>
+                    {(statusBarState.error || statusBarState.success) &&
+                        <h5 className={statusBarState.error ? 'text-error text-2xl' : 'text-primary text-2xl'}>
+                            {statusBarState.error || statusBarState.success}
+                        </h5>
+                    }
+                </TopBar>
+            }
             {showPreview ? (
                 <PostView
                     post={formState}
@@ -173,8 +199,14 @@ const EditPost = ({ post, ...props }) => {
     );
 }
 
-export async function getServerSideProps({ params }) {
-    const { post, allUsers, allCourses } = await request([GET_ENTRY_BY_ID(params.postId), GET_ALL_COURSES, GET_ALL_STUDENTS]);
+export default EditPost;
+
+export const getServerSideProps = withSession(async function ({ req, params }) {
+    const currentUser = req.session.get('user');
+    if (!currentUser) {
+        return { props: {} };
+    }
+    const { post, allUsers, allCourses } = await request([GET_ENTRY_BY_ID(params.postId), GET_ALL_COURSES(currentUser.id), GET_ALL_STUDENTS]);
     const { course, ...postData } = post;
 
     if (course) {
@@ -188,9 +220,4 @@ export async function getServerSideProps({ params }) {
     return {
         props: { courses: allCourses, students: allUsers, post: postData }
     };
-}
-
-
-EditPost.pageTitle = 'Editar contenido';
-
-export default EditPost;
+});
