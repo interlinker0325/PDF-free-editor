@@ -78,6 +78,8 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
             if (name === INPUT_TYPES.PHONE) {
                 if (/^\d*[.]?\d*$/.test(e.target.value)) {
                     itemValue = e.target.value;
+                } else {
+                    itemValue = formState[name];
                 }
             } else {
                 itemValue = e.target.value;
