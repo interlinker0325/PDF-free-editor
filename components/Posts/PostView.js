@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import IFrame from 'components/IFrame/IFrame';
+import { isPostApproved } from 'utils';
 
 const PostView = ({
     user,
@@ -26,11 +27,13 @@ const PostView = ({
     let course = post?.course;
     if (courses) course = courses.find(someCourse => someCourse.id === course);
 
+    const postApproved = isPostApproved(post);
+
     return (
         <article className='flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap'>
             <div className='flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black'>
                 <h2 className="col-span-4 text-4xl">{post.title}</h2>
-                {isCurrentUserAuthor && !editMode &&
+                {isCurrentUserAuthor && !editMode && !postApproved &&
                     <a href={`/posts/${post.id}/edit`} className='align-self-end text-primary text-2xl'>{'Editar Publicación >'}</a>
                 }
             </div>
