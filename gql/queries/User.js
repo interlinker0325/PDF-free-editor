@@ -18,8 +18,20 @@ export const GET_PUBLIC_USER_PROFILE = (id) => `
     }
 `;
 
+export const GET_USER_COURSES = (id) => `
+    allCourses(
+        filter: { 
+            OR: [
+                { students: { anyIn: ["${id}"] } },
+                { professor: { eq: "${id}" } }
+            ]
+        }) {
+        ${selector.courses.USER_COURSES}
+    }
+`;
+
 export const GET_STUDENT_COURSES = (id) => `
-    allCourses(filter: {students: {eq: "${id}"}}) {
+    allCourses(filter: { students: { anyIn: ["${id}"] } }) {
         ${selector.courses.USER_COURSES}
     }
 `;
@@ -31,7 +43,13 @@ export const GET_PROFESOR_COURSES = (id) => `
 `;
 
 export const GET_USER_POSTS = (id) => `
-    allPosts(filter: { author: { eq: "${id}" } }) {
+    allPosts(
+        filter: { 
+            OR: [
+                { author: { eq: "${id}" } },
+                { coauthors: { anyIn: ["${id}"] } }
+            ]
+        }) {
         ${selector.posts.POSTS_OF_USER}
     }
 `;

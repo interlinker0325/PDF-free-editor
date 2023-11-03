@@ -5,6 +5,10 @@ const fields = `
         id
         fullname
     }
+    students {
+        id
+        fullname
+    }
 `
 
 export const GET_ALL_COURSES = (userId) => userId ? `
