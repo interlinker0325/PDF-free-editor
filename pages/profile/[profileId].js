@@ -1,23 +1,23 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { updateProfile } from 'handlers/profile';
-import { upload } from 'handlers/bll';
+import {useState, useCallback, useEffect, useRef} from 'react';
+import {updateProfile} from 'handlers/profile';
+import {upload} from 'handlers/bll';
 import withSession from 'utils/withSession';
-import { request } from 'utils/graphqlRequest';
-import { query } from 'gql';
+import {request} from 'utils/graphqlRequest';
+import {query} from 'gql';
 import Main from 'components/Main/Main';
-import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleUser } from '@fortawesome/free-solid-svg-icons'
+import {useRouter} from 'next/router';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faCircleUser} from '@fortawesome/free-solid-svg-icons'
 import UserInfo from 'components/Profile/UserInfo';
 import Courses from 'components/Profile/Courses';
 import Publications from 'components/Profile/Publications';
 import EditProfile from 'components/Profile/EditProfile';
 import TopBar from 'components/TopBar/TopBar';
 import Loader from 'components/Loader/Loader';
-import { verifyMutipleFields, INPUT_TYPES } from 'utils/form';
+import {verifyMutipleFields, INPUT_TYPES} from 'utils/form';
 import useUser from 'utils/useUser';
 
-import { isProfessor as isUserProfessor} from 'utils';
+import {isProfessor as isUserProfessor} from 'utils';
 
 const DEFAULT_USER_ID = 'me'
 
@@ -29,10 +29,10 @@ const VIEW_STATES = {
     ARCHIVE: 'ARCHIVE'
 }
 
-const DEFAULT_ERRORFORM = { field: null, msg: null };
+const DEFAULT_ERRORFORM = {field: null, msg: null};
 
-const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
-    const { user } = useUser({ redirectTo: '/' })
+const Profile = ({profile, courses, posts, archivePosts, isProfessor}) => {
+    const {user} = useUser({redirectTo: '/'})
     const router = useRouter();
     useEffect(() => {
         if (!profile) router.push('/');
@@ -42,7 +42,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     const [errorForm, setErrorForm] = useState(DEFAULT_ERRORFORM);
     const [avatarImage, setAvatarImage] = useState(null);
     const [activeView, setActiveView] = useState(VIEW_STATES.USER);
-    const { query: { profileId } } = useRouter();
+    const {query: {profileId}} = useRouter();
     const isCurrentUserProfile = profileId === DEFAULT_USER_ID;
 
     const refs = {
@@ -86,7 +86,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
             }
         }
         delete formState[name];
-        setFormState({ [name]: itemValue , ...formState })
+        setFormState({[name]: itemValue, ...formState})
     }, [formState]);
 
     const submitUpdateProfile = useCallback(async (e) => {
@@ -106,14 +106,14 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         } = formState;
 
         const fieldsStatus = verifyMutipleFields([
-            { field: INPUT_TYPES.FULLNAME, value: fullname, required: true },
-            { field: INPUT_TYPES.EMAIL, value: email, required: true },
-            { field: INPUT_TYPES.PHONE, value: phone, required: true, length: 8 },
-            { field: INPUT_TYPES.BIRTHDATE, value: birthdate, required: true },
-            { field: INPUT_TYPES.GENDER, value: gender },
-            { field: INPUT_TYPES.RESIDENCE, value: residence },
-            { field: INPUT_TYPES.LEVEL, value: level },
-            { field: INPUT_TYPES.EXPERIENCE, value: experience }
+            {field: INPUT_TYPES.FULLNAME, value: fullname, required: true},
+            {field: INPUT_TYPES.EMAIL, value: email, required: true},
+            {field: INPUT_TYPES.PHONE, value: phone, required: true, length: 8},
+            {field: INPUT_TYPES.BIRTHDATE, value: birthdate, required: true},
+            {field: INPUT_TYPES.GENDER, value: gender},
+            {field: INPUT_TYPES.RESIDENCE, value: residence},
+            {field: INPUT_TYPES.LEVEL, value: level},
+            {field: INPUT_TYPES.EXPERIENCE, value: experience}
         ]);
 
         if (fieldsStatus) {
@@ -139,7 +139,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
         if (entry.error) {
             alert('No se pudo actualizar la entrada');
         } else {
-            setFormState({ ...entry });
+            setFormState({...entry});
         }
         triggerLoading(false);
         setActiveView(VIEW_STATES.USER);
@@ -152,10 +152,10 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
     }, [formState])
 
     const avatarView = avatarImage || formState.avatar?.url ? (
-        <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} />
+        <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url}/>
     ) : (
         <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
-            <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser} />
+            <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
         </div>
     );
 
@@ -169,7 +169,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                         children={errorForm.msg ?
                             errorForm.msg :
                             'Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento'
-                        } />
+                        }/>
                 </TopBar>
             }
             <div className={`${showStatusBar ? 'mb-8' : 'my-5'} ${styles.mainContainer}`}>
@@ -201,7 +201,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                             <a
                                 className={showStatusBar ? styles.activeTab : styles.tabItem}
                                 onClick={() => setActiveView(VIEW_STATES.USER)}>
-                                Data personal
+                                Perfil
                             </a>
                             <a
                                 className={activeView === VIEW_STATES.COURSE ? styles.activeTab : styles.tabItem}
@@ -217,7 +217,7 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                                 <a
                                     className={activeView === VIEW_STATES.ARCHIVE ? styles.activeTab : styles.tabItem}
                                     onClick={() => setActiveView(VIEW_STATES.ARCHIVE)}>
-                                    Archivo
+                                    Tutorías
                                 </a>
                             }
                         </div>
@@ -236,25 +236,25 @@ const Profile = ({ profile, courses, posts, archivePosts, isProfessor }) => {
                                 {...formState} />
                         }
                         {activeView === VIEW_STATES.COURSE &&
-                            <Courses items={courses} />
+                            <Courses items={courses}/>
                         }
                         {activeView === VIEW_STATES.POSTS &&
-                            <Publications items={posts} />
+                            <Publications items={posts}/>
                         }
                         {activeView === VIEW_STATES.ARCHIVE &&
-                            <Publications items={archivePosts} />
+                            <Publications items={archivePosts}/>
                         }
                         {activeView === VIEW_STATES.EDIT &&
                             <EditProfile
                                 profile={formState}
                                 onChange={onChange}
                                 setProfile={setFormState}
-                                errorState={errorForm} />
+                                errorState={errorForm}/>
                         }
                     </div>
                 </div>
             </div>
-            <Loader show={showLoadingScreen} />
+            <Loader show={showLoadingScreen}/>
         </Main>
     );
 }
@@ -274,10 +274,11 @@ const styles = {
     fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',
 };
 
-export const getServerSideProps = withSession(async function ({ req }) {
+export const getServerSideProps = withSession(async function ({req}) {
     const currentUser = req.session.get('user');
+    console.log({currentUser})
     if (!currentUser) {
-        return { props: {} };
+        return {props: {}};
     }
     const urlSplit = req.url.split('/');
     const userIdParam = urlSplit[urlSplit.length - 1];
@@ -287,21 +288,20 @@ export const getServerSideProps = withSession(async function ({ req }) {
     const profileQuery = isCurrentUserProfile ?
         query.user.GET_PRIVATE_USER_PROFILE : query.user.GET_PUBLIC_USER_PROFILE;
 
-    const { user: profile, allCourses, allPosts: posts } = await request([
+    const {user: profile, allCourses, allPosts: posts} = await request([
         profileQuery(profileId),
         (isProfessor && isCurrentUserProfile) ?
-            query.user.GET_PROFESOR_COURSES(profileId) : query.user.GET_STUDENT_COURSES(profileId),
+            query.user.GET_USER_COURSES(profileId) : query.user.GET_STUDENT_COURSES(profileId),
         query.user.GET_USER_POSTS(profileId)
     ]);
 
     let archivePosts = {};
     if (isProfessor && isCurrentUserProfile) {
-        const profesorCourses = allCourses.map(course => course.id);
+        const profesorCourses = allCourses.filter(course => course.professor.id === profileId).map(course => course.id);
         archivePosts = await request(
             query.posts.GET_PROFESOR_COURSES_POSTS(profesorCourses)
         );
     }
-
     return {
         props: {
             profile,
