@@ -2,11 +2,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons'
 import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
+import {log} from "../../utils/logs";
 
 const PostForm = ({
     form,
     courses,
-    students,
     clearForm,
     onChange,
     doSubmit,
@@ -19,7 +19,10 @@ const PostForm = ({
     removeCoAuthor,
     refs
 }) => {
-    const coAuthorsString = Array.isArray(form.coauthors) && form.coauthors.map(author => author.fullname).join(', ');
+    console.log("form.course",form.course)
+    const selectedCourse = (courses || []).find(c=>c.id === form.course)
+    console.log({selectedCourse})
+    const courseStudents = (selectedCourse?.students || []).filter(student=>student.id !== user.id)
     return (
         <form className='font-roboto grid auto-rows-auto gap-8' onSubmit={doSubmit}>
             <section className='row-auto'>
@@ -100,12 +103,11 @@ const PostForm = ({
                             coAuthors={form.coauthors}
                             placeholder='Co-autores'
                             onClick={setCoAuthors}
-                            suggestions={students} />
+                            suggestions={courseStudents} />
                     </div>
 
                     <div>
-                        <h4 className='text-base font-normal font-roboto mb-2'>Autor(a) original: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
-                        <h4 className='text-base font-normal font-roboto mt-2'>Co-autores:
+                        <h4 className='text-base font-normal font-roboto mb-2'>Autores: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
                             {' '}
                             {form.coauthors?.map(coauth =>
                                 <span key={`coAuthor_${coauth.id}`} className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
@@ -118,7 +120,6 @@ const PostForm = ({
                                     </a>
                                 </span>
                             )}
-                        </h4>
                     </div>
                 </div>
                 <div className='form-control gap-5'>
@@ -153,7 +154,7 @@ const PostForm = ({
                         </div>
                         <span className='label-text normal-case text-checkbox font-thin italic max-w-[97%]'>
                             <h4 className='not-italic text-black font-normal '>Los terminos y condiciones deben ser aceptados para publicar una publicación*</h4>
-                            <div className='w-full h-[85px] overflow-scroll'>
+                            <div className='w-full h-[800px] overflow-scroll'>
                                 {TERMS_AND_CONDITIONS_TEXT}
                                 <a onClick={setAgreedterms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
                             </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import IFrame from 'components/IFrame/IFrame';
 import { isPostApproved } from 'utils';
+let options = { year: 'numeric', month: 'long', day: 'numeric' };
 
 const PostView = ({
     user,
@@ -28,6 +29,7 @@ const PostView = ({
     if (courses) course = courses.find(someCourse => someCourse.id === course);
 
     const postApproved = isPostApproved(post);
+    let formattedDate = new Date(post.createdAt).toLocaleDateString('es-ES', options);
 
     return (
         <article className='flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap'>
@@ -48,6 +50,7 @@ const PostView = ({
                         <h4 className='text-lg font-caslon'>{post?.coauthors.map(coauthor => coauthor.fullname).join(', ')}</h4>
                     }
                     <h4 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Tutor(a):</span>{course?.professor?.fullname}</h4>
+                    <h4 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Fecha publicación:</span>{formattedDate}</h4>
                     <a onClick={toggleShowFiles} className='text-other hover:text-primary underline underline-offset-2'>Contenido Adjunto ></a>
                     <div className='w-full pl-4 flex flex-col gap-0'>
                         {showFiles && files}

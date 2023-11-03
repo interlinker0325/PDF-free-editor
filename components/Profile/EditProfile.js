@@ -93,6 +93,19 @@ const EditProfile = ({ errorState, ...props }) => (
                 value={props.profile.level || ''}
                 onChange={(e) => props.onChange(e, INPUT_TYPES.LEVEL)} />
         </div>
+        {/*<div className='flex flex-col gap-2 mb-2'>*/}
+        {/*    <h4 className='text-2xl text-primary'>Cursos del plan académico:</h4>*/}
+        {/*    <textarea*/}
+        {/*        maxLength='200'*/}
+        {/*        name={INPUT_TYPES.LEVEL}*/}
+        {/*        className={styles.textarea(*/}
+        {/*            props.profile.level,*/}
+        {/*            errorState.field === INPUT_TYPES.LEVEL*/}
+        {/*        )}*/}
+        {/*        placeholder='Agregar descripción de: Carrera/Universidad/Nivel'*/}
+        {/*        value={props.profile.level || ''}*/}
+        {/*        onChange={(e) => props.onChange(e, INPUT_TYPES.LEVEL)} />*/}
+        {/*</div>*/}
         <div className='flex flex-col gap-2 mt-2'>
             <h4 className='text-2xl text-primary'>Experiencia laboral:</h4>
             <textarea
