@@ -16,6 +16,7 @@ export const USER_TYPE_BY_ID = {
 
 export const isProfessor = (typeId) =>
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.PROFESOR ||
+    USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.ADMINISTRADOR ||
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.SUPLENTE;
 
 export const isStudent = (typeId) =>

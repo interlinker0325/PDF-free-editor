@@ -2,7 +2,6 @@ export const INPUT_TYPES = {
     EMAIL: 'email',
     PASSWORD: 'password',
     FULLNAME: 'fullname',
-    EMAIL: 'email',
     PHONE: 'phone',
     BIRTHDATE: 'birthdate',
     GENDER: 'gender',
