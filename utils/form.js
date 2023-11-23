@@ -125,7 +125,7 @@ export const verifyField = (field = {}) => {
 };
 
 export const verifyMutipleFields = (fields) => {
-    for (const x = 0; fields.length > 0; x++) {
+    for (let x = 0; fields.length > 0; x++) {
         const test = verifyField(fields[x]);
         if (test) {
             return test;

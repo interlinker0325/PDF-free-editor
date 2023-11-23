@@ -44,7 +44,7 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
                 )}
             </div>
 			{state.showMore &&
-				<a onClick={getNextPage} className='text-other cursor-pointer hover:text-primary underline underline-offset-1 mt-4 mb-20'>Cargar más publicaciones ></a>
+				<a onClick={getNextPage} className='text-other cursor-pointer hover:text-primary underline underline-offset-1 mt-4 mb-20'>Cargar más publicaciones &gt;</a>
 			}
         </Main>
     );

@@ -225,7 +225,7 @@ const Profile = ({profile, courses, posts, archivePosts, isProfessor}) => {
                             <a
                                 className={`${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.editTab}`}
                                 onClick={() => setActiveView(VIEW_STATES.EDIT)}>
-                                Editar perfil >
+                                Editar perfil &gt;
                             </a>
                         }
                     </div>
