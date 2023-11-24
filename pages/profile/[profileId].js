@@ -31,7 +31,7 @@ const VIEW_STATES = {
 
 const DEFAULT_ERRORFORM = {field: null, msg: null};
 
-const Profile = ({profile, courses, posts, archivePosts, isProfessor}) => {
+function Profile({profile, courses, posts, archivePosts, isProfessor}) {
     const {user} = useUser({redirectTo: '/'})
     const router = useRouter();
     useEffect(() => {
