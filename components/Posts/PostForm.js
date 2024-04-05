@@ -19,9 +19,7 @@ const PostForm = ({
     removeCoAuthor,
     refs
 }) => {
-    console.log("form.course",form.course)
     const selectedCourse = (courses || []).find(c=>c.id === form.course)
-    console.log({selectedCourse})
     const courseStudents = (selectedCourse?.students || []).filter(student=>student.id !== user.id)
     return (
         <form className='font-roboto grid auto-rows-auto gap-8' onSubmit={doSubmit}>
@@ -63,8 +61,17 @@ const PostForm = ({
                                     id='monograph'
                                     ref={refs.monograph}
                                     onChange={(e) => onChange(e, 'monograph')}/>
-                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento HTML * <span className='font-thin'>{'>'}</span></span>
+                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento(HTML, PDF, DOC, DOCX, RTF)   *<span className='font-thin'>{'  >'}</span></span>
                             </div>
+                        </label>
+                        <label className={styles.label}>
+                            <select
+                                className={styles.type(form.type)}
+                                onChange={(e) => onChange(e, 'type')}>
+                                <option value='essay'>Ensayo</option>
+                                <option value='theory'>Teoría</option>
+                                <option value='science'>Ciencia</option>
+                            </select>
                         </label>
                     </div>
 
@@ -207,6 +214,7 @@ const styles = {
     labelNoCursor: 'font-normal label justify-start gap-3.5 p-0',
     icon: 'label-text w-[38px] h-[36px] p-1',
     select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
+    type: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',
     fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text drop-shadow-lg font-normal text-lg border-2 border-transparent py-2 rounded-none`,
     textarea: val => `${val ? 'border-other' : ''} textarea font-normal drop-shadow-lg p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full`,

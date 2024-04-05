@@ -22,10 +22,6 @@ export const isProfessor = (typeId) =>
 export const isStudent = (typeId) =>
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.ESTUDIANTE;
 
-// export const userHasCourse = (user, courseId) => {
-//     console.log('over here!!', user, courseId);
-// }
-
 export const isUserTeacherOfCourse = (user, courses) => {
     const teacherInCourse = courses.find(c => c.professor.id === user.id);
     return !!teacherInCourse;
