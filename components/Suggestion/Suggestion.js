@@ -14,7 +14,7 @@ const Suggestion = ({ changedContent, setEditorContent, section, allCharacterCou
   const [loadingStatus, setLoadingStatus] = useState(false);
   const sectionCheck = async () => {
     axios
-      .post("http://127.0.0.1:5000/sectionCheck", null, {
+      .post(`${process.env.WINDOWS_SERVER_URL}/sectionCheck`, null, {
         params: {
           content: changedContent,
           title: section
@@ -93,7 +93,7 @@ const Suggestion = ({ changedContent, setEditorContent, section, allCharacterCou
             ></img>
           </div>
         </div>
-        
+
       </div>
     </>
   );

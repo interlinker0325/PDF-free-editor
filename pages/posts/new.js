@@ -153,7 +153,7 @@ const NewPost = (props) => {
 
               try {
                 const response = await axios.post(
-                  "http://127.0.0.1:5000/filetohtml",
+                    process.env.WINDOWS_SERVER_URL,
                   formData,
                   {
                     headers: {
@@ -168,7 +168,7 @@ const NewPost = (props) => {
                 const files = await upload([htmlFile], true);
                 const loadedMonograph = await getHTML(
                   `/api/${files.url.replace(
-                    "https://www.datocms-assets.com/",
+                      process.env.DATOCMS_API_TOKEN,
                     ""
                   )}`
                 );
