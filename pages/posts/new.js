@@ -153,7 +153,7 @@ const NewPost = (props) => {
 
               try {
                 const response = await axios.post(
-                    process.env.WINDOWS_SERVER_URL,
+                    process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL,
                   formData,
                   {
                     headers: {
@@ -168,7 +168,7 @@ const NewPost = (props) => {
                 const files = await upload([htmlFile], true);
                 const loadedMonograph = await getHTML(
                   `/api/${files.url.replace(
-                      process.env.DATOCMS_STORAGE_URL,
+                      process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL,
                     ""
                   )}`
                 );

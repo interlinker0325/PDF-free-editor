@@ -14,7 +14,7 @@ const Suggestion = ({ changedContent, setEditorContent, section, allCharacterCou
   const [loadingStatus, setLoadingStatus] = useState(false);
   const sectionCheck = async () => {
     axios
-      .post(`${process.env.WINDOWS_SERVER_URL}/sectionCheck`, null, {
+      .post(`${process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL}/sectionCheck`, null, {
         params: {
           content: changedContent,
           title: section
