@@ -168,7 +168,7 @@ const NewPost = (props) => {
                 const files = await upload([htmlFile], true);
                 const loadedMonograph = await getHTML(
                   `/api/${files.url.replace(
-                      process.env.DATOCMS_API_TOKEN,
+                      process.env.DATOCMS_STORAGE_URL,
                     ""
                   )}`
                 );
