@@ -12,3 +12,11 @@ svg path {
     width: 100%;
     background-color: #000000;
 }
+
+.fr-table-colors{
+    padding-bottom: 20px;
+}
+
+textarea.fr-code {
+    height: 100%;
+}
