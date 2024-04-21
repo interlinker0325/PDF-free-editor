@@ -153,11 +153,12 @@ const NewPost = (props) => {
 
               try {
                 const response = await axios.post(
-                    process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL,
+                  `${process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL}/filetohtml`,
                   formData,
                   {
                     headers: {
                       "Content-Type": "multipart/form-data",
+                      "ngrok-skip-browser-warning": "true"
                     },
                   }
                 );
