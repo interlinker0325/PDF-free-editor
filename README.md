@@ -1,7 +1,7 @@
 
 # Adlyceum
 
-Paper publishing website
+Paper publishing website.
 
 
 ## Run Locally
