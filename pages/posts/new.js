@@ -63,11 +63,6 @@ const NewPost = (props) => {
     agreedterms: useRef(),
   };
 
-  const [statusBarState, setStatusBarState] = useState({
-    error: null,
-    success:
-      "Los campos con (*) son requeridos. Debes guardar tu publicación para enviar a aprobación.",
-  });
 
   const triggerLoading = (show) => {
     if (show) {
@@ -100,21 +95,6 @@ const NewPost = (props) => {
         entry = await createEntry({
           author: user.id,
           ...postData,
-        });
-      }
-
-      if (entry?.error) {
-        console.error("No se pudo actualizar la entrada", entry?.error);
-        setStatusBarState({
-          success: null,
-          error: "No se pudo guardar la entrada",
-        });
-      } else {
-        setFormState({ ...entry, ...postData });
-        setStatusBarState({
-          error: null,
-          success:
-            'Publicación guardada. Debes "Solicitar aprobación" para ser enviada a aprobación',
         });
       }
 
@@ -198,11 +178,6 @@ const NewPost = (props) => {
   const requestApproval = useCallback(async () => {
     triggerLoading(true);
     await publishEntry(formState.id);
-    setStatusBarState({
-      error: null,
-      success:
-        "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
-    });
     triggerLoading(false);
   }, [formState]);
 
@@ -378,17 +353,6 @@ const NewPost = (props) => {
       )}
       {!showPreview && (
         <TopBar>
-          {(statusBarState.error || statusBarState.success) && (
-            <h5
-              className={
-                statusBarState.error
-                  ? "text-error text-2xl"
-                  : "text-primary text-2xl"
-              }
-            >
-              {statusBarState.error || statusBarState.success}
-            </h5>
-          )}
         </TopBar>
       )}
       {showPreview ? (

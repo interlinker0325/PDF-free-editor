@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import "froala-editor/css/froala_style.min.css";
 import "froala-editor/css/froala_editor.pkgd.min.css";
 import "@fortawesome/fontawesome-free/js/all.js";
-import $ from 'jquery';
 
 const FroalaEditorComponent = dynamic(
   async () => {
