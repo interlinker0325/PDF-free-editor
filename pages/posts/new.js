@@ -66,7 +66,7 @@ const NewPost = (props) => {
   const [statusBarState, setStatusBarState] = useState({
     error: null,
     success:
-      "Los campos con (*) son requeridos. Debes guardar tu publicación para enviar a aprobación.",
+      "Los campos con (*) son requeridos.",
   });
 
   const triggerLoading = (show) => {
