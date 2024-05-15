@@ -383,6 +383,7 @@ const NewPost = (props) => {
               onClick={() => {
                 setFormView(true);
                 setShowPreview(false);
+                setEditView(false);
               }}
               children="Formulario"
             />
@@ -390,8 +391,9 @@ const NewPost = (props) => {
               className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
               onClick={() => {
                 setShowPreview(true);
-                setFormView(false)
-                setEditView(false)
+                setFormView(false);
+                setEditView(false);
+                setSuggestionView(false);
               }}
               children="Vista previa"
             />
