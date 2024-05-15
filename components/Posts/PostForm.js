@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons';
 import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import {log} from "../../utils/logs";
+import { log } from "../../utils/logs";
 
 const PostForm = ({
     form,
@@ -19,10 +19,11 @@ const PostForm = ({
     removeCoAuthor,
     refs
 }) => {
-    const selectedCourse = (courses || []).find(c=>c.id === form.course)
-    const courseStudents = (selectedCourse?.students || []).filter(student=>student.id !== user.id)
+    const selectedCourse = (courses || []).find(c => c.id === form.course);
+    const courseStudents = (selectedCourse?.students || []).filter(student => student.id !== user.id);
+
     return (
-        <form className='font-roboto grid auto-rows-auto gap-8' onSubmit={doSubmit}>
+        <form className='font-roboto grid auto-rows-auto gap-8 p-6 bg-white shadow-lg rounded-lg' onSubmit={doSubmit}>
             <section className='row-auto'>
                 <div className='form-control'>
                     <input
@@ -31,11 +32,11 @@ const PostForm = ({
                         name='title'
                         placeholder='Titular de publicación *'
                         value={form.title}
-                        onChange={(e) => onChange(e, 'title')}/>
+                        onChange={(e) => onChange(e, 'title')} />
                 </div>
             </section>
-            <section className='row-span-3 grid lg:grid-cols-2 auto-rows-auto gap-3.5'>
-                <div className='flex flex-col form-control gap-4 pt-4'>
+            <section className='row-span-3 grid lg:grid-cols-2 auto-rows-auto gap-6'>
+                <div className='flex flex-col form-control gap-6 pt-4'>
                     <div className={styles.formControl}>
                         <FontAwesomeIcon className={styles.icon} icon={faTags} />
                         <label className={styles.label}>
@@ -60,17 +61,19 @@ const PostForm = ({
                                     name='monograph'
                                     id='monograph'
                                     ref={refs.monograph}
-                                    onChange={(e) => onChange(e, 'monograph')}/>
-                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento(HTML, PDF, DOC, DOCX, RTF)   *<span className='font-thin'>{'  >'}</span></span>
+                                    onChange={(e) => onChange(e, 'monograph')} />
+                                <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento(HTML, PDF, DOC, DOCX, RTF) *<span className='font-thin'>{'  >'}</span></span>
                             </div>
                         </label>
                         <label className={styles.label}>
                             <select
                                 className={styles.type(form.type)}
+                                value={form.type || 'default'}
                                 onChange={(e) => onChange(e, 'type')}>
+                                <option value='default' disabled style={{ color: 'gray' }}>Tipo de publicación</option>
                                 <option value='essay'>Ensayo</option>
-                                <option value='theory'>Teoría</option>
-                                <option value='science'>Ciencia</option>
+                                <option value='academic'>Doc. Académico</option>
+                                <option value='scientific'>Art. Científico</option>
                             </select>
                         </label>
                     </div>
@@ -84,7 +87,7 @@ const PostForm = ({
                                 name='coverimage'
                                 id='coverimage'
                                 ref={refs.coverimage}
-                                onChange={(e) => onChange(e, 'coverimage')}/>
+                                onChange={(e) => onChange(e, 'coverimage')} />
                             <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado * <span className='font-thin'>{'>'}</span></span>
                         </label>
                     </div>
@@ -99,7 +102,7 @@ const PostForm = ({
                                 id='attachments'
                                 multiple
                                 ref={refs.attachments}
-                                onChange={(e) => onChange(e, 'attachments')}/>
+                                onChange={(e) => onChange(e, 'attachments')} />
                             <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto <span className='font-thin'>{'>'}</span></span>
                         </label>
                     </div>
@@ -115,21 +118,21 @@ const PostForm = ({
 
                     <div>
                         <h4 className='text-base font-normal font-roboto mb-2'>Autores: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
-                            {' '}
-                            {form.coauthors?.map(coauth =>
-                                <span key={`coAuthor_${coauth.id}`} className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
-                                    {coauth.fullname}
-                                    <a
-                                        className='underline cursor-pointer'
-                                        id={coauth.id}
-                                        onClick={async (e) => removeCoAuthor(e, coauth.id)}>
-                                        (-)
-                                    </a>
-                                </span>
-                            )}
+                        {' '}
+                        {form.coauthors?.map(coauth =>
+                            <span key={`coAuthor_${coauth.id}`} className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
+                                {coauth.fullname}
+                                <a
+                                    className='underline cursor-pointer'
+                                    id={coauth.id}
+                                    onClick={async (e) => removeCoAuthor(e, coauth.id)}>
+                                    (-)
+                                </a>
+                            </span>
+                        )}
                     </div>
                 </div>
-                <div className='form-control gap-5'>
+                <div className='form-control gap-6'>
                     <div>
                         <textarea
                             maxLength='200'
@@ -161,7 +164,7 @@ const PostForm = ({
                         </div>
                         <span className='label-text normal-case text-checkbox font-thin italic max-w-[97%]'>
                             <h4 className='not-italic text-black font-normal '>Los terminos y condiciones deben ser aceptados para publicar una publicación*</h4>
-                            <div className='w-full h-[800px] overflow-scroll'>
+                            <div className='w-full h-[300px] overflow-scroll border p-4 rounded-lg'>
                                 {TERMS_AND_CONDITIONS_TEXT}
                                 <a onClick={setAgreedterms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
                             </div>
@@ -170,19 +173,18 @@ const PostForm = ({
                 </div>
             </section>
             <section className='row-auto items-center flex flex-row w-full justify-between'>
-                <div className='form-control flex flex-row gap-2'>
+                <div className='form-control flex flex-row gap-4'>
                     <button
                         type='submit'
                         disabled={(
                             formHasChanged &&
-                                form.agreedterms &&
-                                    form.title &&
-                                    form.monograph &&
-                                    form.coverimage &&
-                                    form.description &&
-                                    form.tags
-                            ) ? '' : 'disabled'
-                        }
+                            form.agreedterms &&
+                            form.title &&
+                            form.monograph &&
+                            form.coverimage &&
+                            form.description &&
+                            form.tags
+                        ) ? '' : 'disabled'}
                         className={styles.button}>
                         Guardar
                     </button>
@@ -205,13 +207,13 @@ const PostForm = ({
 };
 
 const STYLE_ACTIVE = 'text-other border-b-other';
-const STYLE_INACTIVE =  'text-titleInput border-b-black';
+const STYLE_INACTIVE = 'text-titleInput border-b-black';
 
 const styles = {
-    formControl: 'form-control flex flex-row gap-3.5',
+    formControl: 'form-control flex flex-row gap-4',
     titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input drop-shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
-    label: 'cursor-pointer font-normal label justify-start gap-3.5 p-0',
-    labelNoCursor: 'font-normal label justify-start gap-3.5 p-0',
+    label: 'cursor-pointer font-normal label justify-start gap-4 p-0',
+    labelNoCursor: 'font-normal label justify-start gap-4 p-0',
     icon: 'label-text w-[38px] h-[36px] p-1',
     select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     type: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
