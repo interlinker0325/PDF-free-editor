@@ -386,6 +386,7 @@ const NewPost = (props) => {
               onClick={() => {
                 setShowPreview(true);
                 setFormView(false)
+                setEditView(false)
               }}
               children="Vista previa"
             />
@@ -422,7 +423,7 @@ const NewPost = (props) => {
           </div>
         </div>
       </TopBar>
-      {showPreview ? (
+      {!formView && (showPreview || editView)? (
         <PostView
           post={formState}
           user={user}
