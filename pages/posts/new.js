@@ -169,7 +169,7 @@ const NewPost = (props) => {
                 const files = await upload([htmlFile], true);
                 const loadedMonograph = await getHTML(
                   `/api/${files.url.replace(
-                      process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL,
+                    process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL,
                     ""
                   )}`
                 );
@@ -344,53 +344,83 @@ const NewPost = (props) => {
     }
   };
 
+  const compliance = () => {
+    console.log("this is form button");
+  }
+
+  const warning = () => {
+    alert("Warning")
+  }
+
   return (
     <Main>
-      {showPreview && (
-        <TopBar>
-          <a
-            className="text-other text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
-            onClick={hidePreview}
-            children="<div Volver a archivo"
-          />
+      <TopBar>
+        <div className="flex flex-row justify-between w-full">
           <div>
+            {(statusBarState.error || statusBarState.success) && (
+              <h5
+                className={
+                  statusBarState.error
+                    ? "text-error text-2xl"
+                    : "text-primary text-2xl"
+                }
+              >
+                {statusBarState.error || statusBarState.success}
+              </h5>
+            )}
+          </div>
+          <div className="flex items-center">
+            <a
+              className={`${!showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+              onClick={hidePreview}
+              children="Formulario"
+            />
+            <a
+              className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
+              onClick={setShowPreview}
+              children="Vista previa"
+            />
             {editView && (
               <a
-                className="text-other mr-8 text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
-                onClick={suggestionViewSet}
-                children={`${
-                  suggestionView ? "Ocultar Sugerencia" : "Mostrar sugerencia"
-                }`}
+              className="text-other ml-8 text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
+              onClick={suggestionViewSet}
+              children={`${suggestionView ? "Ocultar Sugerencia" : "Mostrar sugerencia"
+            }`}
               />
             )}
             <a
-              className="text-other text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
-              onClick={editViewSet}
-              children={!editView ? "Editar documento" : "Cerrar editor"}
+              className={`${!showPreview ? 'text-zinc-400 disabled' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+              onClick={(e) => {
+                if (!showPreview) {
+                  e.preventDefault();
+                } else {
+                  editViewSet(e);
+                }
+              }}
+              children={!editView ? "Editor" : "Cerrar editor"}
             />
             <a
               className="text-other ml-8 text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
-              onClick={saveDocument}
-              children="Guardar documento"
+              onClick={compliance}
+              children="Cumplimiento"
+            />
+            <div className="cursor-pointer ml-3" onClick={warning}>
+              <img src='/warning.png' className="w-8"></img>
+            </div>
+            <a
+              className={`${!showPreview ? 'text-zinc-400 disabled' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
+              onClick={(e) => {
+                if (!showPreview) {
+                  e.preventDefault();
+                } else {
+                  saveDocument(e);
+                }
+              }}
+              children="Guardar"
             />
           </div>
-        </TopBar>
-      )}
-      {!showPreview && (
-        <TopBar>
-          {(statusBarState.error || statusBarState.success) && (
-            <h5
-              className={
-                statusBarState.error
-                  ? "text-error text-2xl"
-                  : "text-primary text-2xl"
-              }
-            >
-              {statusBarState.error || statusBarState.success}
-            </h5>
-          )}
-        </TopBar>
-      )}
+        </div>
+      </TopBar>
       {showPreview ? (
         <PostView
           post={formState}
@@ -410,7 +440,6 @@ const NewPost = (props) => {
           onChange={onChange}
           requestApproval={requestApproval}
           formHasChanged={formHasChanged}
-          setShowPreview={doShowPreview}
           user={user}
           setAgreedterms={setAgreedterms}
           setCoAuthors={setCoAuthors}

@@ -12,7 +12,6 @@ const PostForm = ({
     doSubmit,
     requestApproval,
     formHasChanged,
-    setShowPreview,
     user,
     setAgreedterms,
     setCoAuthors,
@@ -200,7 +199,6 @@ const PostForm = ({
                         disabled={(formHasChanged && form.id) ? '' : 'disabled'}
                         className={styles.button}>Solicitar Aprobación</button>
                 </div>
-                <button type='button' onClick={setShowPreview} className={styles.button}>Vista Previa</button>
             </section>
         </form>
     );
