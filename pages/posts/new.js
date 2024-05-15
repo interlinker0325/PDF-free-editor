@@ -221,9 +221,14 @@ const NewPost = (props) => {
 
   const editViewSet = (e) => {
     e.preventDefault();
-    setEditView(!editView);
     if (editView == true) {
+      setEditView(false)
       setSuggestionView(false);
+      setFormView(true);
+    }
+    else {
+      setEditView(true)
+      setFormView(false)
     }
 
   };
@@ -403,7 +408,6 @@ const NewPost = (props) => {
               onClick={(e) => {
                 editViewSet(e);
                 setShowPreview(false);
-                setFormView(false);
               }}
               children={!editView ? "Editor" : "Cerrar editor"}
             />
