@@ -23,6 +23,7 @@ import TopBar from "components/TopBar/TopBar";
 import Loader from "components/Loader/Loader";
 
 import { toast } from "react-hot-toast";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const notifyError = (warningMessage) =>
   toast.error(warningMessage, {
@@ -53,6 +54,7 @@ const NewPost = (props) => {
   const [formState, setFormState] = useState(formBaseState);
   const [previewIframe, setPreviewIframe] = useState(null);
   const [isSaved, setIsSaved] = useState(true);
+  const [formView, setFormView ] = useState(true)
   const clearSubmitForm = () => {
     setFormState(formBaseState);
   };
@@ -223,6 +225,7 @@ const NewPost = (props) => {
     if (editView == true) {
       setSuggestionView(false);
     }
+
   };
 
   const suggestionViewSet = (e) => {
@@ -371,13 +374,19 @@ const NewPost = (props) => {
           </div>
           <div className="flex items-center">
             <a
-              className={`${!showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-              onClick={hidePreview}
+              className={`${formView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+              onClick={() => {
+                setFormView(true);
+                setShowPreview(false);
+              }}
               children="Formulario"
             />
             <a
               className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
-              onClick={setShowPreview}
+              onClick={() => {
+                setShowPreview(true);
+                setFormView(false)
+              }}
               children="Vista previa"
             />
             {editView && (
@@ -390,7 +399,11 @@ const NewPost = (props) => {
             )}
             <a
               className='text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-8 text-2xl'
-              onClick={editViewSet}
+              onClick={(e) => {
+                editViewSet(e);
+                setShowPreview(false);
+                setFormView(false);
+              }}
               children={!editView ? "Editor" : "Cerrar editor"}
             />
             <a
