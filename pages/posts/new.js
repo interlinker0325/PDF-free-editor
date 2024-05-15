@@ -42,7 +42,7 @@ const formBaseState = {
   coauthors: null,
   agreedterms: false,
   review: POST_REVIEW_STATUS.PENDING,
-  type: "essay",
+  type: "",
 };
 
 const NewPost = (props) => {
