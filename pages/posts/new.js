@@ -389,14 +389,8 @@ const NewPost = (props) => {
               />
             )}
             <a
-              className={`${!showPreview ? 'text-zinc-400 disabled' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-              onClick={(e) => {
-                if (!showPreview) {
-                  e.preventDefault();
-                } else {
-                  editViewSet(e);
-                }
-              }}
+              className='text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-8 text-2xl'
+              onClick={editViewSet}
               children={!editView ? "Editor" : "Cerrar editor"}
             />
             <a
@@ -408,14 +402,8 @@ const NewPost = (props) => {
               <img src='/warning.png' className="w-8"></img>
             </div>
             <a
-              className={`${!showPreview ? 'text-zinc-400 disabled' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
-              onClick={(e) => {
-                if (!showPreview) {
-                  e.preventDefault();
-                } else {
-                  saveDocument(e);
-                }
-              }}
+              className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
+              onClick={saveDocument}
               children="Guardar"
             />
           </div>
