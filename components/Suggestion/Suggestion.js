@@ -8,7 +8,7 @@ const notifyError = (errorMessage) => {
     duration: 2000,
   });
 }
-const Suggestion = ({ changedContent, setEditorContent, section, allCharacterCount, aiContentRate, setAiContentRate }) => {
+const Suggestion = ({ changedContent, setEditorContent, section, allCharacterCount }) => {
   const [suggestion, setSuggestion] = useState("");
   const [improvedText, setImprovedText] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -33,7 +33,6 @@ const Suggestion = ({ changedContent, setEditorContent, section, allCharacterCou
   const improveCheck = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(improvedText, "text/html");
-    setAiContentRate(aiContentRate + improvedText.length/allCharacterCount*100);
     setEditorContent(doc.body);
   };
 
