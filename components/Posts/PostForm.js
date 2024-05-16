@@ -67,11 +67,11 @@ const PostForm = ({
                         <label className={styles.label}>
                             <select
                                 className={styles.type(form.type)}
-                                value={form.type || 'default'}
+                                value={form.type || ''}
                                 onChange={(e) => onChange(e, 'type')}
                             >
-                                <option value='default' disabled style={{ color: 'gray' }}>
-                                    Tipo de publicación
+                                <option value='' style={{ color: 'gray' }}>
+                                    Curso de la publicación *
                                 </option>
                                 <option value='essay'>Ensayo</option>
                                 <option value='academic'>Doc. Académico</option>
