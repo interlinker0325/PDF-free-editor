@@ -23,7 +23,6 @@ import TopBar from "components/TopBar/TopBar";
 import Loader from "components/Loader/Loader";
 
 import { toast } from "react-hot-toast";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const notifyError = (warningMessage) =>
   toast.error(warningMessage, {
@@ -136,6 +135,7 @@ const NewPost = (props) => {
             let file_type = _files[0].name.split(".").pop();
             if (file_type == "html") {
               const files = await upload(_files, true);
+              itemValue = files;
               const loadedMonograph = await getHTML(
                 `/api/${files.url.replace(
                   "https://www.datocms-assets.com/",
@@ -144,7 +144,7 @@ const NewPost = (props) => {
               );
               setPreviewIframe(loadedMonograph);
             }
-            if (
+            else if (
               file_type == "pdf" ||
               file_type == "docx" ||
               file_type == "doc" ||
@@ -179,6 +179,10 @@ const NewPost = (props) => {
               } catch (error) {
                 console.log("Error uploading file:", error);
               }
+            }
+            else {
+              notifyError("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
+              e.target.value = null;
             }
           } else {
             const files = await upload(_files, true);
