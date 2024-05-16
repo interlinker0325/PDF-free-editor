@@ -23,7 +23,6 @@ const PostView = ({
   const [allCharacterCount, setAllCharacterCount] = useState(0);
   const author = post?.author;
   const isCurrentUserAuthor = author?.id === user?.id;
-  const [aiContentRate, setAiContentRate] = useState(0);
 
   useEffect(() => {
     setAllCharacterCount(String(previewIframe).length);
@@ -31,18 +30,18 @@ const PostView = ({
 
   const files = Array.isArray(post?.attachments)
     ? post?.attachments?.map((file) => (
-        <a
-          href={`/api/download?uri=${file.url.replace(
-            "https://www.datocms-assets.com",
-            ""
-          )}&mimeType=${file.mimeType}&filename=${file.filename}`}
-          key={`Attachment_${file.url}`}
-          className="!text-other hover:!text-primary !m-0 !no-underline"
-          download={file.filename}
-        >
-          {file.title || file.filename}
-        </a>
-      ))
+      <a
+        href={`/api/download?uri=${file.url.replace(
+          "https://www.datocms-assets.com",
+          ""
+        )}&mimeType=${file.mimeType}&filename=${file.filename}`}
+        key={`Attachment_${file.url}`}
+        className="!text-other hover:!text-primary !m-0 !no-underline"
+        download={file.filename}
+      >
+        {file.title || file.filename}
+      </a>
+    ))
     : [];
 
   let course = post?.course;
@@ -69,9 +68,8 @@ const PostView = ({
       </div>
       <div className="grid grid-cols-10 gap-5 h-[75vh]">
         <aside
-          className={`${
-            suggestionView ? "hidden" : "block"
-          } h-[76vh] col-span-6 pr-5 border-[1px] border-transparent border-r-black`}
+          className={`${suggestionView ? "hidden" : "block"
+            } h-[76vh] col-span-6 pr-5 border-[1px] border-transparent border-r-black`}
         >
           <IFrame
             className=""
@@ -80,7 +78,7 @@ const PostView = ({
             setEditorContent={setEditorContent}
             setIsSaved={setIsSaved}
             changedContent={changedContent}
-            setSection = {setSection}
+            setSection={setSection}
           />
         </aside>
         {editView ? (
@@ -145,19 +143,16 @@ const PostView = ({
               setEditorContent={setEditorContent}
               allCharacterCount={allCharacterCount}
               section={section}
-              aiContentRate={aiContentRate}
-              setAiContentRate={setAiContentRate}
             />
           </aside>
         )}
       </div>
-        <div className="p-2 mt-2 w-[100%] inline-block text-center">
-          <span className="font-semibold text-[1.2rem] text-red-600">
-            Límites de publicación
-          </span>
-          <span className="ps-2">(Incorrección política, Falta de coherencia, Exceder el nivel aceptable de contenido generado por IA, Longitud del título)</span>
-          <span className="text-green-500 ps-10">Proporción de contenido de AI: {aiContentRate}%</span>
-        </div>
+      <div className="p-2 mt-2 w-[100%] inline-block text-center">
+        <span className="font-semibold text-[1.2rem] text-red-600">
+          Límites de publicación
+        </span>
+        <span className="ps-2">(Incorrección política, Falta de coherencia, Exceder el nivel aceptable de contenido generado por IA, Longitud del título)</span>
+      </div>
     </article>
   );
 };

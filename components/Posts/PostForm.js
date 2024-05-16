@@ -26,7 +26,6 @@ const PostForm = ({
     const [open, setOpen] = useState(false);
 
     const handleClick = (event) => {
-        console.log("event triggered");
         if (form.monograph) {
             event.preventDefault();
             setOpen(true);
