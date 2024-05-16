@@ -169,6 +169,7 @@ const NewPost = (props) => {
                 });
                 console.log("HTML conversion succeed. Now file uploading...");
                 const files = await upload([htmlFile], true);
+                itemValue = files;
                 const loadedMonograph = await getHTML(
                   `/api/${files.url.replace(
                     process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL,
