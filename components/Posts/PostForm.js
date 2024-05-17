@@ -63,9 +63,9 @@ const PostForm = ({
                             <label className={styles.label}>
                                 <select
                                     className={styles.select(form.course)}
-                                    value={form.course || 'default'}
+                                    value={form.course || ''}
                                     onChange={(e) => onChange(e, 'course')}>
-                                    <option value='default'>Tipo de publicacion *</option>
+                                    <option value='' style={{ color: 'gray' }}>Curso de la publicacion *</option>
                                     {courses.map(course =>
                                         <option key={`select_course_${course.id}`} value={course.id}>{course.name}</option>
                                     )}
@@ -95,7 +95,7 @@ const PostForm = ({
                                     onChange={(e) => onChange(e, 'type')}
                                 >
                                     <option value='' style={{ color: 'gray' }}>
-                                        Curso de la publicación *
+                                        Tipo de publicacion *
                                     </option>
                                     <option value='essay'>Ensayo</option>
                                     <option value='academic'>Doc. Académico</option>
