@@ -65,7 +65,7 @@ const PostForm = ({
                                     className={styles.select(form.course)}
                                     value={form.course || 'default'}
                                     onChange={(e) => onChange(e, 'course')}>
-                                    <option value='default'>Curso de la publicación *</option>
+                                    <option value='default'>Tipo de publicacion *</option>
                                     {courses.map(course =>
                                         <option key={`select_course_${course.id}`} value={course.id}>{course.name}</option>
                                     )}
