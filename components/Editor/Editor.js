@@ -8,7 +8,6 @@ const FroalaEditorComponent = dynamic(
   async () => {
     const editorModule = await import("react-froala-wysiwyg");
     window.FroalaEditor = require("froala-editor");
-    window.$ = $;
 
     if (typeof window !== "undefined" && window.FroalaEditor) {
       await import("@wiris/mathtype-froala");
