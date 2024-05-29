@@ -15,76 +15,76 @@ const IFrame = ({
 
   const titleHandleClick = (e) => {
     let clickedElement = e.target;
-    setEditorContent(clickedElement)
-    setSection('Título del trabajo')
-  }
+    setEditorContent(clickedElement);
+    setSection('Título del trabajo');
+  };
 
   const handleClick = function (event) {
     event.preventDefault();
     var clickedElement = event.target;
-    // var parentElement = clickedElement.parentNode;
     setEditorContent(clickedElement);
     setEditElement(clickedElement);
+    console.log('element is clicked');
   };
 
   const handleMouseOver = function (event) {
     var hoveredElement = event.target;
-    // var parentElement = hoveredElement.parentNode;
-    // hoveredElement.style.border = "1px solid #000";
     hoveredElement.style.cursor = "pointer";
     if (!hoveredElement.style) return;
-    hoveredElement.style.border = "1px solid #000";
+    hoveredElement.style.background = "#bae6fd";
+    console.log('mouse over');
   };
 
   const handleMouseOut = function (event) {
     var leftElement = event.target;
-    // var parentElement = leftElement.parentNode;
     if (!leftElement.style) return;
-    leftElement.style.border = "1px solid #fff";
+    leftElement.style.background = "none";
     leftElement.style.cursor = "auto";
   };
 
   useEffect(() => {
     const paperTitle = document.getElementById('title');
-    if(editView) {
-      paperTitle.addEventListener('click', titleHandleClick)
-    }
     const iframe = document.getElementById("documentWindow");
-    if (editView && iframe) {
-      iframe?.contentWindow?.document?.addEventListener("click", handleClick);
-      iframe?.contentWindow?.document?.addEventListener(
-        "mouseover",
-        handleMouseOver
-      );
-      iframe?.contentWindow?.document?.addEventListener(
-        "mouseout",
-        handleMouseOut
-      );
+
+    const addIframeEventListeners = () => {
+      if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
+        const iframeDoc = iframe.contentWindow.document;
+        iframeDoc.addEventListener("click", handleClick);
+        iframeDoc.addEventListener("mouseover", handleMouseOver);
+        iframeDoc.addEventListener("mouseout", handleMouseOut);
+      }
+    };
+
+    if (editView) {
+      if (paperTitle) {
+        paperTitle.addEventListener('click', titleHandleClick);
+      }
+      if (iframe) {
+        iframe.addEventListener('load', addIframeEventListeners);
+      }
     }
+
     // Cleanup function
     return () => {
+      if (paperTitle) {
+        paperTitle.removeEventListener('click', titleHandleClick);
+      }
+      if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
+        const iframeDoc = iframe.contentWindow.document;
+        iframeDoc.removeEventListener("click", handleClick);
+        iframeDoc.removeEventListener("mouseover", handleMouseOver);
+        iframeDoc.removeEventListener("mouseout", handleMouseOut);
+      }
       if (iframe) {
-        iframe?.contentWindow?.document?.removeEventListener(
-          "click",
-          handleClick
-        );
-        iframe?.contentWindow?.document?.removeEventListener(
-          "mouseover",
-          handleMouseOver
-        );
-        iframe?.contentWindow?.document?.removeEventListener(
-          "mouseout",
-          handleMouseOut
-        );
+        iframe.removeEventListener('load', addIframeEventListeners);
       }
     };
   }, [editView]);
 
   useEffect(() => {
     if (!editElement) return;
-    const tempContainer = document.createElement('div');
-    // Set the innerHTML of the container to the HTML string
-    editElement.innerHTML = changedContent ;
+    // Set the Iframe's content as Editor's content
+    editElement.innerHTML = changedContent;
     setIsSaved(false);
   }, [changedContent]);
 

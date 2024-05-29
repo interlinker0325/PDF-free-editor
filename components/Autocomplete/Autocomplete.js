@@ -107,7 +107,7 @@ class Autocomplete extends Component {
             } else {
                 suggestionsListComponent = (
                     <div
-                        className='w-[18rem] p-2 border-other border-[1px] drop-shadow-lg text-other absolute bg-white ml-0 mt-15 mt-0 max-h-[143px] w-64'>
+                        className='w-[18rem] p-2 border-other drop-shadow-lg text-other absolute bg-white ml-0 mt-15 mt-0 max-h-[143px]'>
                         <em>No hay estudiantes</em>
                     </div>
                 );
