@@ -48,11 +48,17 @@ const NewPost = (props) => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const { user } = useUser({ redirectTo: "/" });
   const [showPreview, setShowPreview] = useState(false);
+  // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
+  // display suggestion window during editView
   const [suggestionView, setSuggestionView] = useState(false);
+  // set post form state
   const [formState, setFormState] = useState(formBaseState);
+  // this is converted html content. once upload is completed, set iframe content by previewIframe from loaded monograph
   const [previewIframe, setPreviewIframe] = useState(null);
+  // check if document is saved
   const [isSaved, setIsSaved] = useState(true);
+  // set post form view PostForm : PostView
   const [formView, setFormView ] = useState(true)
   const clearSubmitForm = () => {
     setFormState(formBaseState);
@@ -212,17 +218,6 @@ const NewPost = (props) => {
     });
     triggerLoading(false);
   }, [formState]);
-
-  const hidePreview = (e) => {
-    if (isSaved == true) {
-      e.preventDefault();
-      setShowPreview(false);
-      setEditView(false);
-      setSuggestionView(false);
-    } else {
-      notifyError("El documento no fue guardado.");
-    }
-  };
 
   const editViewSet = (e) => {
     e.preventDefault();

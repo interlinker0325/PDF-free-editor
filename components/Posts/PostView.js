@@ -15,13 +15,21 @@ const PostView = ({
   suggestionView,
   setIsSaved,
 }) => {
+  // when the element of the Iframe Preview, editorContent is set as clicked Element
   const [editorContent, setEditorContent] = useState("Select the tag");
+  // once the editorContent(html object of the Iframe) is changed, changedContent is set as its html string
+  // once the value of Editor is changed, it is set as editor's html string
   const [changedContent, setChangedContent] = useState("");
+  // section title of the edited content. set from preview IFrame
   const [section, setSection] = useState("Sección Título");
+  // show file list as link if set true in post view
   const [showFiles, setshowFiles] = useState(false);
   const toggleShowFiles = () => setshowFiles(!showFiles);
+  // save character count that generated in suggestion window by AI. set in Suggestion window
   const [allCharacterCount, setAllCharacterCount] = useState(0);
+  // author of the post
   const author = post?.author;
+  // check if current user is author of this post
   const isCurrentUserAuthor = author?.id === user?.id;
 
   useEffect(() => {

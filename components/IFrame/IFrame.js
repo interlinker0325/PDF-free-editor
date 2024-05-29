@@ -1,4 +1,3 @@
-import { event } from "jquery";
 import React, { useState, useEffect } from "react";
 
 const IFrame = ({
@@ -11,6 +10,7 @@ const IFrame = ({
   setSection,
   ...props
 }) => {
+  // set as clicked element - html object
   const [editElement, setEditElement] = useState();
 
   const titleHandleClick = (e) => {
@@ -84,13 +84,7 @@ const IFrame = ({
     if (!editElement) return;
     const tempContainer = document.createElement('div');
     // Set the innerHTML of the container to the HTML string
-    tempContainer.innerHTML = changedContent;
-    const changedContentElement = tempContainer.firstChild;
-    if(changedContentElement?.tagName == 'P'){
-      editElement.innerHTML = changedContentElement.textContent;
-    } else {
-      editElement.innerHTML = changedContent;
-    }
+    editElement.innerHTML = changedContent ;
     setIsSaved(false);
   }, [changedContent]);
 
