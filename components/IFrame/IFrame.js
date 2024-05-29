@@ -10,7 +10,6 @@ const IFrame = ({
   setSection,
   ...props
 }) => {
-  // set as clicked element - html object
   const [editElement, setEditElement] = useState();
 
   const titleHandleClick = (e) => {
@@ -19,24 +18,24 @@ const IFrame = ({
     setSection('Título del trabajo');
   };
 
-  const handleClick = function (event) {
+  const handleClick = (event) => {
     event.preventDefault();
-    var clickedElement = event.target;
+    const clickedElement = event.target;
     setEditorContent(clickedElement);
     setEditElement(clickedElement);
     console.log('element is clicked');
   };
 
-  const handleMouseOver = function (event) {
-    var hoveredElement = event.target;
+  const handleMouseOver = (event) => {
+    const hoveredElement = event.target;
     hoveredElement.style.cursor = "pointer";
     if (!hoveredElement.style) return;
     hoveredElement.style.background = "#bae6fd";
     console.log('mouse over');
   };
 
-  const handleMouseOut = function (event) {
-    var leftElement = event.target;
+  const handleMouseOut = (event) => {
+    const leftElement = event.target;
     if (!leftElement.style) return;
     leftElement.style.background = "none";
     leftElement.style.cursor = "auto";
@@ -55,12 +54,27 @@ const IFrame = ({
       }
     };
 
+    const injectMathJax = () => {
+      if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
+        const iframeDoc = iframe.contentWindow.document;
+        const script = iframeDoc.createElement("script");
+        script.type = "text/javascript";
+        script.id = "MathJax-script";
+        script.async = true;
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js";
+        iframeDoc.head.appendChild(script);
+      }
+    };
+
     if (editView) {
       if (paperTitle) {
         paperTitle.addEventListener('click', titleHandleClick);
       }
       if (iframe) {
-        iframe.addEventListener('load', addIframeEventListeners);
+        iframe.addEventListener('load', () => {
+          addIframeEventListeners();
+          injectMathJax();
+        });
       }
     }
 
@@ -86,15 +100,21 @@ const IFrame = ({
     // Set the Iframe's content as Editor's content
     editElement.innerHTML = changedContent;
     setIsSaved(false);
+    // Re-render MathJax content
+    if (window.MathJax) {
+      window.MathJax.typeset();
+    }
   }, [changedContent]);
 
   return (
-    <iframe
-      id="documentWindow"
-      src={url}
-      className={`border-none w-full h-full my-4 overflow-unset overflow-none ${className}`}
-      {...props}
-    />
+    <>
+      <iframe
+        id="documentWindow"
+        src={url}
+        className={`border-none w-full h-full my-4 overflow-unset overflow-none ${className}`}
+        {...props}
+      />
+    </>
   );
 };
 
