@@ -4,6 +4,7 @@ import { isPostApproved } from "utils";
 import Editor from "components/Editor/Editor";
 import Suggestion from "components/Suggestion/Suggestion";
 let options = { year: "numeric", month: "long", day: "numeric" };
+import ErrorBoundary from "components/Editor/ErrorBoundary";
 
 const PostView = ({
   user,
@@ -91,12 +92,14 @@ const PostView = ({
         </aside>
         {editView ? (
           <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none h-full">
-            <Editor
-              setChangedContent={setChangedContent}
-              editorContent={editorContent}
-              section={section}
-              setSection={setSection}
-            />
+            <ErrorBoundary>
+              <Editor
+                setChangedContent={setChangedContent}
+                editorContent={editorContent}
+                section={section}
+                setSection={setSection}
+              />
+            </ErrorBoundary>
           </aside>
         ) : (
           <aside className="col-span-2 flex flex-col gap-4 pl-5">

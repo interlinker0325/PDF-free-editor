@@ -20,39 +20,68 @@ const IFrame = ({
 
   const handleClick = (event) => {
     event.preventDefault();
-    const clickedElement = event.target;
-    if (clickedElement.tagName == 'SECTION' || clickedElement.tagName == 'HTML' || clickedElement.id == "preview-content" || clickedElement.id == "preview" || clickedElement.id == "container-ruller") {
-      console.log('Invalid position');
+    var clickedElement = event.target;
+    // if target is tr or td, select table tag for editing
+    if (clickedElement.tagName === 'TD' || clickedElement.tagName === 'TH') {
+      clickedElement = clickedElement.parentElement.parentElement.parentElement;
     }
-    else {
+    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG'];
+    const ids = ['preview-content', 'preview', 'container-ruller'];
+    if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id)) {
+      // Do nothing for these elements
+    } else {
       setEditorContent(clickedElement);
       setEditElement(clickedElement);
-      console.log('element is clicked');
+
+
+      const iframe = document.getElementById("documentWindow");
+
+      if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
+        const iframeDoc = iframe.contentWindow.document;
+        const elements = iframeDoc.querySelectorAll('h2, div, table');
+
+        elements.forEach(element => {
+          element.style.background = 'none';
+        });
+      }
+
+      // Set the background color of the newly clicked element
+      clickedElement.style.background = "#dcfce7";
+
     }
   };
 
   const handleMouseOver = (event) => {
-    const hoveredElement = event.target;
-    if (hoveredElement.tagName == 'SECTION' || hoveredElement.tagName == 'HTML' || hoveredElement.id == "preview-content" || hoveredElement.id == "preview" || hoveredElement.id == "container-ruller") {
-      console.log('Invalid position');
-      console.log(hoveredElement.tagName);
+    var hoveredElement = event.target;
+    if (hoveredElement.tagName === 'TD' || hoveredElement.tagName === 'TH') {
+      hoveredElement = hoveredElement.parentElement.parentElement.parentElement;
     }
-    else {
+    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG'];
+    const ids = ['preview-content', 'preview', 'container-ruller'];
+    if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id)) {
+    } else {
       hoveredElement.style.cursor = "pointer";
       if (!hoveredElement.style) return;
-      hoveredElement.style.background = "#bae6fd";
-      console.log('mouse over');
+      if (hoveredElement.style.background !== 'rgb(220, 252, 231)') {
+        hoveredElement.style.background = "#bae6fd";
+      }
     }
   };
 
   const handleMouseOut = (event) => {
-    const leftElement = event.target;
-    if (leftElement.tagName == 'SECTION' || leftElement.tagName == 'HTML' || leftElement.id == "preview-content" || leftElement.id == "preview" || leftElement.id == "container-ruller") {
-      console.log('Invalid position');
+    var leftElement = event.target;
+    if (leftElement.tagName === 'TD' || leftElement.tagName === 'TH') {
+      leftElement = leftElement.parentElement.parentElement.parentElement;
     }
-    else {
+    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG'];
+    const ids = ['preview-content', 'preview', 'container-ruller'];
+    if (tagNames.includes(leftElement.tagName) || ids.includes(leftElement.id)) {
+    } else {
       if (!leftElement.style) return;
-      leftElement.style.background = "none";
+      // Only reset the background if the element is not the previously clicked element
+      if (leftElement.style.background == 'rgb(186, 230, 253)') {
+        leftElement.style.background = "none";
+      }
       leftElement.style.cursor = "auto";
     }
   };
@@ -112,9 +141,27 @@ const IFrame = ({
   }, [editView]);
 
   useEffect(() => {
-    if (!editElement) return;
-    // Set the Iframe's content as Editor's content
-    editElement.innerHTML = changedContent;
+    if (!editElement) return
+    const tempContainer = document.createElement('div');
+    tempContainer.innerHTML = changedContent;
+    editElement.innerHTML = '';
+
+    while (tempContainer.firstChild) {
+      const firstChild = tempContainer.firstChild;
+
+      while (firstChild.firstChild) {
+        const childNode = firstChild.firstChild;
+        editElement.appendChild(childNode);
+      }
+
+      try {
+        tempContainer.removeChild(firstChild);
+      }
+      catch {
+      }
+    }
+
+
     setIsSaved(false);
     // Re-render MathJax content
     if (window.MathJax) {
