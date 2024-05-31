@@ -56,9 +56,6 @@ const Editor = ({
 
   return (
     <div className="w-full h-full p-1">
-      <Head>
-        <title>Jodit Rich Text Editor</title>
-      </Head>
       <div className="flex justify-between">
         <span className="font-semibold text-[30px]">{section}</span>
       </div>

@@ -22,6 +22,8 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@wiris/mathtype-froala": "^8.8.3",
     "@wiris/mathtype-froala3": "^7.31.1",
+    "@wiris/mathtype-generic": "^8.9.2",
+    "@wiris/mathtype-html-integration-devkit": "^1.17.2",
     "autoprefixer": "^10.4.16",
     "axios": "^0.21.4",
     "codemirror": "^6.0.1",
