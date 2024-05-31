@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 
 // Using dynamic import of Jodit component as it can't render in server side
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -23,8 +22,8 @@ const Editor = ({
   }, []);
 
   useEffect(() => {
-    setModel(editorContent.innerHTML);
-    setChangedContent(editorContent.innerHTML);
+    setModel(editorContent.outerHTML);
+    setChangedContent(editorContent.outerHTML);
     try {
       const sectionTitleElement = editorContent.parentNode.getElementsByTagName("h2")[0];
       if (sectionTitleElement?.id !== 'title') {
@@ -35,43 +34,43 @@ const Editor = ({
     }
   }, [editorContent]);
 
-  const handleModelChange = (value) => {
-    console.log('this is value===>', value);
-    setChangedContent(value);
-    setModel(value);
-  };
+const handleModelChange = (value) => {
+  // console.log('this is value===>', value);
+  setChangedContent(value);
+  setModel(value);
+};
 
-  const config = useMemo(() => ({
-    readonly: false,
-    toolbar: true,
-    uploader: {
-      insertImageAsBase64URI: true,
-      imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
-    },
-    buttons: [
-      "undo", "redo", "bold", "italic", "link", "align", "image", "source", "fullsize"
-    ],
-    placeholder: "Edite aquí su contenido!",
-  }), []);
+const config = useMemo(() => ({
+  readonly: false,
+  toolbar: true,
+  uploader: {
+    insertImageAsBase64URI: true,
+    imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
+  },
+  buttons: [
+    "undo", "redo", "bold", "italic", "link", "align", "image", "source", "fullsize"
+  ],
+  placeholder: "Edite aquí su contenido!",
+}), []);
 
-  return (
-    <div className="w-full h-full p-1">
-      <div className="flex justify-between">
-        <span className="font-semibold text-[30px]">{section}</span>
-      </div>
-      <form className="w-full h-full mt-5">
-        {isBrowser && (
-          <JoditEditor
-            ref={editor}
-            value={model}
-            config={config}
-            onChange={handleModelChange}
-            className="w-full h-[70%] mt-10 bg-white"
-          />
-        )}
-      </form>
+return (
+  <div className="w-full h-full p-1">
+    <div className="flex justify-between">
+      <span className="font-semibold text-[30px]">{section}</span>
     </div>
-  );
+    <form className="w-full h-full mt-5">
+      {isBrowser && (
+        <JoditEditor
+          ref={editor}
+          value={model}
+          config={config}
+          onChange={handleModelChange}
+          className="w-full h-[70%] mt-10 bg-white"
+        />
+      )}
+    </form>
+  </div>
+);
 };
 
 export default Editor;
