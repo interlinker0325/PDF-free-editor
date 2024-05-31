@@ -53,12 +53,13 @@ const IFrame = ({
 
   const handleMouseOver = (event) => {
     var hoveredElement = event.target;
+    console.log('this is tag name===>', hoveredElement.tagName);
     if (hoveredElement.tagName === 'TD' || hoveredElement.tagName === 'TH') {
       hoveredElement = hoveredElement.parentElement.parentElement.parentElement;
     }
     const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
-    if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id)) {
+    if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id) || hoveredElement.tagName.includes('MJX')) {
     } else {
       hoveredElement.style.cursor = "pointer";
       if (!hoveredElement.style) return;
