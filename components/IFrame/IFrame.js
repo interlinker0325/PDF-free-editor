@@ -21,24 +21,40 @@ const IFrame = ({
   const handleClick = (event) => {
     event.preventDefault();
     const clickedElement = event.target;
-    setEditorContent(clickedElement);
-    setEditElement(clickedElement);
-    console.log('element is clicked');
+    if (clickedElement.tagName == 'SECTION' || clickedElement.tagName == 'HTML' || clickedElement.id == "preview-content" || clickedElement.id == "preview" || clickedElement.id == "container-ruller") {
+      console.log('Invalid position');
+    }
+    else {
+      setEditorContent(clickedElement);
+      setEditElement(clickedElement);
+      console.log('element is clicked');
+    }
   };
 
   const handleMouseOver = (event) => {
     const hoveredElement = event.target;
-    hoveredElement.style.cursor = "pointer";
-    if (!hoveredElement.style) return;
-    hoveredElement.style.background = "#bae6fd";
-    console.log('mouse over');
+    if (hoveredElement.tagName == 'SECTION' || hoveredElement.tagName == 'HTML' || hoveredElement.id == "preview-content" || hoveredElement.id == "preview" || hoveredElement.id == "container-ruller") {
+      console.log('Invalid position');
+      console.log(hoveredElement.tagName);
+    }
+    else {
+      hoveredElement.style.cursor = "pointer";
+      if (!hoveredElement.style) return;
+      hoveredElement.style.background = "#bae6fd";
+      console.log('mouse over');
+    }
   };
 
   const handleMouseOut = (event) => {
     const leftElement = event.target;
-    if (!leftElement.style) return;
-    leftElement.style.background = "none";
-    leftElement.style.cursor = "auto";
+    if (leftElement.tagName == 'SECTION' || leftElement.tagName == 'HTML' || leftElement.id == "preview-content" || leftElement.id == "preview" || leftElement.id == "container-ruller") {
+      console.log('Invalid position');
+    }
+    else {
+      if (!leftElement.style) return;
+      leftElement.style.background = "none";
+      leftElement.style.cursor = "auto";
+    }
   };
 
   useEffect(() => {
