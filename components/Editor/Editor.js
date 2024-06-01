@@ -65,7 +65,7 @@ return (
           value={model}
           config={config}
           onChange={handleModelChange}
-          className="w-full h-[70%] mt-10 bg-white"
+          className="w-full"
         />
       )}
     </form>
