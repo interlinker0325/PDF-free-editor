@@ -37,3 +37,14 @@
 .clicked {
   background-color: aquamarine;
 }
+
+
+/* Jodit Editor setting */
+.jodit-wysiwyg{
+  height: 60vh !important;
+  overflow-y: scroll;
+}
+
+.jodit-wysiwyg > div, li, table, h2 {
+  background: none !important;
+}
