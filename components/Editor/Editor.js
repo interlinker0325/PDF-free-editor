@@ -34,43 +34,80 @@ const Editor = ({
     }
   }, [editorContent]);
 
-const handleModelChange = (value) => {
-  // console.log('this is value===>', value);
-  setChangedContent(value);
-  setModel(value);
-};
+  const handleModelChange = (value) => {
+    // console.log('this is value===>', value);
+    setChangedContent(value);
+    setModel(value);
+  };
 
-const config = useMemo(() => ({
-  readonly: false,
-  toolbar: true,
-  uploader: {
-    insertImageAsBase64URI: true,
-    imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
-  },
-  buttons: [
-    "undo", "redo", "bold", "italic", "link", "align", "image", "source", "fullsize"
-  ],
-  placeholder: "Edite aquí su contenido!",
-}), []);
+  const options = [
+    'paragraph', '|',
+    'bold',
+    'strikethrough',
+    'underline',
+    'italic', '|',
+    'ul',
+    'ol', '|',
+    'outdent', 'indent',  '|',
+    'font',
+    'fontsize',
+    'brush',
+    'image',
+    'video',
+    'table',
+    'link', '|',
+    'undo', 'redo', '|',
+    'hr',
+    'eraser',
+    'copyformat', '|',
+    'symbol',
+    'fullsize',
+    'print',
+    'about',
+    'source', '|',
+];
 
-return (
-  <div className="w-full h-full p-1">
-    <div className="flex justify-between">
-      <span className="font-semibold text-[30px]">{section}</span>
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      placeholder: '',
+      defaultActionOnPaste: 'insert_as_html',
+      defaultLineHeight: 1.5,
+      enter: 'div',
+      // options that we defined in above step.
+      buttons: options,
+      buttonsMD: options,
+      buttonsSM: options,
+      buttonsXS: options,
+      statusbar: false,
+      sizeLG: 900,
+      sizeMD: 700,
+      sizeSM: 400,
+      toolbarAdaptive: false,
+      language: 'sp',
+      colors: ['#159957', '#f2f2f2', '#fcf9e7'],
+    }),
+    [],
+  );
+
+  return (
+    <div className="w-full h-full p-1">
+      <div className="flex justify-between">
+        <span className="font-semibold text-[30px]">{section}</span>
+      </div>
+      <form className="w-full h-full mt-5">
+        {isBrowser && (
+          <JoditEditor
+            ref={editor}
+            value={model}
+            config={config}
+            onChange={handleModelChange}
+            className="w-full"
+          />
+        )}
+      </form>
     </div>
-    <form className="w-full h-full mt-5">
-      {isBrowser && (
-        <JoditEditor
-          ref={editor}
-          value={model}
-          config={config}
-          onChange={handleModelChange}
-          className="w-full"
-        />
-      )}
-    </form>
-  </div>
-);
+  );
 };
 
 export default Editor;

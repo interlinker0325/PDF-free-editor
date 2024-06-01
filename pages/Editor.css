@@ -45,6 +45,6 @@
   overflow-y: scroll;
 }
 
-.jodit-wysiwyg > div, li, table, h2 {
+.jodit-wysiwyg > * {
   background: none !important;
 }
