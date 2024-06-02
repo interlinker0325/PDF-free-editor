@@ -43,37 +43,23 @@ const Editor = ({
   const options = [
     'paragraph', '|',
     'bold',
-    'strikethrough',
     'underline',
     'italic', '|',
-    'ul',
-    'ol', '|',
-    'outdent', 'indent',  '|',
-    'font',
-    'fontsize',
     'brush',
     'image',
-    'video',
     'table',
     'link', '|',
     'undo', 'redo', '|',
-    'hr',
     'eraser',
-    'copyformat', '|',
-    'symbol',
-    'fullsize',
-    'print',
-    'about',
-    'source', '|',
 ];
 
   const config = useMemo(
     () => ({
       readonly: false,
-      placeholder: '',
+      placeholder: 'Edite aquí su contenido!',
       defaultActionOnPaste: 'insert_as_html',
       defaultLineHeight: 1.5,
-      enter: 'div',
+      enter: 'p',
       // options that we defined in above step.
       buttons: options,
       buttonsMD: options,
@@ -83,9 +69,19 @@ const Editor = ({
       sizeLG: 900,
       sizeMD: 700,
       sizeSM: 400,
-      toolbarAdaptive: false,
+      // toolbarAdaptive: false,
       language: 'sp',
       colors: ['#159957', '#f2f2f2', '#fcf9e7'],
+      uploader: {
+        insertImageAsBase64URI: true,
+        imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
+      },
+      allowTabNavigation: false, //allow tab naviation of the toolbar button
+      editorClassName: '', //Class name that can be appended to the main editor container
+      // Style of the editor workspace area
+      style: {
+        // margin: 5,
+       }
     }),
     [],
   );
