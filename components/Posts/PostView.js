@@ -96,6 +96,7 @@ const PostView = ({
               <Editor
                 setChangedContent={setChangedContent}
                 editorContent={editorContent}
+                setEditorContent={setEditorContent}
                 section={section}
                 setSection={setSection}
               />

@@ -30,6 +30,7 @@ const IFrame = ({
     if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id)) {
       // Do nothing for these elements
     } else {
+      console.log('click event occurred');
       setEditorContent(clickedElement);
       setEditElement(clickedElement);
 
