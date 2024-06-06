@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import IFrame from "components/IFrame/IFrame";
 import { isPostApproved } from "utils";
 import Editor from "components/Editor/Editor";
-import Suggestion from "components/Suggestion/Suggestion";
 let options = { year: "numeric", month: "long", day: "numeric" };
 import ErrorBoundary from "components/Editor/ErrorBoundary";
 
@@ -13,7 +12,6 @@ const PostView = ({
   editMode = false,
   previewIframe,
   editView,
-  suggestionView,
   setIsSaved,
 }) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
@@ -26,16 +24,10 @@ const PostView = ({
   // show file list as link if set true in post view
   const [showFiles, setshowFiles] = useState(false);
   const toggleShowFiles = () => setshowFiles(!showFiles);
-  // save character count that generated in suggestion window by AI. set in Suggestion window
-  const [allCharacterCount, setAllCharacterCount] = useState(0);
   // author of the post
   const author = post?.author;
   // check if current user is author of this post
   const isCurrentUserAuthor = author?.id === user?.id;
-
-  useEffect(() => {
-    setAllCharacterCount(String(previewIframe).length);
-  }, []);
 
   const files = Array.isArray(post?.attachments)
     ? post?.attachments?.map((file) => (
@@ -76,10 +68,7 @@ const PostView = ({
         )}
       </div>
       <div className="grid grid-cols-10 gap-5 h-[75vh]">
-        <aside
-          className={`${suggestionView ? "hidden" : "block"
-            } h-[76vh] col-span-6 pr-5 border-[1px] border-transparent border-r-black`}
-        >
+        <aside className='h-[76vh] col-span-6 pr-5 border-[1px] border-transparent border-r-black'>
           <IFrame
             className=""
             srcDoc={previewIframe || post.monographView}
@@ -146,16 +135,6 @@ const PostView = ({
             <div className="w-full pl-4 flex flex-col gap-0">
               {showFiles && files}
             </div>
-          </aside>
-        )}
-        {suggestionView && (
-          <aside className="col-span-6 flex flex-col gap-4 pl-5 border-[1px] border-transparent rounded-none border-l-black">
-            <Suggestion
-              changedContent={changedContent}
-              setEditorContent={setEditorContent}
-              allCharacterCount={allCharacterCount}
-              section={section}
-            />
           </aside>
         )}
       </div>

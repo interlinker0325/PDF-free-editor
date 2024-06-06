@@ -15,7 +15,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const [model, setModel] = useState('');
   const [config, setConfig] = useState(null)
 
-  const [suggestion, setSuggestion] = useState("");
   const [improvedText, setImprovedText] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(false);
 
@@ -165,7 +164,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                       })
                       .then(function (response) {
                         setLoadingStatus(false);
-                        setSuggestion(response["data"].suggestion);
                         setImprovedText(response["data"].improvedText);
                       })
                       .catch(function (error) {
