@@ -14,7 +14,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const [config, setConfig] = useState(null)
 
   const options = [
-    'customParagraph', 'paragraph', '|',
+    'customParagraph', '|',
     'bold',
     'underline',
     'italic', '|',
