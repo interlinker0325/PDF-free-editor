@@ -189,7 +189,8 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             setEditorContent(tempElement);
           }
           else if(value == 'Texto recuadro') {
-            const tempElement = document.createElement('div');
+            console.log('blockquote');
+            const tempElement = document.createElement('blockquote');
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
