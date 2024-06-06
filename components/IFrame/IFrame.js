@@ -30,7 +30,6 @@ const IFrame = ({
     if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id)) {
       // Do nothing for these elements
     } else {
-      console.log('click event occurred');
       setEditorContent(clickedElement);
       setEditElement(clickedElement);
 
@@ -39,7 +38,7 @@ const IFrame = ({
 
       if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
         const iframeDoc = iframe.contentWindow.document;
-        const elements = iframeDoc.querySelectorAll('h2, div, table, li, a');
+        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote');
 
         elements.forEach(element => {
           element.style.background = 'none';
