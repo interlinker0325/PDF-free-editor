@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
+import axios from "axios";
+
 import { icon } from '@fortawesome/fontawesome-svg-core';
-import { faL } from '@fortawesome/free-solid-svg-icons';
+import { faL, faSpellCheck } from '@fortawesome/free-solid-svg-icons';
 // import { Jodit } from 'jodit-react';
 
 // Using dynamic import of Jodit component as it can't render server-side
@@ -12,6 +14,10 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const [isBrowser, setIsBrowser] = useState(false);
   const [model, setModel] = useState('');
   const [config, setConfig] = useState(null)
+
+  const [suggestion, setSuggestion] = useState("");
+  const [improvedText, setImprovedText] = useState("");
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   const options = [
     'customParagraph', '|',
@@ -55,19 +61,12 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
           },
           allowTabNavigation: false,
-          controls: {
-            paragraph: module.Jodit.atom({
-              list: {
-                h1: 'Título 1',
-                h2: 'Título 2',
-                h3: 'Título 3',
-                h4: 'Cuerpo',
-                h5: 'Texto recuadro',
-                blockquote: 'Título de Tabla/Figura',
-                div: 'Nota de Tabla/Figura',
-              }
-            })
+          link: {
+            noFollowCheckbox: false,
+            openInNewTabCheckbox: false,
+            modeClassName: '',
           },
+          spellCheck: true,
           // custom buttons
           extraButtons: [
             // add insert tooltip button
@@ -140,19 +139,60 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             {
               name: 'deleteBlock',
               tooltip: 'Delete Block',
-              icon: 'cancel',
+              icon: 'bin',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
                   editorContent.parentNode.removeChild(editorContent);
                 }
               }
             },
-            '|'
+            '|',
+            ,
+            {
+              name: 'aiAssistant',
+              tooltip: 'AI Assistant',
+              icon: 'ai_assistant',
+              exec: (editor) => {
+                if (editor.value) {
+                  const sectionCheck = async () => {
+                    setModel("Processing...")
+                    axios
+                      .post(`${process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL}/sectionCheck`, null, {
+                        params: {
+                          content: editor.value,
+                          title: section
+                        },
+                      })
+                      .then(function (response) {
+                        setLoadingStatus(false);
+                        setSuggestion(response["data"].suggestion);
+                        setImprovedText(response["data"].improvedText);
+                      })
+                      .catch(function (error) {
+                        setImprovedText(error)
+                      });
+                  };
+                  sectionCheck();
+                }
+              }
+            },
+            '|',
+            // insert check button
+            {
+              name: 'insertCheck',
+              tooltip: 'Insert',
+              icon: 'ok',
+              exec: (editor) => {
+                setChangedContent(editor.value)
+              }
+            },
+
           ],
         }
       );
 
       // add custom button by Jodit method
+      // create custom paragraph type button
       module.Jodit.defaultOptions.controls.customParagraph = {
         tooltip: 'Select the type of the block',
         icon: 'paragraph',
@@ -170,39 +210,39 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
-          else if(value == 'Título 2') {
+          else if (value == 'Título 2') {
             const tempElement = document.createElement('h3');
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
-          else if(value == 'Título 3') {
+          else if (value == 'Título 3') {
             const tempElement = document.createElement('h4');
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
-          else if(value == 'Cuerpo') {
+          else if (value == 'Cuerpo') {
             const tempElement = document.createElement('div');
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
-          else if(value == 'Texto recuadro') {
+          else if (value == 'Texto recuadro') {
             console.log('blockquote');
             const tempElement = document.createElement('blockquote');
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
-          else if(value == 'Título de Tabla/Figura') {
+          else if (value == 'Título de Tabla/Figura') {
             const tempElement = document.createElement('div');
             tempElement.style.cssText = 'text-align: center;';
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
-          else if(value == 'Nota de Tabla/Figura') {
+          else if (value == 'Nota de Tabla/Figura') {
             const tempElement = document.createElement('div');
             tempElement.style.cssText = 'font-size: 0.9rem; text-align: center'
             tempElement.innerHTML = editorContent.innerHTML;
@@ -229,13 +269,13 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     }
   }, [editorContent]);
 
+  useEffect(() => {
+    setModel(improvedText);
+  }, [improvedText])
+
   const handleModelChange = (value) => {
-    setChangedContent(value);
     setModel(value);
   };
-
-
-
 
   return (
     <div className="w-full h-full p-1">
