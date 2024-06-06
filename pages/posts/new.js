@@ -50,8 +50,6 @@ const NewPost = (props) => {
   const [showPreview, setShowPreview] = useState(false);
   // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
-  // display suggestion window during editView
-  const [suggestionView, setSuggestionView] = useState(false);
   // set post form state
   const [formState, setFormState] = useState(formBaseState);
   // this is converted html content. once upload is completed, set iframe content by previewIframe from loaded monograph
@@ -219,24 +217,6 @@ const NewPost = (props) => {
     triggerLoading(false);
   }, [formState]);
 
-  const editViewSet = (e) => {
-    e.preventDefault();
-    if (editView == true) {
-      setEditView(false)
-      setSuggestionView(false);
-      setFormView(true);
-    }
-    else {
-      setEditView(true)
-      setFormView(false)
-    }
-
-  };
-
-  const suggestionViewSet = (e) => {
-    e.preventDefault();
-    setSuggestionView(!suggestionView);
-  };
 
   const doShowPreview = useCallback(
     async (e) => {
@@ -378,7 +358,7 @@ const NewPost = (props) => {
             )}
           </div>
           <div className="flex items-center">
-            <a
+            <a  
               className={`${formView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
               onClick={() => {
                 setFormView(true);
@@ -393,25 +373,17 @@ const NewPost = (props) => {
                 setShowPreview(true);
                 setFormView(false);
                 setEditView(false);
-                setSuggestionView(false);
               }}
               children="Vista previa"
             />
-            {editView && (
-              <a
-              className="text-other ml-8 text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
-              onClick={suggestionViewSet}
-              children={`${suggestionView ? "Ocultar Sugerencia" : "Mostrar sugerencia"
-            }`}
-              />
-            )}
             <a
-              className='text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-8 text-2xl'
-              onClick={(e) => {
-                editViewSet(e);
+              className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+              onClick={() => {
+                setEditView(true);
                 setShowPreview(false);
+                setFormView(false);
               }}
-              children={!editView ? "Editor" : "Cerrar editor"}
+              children="Editor"
             />
             <a
               className="text-other ml-8 text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
@@ -435,7 +407,6 @@ const NewPost = (props) => {
           user={user}
           previewIframe={previewIframe}
           editView={editView}
-          suggestionView={suggestionView}
           setIsSaved={setIsSaved}
           {...props}
         />

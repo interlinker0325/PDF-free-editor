@@ -25,9 +25,9 @@ const IFrame = ({
     if (clickedElement.tagName === 'TD' || clickedElement.tagName === 'TH') {
       clickedElement = clickedElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL'];
+    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
-    if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id)) {
+    if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id) || clickedElement.tagName.includes('MJX')) {
       // Do nothing for these elements
     } else {
       setEditorContent(clickedElement);
@@ -57,7 +57,7 @@ const IFrame = ({
     if (hoveredElement.tagName === 'TD' || hoveredElement.tagName === 'TH') {
       hoveredElement = hoveredElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL'];
+    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id) || hoveredElement.tagName.includes('MJX')) {
     } else {
@@ -74,9 +74,9 @@ const IFrame = ({
     if (leftElement.tagName === 'TD' || leftElement.tagName === 'TH') {
       leftElement = leftElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL'];
+    const tagNames = ['SECTION', 'HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
-    if (tagNames.includes(leftElement.tagName) || ids.includes(leftElement.id)) {
+    if (tagNames.includes(leftElement.tagName) || ids.includes(leftElement.id) || leftElement.tagName.includes('MJX')) {
     } else {
       if (!leftElement.style) return;
       // Only reset the background if the element is not the previously clicked element
@@ -90,6 +90,7 @@ const IFrame = ({
   useEffect(() => {
     const paperTitle = document.getElementById('title');
     const iframe = document.getElementById("documentWindow");
+    const iframeDoc = iframe.contentWindow.document;
 
     const addIframeEventListeners = () => {
       if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
@@ -102,7 +103,7 @@ const IFrame = ({
 
     const injectMathJax = () => {
       if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
-        const iframeDoc = iframe.contentWindow.document;
+        // const iframeDoc = iframe.contentWindow.document;
         const script = iframeDoc.createElement("script");
         script.type = "text/javascript";
         script.id = "MathJax-script";
@@ -121,11 +122,14 @@ const IFrame = ({
           addIframeEventListeners();
           injectMathJax();
         });
+        if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
+          iframeDoc.addEventListener("click", handleClick);
+          iframeDoc.addEventListener("mouseover", handleMouseOver);
+          iframeDoc.addEventListener("mouseout", handleMouseOut);
+        }
       }
     }
-
-    // Cleanup function
-    return () => {
+    else {
       if (paperTitle) {
         paperTitle.removeEventListener('click', titleHandleClick);
       }
@@ -135,8 +139,18 @@ const IFrame = ({
         iframeDoc.removeEventListener("mouseover", handleMouseOver);
         iframeDoc.removeEventListener("mouseout", handleMouseOut);
       }
-      if (iframe) {
-        iframe.removeEventListener('load', addIframeEventListeners);
+    };
+
+    return () => {
+      // Cleanup code
+      if (paperTitle) {
+        paperTitle.removeEventListener('click', titleHandleClick);
+      }
+      if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
+        const iframeDoc = iframe.contentWindow.document;
+        iframeDoc.removeEventListener("click", handleClick);
+        iframeDoc.removeEventListener("mouseover", handleMouseOver);
+        iframeDoc.removeEventListener("mouseout", handleMouseOut);
       }
     };
   }, [editView]);
@@ -161,8 +175,6 @@ const IFrame = ({
       catch {
       }
     }
-
-
     setIsSaved(false);
     // Re-render MathJax content
     if (window.MathJax) {
