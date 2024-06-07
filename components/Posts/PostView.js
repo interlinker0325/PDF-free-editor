@@ -12,6 +12,8 @@ const PostView = ({
   editMode = false,
   previewIframe,
   editView,
+  showPreview,
+  complianceView,
   setIsSaved,
 }) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
@@ -79,7 +81,7 @@ const PostView = ({
             setSection={setSection}
           />
         </aside>
-        {editView ? (
+        {editView && (
           <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none h-full">
             <ErrorBoundary>
               <Editor
@@ -91,7 +93,8 @@ const PostView = ({
               />
             </ErrorBoundary>
           </aside>
-        ) : (
+        )}
+        {showPreview && (
           <aside className="col-span-2 flex flex-col gap-4 pl-5">
             {course && (
               <h3 className="text-lg font-caslon">
@@ -135,6 +138,11 @@ const PostView = ({
             <div className="w-full pl-4 flex flex-col gap-0">
               {showFiles && files}
             </div>
+          </aside>
+        )}
+        {complianceView && (
+          <aside className="col-span-2 flex flex-col gap-4 pl-5">
+            Hello From Compliance Pannel
           </aside>
         )}
       </div>

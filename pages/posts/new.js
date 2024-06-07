@@ -23,6 +23,7 @@ import TopBar from "components/TopBar/TopBar";
 import Loader from "components/Loader/Loader";
 
 import { toast } from "react-hot-toast";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const notifyError = (warningMessage) =>
   toast.error(warningMessage, {
@@ -50,6 +51,8 @@ const NewPost = (props) => {
   const [showPreview, setShowPreview] = useState(false);
   // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
+  // compliance pannel display
+  const [complianceView, setCompliaceView ] = useState(false)
   // set post form state
   const [formState, setFormState] = useState(formBaseState);
   // this is converted html content. once upload is completed, set iframe content by previewIframe from loaded monograph
@@ -373,6 +376,7 @@ const NewPost = (props) => {
                 setShowPreview(true);
                 setFormView(false);
                 setEditView(false);
+                setCompliaceView(false);
               }}
               children="Vista previa"
             />
@@ -382,12 +386,18 @@ const NewPost = (props) => {
                 setEditView(true);
                 setShowPreview(false);
                 setFormView(false);
+                setCompliaceView(false);
               }}
               children="Editor"
             />
             <a
-              className="text-other ml-8 text-2xl cursor-pointer hover:text-primary hover:underline hover:underline-offset-1"
-              onClick={compliance}
+              className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+              onClick={() => {
+                setCompliaceView(true);
+                setEditView(false);
+                setShowPreview(false);
+                setFormView(false);
+              }}
               children="Cumplimiento"
             />
             <div className="cursor-pointer ml-3" onClick={warning}>
@@ -401,12 +411,14 @@ const NewPost = (props) => {
           </div>
         </div>
       </TopBar>
-      {!formView && (showPreview || editView)? (
+      {!formView && (showPreview || editView || complianceView)? (
         <PostView
           post={formState}
           user={user}
           previewIframe={previewIframe}
           editView={editView}
+          showPreview={showPreview}
+          complianceView={complianceView}
           setIsSaved={setIsSaved}
           {...props}
         />
