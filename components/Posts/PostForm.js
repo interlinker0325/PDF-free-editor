@@ -59,7 +59,7 @@ const PostForm = ({
                 <section className='row-span-3 grid lg:grid-cols-2 auto-rows-auto gap-6'>
                     <div className='flex flex-col form-control gap-6 pt-4'>
                         <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faTags} />
+                            <FontAwesomeIcon className={styles.icon} icon={faTags} size='lg' />
                             <label className={styles.label}>
                                 <select
                                     className={styles.select(form.course)}
@@ -73,7 +73,7 @@ const PostForm = ({
                             </label>
                         </div>
                         <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faFileCode} />
+                            <FontAwesomeIcon className={styles.icon} icon={faFileCode} size='lg'  />
                             <label className={styles.label}>
                                 <div>
                                     <input
@@ -105,7 +105,7 @@ const PostForm = ({
                         </div>
 
                         <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faImages} />
+                            <FontAwesomeIcon className={styles.icon} icon={faImages} size='lg'  />
                             <label className={styles.label}>
                                 <input
                                     className={styles.fileInput}
@@ -119,7 +119,7 @@ const PostForm = ({
                         </div>
 
                         <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} />
+                            <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} size='lg'  />
                             <label className={styles.label}>
                                 <input
                                     className={styles.fileInput}
@@ -134,7 +134,7 @@ const PostForm = ({
                         </div>
 
                         <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} />
+                            <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} size='lg'  />
                             <Autocomplete
                                 coAuthors={form.coauthors}
                                 placeholder='Co-autores'
@@ -259,11 +259,11 @@ const STYLE_ACTIVE = 'text-other border-b-other';
 const STYLE_INACTIVE = 'text-titleInput border-b-black';
 
 const styles = {
-    formControl: 'form-control flex flex-row gap-4',
+    formControl: 'form-control flex-row gap-4 items-end',
     titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input drop-shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
     label: 'cursor-pointer font-normal label justify-start gap-4 p-0',
     labelNoCursor: 'font-normal label justify-start gap-4 p-0',
-    icon: 'label-text w-[38px] h-[36px] p-1',
+    icon: '',
     select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     type: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',

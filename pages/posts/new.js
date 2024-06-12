@@ -368,6 +368,7 @@ const NewPost = (props) => {
                 setFormView(true);
                 setShowPreview(false);
                 setEditView(false);
+                setCompliaceView(false);
               }}
               children="Formulario"
             />
