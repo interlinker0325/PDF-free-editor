@@ -143,7 +143,7 @@ const PostView = ({
         )}
         {complianceView && (
           <aside className="col-span-4 flex flex-col pl-5">
-            <Compliace />
+            <Compliace form={post}/>
           </aside>
         )}
       </div>
