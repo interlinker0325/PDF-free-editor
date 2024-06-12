@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import IFrame from "components/IFrame/IFrame";
 import { isPostApproved } from "utils";
 import Editor from "components/Editor/Editor";
+import Compliace from "components/Compliance/Compliance"
 let options = { year: "numeric", month: "long", day: "numeric" };
 import ErrorBoundary from "components/Editor/ErrorBoundary";
 
@@ -141,8 +142,8 @@ const PostView = ({
           </aside>
         )}
         {complianceView && (
-          <aside className="col-span-2 flex flex-col gap-4 pl-5">
-            Hello From Compliance Pannel
+          <aside className="col-span-2 flex flex-col pl-5">
+            <Compliace />
           </aside>
         )}
       </div>

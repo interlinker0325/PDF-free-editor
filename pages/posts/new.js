@@ -23,7 +23,8 @@ import TopBar from "components/TopBar/TopBar";
 import Loader from "components/Loader/Loader";
 
 import { toast } from "react-hot-toast";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+
+import { Tooltip } from "@mui/material";
 
 const notifyError = (warningMessage) =>
   toast.error(warningMessage, {
@@ -52,7 +53,7 @@ const NewPost = (props) => {
   // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
   // compliance pannel display
-  const [complianceView, setCompliaceView ] = useState(false)
+  const [complianceView, setCompliaceView] = useState(false)
   // set post form state
   const [formState, setFormState] = useState(formBaseState);
   // this is converted html content. once upload is completed, set iframe content by previewIframe from loaded monograph
@@ -60,7 +61,7 @@ const NewPost = (props) => {
   // check if document is saved
   const [isSaved, setIsSaved] = useState(true);
   // set post form view PostForm : PostView
-  const [formView, setFormView ] = useState(true)
+  const [formView, setFormView] = useState(true)
   const clearSubmitForm = () => {
     setFormState(formBaseState);
   };
@@ -361,7 +362,7 @@ const NewPost = (props) => {
             )}
           </div>
           <div className="flex items-center">
-            <a  
+            <a
               className={`${formView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
               onClick={() => {
                 setFormView(true);
@@ -401,7 +402,9 @@ const NewPost = (props) => {
               children="Cumplimiento"
             />
             <div className="cursor-pointer ml-3" onClick={warning}>
-              <img src='/warning.png' className="w-8"></img>
+              <Tooltip title='Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' arrow>
+                <img src='/warning.png' className="w-8"></img>
+              </Tooltip>
             </div>
             <a
               className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
@@ -411,7 +414,7 @@ const NewPost = (props) => {
           </div>
         </div>
       </TopBar>
-      {!formView && (showPreview || editView || complianceView)? (
+      {!formView && (showPreview || editView || complianceView) ? (
         <PostView
           post={formState}
           user={user}
