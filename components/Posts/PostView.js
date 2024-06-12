@@ -142,7 +142,7 @@ const PostView = ({
           </aside>
         )}
         {complianceView && (
-          <aside className="col-span-2 flex flex-col pl-5">
+          <aside className="col-span-4 flex flex-col pl-5">
             <Compliace />
           </aside>
         )}
