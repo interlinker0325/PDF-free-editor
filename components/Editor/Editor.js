@@ -66,6 +66,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             modeClassName: '',
           },
           spellCheck: true,
+          autofocus: true,
           // custom buttons
           extraButtons: [
             // add insert tooltip button
