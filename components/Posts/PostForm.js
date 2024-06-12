@@ -263,7 +263,7 @@ const styles = {
     titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input drop-shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
     label: 'cursor-pointer font-normal label justify-start gap-4 p-0',
     labelNoCursor: 'font-normal label justify-start gap-4 p-0',
-    icon: '',
+    icon: 'w-[10px]',
     select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     type: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',
