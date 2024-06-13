@@ -97,9 +97,9 @@ const PostForm = ({
                                     <option value='' style={{ color: 'gray' }}>
                                         Tipo de publicacion *
                                     </option>
-                                    <option value='essay'>Ensayo</option>
-                                    <option value='academic'>Doc. Académico</option>
-                                    <option value='scientific'>Art. Científico</option>
+                                    <option value='Ensayo'>Ensayo</option>
+                                    <option value='Doc. Académico'>Doc. Académico</option>
+                                    <option value='Art. Científico'>Art. Científico</option>
                                 </select>
                             </label>
                         </div>
