@@ -6,6 +6,10 @@ const Compliance = ({ form }) => {
         </svg>
     )
 
+    const sections = {
+        'Art. Científico': ['Resumen', 'Introducción', 'Metodología', 'Resultados', 'Conclusiones', 'Bibliografía', 'Anexos'],
+    }
+
     return (
         <>
             <div className="flex justify-around mt-10 leading-8 text-xl">
@@ -92,10 +96,10 @@ const Compliance = ({ form }) => {
                                     Revisar
                                 </div>
                                 <div className="text-red-600">
-                                    Pendiente
+                                    Revisar
                                 </div>
                                 <div className="text-red-600">
-                                    Pendiente
+                                    Revisar
                                 </div>
                             </div>
                         </div>
@@ -129,8 +133,8 @@ const Compliance = ({ form }) => {
                                 </div>
                             </div>
                             <div className="text-end">
-                                <div className="">
-                                    Art. Científico
+                                <div className="text-sky-500">
+                                    {form.type ? form.type : <div className="text-red-600">Tipo de publicacion</div>}
                                 </div>
                                 <div className="text-red-600">
                                     Pendiente
