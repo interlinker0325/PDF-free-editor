@@ -144,6 +144,7 @@ const NewPost = (props) => {
             if (file_type == "html") {
               const files = await upload(_files, true);
               itemValue = files;
+              console.log('this is files==>', files);
               const loadedMonograph = await getHTML(
                 `/api/${files.url.replace(
                   "https://www.datocms-assets.com/",
