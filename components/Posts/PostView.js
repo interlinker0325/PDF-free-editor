@@ -26,6 +26,7 @@ const PostView = ({
   const [section, setSection] = useState("Sección Título");
   // show file list as link if set true in post view
   const [showFiles, setshowFiles] = useState(false);
+  const [sectionTitles, setSectionTitles] = useState([]);
   const toggleShowFiles = () => setshowFiles(!showFiles);
   // author of the post
   const author = post?.author;
@@ -56,6 +57,33 @@ const PostView = ({
     "es-ES",
     options
   );
+
+  useEffect(() => {
+    console.log('here');
+    const iframe = document.getElementById("documentWindow");
+    if (iframe) {
+      // get section titles when first loaded
+      iframe.onload = function () {
+        try {
+          const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
+          const titles = Array.from(sectionTitleElements).map(el => el.textContent.toLowerCase().trim());
+          setSectionTitles(titles);
+          console.log('this is titles===>', titles);
+        } catch (error) {
+          console.error("Error accessing iframe content:", error);
+        }
+      };
+      // get section titles after some changes
+      try {
+        const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
+        const titles = Array.from(sectionTitleElements).map(el => el.textContent.toLowerCase().trim());
+        setSectionTitles(titles);
+        console.log('this is titles===>', titles);
+      } catch (error) {
+        console.error("Error accessing iframe content:", error);
+      }
+    }
+  }, [complianceView]);
 
   return (
     <article className="flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap">
@@ -143,7 +171,7 @@ const PostView = ({
         )}
         {complianceView && (
           <aside className="col-span-4 flex flex-col pl-5">
-            <Compliace form={post}/>
+            <Compliace form={post} sectionTitles={sectionTitles} />
           </aside>
         )}
       </div>

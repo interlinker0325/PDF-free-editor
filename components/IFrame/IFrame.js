@@ -51,6 +51,20 @@ const IFrame = ({
     }
   };
 
+  // remove background from clicked element when user left editor
+  useEffect(() => {
+    const iframe = document.getElementById("documentWindow");
+    
+    if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
+      const iframeDoc = iframe.contentWindow.document;
+      const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote');
+
+        elements.forEach(element => {
+          element.style.background = 'none';
+        });
+      }
+  }, [editView])
+
   const handleMouseOver = (event) => {
     var hoveredElement = event.target;
     console.log('this is tag name===>', hoveredElement.tagName);
