@@ -148,6 +148,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             },
             '|',
             ,
+            // AI assistant
             {
               name: 'aiAssistant',
               tooltip: 'AI Assistant',
