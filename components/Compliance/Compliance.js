@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-const Compliance = ({ form, sectionTitles}) => {
+const Compliance = ({ form, check, sections, sectionCheckBadge }) => {
 
-    const check = (
-        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
-            <path fill="#2775db" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path>
-            <path fill="#fff" d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
-        </svg>
-    );
+    
 
-    // Section check
-    const sections = {
-        'Ensayo': ['conclusiones', 'bibliografía', 'anexos'],
-        'Doc. Académico': ['bibliografía', 'anexos'],
-        'Art. Científico': ['resumen', 'introducción', 'metodología', 'resultados', 'conclusiones', 'bibliografía', 'anexos'],
-    };
+    
+
 
     return (
         <div className="flex justify-around mt-10 leading-8 text-xl">
@@ -65,17 +56,11 @@ const Compliance = ({ form, sectionTitles}) => {
                                 ))}
                             </div>
                         </div>
-                        <div className="text-end">
+                        <div className="flex flex-col">
                             <div className="text-sky-500">
                                 {form.type ? form.type : <div className="text-red-600">Tipo de publicacion</div>}
                             </div>
-                            {sections[form.type]?.map((section, index) => (
-                                sectionTitles.includes(section) ? (
-                                    <div key={index} className='ps-6'>{check}</div>
-                                ) : (
-                                    <div key={index} className="text-red-600">Pendiente</div>
-                                )
-                            ))}
+                            {sectionCheckBadge[form.type]?.map((state) => state)}
                         </div>
                     </div>
                 </div>

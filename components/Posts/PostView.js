@@ -28,6 +28,30 @@ const PostView = ({
   const [showFiles, setshowFiles] = useState(false);
   const [sectionTitles, setSectionTitles] = useState([]);
   const toggleShowFiles = () => setshowFiles(!showFiles);
+
+  // standard section titles
+  const sections = {
+    'Ensayo': ['conclusiones', 'bibliografía', 'anexos'],
+    'Doc. Académico': ['bibliografía', 'anexos'],
+    'Art. Científico': ['resumen', 'introducción', 'metodología', 'resultados', 'conclusiones', 'bibliografía', 'anexos'],
+  };
+
+  const check = (
+    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
+      <path fill="#2775db" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path>
+      <path fill="#fff" d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
+    </svg>
+  );
+
+  const pendiente = (<div className="text-red-600">Pendiente</div>)
+  const order = (<div className="text-red-600">Order</div>)
+
+  const [sectionCheckBadge, setSectionCheckBadge] = useState({
+    'Ensayo': [pendiente, pendiente, pendiente],
+    'Doc. Académico': [pendiente, pendiente],
+    'Art. Científico': [pendiente, pendiente, pendiente, pendiente, pendiente, pendiente, pendiente],
+  })
+
   // author of the post
   const author = post?.author;
   // check if current user is author of this post
@@ -59,16 +83,65 @@ const PostView = ({
   );
 
   useEffect(() => {
-    console.log('here');
     const iframe = document.getElementById("documentWindow");
+    const standardTitles = sections[post.type];
     if (iframe) {
       // get section titles when first loaded
       iframe.onload = function () {
         try {
           const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
+          Array.from(sectionTitleElements).map((sectionElement, index) => {
+            console.log('hi==>', standardTitles);
+            const title = sectionElement.textContent.toLowerCase().trim();
+            if (standardTitles.includes(title)) {
+              // section order check
+              if (sectionElement.textContent.toLowerCase().trim() == standardTitles[index]) {
+                sectionElement.style.border = 'none';
+                sectionElement.title = '';
+                setSectionCheckBadge(prevState => {
+                  const updatedState = [...prevState[post.type]];
+                  updatedState[index] = check;
+                  return {
+                    ...prevState,
+                    [post.type]: updatedState,
+                  };
+                })
+              }
+              else {
+                // if the title belong to standard titles but the position equal to origin postion. In this case, first find the index in standard title and then set state to 'order'
+                setSectionCheckBadge(prevState => {
+                  const updatedState = [...prevState[post.type]];
+                  updatedState[index] = pendiente;
+                  updatedState[standardTitles.indexOf(title)] = order;
+                  return {
+                    ...prevState,
+                    [post.type]: updatedState,
+                  };
+                })
+                sectionElement.style.border = '2.5px solid red';
+                sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+              }
+            }
+            else {
+              setSectionCheckBadge(prevState => {
+                const updatedState = [...prevState[post.type]];
+                if (updatedState[index] != order) {
+                  updatedState[index] = pendiente;
+                };
+                return {
+                  ...prevState,
+                  [post.type]: updatedState,
+                };
+              })
+              // un-neccessary section title check in scientific paper
+              if (post.type == 'Art. Científico') {
+                sectionElement.style.border = '2.5px solid red';
+                sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional).';
+              }
+            }
+          })
           const titles = Array.from(sectionTitleElements).map(el => el.textContent.toLowerCase().trim());
           setSectionTitles(titles);
-          console.log('this is titles===>', titles);
         } catch (error) {
           console.error("Error accessing iframe content:", error);
         }
@@ -76,14 +149,63 @@ const PostView = ({
       // get section titles after some changes
       try {
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
+        Array.from(sectionTitleElements).map((sectionElement, index) => {
+          console.log('hi==>', standardTitles);
+          const title = sectionElement.textContent.toLowerCase().trim();
+          if (standardTitles.includes(title)) {
+            // section order check
+            if (sectionElement.textContent.toLowerCase().trim() == standardTitles[index]) {
+              sectionElement.style.border = 'none';
+              sectionElement.title = '';
+              setSectionCheckBadge(prevState => {
+                const updatedState = [...prevState[post.type]];
+                updatedState[index] = check;
+                return {
+                  ...prevState,
+                  [post.type]: updatedState,
+                };
+              })
+            }
+            else {
+              // if the title belong to standard titles but the position equal to origin postion. In this case, first find the index in standard title and then set state to 'order'
+              setSectionCheckBadge(prevState => {
+                const updatedState = [...prevState[post.type]];
+                updatedState[index] = pendiente;
+                updatedState[standardTitles.indexOf(title)] = order;
+                return {
+                  ...prevState,
+                  [post.type]: updatedState,
+                };
+              })
+              sectionElement.style.border = '2.5px solid red';
+              sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+            }
+          }
+          else {
+            setSectionCheckBadge(prevState => {
+              const updatedState = [...prevState[post.type]];
+              if (updatedState[index] != order) {
+                updatedState[index] = pendiente;
+              };
+              return {
+                ...prevState,
+                [post.type]: updatedState,
+              };
+            })
+            // un-neccessary section title check in scientific paper
+            if (post.type == 'Art. Científico') {
+              sectionElement.style.border = '2.5px solid red';
+              sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional).';
+            }
+          }
+        })
         const titles = Array.from(sectionTitleElements).map(el => el.textContent.toLowerCase().trim());
         setSectionTitles(titles);
-        console.log('this is titles===>', titles);
       } catch (error) {
         console.error("Error accessing iframe content:", error);
       }
     }
-  }, [complianceView]);
+  }, [complianceView, changedContent]);
 
   return (
     <article className="flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap">
@@ -171,7 +293,7 @@ const PostView = ({
         )}
         {complianceView && (
           <aside className="col-span-4 flex flex-col pl-5">
-            <Compliace form={post} sectionTitles={sectionTitles} />
+            <Compliace form={post} sectionTitles={sectionTitles} sections={sections} sectionCheckBadge={sectionCheckBadge} check={check} />
           </aside>
         )}
       </div>
