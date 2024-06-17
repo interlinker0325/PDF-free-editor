@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 const Compliance = ({ form, check, sections, sectionCheckBadge }) => {
 
-
-
-
-
-
     return (
         <>
             <div className='text-red-500 text-center mt-2'>- Ante cualquier incumplimiento, revisa el documento por las secciones marcadas en rojo -</div>
@@ -45,8 +40,8 @@ const Compliance = ({ form, check, sections, sectionCheckBadge }) => {
                             </div>
                             <div>
                                 <div className="text-orange-400">Revisar</div>
-                                <div className="text-red-600">Revisar</div>
-                                <div className="text-red-600">Revisar</div>
+                                <div className="text-orange-400">Revisar</div>
+                                <div className="text-orange-400">Revisar</div>
                             </div>
                         </div>
                         <div className="flex p-5 justify-between">
