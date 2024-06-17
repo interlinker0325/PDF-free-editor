@@ -206,7 +206,6 @@ const PostView = ({
             }
           });
           if (!tempAnexos) {
-            console.log('11111111111111111111111111111111111111111');
             setSectionCheckBadge(prevState => {
               const updatedState = [...prevState[post.type]];
               updatedState[sectionCheckBadge[post?.type].length - 1] = null;
@@ -292,7 +291,7 @@ const PostView = ({
                   else {
                     setSectionCheckBadge(prevState => {
                       title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
                       const updatedState = [...prevState[post.type]];
                       updatedState[0] = order;
                       return {
@@ -307,7 +306,6 @@ const PostView = ({
           }
           // If anexos exist
           if (tempAnexos) {
-            console.log('22222222222222222222222222');
             if (post.type == 'Ensayo') {
               Array.from(sectionTitleElements).some((title, index) => {
                 if (title.textContent.toLowerCase().trim() == 'conclusiones') {
@@ -546,12 +544,10 @@ const PostView = ({
                 const updatedState = [...prevState[post.type]];
                 if (Array.from(sectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
                   updatedState[5] = order;
-                  console.log('good');
                   updatedState[6] = order;
                 }
                 else {
                   updatedState[5] = order;
-                  console.log('genius');
                   updatedState[6] = pendiente;
                 }
                 return {
@@ -561,9 +557,15 @@ const PostView = ({
               });
             }
             else {
+              const bibliographySection = Array.from(sectionTitleElements)[index]?.parentNode;
               bibliographySection.style.border = 'none';
               bibliographySection.title = '';
             }
+          }
+          else {
+            const tempSection = Array.from(sectionTitleElements)[index]?.parentNode;
+            tempSection.style.border = 'none';
+            tempSection.title = '';
           }
         });
         // if anexos section isn't detected, set the value to null
