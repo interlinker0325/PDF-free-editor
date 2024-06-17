@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, use } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import IFrame from "components/IFrame/IFrame";
 import { isPostApproved } from "utils";
 import Editor from "components/Editor/Editor";
@@ -89,6 +89,7 @@ const PostView = ({
   // section compliance check
   useEffect(() => {
     console.log('splendiferous');
+    let tempAnexos = false;
     const iframe = document.getElementById("documentWindow");
     const standardTitles = sections[post.type];
     if (iframe) {
@@ -101,7 +102,7 @@ const PostView = ({
           Array.from(sectionTitleElements).map((sectionElement, index) => {
             const title = sectionElement.textContent.toLowerCase().trim();
             if (title == 'anexos') {
-              setIsAnexos(true);
+              tempAnexos = true;
             }
             if (standardTitles.includes(title)) {
               // section order check
@@ -159,8 +160,7 @@ const PostView = ({
           Array.from(sectionTitleElements).map((sectionElement, index) => {
             const title = sectionElement.textContent.toLowerCase().trim();
             if (gratidudeSections.includes(title)) {
-              console.log('I set it to true');
-              setIsAnexos(true);
+              tempAnexos = true;
               sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe estar en la sección final de Anexos. Mueve esta sección al área correspondiente, o declara el título correspondiente de Anexos arriba de esta sección para continuar';
               // If anxios exist, set badge to 'order'
               setSectionCheckBadge(prevState => {
@@ -178,7 +178,7 @@ const PostView = ({
             if (title == 'bibliografía') {
               const bibliographySection = Array.from(sectionTitleElements)[index]?.parentNode;
               if (bibliographySection.querySelector('img') || bibliographySection.querySelector('table')) {
-                setIsAnexos(true);
+                tempAnexos = true;
                 bibliographySection.style.border = '2.5px solid red';
                 bibliographySection.title = 'Hay elementos no reconocidos en la bibliografía, elimínalos o revisa si debes agregar una sección de anexos al final';
                 setSectionCheckBadge(prevState => {
@@ -205,9 +205,8 @@ const PostView = ({
               }
             }
           });
-          // if anexos section isn't detected, set the value to null
-          if (!isAnexos && post.type) {
-            console.log('But this is false what is the reason?');
+          if (!tempAnexos) {
+            console.log('11111111111111111111111111111111111111111');
             setSectionCheckBadge(prevState => {
               const updatedState = [...prevState[post.type]];
               updatedState[sectionCheckBadge[post?.type].length - 1] = null;
@@ -307,7 +306,8 @@ const PostView = ({
             }
           }
           // If anexos exist
-          if (isAnexos) {
+          if (tempAnexos) {
+            console.log('22222222222222222222222222');
             if (post.type == 'Ensayo') {
               Array.from(sectionTitleElements).some((title, index) => {
                 if (title.textContent.toLowerCase().trim() == 'conclusiones') {
@@ -449,6 +449,7 @@ const PostView = ({
               })
             }
           }
+          // if anexos section isn't detected, set the value to null
 
         } catch (error) {
           console.error("Error accessing iframe content:", error);
@@ -565,251 +566,249 @@ const PostView = ({
             }
           }
         });
-        setTimeout(() => {
-          // if anexos section isn't detected, set the value to null
-          if (!isAnexos && post.type) {
-            setSectionCheckBadge(prevState => {
-              const updatedState = [...prevState[post.type]];
-              updatedState[sectionCheckBadge[post?.type].length - 1] = null;
-              return {
-                ...prevState,
-                [post.type]: updatedState,
-              };
-            });
-            // essay paper section check
-            if (post.type == 'Ensayo') {
-              Array.from(sectionTitleElements).some((title, index) => {
-                if (title.textContent.toLowerCase().trim() == 'conclusiones') {
-                  if (index == sectionTitleElements.length - 2) {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = 'none';
-                      title.title = '';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                }
-                // essay paper bibliografia section check
-                if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                  if (index == sectionTitleElements.length - 1) {
+        // if anexos section isn't detected, set the value to null
+        if (!isAnexos && post.type) {
+          setSectionCheckBadge(prevState => {
+            const updatedState = [...prevState[post.type]];
+            updatedState[sectionCheckBadge[post?.type].length - 1] = null;
+            return {
+              ...prevState,
+              [post.type]: updatedState,
+            };
+          });
+          // essay paper section check
+          if (post.type == 'Ensayo') {
+            Array.from(sectionTitleElements).some((title, index) => {
+              if (title.textContent.toLowerCase().trim() == 'conclusiones') {
+                if (index == sectionTitleElements.length - 2) {
+                  setSectionCheckBadge(prevState => {
                     title.style.border = 'none';
                     title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
                 }
-              })
-            }
-            if (post.type == 'Doc. Académico') {
-              Array.from(sectionTitleElements).some((title, index) => {
-                // essay paper bibliografia section check
-                if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                  if (index == sectionTitleElements.length - 1) {
-                    title.style.border = 'none';
-                    title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
                 }
-              })
-            }
+              }
+              // essay paper bibliografia section check
+              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
+                if (index == sectionTitleElements.length - 1) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+            })
           }
-          // If anexos exist
-          if (isAnexos) {
-            if (post.type == 'Ensayo') {
-              Array.from(sectionTitleElements).some((title, index) => {
-                if (title.textContent.toLowerCase().trim() == 'conclusiones') {
-                  if (index == sectionTitleElements.length - 3) {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = 'none';
-                      title.title = '';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
+          if (post.type == 'Doc. Académico') {
+            Array.from(sectionTitleElements).some((title, index) => {
+              // essay paper bibliografia section check
+              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
+                if (index == sectionTitleElements.length - 1) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
                 }
-                // essay paper bibliografia section check
-                if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                  if (index == sectionTitleElements.length - 2) {
-                    title.style.border = 'none';
-                    title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
                 }
-                if (title.textContent.toLowerCase().trim() == 'anexos') {
-                  if (index == sectionTitleElements.length - 1) {
-                    title.style.border = 'none';
-                    title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[2] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[2] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                }
-              })
-            }
-            if (post.type == 'Doc. Académico') {
-              Array.from(sectionTitleElements).some((title, index) => {
-                // essay paper bibliografia section check
-                if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                  if (index == sectionTitleElements.length - 2) {
-                    title.style.border = 'none';
-                    title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                }
-                if (title.textContent.toLowerCase().trim() == 'anexos') {
-                  if (index == sectionTitleElements.length - 1) {
-                    title.style.border = 'none';
-                    title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                }
-              })
-            }
+              }
+            })
           }
-        }, 0.1);
+        }
+        // If anexos exist
+        if (isAnexos) {
+          if (post.type == 'Ensayo') {
+            Array.from(sectionTitleElements).some((title, index) => {
+              if (title.textContent.toLowerCase().trim() == 'conclusiones') {
+                if (index == sectionTitleElements.length - 3) {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = 'none';
+                    title.title = '';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+              // essay paper bibliografia section check
+              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
+                if (index == sectionTitleElements.length - 2) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+              if (title.textContent.toLowerCase().trim() == 'anexos') {
+                if (index == sectionTitleElements.length - 1) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[2] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[2] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+            })
+          }
+          if (post.type == 'Doc. Académico') {
+            Array.from(sectionTitleElements).some((title, index) => {
+              // essay paper bibliografia section check
+              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
+                if (index == sectionTitleElements.length - 2) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+              if (title.textContent.toLowerCase().trim() == 'anexos') {
+                if (index == sectionTitleElements.length - 1) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+            })
+          }
+        }
 
       } catch (error) {
         console.error("Error accessing iframe content:", error);
