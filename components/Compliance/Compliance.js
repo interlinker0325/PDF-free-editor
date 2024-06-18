@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Compliance = ({ form, check, sections, sectionCheckBadge }) => {
+const Compliance = ({ form, check, sections, sectionCheckBadge, numerationCheckBadge }) => {
 
     return (
         <>
@@ -73,10 +73,8 @@ const Compliance = ({ form, check, sections, sectionCheckBadge }) => {
                                 <div>Figuras</div>
                                 <div>Anexos</div>
                             </div>
-                            <div className="ps-3">
-                                <div className="text-red-600 ps-5">Pendiente</div>
-                                <div className="text-red-600 ps-5">Pendiente</div>
-                                <div className="text-red-600 ps-5">Pendiente</div>
+                            <div className="ps-10">
+                                {Object.values(numerationCheckBadge)?.map((state) => state)}
                             </div>
                         </div>
                     </div>

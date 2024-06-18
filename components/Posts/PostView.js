@@ -44,15 +44,22 @@ const PostView = ({
     </svg>
   );
 
-  const pendiente = (<div className="text-red-600">Pendiente</div>)
-  const order = (<div className="text-red-600">Ordenar</div>)
+  const pendiente = (<div className="text-red-600">Pendiente</div>);
+  const order = (<div className="text-red-600">Ordenar</div>);
+  const revisa = (<div className="text-orange-400">Revisar</div>);
   const baseSectionCheckBadge = {
     'Ensayo': [pendiente, pendiente, pendiente],
     'Doc. Académico': [pendiente, pendiente],
     'Art. Científico': [pendiente, pendiente, pendiente, pendiente, pendiente, pendiente, pendiente],
-  }
+  };
+  const baseNumerationCheckBadge = {
+    'tables': check,
+    'figures': check,
+    'anexos': check,
+  };
 
-  const [sectionCheckBadge, setSectionCheckBadge] = useState(baseSectionCheckBadge)
+  const [sectionCheckBadge, setSectionCheckBadge] = useState(baseSectionCheckBadge);
+  const [numerationCheckBadge, setNumerationCheckBadge] = useState(baseNumerationCheckBadge);
 
   const gratidudeSections = ['agradecimiento', 'agradecimientos', 'reconocimiento', 'gratitud', 'honor']
 
@@ -86,9 +93,8 @@ const PostView = ({
     options
   );
 
-  // section compliance check
   useEffect(() => {
-    console.log('splendiferous');
+    // section compliance check
     let tempAnexos = false;
     const iframe = document.getElementById("documentWindow");
     const standardTitles = sections[post.type];
@@ -205,7 +211,7 @@ const PostView = ({
               }
             }
           });
-          if (!tempAnexos) {
+          if (!tempAnexos && post.type) {
             setSectionCheckBadge(prevState => {
               const updatedState = [...prevState[post.type]];
               updatedState[sectionCheckBadge[post?.type].length - 1] = null;
@@ -457,6 +463,7 @@ const PostView = ({
       try {
         setIsAnexos(false);
         setSectionCheckBadge(baseSectionCheckBadge);
+        setNumerationCheckBadge(baseNumerationCheckBadge);
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
         Array.from(sectionTitleElements).map((sectionElement, index) => {
           const title = sectionElement.textContent.toLowerCase().trim();
@@ -812,11 +819,86 @@ const PostView = ({
           }
         }
 
+        // numeration compliance check
+        const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
+        const tablePattern = /^Tabla \d+:/;
+        const figurePattern = /^Figura \d+:/;
+        let tableIndex = 0;
+        let tableNumber = 0;
+        let figureIndex = 0;
+        let figureNumber = 0;
+        Array.from(divElements).map((divElement) => {
+          if (tablePattern.test(divElement.textContent)) {
+            tableIndex++;
+            tableNumber = divElement.textContent.split(':')[0].split(' ')[1];
+            if (tableIndex != tableNumber) {
+              divElement.style.border = 'solid 2.5px red';
+              divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
+              setNumerationCheckBadge(prevState => {
+                return {
+                  ...prevState,
+                  'tables': revisa,
+                };
+              });
+            }
+            else {
+              divElement.style.border = 'none';
+              divElement.title = '';
+            }
+          };
+          if (figurePattern.test(divElement.textContent)) {
+            figureIndex++;
+            figureNumber = divElement.textContent.split(':')[0].split(' ')[1];
+            if (figureIndex != figureNumber) {
+              divElement.style.border = 'solid 2.5px red';
+              divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
+              setNumerationCheckBadge(prevState => {
+                return {
+                  ...prevState,
+                  'figures': revisa,
+                };
+              });
+            }
+            else {
+              divElement.style.border = 'none';
+              divElement.title = '';
+            }
+          };
+        })
+        // Anxeos numeration check
+        const anexosPattern = /^Anexo \d+:/;
+        let anexosIndex = 0;
+        let anexosNumber = 0;
+        Array.from(sectionTitleElements).forEach((sectionTitleElement) => {
+          if (sectionTitleElement.textContent.toLowerCase().trim() === "anexos") {
+            const h3Elements = iframe.contentWindow.document.body.getElementsByTagName('h3');
+            console.log(h3Elements);
+            Array.from(h3Elements).forEach((h3Element) => {
+              if (anexosPattern.test(h3Element.textContent)) {
+                anexosIndex++;
+                const anexosNumber = parseInt(h3Element.textContent.split(':')[0].split(' ')[1], 10);
+                if (anexosIndex !== anexosNumber) {
+                  h3Element.style.border = 'solid 2.5px red';
+                  h3Element.title = 'Los títulos de los anexos deben empezar con el texto: “Anexo #: ';
+                  setNumerationCheckBadge(prevState => ({
+                    ...prevState,
+                    'anexos': revisa,
+                  }));
+                } else {
+                  h3Element.style.border = 'none';
+                  h3Element.title = '';
+                }
+              }
+            });
+          }
+        });
       } catch (error) {
         console.error("Error accessing iframe content:", error);
       }
     }
   }, [complianceView, changedContent]);
+
+
 
   return (
     <article className="flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap">
@@ -904,7 +986,7 @@ const PostView = ({
         )}
         {complianceView && (
           <aside className="col-span-4 flex flex-col pl-5">
-            <Compliace form={post} sectionTitles={sectionTitles} sections={sections} sectionCheckBadge={sectionCheckBadge} check={check} />
+            <Compliace form={post} sectionTitles={sectionTitles} sections={sections} sectionCheckBadge={sectionCheckBadge} numerationCheckBadge={numerationCheckBadge} check={check} />
           </aside>
         )}
       </div>
