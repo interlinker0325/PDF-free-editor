@@ -872,14 +872,13 @@ const PostView = ({
         Array.from(sectionTitleElements).forEach((sectionTitleElement) => {
           if (sectionTitleElement.textContent.toLowerCase().trim() === "anexos") {
             const h3Elements = iframe.contentWindow.document.body.getElementsByTagName('h3');
-            console.log(h3Elements);
             Array.from(h3Elements).forEach((h3Element) => {
               if (anexosPattern.test(h3Element.textContent)) {
                 anexosIndex++;
                 const anexosNumber = parseInt(h3Element.textContent.split(':')[0].split(' ')[1], 10);
                 if (anexosIndex !== anexosNumber) {
                   h3Element.style.border = 'solid 2.5px red';
-                  h3Element.title = 'Los títulos de los anexos deben empezar con el texto: “Anexo #: ';
+                  h3Element.title = 'Revisa la numeración de esta sección';
                   setNumerationCheckBadge(prevState => ({
                     ...prevState,
                     'anexos': revisa,
@@ -887,7 +886,19 @@ const PostView = ({
                 } else {
                   h3Element.style.border = 'none';
                   h3Element.title = '';
+                  setNumerationCheckBadge(prevState => ({
+                    ...prevState,
+                    'anexos': check,
+                  }));
                 }
+              }
+              else {
+                h3Element.style.border = 'solid 2.5px red';
+                h3Element.title = 'Los títulos de los anexos deben empezar con el texto: Anexo #: ';
+                setNumerationCheckBadge(prevState => ({
+                  ...prevState,
+                  'anexos': revisa,
+                }));
               }
             });
           }
