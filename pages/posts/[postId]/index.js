@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import Post from 'components/Posts/Post';
 
 const Posts = (props) => {
-    console.log(props.post.monograph.url);
     const router = useRouter();
     useEffect(() => {
         if (!props.post) router.push('/');

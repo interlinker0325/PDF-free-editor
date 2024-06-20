@@ -13,12 +13,13 @@ const Post = ({ post,  updatePost }) => {
         }
     }, [post]);
     const { user } = useUser();
+    const showPreview = true;
 
     if (!post) return null;
     return (
         <Main>
             <PostStatusBar user={user} post={post} updatePost={updatePost} />
-            <PostView {...{post, user}} />
+            <PostView {...{post, user, showPreview}} />
         </Main>
     );
 };
