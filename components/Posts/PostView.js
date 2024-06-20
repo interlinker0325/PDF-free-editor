@@ -57,9 +57,14 @@ const PostView = ({
     'figures': check,
     'anexos': check,
   };
+  const baseNoteCheckBadge = {
+    'tables': check,
+    'figures': check,
+  };
 
   const [sectionCheckBadge, setSectionCheckBadge] = useState(baseSectionCheckBadge);
   const [numerationCheckBadge, setNumerationCheckBadge] = useState(baseNumerationCheckBadge);
+  const [noteCheckBadge, setNoteCheckBadge] = useState(baseNoteCheckBadge);
 
   const gratidudeSections = ['agradecimiento', 'agradecimientos', 'reconocimiento', 'gratitud', 'honor']
 
@@ -139,7 +144,7 @@ const PostView = ({
                     };
                   });
                   sectionElement.style.border = '2.5px solid red';
-                  sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                  sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional) Ajusta su posición para continuar';
                 }
               }
             }
@@ -158,7 +163,7 @@ const PostView = ({
               // un-neccessary section title check in scientific paper
               if (post.type == 'Art. Científico') {
                 sectionElement.style.border = '2.5px solid red';
-                sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional).';
+                sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional)';
               }
             }
           });
@@ -167,7 +172,7 @@ const PostView = ({
             const title = sectionElement.textContent.toLowerCase().trim();
             if (gratidudeSections.includes(title)) {
               tempAnexos = true;
-              sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe estar en la sección final de Anexos. Mueve esta sección al área correspondiente, o declara el título correspondiente de Anexos arriba de esta sección para continuar';
+              sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe debe estar en la sección final de Anexos.\n1. Mueve esta sección al área correspondiente, debajo de la Bibliografía.\n2. Declara el título correspondiente de Anexos arriba de esta sección con formato "Título 1".\n3. Cambia el título de esta sección a "Anexo 1: Reconocimiento"  y cambia su formato a "Título 2".';
               // If anxios exist, set badge to 'order'
               setSectionCheckBadge(prevState => {
                 const updatedState = [...prevState[post.type]];
@@ -464,6 +469,7 @@ const PostView = ({
         setIsAnexos(false);
         setSectionCheckBadge(baseSectionCheckBadge);
         setNumerationCheckBadge(baseNumerationCheckBadge);
+        setNoteCheckBadge(baseNoteCheckBadge);
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
         Array.from(sectionTitleElements).map((sectionElement, index) => {
           const title = sectionElement.textContent.toLowerCase().trim();
@@ -499,7 +505,7 @@ const PostView = ({
                   };
                 });
                 sectionElement.style.border = '2.5px solid red';
-                sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional) Ajusta su posición para continuar';
               }
             }
           }
@@ -518,7 +524,7 @@ const PostView = ({
             // un-neccessary section title check in scientific paper
             if (post.type == 'Art. Científico') {
               sectionElement.style.border = '2.5px solid red';
-              sectionElement.title = 'Esta sección no corresponde al orden requerido: Resumen, Palabras Clave (opcional), introducción, Metodología, Resultados, Conclusiones, Bibliografía, y Anexos (opcional).';
+              sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional)';
             }
           }
         });
@@ -527,7 +533,7 @@ const PostView = ({
           const title = sectionElement.textContent.toLowerCase().trim();
           if (gratidudeSections.includes(title)) {
             setIsAnexos(true);
-            sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe estar en la sección final de Anexos. Mueve esta sección al área correspondiente, o declara el título correspondiente de Anexos arriba de esta sección para continuar';
+            sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe debe estar en la sección final de Anexos.\n1. Mueve esta sección al área correspondiente, debajo de la Bibliografía. \n2. Declara el título correspondiente de Anexos arriba de esta sección con formato "Título 1".\n3. Cambia el título de esta sección a "Anexo 1: Reconocimiento"  y cambia su formato a "Título 2".';
             // If anxios exist, set badge to 'order'
             setSectionCheckBadge(prevState => {
               const updatedState = [...prevState[post.type]];
@@ -910,6 +916,72 @@ const PostView = ({
             });
           }
         });
+
+        // Figure and Table Note check
+        // Figure check
+        const notePattern = /^Fuente:/;
+        const figureElements = iframe.contentWindow.document.body.getElementsByTagName('figure');
+        Array.from(figureElements).forEach((figure) => {
+          const hasNote = figure.parentNode.nextElementSibling.style.cssText.includes('0.9rem');
+          if(!hasNote){
+            figure.style.border = 'solid 2.5px red';
+            figure.title = 'Esta Figura requiere una nota inferior empezando por el texto: "Fuente:"';
+            setNoteCheckBadge(prevState => ({
+              ...prevState,
+              'figures': revisa,
+            }));
+          }
+          else {
+            figure.style.border = 'none';
+            figure.title = '';
+            const noteElement = figure.parentNode.nextElementSibling;
+            // check if note element start with Fuente:
+            if(notePattern.test(noteElement.textContent)) {
+              noteElement.style.border = 'none';
+              noteElement.title = '';
+            }
+            else {
+              setNoteCheckBadge(prevState => ({
+                ...prevState,
+                'figures': revisa,
+              }));
+              noteElement.style.border = 'solid 2.5px red';
+              noteElement.title = 'Esta nota debe empezar con el texto: “Fuente: “';
+            }
+          }
+        })
+        // table note check
+        const tableElements = iframe.contentWindow.document.body.getElementsByTagName('table');
+        Array.from(tableElements).forEach((table) => {
+          const hasNote = table.nextElementSibling.style.cssText.includes('0.9rem');
+          if(!hasNote){
+            table.style.border = 'solid 2.5px red';
+            table.title = 'Esta Tabla requiere una nota inferior empezando por el texto: "Fuente:"';
+            setNoteCheckBadge(prevState => ({
+              ...prevState,
+              'tables': revisa,
+            }));
+          }
+          else {
+            table.style.border = 'none';
+            table.title = '';
+            const noteElement = table.nextElementSibling;
+            // check if note element start with Fuente:
+            if(notePattern.test(noteElement.textContent)) {
+              noteElement.style.border = 'none';
+              noteElement.title = '';
+            }
+            else {
+              setNoteCheckBadge(prevState => ({
+                ...prevState,
+                'tables': revisa,
+              }));
+              noteElement.style.border = 'solid 2.5px red';
+              noteElement.title = 'Esta nota debe empezar con el texto: “Fuente: “';
+            }
+          }
+        })
+
       } catch (error) {
         console.error("Error accessing iframe content:", error);
       }
@@ -1004,7 +1076,7 @@ const PostView = ({
         )}
         {complianceView && (
           <aside className="col-span-4 flex flex-col pl-5">
-            <Compliace form={post} sectionTitles={sectionTitles} sections={sections} sectionCheckBadge={sectionCheckBadge} numerationCheckBadge={numerationCheckBadge} check={check} />
+            <Compliace form={post} sectionTitles={sectionTitles} sections={sections} sectionCheckBadge={sectionCheckBadge} numerationCheckBadge={numerationCheckBadge} noteCheckBadge={noteCheckBadge} check={check} />
           </aside>
         )}
       </div>
