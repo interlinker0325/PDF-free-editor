@@ -866,38 +866,45 @@ const PostView = ({
           };
         })
         // Anxeos numeration check
-        const anexosPattern = /^Anexo \d+:/;
-        let anexosIndex = 0;
-        let anexosNumber = 0;
         Array.from(sectionTitleElements).forEach((sectionTitleElement) => {
           if (sectionTitleElement.textContent.toLowerCase().trim() === "anexos") {
-            const h3Elements = iframe.contentWindow.document.body.getElementsByTagName('h3');
+            console.log(sectionTitleElement);
+            const h3Elements = sectionTitleElement.querySelectorAll('h3');
+
             Array.from(h3Elements).forEach((h3Element) => {
-              if (anexosPattern.test(h3Element.textContent)) {
+              const textContent = h3Element.textContent.trim();
+
+              if (anexosPattern.test(textContent)) {
+                // Increment anexos index
                 anexosIndex++;
-                const anexosNumber = parseInt(h3Element.textContent.split(':')[0].split(' ')[1], 10);
-                if (anexosIndex !== anexosNumber) {
+                // Extract the number from the Anexo pattern and parse it
+                const parsedNumber = parseInt(textContent.split(':')[0].split(' ')[1], 10);
+
+                if (anexosIndex !== parsedNumber) {
+                  // If numbers don't match, highlight the <h3> and set a warning badge
                   h3Element.style.border = 'solid 2.5px red';
                   h3Element.title = 'Revisa la numeración de esta sección';
                   setNumerationCheckBadge(prevState => ({
                     ...prevState,
-                    'anexos': revisa,
+                    'anexos': 'revisa',
                   }));
                 } else {
+                  // If numbers match, reset border and tooltip
                   h3Element.style.border = 'none';
                   h3Element.title = '';
-                  setNumerationCheckBadge(prevState => ({
-                    ...prevState,
-                    'anexos': check,
-                  }));
+                  // Uncomment this if you want to clear the error badge when everything's correct
+                  // setNumerationCheckBadge(prevState => ({
+                  //     ...prevState,
+                  //     'anexos': 'check',
+                  // }));
                 }
-              }
-              else {
+              } else {
+                // If pattern doesn't match, highlight the <h3> and set a warning badge
                 h3Element.style.border = 'solid 2.5px red';
                 h3Element.title = 'Los títulos de los anexos deben empezar con el texto: Anexo #: ';
                 setNumerationCheckBadge(prevState => ({
                   ...prevState,
-                  'anexos': revisa,
+                  'anexos': 'revisa',
                 }));
               }
             });
