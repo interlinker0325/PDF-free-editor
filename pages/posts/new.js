@@ -46,7 +46,7 @@ const formBaseState = {
   type: "",
 };
 
-const NewPost = (props) => {
+const NewPost = ({ setIsSaved, ...props }) => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const { user } = useUser({ redirectTo: "/" });
   const [showPreview, setShowPreview] = useState(false);
@@ -58,8 +58,7 @@ const NewPost = (props) => {
   const [formState, setFormState] = useState(formBaseState);
   // this is converted html content. once upload is completed, set iframe content by previewIframe from loaded monograph
   const [previewIframe, setPreviewIframe] = useState(null);
-  // check if document is saved
-  const [isSaved, setIsSaved] = useState(true);
+
   // set post form view PostForm : PostView
   const [formView, setFormView] = useState(true)
   const clearSubmitForm = () => {
@@ -337,10 +336,6 @@ const NewPost = (props) => {
     }
   };
 
-  const compliance = () => {
-    console.log("this is form button");
-  }
-
   const warning = () => {
     alert("Warning")
   }
@@ -416,7 +411,33 @@ const NewPost = (props) => {
           </div>
         </div>
       </TopBar>
-      {!formView && (showPreview || editView || complianceView) ? (
+      <PostForm
+        refs={refs}
+        form={formState}
+        doSubmit={doSubmit}
+        clearForm={clearSubmitForm}
+        onChange={onChange}
+        requestApproval={requestApproval}
+        formHasChanged={formHasChanged}
+        user={user}
+        setAgreedterms={setAgreedterms}
+        setCoAuthors={setCoAuthors}
+        removeCoAuthor={removeCoAuthor}
+        formView={formView}
+        {...props}
+      />
+      <PostView
+        post={formState}
+        user={user}
+        previewIframe={previewIframe}
+        editView={editView}
+        showPreview={showPreview}
+        complianceView={complianceView}
+        setIsSaved={setIsSaved}
+        {...props}
+      />
+
+      {/* {!formView && (showPreview || editView || complianceView) ? (
         <PostView
           post={formState}
           user={user}
@@ -442,7 +463,7 @@ const NewPost = (props) => {
           removeCoAuthor={removeCoAuthor}
           {...props}
         />
-      )}
+      )} */}
       <Loader show={showLoadingScreen} />
     </Main>
   );

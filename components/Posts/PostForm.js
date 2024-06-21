@@ -18,7 +18,8 @@ const PostForm = ({
     setAgreedterms,
     setCoAuthors,
     removeCoAuthor,
-    refs
+    refs,
+    formView
 }) => {
     const selectedCourse = (courses || []).find(c => c.id === form.course);
     const courseStudents = (selectedCourse?.students || []).filter(student => student.id !== user.id);
@@ -44,7 +45,7 @@ const PostForm = ({
 
     return (
         <>
-            <form className='font-roboto grid auto-rows-auto gap-8 p-6 bg-white shadow-lg rounded-lg' onSubmit={doSubmit}>
+            <form className={!formView ? 'hidden' : 'font-roboto grid auto-rows-auto gap-8 p-6 bg-white shadow-lg rounded-lg'} onSubmit={doSubmit}>
                 <section className='row-auto'>
                     <div className='form-control'>
                         <input
@@ -228,7 +229,6 @@ const PostForm = ({
                     </div>
                 </section>
             </form>
-        // popup dialog
             <Dialog
                 open={open}
                 onClose={handleNo}

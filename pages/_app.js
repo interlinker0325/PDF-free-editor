@@ -9,16 +9,17 @@ import { SWRConfig } from 'swr';
 import fetchJson from 'utils/fetchJson';
 import useUser from 'utils/useUser';
 import "./Editor.css"
-import { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }) {
     const [displayModal, setDisplayModal] = useState(false);
+    // check if document is saved
+    const [isSaved, setIsSaved] = useState(true);
     const closeModal = () => setDisplayModal(false);
     const { mutateUser, user = {} } = useUser();
 
     const sessionText = `${user.isLoggedIn ? 'Cerrar' : 'Iniciar'} sesión`;
-    const doLogout = async (e) => {
-        e.preventDefault();
+    const doLogout = async () => {
+        console.log('hahaha');
         mutateUser(
             await fetchJson('/api/logout', { method: 'POST' }),
             false,
@@ -54,15 +55,14 @@ function MyApp({ Component, pageProps }) {
                 <link rel='preconnect' href='https://fonts.googleapis.com' />
                 <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
             </Head>
-            <Toaster />
             <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>
                 {!Component.hideNav ?
-                    <Header items={navItems}/> : null}
-                <Component {...pageProps} />
+                    <Header items={navItems} isSaved={isSaved} setIsSaved={setIsSaved} /> : null}
+                <Component {...pageProps} setIsSaved={setIsSaved} />
                 {!Component.hideFooter ?
                     <Footer /> : null}
             </div>
-            {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
+            {displayModal && <LoginModal onClose={closeModal} display={displayModal} />}
         </SWRConfig>
     );
 }
