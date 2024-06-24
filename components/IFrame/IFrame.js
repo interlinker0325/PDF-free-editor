@@ -44,30 +44,14 @@ const IFrame = ({
           element.style.background = 'none';
         });
       }
-
       // Set the background color of the newly clicked element
       clickedElement.style.background = "#dcfce7";
 
     }
   };
-
-  // remove background from clicked element when user left editor
-  useEffect(() => {
-    const iframe = document.getElementById("documentWindow");
-    
-    if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
-      const iframeDoc = iframe.contentWindow.document;
-      const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote');
-
-        elements.forEach(element => {
-          element.style.background = 'none';
-        });
-      }
-  }, [editView])
-
+  
   const handleMouseOver = (event) => {
     var hoveredElement = event.target;
-    console.log('this is tag name===>', hoveredElement.tagName);
     if (hoveredElement.tagName === 'TD' || hoveredElement.tagName === 'TH') {
       hoveredElement = hoveredElement.parentElement.parentElement.parentElement;
     }
@@ -101,6 +85,22 @@ const IFrame = ({
     }
   };
 
+  // remove background and editorContent from clicked element when user left editor
+  useEffect(() => {
+    setEditElement(null);
+    setEditorContent(null);
+    const iframe = document.getElementById("documentWindow");
+    if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
+      const iframeDoc = iframe.contentWindow.document;
+      const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, body');
+
+        elements.forEach(element => {
+          element.style.background = 'none';
+        });
+      }
+  }, [editView])
+
+
   useEffect(() => {
     const paperTitle = document.getElementById('title');
     const iframe = document.getElementById("documentWindow");
@@ -117,7 +117,6 @@ const IFrame = ({
 
     const injectMathJax = () => {
       if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
-        // const iframeDoc = iframe.contentWindow.document;
         const script = iframeDoc.createElement("script");
         script.type = "text/javascript";
         script.id = "MathJax-script";
@@ -130,25 +129,22 @@ const IFrame = ({
     if (editView) {
       if (paperTitle) {
         paperTitle.addEventListener('click', titleHandleClick);
-      }
+      };
       if (iframe) {
         iframe.addEventListener('load', () => {
           addIframeEventListeners();
           injectMathJax();
         });
         if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
-          iframeDoc.addEventListener("click", handleClick);
-          iframeDoc.addEventListener("mouseover", handleMouseOver);
-          iframeDoc.addEventListener("mouseout", handleMouseOut);
-        }
-      }
+          addIframeEventListeners();
+        };
+      };
     }
     else {
       if (paperTitle) {
         paperTitle.removeEventListener('click', titleHandleClick);
       }
       if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
-        const iframeDoc = iframe.contentWindow.document;
         iframeDoc.removeEventListener("click", handleClick);
         iframeDoc.removeEventListener("mouseover", handleMouseOver);
         iframeDoc.removeEventListener("mouseout", handleMouseOut);
@@ -161,7 +157,6 @@ const IFrame = ({
         paperTitle.removeEventListener('click', titleHandleClick);
       }
       if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
-        const iframeDoc = iframe.contentWindow.document;
         iframeDoc.removeEventListener("click", handleClick);
         iframeDoc.removeEventListener("mouseover", handleMouseOver);
         iframeDoc.removeEventListener("mouseout", handleMouseOut);

@@ -436,34 +436,6 @@ const NewPost = ({ setIsSaved, ...props }) => {
         setIsSaved={setIsSaved}
         {...props}
       />
-
-      {/* {!formView && (showPreview || editView || complianceView) ? (
-        <PostView
-          post={formState}
-          user={user}
-          previewIframe={previewIframe}
-          editView={editView}
-          showPreview={showPreview}
-          complianceView={complianceView}
-          setIsSaved={setIsSaved}
-          {...props}
-        />
-      ) : (
-        <PostForm
-          refs={refs}
-          form={formState}
-          doSubmit={doSubmit}
-          clearForm={clearSubmitForm}
-          onChange={onChange}
-          requestApproval={requestApproval}
-          formHasChanged={formHasChanged}
-          user={user}
-          setAgreedterms={setAgreedterms}
-          setCoAuthors={setCoAuthors}
-          removeCoAuthor={removeCoAuthor}
-          {...props}
-        />
-      )} */}
       <Loader show={showLoadingScreen} />
     </Main>
   );
