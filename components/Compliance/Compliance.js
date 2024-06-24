@@ -74,7 +74,13 @@ const Compliance = ({ form, check, sections, sectionCheckBadge, numerationCheckB
                                 <div>Anexos</div>
                             </div>
                             <div className="ps-10">
-                                {Object.values(numerationCheckBadge)?.map((state) => state)}
+                                {Object.values(numerationCheckBadge)?.map((state, index) => {
+                                    return (
+                                        <div key={index}>
+                                            {state}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </div>
                     </div>
