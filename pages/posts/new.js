@@ -140,19 +140,9 @@ const NewPost = ({ setIsSaved, ...props }) => {
           triggerLoading(true);
           if (e.target.name === "monograph") {
             let file_type = _files[0].name.split(".").pop();
-            if (file_type == "html") {
-              const files = await upload(_files, true);
-              itemValue = files;
-              console.log('this is files==>', files);
-              const loadedMonograph = await getHTML(
-                `/api/${files.url.replace(
-                  "https://www.datocms-assets.com/",
-                  ""
-                )}`
-              );
-              setPreviewIframe(loadedMonograph);
-            }
-            else if (
+            let file_name = _files[0].name.split('.')[0]
+            if (
+              file_type == "html" ||
               file_type == "pdf" ||
               file_type == "docx" ||
               file_type == "doc" ||
@@ -160,7 +150,6 @@ const NewPost = ({ setIsSaved, ...props }) => {
             ) {
               const formData = new FormData();
               formData.append("file", _files[0]);
-
               try {
                 const response = await axios.post(
                   `${process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL}/filetohtml`,
@@ -172,7 +161,7 @@ const NewPost = ({ setIsSaved, ...props }) => {
                     },
                   }
                 );
-                const htmlFile = new File([response.data], "response.html", {
+                const htmlFile = new File([response.data], `${file_name}.html`, {
                   type: "text/html",
                 });
                 console.log("HTML conversion succeed. Now file uploading...");
