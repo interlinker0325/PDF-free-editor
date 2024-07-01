@@ -53,7 +53,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           sizeLG: 900,
           sizeMD: 700,
           sizeSM: 400,
-          language: 'en',
+          language: 'es',
           colors: ['#159957', '#f2f2f2', '#fcf9e7'],
           uploader: {
             insertImageAsBase64URI: true,
