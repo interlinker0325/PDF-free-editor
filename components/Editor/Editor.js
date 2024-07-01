@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import axios from "axios";
 
-import { icon } from '@fortawesome/fontawesome-svg-core';
-import { faL, faSpellCheck } from '@fortawesome/free-solid-svg-icons';
-// import { Jodit } from 'jodit-react';
-
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
@@ -13,10 +9,12 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const editor = useRef(null);
   const [isBrowser, setIsBrowser] = useState(false);
   const [model, setModel] = useState('');
-  const [config, setConfig] = useState(null)
+  const [config, setConfig] = useState(null);
 
   const [improvedText, setImprovedText] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(false);
+
+  const [isChanged, setIsChanged] = useState(false)
 
   const options = [
     'customParagraph', '|',
@@ -33,10 +31,12 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
 
   useEffect(() => {
     setIsBrowser(true);
+    setIsChanged(false);
     import('jodit-react').then((module) => {
 
       //add tooltip icon
       module.Jodit.modules.Icon.set('tooltip', '<img data-v-f5c15f4e="" srcset="https://img.icons8.com/?size=80&amp;id=50rlyzgyjENI&amp;format=png 1x, https://img.icons8.com/?size=160&amp;id=50rlyzgyjENI&amp;format=png 2x" width="80" height="80" alt="Info icon" class="loaded">')
+      module.Jodit.modules.Icon.set('greenCheck', '<img src="https://img.icons8.com/?size=100&id=Zy5ghkQj2rKy&format=png&color=000000" />')
 
       setConfig(
         {
@@ -180,16 +180,22 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             // insert check button
             {
               name: 'insertCheck',
-              tooltip: 'Insert',
+              tooltip: 'Apply Changes',
               icon: 'ok',
               exec: (editor) => {
-                setChangedContent(editor.value)
+                setChangedContent(editor.value);
+                const updatedConfig = { ...config };
+                updatedConfig.extraButtons[9].icon = 'ok';
+                setConfig(updatedConfig);
+                setIsChanged(false);
               }
             },
 
           ],
         }
       );
+
+      // config.extraButtons[9].icon = 'ok'
 
       // add custom button by Jodit method
       // create custom paragraph type button
@@ -229,7 +235,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             setEditorContent(tempElement);
           }
           else if (value == 'Texto recuadro') {
-            console.log('blockquote');
             const tempElement = document.createElement('blockquote');
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
@@ -249,12 +254,26 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
-          console.log('this is the value ==>', value);
 
         }
       };
     })
   }, [editorContent]);
+
+  // Dynamic change the insertCheck button icon
+  useEffect(() => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = model;
+    const modelContent = tempDiv.textContent;
+
+    if (modelContent != editorContent?.textContent && isBrowser && editorContent && !isChanged) {
+      console.log('here ');
+      const updatedConfig = { ...config };
+      updatedConfig.extraButtons[9].icon = 'greenCheck';
+      setConfig(updatedConfig);
+      setIsChanged(true);
+    }
+  }, [model])
 
   useEffect(() => {
     setModel(editorContent ? editorContent.outerHTML : '');
