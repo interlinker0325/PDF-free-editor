@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import axios from "axios";
 
 // Using dynamic import of Jodit component as it can't render server-side
-const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
 
 const Editor = ({ editorContent, setEditorContent, setChangedContent, section, setSection }) => {
   const editor = useRef(null);
@@ -37,6 +37,8 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       //add tooltip icon
       module.Jodit.modules.Icon.set('tooltip', '<img data-v-f5c15f4e="" srcset="https://img.icons8.com/?size=80&amp;id=50rlyzgyjENI&amp;format=png 1x, https://img.icons8.com/?size=160&amp;id=50rlyzgyjENI&amp;format=png 2x" width="80" height="80" alt="Info icon" class="loaded">')
       module.Jodit.modules.Icon.set('greenCheck', '<img src="https://img.icons8.com/?size=100&id=Zy5ghkQj2rKy&format=png&color=000000" />')
+      module.Jodit.modules.Icon.set('math', '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVDiNxY+xSgNBFEXPG7KEBW38Ab8gzU61naQSQbAR/Atb7QRRSeMfWKYxFkoKG60UtnDzEG1stbOxNCQL+6wWliU7BiycaoZ77+EM/PeRtsB73wPGwHpLZQocuwD8MDAGiIGDhQZpmsbz+fwTWA0AAIYd7/0OsA+MJ5PJOcBsNtsUkWpcAH0zmzbG36r61gEugDVgI0mSJ1V9EJHdqiUi93meP7YpOOCjVj5K0zQGtmudUegPzszOau9+URSnwEqlH0XRdQgggPPePwO9Zmhmt6q6FTQASjM7acmD+hUAVR0BL42s6Ha7N0sBFlmY2V2WZV/LAlDVK+C1ll3+Ngbo1O5lWZZ7zrmBiLwDw2UAfz4/dNtaTXH2UcAAAAAASUVORK5CYII=" />')
+      module.Jodit.modules.Icon.set('chemistry', '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGPSURBVDiN1ZKxa1NRFMZ/5yY1COYPKFiEiNpBHe55SQiZdFBEHAQHQZwchapLodClCEKhi4Pg6KaSzamCQnDJEMiTDqIoGXTRRcHFR+K7x8G8cHkNdfabDt8558flu0c4QM1mc8XMboUQPo5Go6dAKM/IosVOp3N4MpmsAZvAkZn9NoRwJ03TNwcCkiS5ZmY7wLEFbDOz55VK5d5wOPwKUC06rVbrZJ7nj83sXGnpM7AMLAEiItdDCKeBMwCumMrz/AUQL/80s/Usy04AZ0VkN+qtFLvVyDwV1U+ccxvFM4H3wCVVvQxcdc49YxboPANVtaJuNBrVXq+XL8hgn9y/R/5LwHg8vquqS2VfVY+r6lqSJPPAY8C3qN4B9rz3FwG63W7de78NvAMemtkrZh8wB4QQbgBfIsiqiOyq6sssyz6IyDpwaNar7AOkafoaWAXuA78i0AX+XmKhPTO7QvkOYrXb7aPT6fSBiNyM7B/AVr1ef9Tv938X5kJAIe/9eefc7RDCp1qttj0YDL6XZ/4A/MWDnkkEniQAAAAASUVORK5CYII=">')
 
       setConfig(
         {
@@ -177,6 +179,23 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               }
             },
             '|',
+            {
+              name: 'math equation',
+              tooltip: 'Math Equation',
+              icon: 'math',
+              exec: (editor) => {
+                document.getElementById('editorIcon')?.click();
+              }
+            },
+            {
+              name: 'chemistry equation',
+              tooltip: 'Chemistry Equation',
+              icon: 'chemistry',
+              exec: (editor) => {
+                document.getElementById('chemistryIcon')?.click();
+              }
+            },
+            '|',
             // insert check button
             {
               name: 'insertCheck',
@@ -185,7 +204,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               exec: (editor) => {
                 setChangedContent(editor.value);
                 const updatedConfig = { ...config };
-                updatedConfig.extraButtons[9].icon = 'ok';
+                updatedConfig.extraButtons[12].icon = 'ok';
                 setConfig(updatedConfig);
                 setIsChanged(false);
               }
@@ -267,9 +286,8 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     const modelContent = tempDiv.textContent;
 
     if (modelContent != editorContent?.textContent && isBrowser && editorContent && !isChanged) {
-      console.log('here ');
       const updatedConfig = { ...config };
-      updatedConfig.extraButtons[9].icon = 'greenCheck';
+      updatedConfig.extraButtons[12].icon = 'greenCheck';
       setConfig(updatedConfig);
       setIsChanged(true);
     }
@@ -296,22 +314,47 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     setModel(value);
   };
 
+  useEffect(() => {
+    if (editor.current) {
+      const editorfield = Array.from(document.getElementsByClassName('jodit-wysiwyg'))[0];
+      if (typeof window !== 'undefined' && window.WirisPlugin && editorfield) {
+        const genericIntegrationProperties = {
+          target: editorfield,
+          toolbar: document.getElementById('mathtoolbar'),
+        };
+        const genericIntegrationInstance = new window.WirisPlugin.GenericIntegration(genericIntegrationProperties);
+        genericIntegrationInstance.init();
+        genericIntegrationInstance.listeners.fire('onTargetReady', {});
+
+        window.WirisPlugin.currentInstance = genericIntegrationInstance;
+      }
+    }
+  }, [editor.current])
+
   return (
     <div className="w-full h-full p-1">
+      <div id="mathtoolbar" className='hidden'></div>
       <div className="flex justify-between">
         <span className="font-semibold text-[30px]">{section}</span>
       </div>
       <form className="w-full h-full mt-5">
-        {isBrowser && (
-          <JoditEditor
-            ref={editor}
-            value={model}
-            config={config}
-            onChange={handleModelChange}
-            tabIndex={1}
-            className="w-full"
-          />
-        )}
+        {isBrowser && (() => {
+          try {
+            return (
+              <JoditEditor
+                ref={editor}
+                value={model}
+                config={config}
+                onChange={handleModelChange}
+                tabIndex={1}
+                className="w-full"
+              />
+            );
+          } catch (error) {
+            console.error('Error in JoditEditor', error);
+            return <h1>Error</h1>;
+          }
+        })()}
       </form>
     </div>
   );
