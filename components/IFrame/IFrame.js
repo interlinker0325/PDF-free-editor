@@ -38,7 +38,7 @@ const IFrame = ({
 
       if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
         const iframeDoc = iframe.contentWindow.document;
-        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section');
+        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section, mjx-container, math, mrow, msub, mi, mo, msqrt, mfrac, mn, svg');
 
         elements.forEach(element => {
           element.style.background = 'none';
@@ -152,7 +152,6 @@ const IFrame = ({
     };
 
     return () => {
-      // Cleanup code
       if (paperTitle) {
         paperTitle.removeEventListener('click', titleHandleClick);
       }

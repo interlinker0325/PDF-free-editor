@@ -48,3 +48,7 @@
 .jodit-wysiwyg > * {
   background: none !important;
 }
+
+.jodit-wysiwyg > * > *{
+  background: none !important;
+}
