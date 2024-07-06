@@ -287,7 +287,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       );
 
       // If selected block is IMG, add IMG size increase and decrease button
-      const img = editorContent.querySelector('img');
+      const img = editorContent?.querySelector('img');
       if (img) {
         const updatedConfig = { ...config };
         updatedConfig.extraButtons = ( updatedConfig.extraButtons || []).concat([
