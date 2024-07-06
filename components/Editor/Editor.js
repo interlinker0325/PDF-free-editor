@@ -21,7 +21,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     'bold',
     'underline',
     'italic', '|',
-    'brush',
     'image',
     'table',
     'link', '|',
@@ -35,10 +34,13 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     import('jodit-react').then((module) => {
 
       //add tooltip icon
-      module.Jodit.modules.Icon.set('tooltip', '<img data-v-f5c15f4e="" srcset="https://img.icons8.com/?size=80&amp;id=50rlyzgyjENI&amp;format=png 1x, https://img.icons8.com/?size=160&amp;id=50rlyzgyjENI&amp;format=png 2x" width="80" height="80" alt="Info icon" class="loaded">')
+      module.Jodit.modules.Icon.set('tooltip', '<img src="https://cdn0.iconfinder.com/data/icons/leading-international-corporate-website-app-collec/16/Info-512.png">')
       module.Jodit.modules.Icon.set('greenCheck', '<img src="https://img.icons8.com/?size=100&id=Zy5ghkQj2rKy&format=png&color=000000" />')
       module.Jodit.modules.Icon.set('math', '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVDiNxY+xSgNBFEXPG7KEBW38Ab8gzU61naQSQbAR/Atb7QRRSeMfWKYxFkoKG60UtnDzEG1stbOxNCQL+6wWliU7BiycaoZ77+EM/PeRtsB73wPGwHpLZQocuwD8MDAGiIGDhQZpmsbz+fwTWA0AAIYd7/0OsA+MJ5PJOcBsNtsUkWpcAH0zmzbG36r61gEugDVgI0mSJ1V9EJHdqiUi93meP7YpOOCjVj5K0zQGtmudUegPzszOau9+URSnwEqlH0XRdQgggPPePwO9Zmhmt6q6FTQASjM7acmD+hUAVR0BL42s6Ha7N0sBFlmY2V2WZV/LAlDVK+C1ll3+Ngbo1O5lWZZ7zrmBiLwDw2UAfz4/dNtaTXH2UcAAAAAASUVORK5CYII=" />')
       module.Jodit.modules.Icon.set('chemistry', '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGPSURBVDiN1ZKxa1NRFMZ/5yY1COYPKFiEiNpBHe55SQiZdFBEHAQHQZwchapLodClCEKhi4Pg6KaSzamCQnDJEMiTDqIoGXTRRcHFR+K7x8G8cHkNdfabDt8558flu0c4QM1mc8XMboUQPo5Go6dAKM/IosVOp3N4MpmsAZvAkZn9NoRwJ03TNwcCkiS5ZmY7wLEFbDOz55VK5d5wOPwKUC06rVbrZJ7nj83sXGnpM7AMLAEiItdDCKeBMwCumMrz/AUQL/80s/Usy04AZ0VkN+qtFLvVyDwV1U+ccxvFM4H3wCVVvQxcdc49YxboPANVtaJuNBrVXq+XL8hgn9y/R/5LwHg8vquqS2VfVY+r6lqSJPPAY8C3qN4B9rz3FwG63W7de78NvAMemtkrZh8wB4QQbgBfIsiqiOyq6sssyz6IyDpwaNar7AOkafoaWAXuA78i0AX+XmKhPTO7QvkOYrXb7aPT6fSBiNyM7B/AVr1ef9Tv938X5kJAIe/9eefc7RDCp1qttj0YDL6XZ/4A/MWDnkkEniQAAAAASUVORK5CYII=">')
+      module.Jodit.modules.Icon.set('rightarrow', '<img src="https://cdn-icons-png.flaticon.com/256/724/724954.png" />')
+      module.Jodit.modules.Icon.set('arrowup', '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAY1BMVEX///8AAADg4OClpaWSkpIPDw/Y2NjHx8caGhorKyswMDCVlZXc3Nzv7++3t7cdHR3m5ubS0tJ8fHyFhYWrq6txcXEkJCS+vr4+Pj45OTlMTExSUlJaWlpHR0cICAj19fVlZWWaRJuaAAADY0lEQVR4nO3c6XqiUAwG4OhUUCr7oq21ev9XOVJtB+EsyVk7z5P8DvD6gQgSBeDi+o21L/pTWZ6aYh9b8lN5O6weNbR5bM290tVTHWJ7xupWs3qNLQL4MzetVi+/0BRdJTRFVklMUY8rqSliVgpTtKyUpkhZaUxRVFpTBBXCFFyFMgVWIU1BVWhTQBXBFExFMgVSEU1BVGRTAJWBybvKyORZZWjyqjI2ebySsTB5y8rK5CkrS5OXrKxNHrJyYHKelROTY5Ujk1OVM5NDlUOTM5VTkyOVY5MTlXOTg/OVB5N1Vl5Mlll5Mlll5c1kkZVHk3FWXk2GKs8mI5V3k4EqgImsCmIiqgKZSKpgJoIqoAmtCmpCqgKbUKrgJoQqgkmrimLSqCKZlFcy0UyKrCKapFlFNUmyimwSqqKbBCqqaeOsSa6imobFMImoukHfI1dRTWVSYdqqpDRXUU3bFNaYvjWkW1MValdMqkwAiwJyVo/zVf1JW+yWEx5Fz2pcO1yIC22/RtzQKNhTVeOsWks0fb0SAoqcVUt+Idv7higoWNM2Ue7hQDOlQEdRszpAT2kvvzdDQ8Ga9B7s4UzoHr5zoqIgpZzbj0D4fBomo6VEFOwJqg0BNcmJjqJktYEj2vQ0gktGEbI6og/0XQ12KKh3yE1docA1DgnYoiBBZlUgT57Zc05mKKgzzFLj51iD6NstRrqNULDH7MHm1pjr27JkvnZDFCSIrKqxUXtU7ZYmUxQk2qy6e6PmwlOQkzlKm9XPpeeLqkuUkwVKk1Xzr/FV3pUJ12yBgrUiq3baKM1KuO/sUIo92Dw3SrKS5GSHkmbVzhuFWYmPJ2uU5Lhqlo2CrLJKtlZLFFSCrIRfuyyykudkjRJktdh395qdRY+q3+XYoiCfXTN1ssZ0Gqr6t0LWKMin93ZZqugsrm/j/XL53ipX6AJ1W0f7Pt5QfL5dC3UjVHWapon2F1UuULe0ktvGavnbiVhuUI6LUYxiFKMYxShGMYpRjGIUoxjFKEYxilGMYtT/gMJNmgVGoQacLoFRgHjumoU2qR9c3iv8v83U2nmUzXxsIEBpRwcET8q810UzJXMMfpiPVZ1UplPo88GjcsXwTh/v//LSD+GM6OeH6kmZ/6q7/lxuJlWe+y7C246LS1l/AcaKNidexH1dAAAAAElFTkSuQmCC" />')
+      module.Jodit.modules.Icon.set('arrowdown', '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJkAAACUCAMAAAC3HHtWAAAAYFBMVEX///8AAAD5+flmZmbIyMisrKyPj4+Tk5Obm5uoqKigoKCJiYmWlpa6urrDw8OMjIy0tLTS0tLz8/NPT0/s7Ozj4+NxcXFJSUl6enpAQEAICAiCgoJgYGA0NDQPDw8vLy9s7q0LAAADpklEQVR4nO2c22KqMBBFidVai9WC1ku1nv//y2NKsUBuM5PL9GH2cyCrK2RCBVJV8dk3zXyYptknOGt8Pg5HNc3x8MGNVbUnA6vLqWUGOzjAlDrwoj05we5onGBvHjCl3vjA2rOX7Mw3nptPL9nnho3sxQum1JqNrA6QXbjAZr6ZqfM0EzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhE7LMZLP9HnjCZGSzFtDl5nLd7a6XeUGyedel/5Hj5qs/6ReALQlZ83h6+8/Dthqc9bYqQra4Ddo7u5w8rlwWIFuOD6hBrZR6yU5mPFS22tiaZw5YiyZbm4dYrBnGwmixZNYun6etnu3n9j6jjyRzvB+wBYEZ7RKSWY0ZXVqusT4ea1FknjcqBmgeMOdMjiRzDtKoS28rj7UIssA7KD/TwDJ3x3Fda3Qy5zXW59vGPNTKWXLJZK/hLu/LdrsLN3NYo5IFjd2za6sG0MxhjUgGMKa0tAuonXWG0sgC863PqfK/3PYbizUSGcyYUufqFm7UxbRGIQMau98fwslMawQyqDFNZr6m68zUGp4MbEypo39lmmQZSRZ6+3CYLbBqPJrHkEHq2CMNrNLa0ZBkKLDr/VCUtNEtJ44suDyP0uDmi05NJEMZ6/+/w6FtSWQ4Ywva31MTyHA9vNKm82/xgJPhjI3+VccdWiPJyMbwaEsUGW5EJmDYw2sEGWJJUtZfXXDK12Ay3Mw3jFXoU9RAMpyxhQ0Ma20JIou8xqjWgmTIP9ZhDH+xbt2fFHU54Ga89/e6Vfj4bHn3gWGtpUzoF85qwQQG+DiKx1rQGNe1FrjG+uCmeoo46xi3NaAxHVwdig3YmA5uNYiLp/LbglvvYhJ+vsVkDWmsnDUCWBk09FB2yT+gJGMlrBGN6eQtuYgCW9ZahDGdfDdF0d+E51reUUtSSWtJvqLPYS2BMZ301pLtO5D6piiRMZ20dS2qjk2Tsq5F1rFp0llLakwn1fJOXsTdSWMtuTGdFNYyGNOJt5bFWAq0bGCxA5ppKLvELFSZt8KhW8tqTIdqrcDmQbSFKvGSZM87AazQzkF4a0WM6WCtFdygCmetmDEdzAwtvKUXvK5lr2PTQK0xbIIGW96LG9OBWGPaNi5sLeNtTxwaG1hoQBl3APRbYzSm416oWI3puKwxG9OxW+PbMHEQ20LFUmDNmHt0/gljOtOboj9iTGdkjXFTTkvmjw/y1Bn0tWA4/wF3FDc+MwStlQAAAABJRU5ErkJggg=="/>')
 
       setConfig(
         {
@@ -55,8 +57,8 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           sizeLG: 900,
           sizeMD: 700,
           sizeSM: 400,
-          language: 'es',
-          colors: ['#159957', '#f2f2f2', '#fcf9e7'],
+          language: 'en',
+          colors: ['#159957', '#52b788', '#f2f2f2', '#fcf9e7', '#fff', '#000'],
           uploader: {
             insertImageAsBase64URI: true,
             imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
@@ -69,6 +71,15 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           },
           spellCheck: true,
           autofocus: true,
+          popup: {
+            img: null
+          },
+          enableDragAndDropFileToEditor: true,
+          uploader: {
+            insertImageAsBase64URI: true,
+            imagesExtensions: ['jpg', 'png', 'jpeg', 'gif'],
+            url: null
+          },
           // custom buttons
           extraButtons: [
             // add insert tooltip button
@@ -105,11 +116,69 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                 }
               }
             },
+            {
+              name: 'addDividedBlock',
+              tooltip: 'Add Divided Block',
+              icon: 'rightarrow',
+              exec: () => {
+                if (editorContent && editorContent.parentNode) {
+                  // Create a container div with flex display
+                  const container = document.createElement('div');
+                  const subcontainer1 = document.createElement('div');
+                  const subcontainer2 = document.createElement('div');
+                  container.style.display = 'flex';
+                  container.style.padding = '0';
+                  container.style.margin = '0';
+
+                  // Style and clone existing editor content
+                  const clonedEditorContent = editorContent.cloneNode(true);
+
+                  // Create a new div element
+                  const newDiv = document.createElement('div');
+                  newDiv.innerText = 'new paragraph';
+
+                  subcontainer1.appendChild(clonedEditorContent);
+                  subcontainer2.appendChild(newDiv);
+
+                  container.appendChild(subcontainer1);
+                  container.appendChild(subcontainer2);
+
+                  // Calculate width for each child element
+                  const childCount = container.children.length;
+                  const childWidth = `${100 / childCount}%`;
+
+                  // Apply calculated width to each child element
+                  Array.from(container.children).forEach(child => {
+                    child.style.flex = `1 0 ${childWidth}`;
+                    child.style.padding = '0';
+                    child.style.margin = '0';
+                  });
+
+                  // Replace original editorContent's parent node with the container
+                  editorContent.parentNode.replaceChild(container, editorContent);
+
+                  // Remove the original editorContent
+                  clonedEditorContent.insertAdjacentElement('beforebegin', editorContent);
+                  clonedEditorContent.remove();
+
+                  // Create and dispatch a click event on the new div
+                  const clickEvent = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: false
+                  });
+                  newDiv.dispatchEvent(clickEvent);
+                }
+
+
+
+              }
+            },
             // move selected block up
             {
               name: 'blockUp',
               tooltip: 'Move Block Up',
-              icon: 'angle-up',
+              icon: 'arrowup',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
                   const previousElement = editorContent.previousElementSibling;
@@ -125,7 +194,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             {
               name: 'blockDown',
               tooltip: 'Move Block Down',
-              icon: 'angle-down',
+              icon: 'arrowdown',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
                   const nextElement = editorContent.nextElementSibling;
@@ -204,17 +273,66 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               exec: (editor) => {
                 setChangedContent(editor.value);
                 const updatedConfig = { ...config };
-                updatedConfig.extraButtons[12].icon = 'ok';
+                updatedConfig.extraButtons[13].icon = 'ok';
                 setConfig(updatedConfig);
                 setIsChanged(false);
               }
             },
+            '|',
+
+
 
           ],
         }
       );
 
-      // config.extraButtons[9].icon = 'ok'
+      // If selected block is IMG, add IMG size increase and decrease button
+      const img = editorContent.querySelector('img');
+      if (img) {
+        const updatedConfig = { ...config };
+        updatedConfig.extraButtons = ( updatedConfig.extraButtons || []).concat([
+          {
+            name: 'img_increase',
+            tooltip: 'Aumentar',
+            icon: 'angle-up',
+            exec: () => {
+              const img = editorContent.querySelector('img')
+              if (img) {
+                if (img?.style.width) {
+                  const img_width = parseInt(img.style.width);
+                  if (img_width <= 100) {
+                    img.style.width = `${img_width + 5}%`;
+                  }
+                }
+                else {
+                  img.style.width = '85%'
+                }
+              };
+            }
+          },
+          {
+            name: 'img_decrease',
+            tooltip: 'Reducir',
+            icon: 'angle-down',
+            exec: () => {
+              const img = editorContent.querySelector('img');
+              if (img) {
+                if (img?.style.width) {
+                  const img_width = parseInt(img.style.width);
+                  if (img_width >= 50) {
+                    img.style.width = `${img_width - 5}%`;
+                  }
+                }
+                else {
+                  img.style.width = '75%'
+                }
+              };
+            }
+          },
+        ]);
+        setConfig(updatedConfig);
+      };
+
 
       // add custom button by Jodit method
       // create custom paragraph type button
@@ -287,7 +405,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
 
     if (modelContent != editorContent?.textContent && isBrowser && editorContent && !isChanged) {
       const updatedConfig = { ...config };
-      updatedConfig.extraButtons[12].icon = 'greenCheck';
+      updatedConfig.extraButtons[13].icon = 'greenCheck';
       setConfig(updatedConfig);
       setIsChanged(true);
     }
