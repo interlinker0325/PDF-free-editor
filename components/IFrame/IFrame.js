@@ -12,12 +12,6 @@ const IFrame = ({
 }) => {
   const [editElement, setEditElement] = useState();
 
-  const titleHandleClick = (e) => {
-    let clickedElement = e.target;
-    setEditorContent(clickedElement);
-    setSection('Título del trabajo');
-  };
-
   const handleClick = (event) => {
     event.preventDefault();
     var clickedElement = event.target;
@@ -102,7 +96,6 @@ const IFrame = ({
 
 
   useEffect(() => {
-    const paperTitle = document.getElementById('title');
     const iframe = document.getElementById("documentWindow");
     const iframeDoc = iframe.contentWindow.document;
 
@@ -127,9 +120,6 @@ const IFrame = ({
     };
 
     if (editView) {
-      if (paperTitle) {
-        paperTitle.addEventListener('click', titleHandleClick);
-      };
       if (iframe) {
         iframe.addEventListener('load', () => {
           addIframeEventListeners();
@@ -141,9 +131,6 @@ const IFrame = ({
       };
     }
     else {
-      if (paperTitle) {
-        paperTitle.removeEventListener('click', titleHandleClick);
-      }
       if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
         iframeDoc.removeEventListener("click", handleClick);
         iframeDoc.removeEventListener("mouseover", handleMouseOver);
@@ -152,9 +139,6 @@ const IFrame = ({
     };
 
     return () => {
-      if (paperTitle) {
-        paperTitle.removeEventListener('click', titleHandleClick);
-      }
       if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
         iframeDoc.removeEventListener("click", handleClick);
         iframeDoc.removeEventListener("mouseover", handleMouseOver);
