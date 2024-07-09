@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import useUser from 'utils/useUser';
 import Main from 'components/Main/Main';
 import PostStatusBar from 'components/Posts/PostStatusBar';
-import PostView from 'components/Posts/PostView';
+import PublicView from 'components/Posts/PublicView';
 import { useRouter } from 'next/router';
 
 const Post = ({ post,  updatePost }) => {
@@ -19,7 +19,7 @@ const Post = ({ post,  updatePost }) => {
     return (
         <Main>
             <PostStatusBar user={user} post={post} updatePost={updatePost} />
-            <PostView {...{post, user, showPreview}} />
+            <PublicView {...{post, user, showPreview}} />
         </Main>
     );
 };
