@@ -22,14 +22,8 @@ import PostView from "components/Posts/PostView";
 import TopBar from "components/TopBar/TopBar";
 import Loader from "components/Loader/Loader";
 
-import { toast } from "react-hot-toast";
-
 import { Tooltip } from "@mui/material";
-
-const notifyError = (warningMessage) =>
-  toast.error(warningMessage, {
-    duration: 5000,
-  });
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 const formBaseState = {
   title: "",
@@ -76,6 +70,9 @@ const NewPost = ({ setIsSaved, ...props }) => {
     success:
       "Los campos con (*) son requeridos.",
   });
+
+  const [logicCheck, setLogicCheck] = useState(null)
+  const [allPass, setAllPass] = useState(false);
 
   const triggerLoading = (show) => {
     if (show) {
@@ -161,6 +158,21 @@ const NewPost = ({ setIsSaved, ...props }) => {
                     },
                   }
                 );
+                // check coherence of the html document
+                const check_result = await axios.post(
+                  `${process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL}/documentCheck`,
+                  {
+                    'content': response.data
+                  },
+                  {
+                    headers: {
+                      "Content-Type": "application/json",
+                      "ngrok-skip-browser-warning": "true"
+                    }
+                  }
+                );
+                setLogicCheck(check_result.data)
+                console.log('hahaha-->', check_result.data);
                 const htmlFile = new File([response.data], `${file_name}.html`, {
                   type: "text/html",
                 });
@@ -179,7 +191,7 @@ const NewPost = ({ setIsSaved, ...props }) => {
               }
             }
             else {
-              notifyError("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
+              enqueueSnackbar("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
               e.target.value = null;
             }
           } else {
@@ -268,164 +280,170 @@ const NewPost = ({ setIsSaved, ...props }) => {
 
   // first check all section title exist, if not display error and then save edited html
   const saveDocument = async () => {
-    let errorFlag = false;
     const iframe = document.getElementById("documentWindow");
-    // check section title
-    const sectionTitleElements =
-      iframe.contentWindow.document.body.getElementsByTagName("h2");
-    const sectionTitles = [];
-    for (let i = 0; i < sectionTitleElements.length; i++) {
-      sectionTitles.push(sectionTitleElements[i].textContent);
-    }
-    const essay = ["Bibliografía"];
-    const theory = ["Bibliografía"];
-    const science = [
-      "Resumen",
-      "Introducción",
-      "Metodología",
-      "Resultados",
-      "Conclusiones",
-      "Bibliografía",
-    ];
-    let type = [];
-    if (formState.type == "essay") type = essay;
-    if (formState.type == "theory") type = theory;
-    if (formState.type == "science") type = science;
-    const sectionTitlesLower = sectionTitles.map((item) =>
-      item.toLowerCase().trim()
-    );
-    const typeLower = type.map((item) => item.toLowerCase().trim());
-    typeLower.forEach((item) => {
-      // Check if the item is not present in the second list
-      if (!sectionTitlesLower.includes(item)) {
-        notifyError(
-          `La sección ${item} no aparece en los títulos de las secciones`
-        );
-        errorFlag = true;
-      }
-    });
     // upload edited html document
-    if (errorFlag == false) {
-      setIsSaved(true);
-      const iframeContent =
-        iframe.contentWindow.document.head.innerHTML +
-        iframe.contentWindow.document.body.innerHTML;
-      const htmlFile = new File([iframeContent], "monograph.html", {
-        type: "text/html",
+    setIsSaved(true);
+    const iframeContent =
+      iframe.contentWindow.document.head.innerHTML +
+      iframe.contentWindow.document.body.innerHTML;
+    const htmlFile = new File([iframeContent], "monograph.html", {
+      type: "text/html",
+    });
+    triggerLoading(true);
+    const files = await upload([htmlFile], true);
+    const loadedMonograph = await getHTML(
+      `/api/${files.url.replace("https://www.datocms-assets.com/", "")}`
+    );
+    setPreviewIframe(loadedMonograph);
+    triggerLoading(false);
+    delete formState["monograph"];
+    setFormState({ ["monograph"]: files, ...formState });
+    enqueueSnackbar('Tu documento se ha guardado satisfactoriamente',
+      {
+        variant: 'success',
+        preventDuplicate: true,
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center'
+        }
       });
-      triggerLoading(true);
-      const files = await upload([htmlFile], true);
-      const loadedMonograph = await getHTML(
-        `/api/${files.url.replace("https://www.datocms-assets.com/", "")}`
-      );
-      setPreviewIframe(loadedMonograph);
-      triggerLoading(false);
-      delete formState["monograph"];
-      setFormState({ ["monograph"]: files, ...formState });
-    }
   };
 
-  const warning = () => {
-    alert("Warning")
-  }
+  const handleSave = () => {
+    // alert(formState.title)
+    const iframe = document.getElementById("documentWindow");
+    const isContent = Boolean(iframe.contentWindow.document.body.innerText.trim());
+    const isTitle = Boolean(formState.title.trim())
 
+    console.log('sdf', allPass)
+    if (isContent && isTitle) {
+      saveDocument();
+    }
+    else {
+      enqueueSnackbar('Para guardar anota el título en la sección de Formulario, incluye un documento Word o PDF, o pasa directamente al Editor donde puedes agregar bloques de texto e iniciar tu publicación directamente',
+        {
+          variant: 'warning',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
+    }
+  };
   return (
     <Main>
-      <TopBar>
-        <div className="flex flex-row justify-between w-full">
-          <div>
-            {(statusBarState.error || statusBarState.success) && (
-              <h5
-                className={
-                  statusBarState.error
-                    ? "text-error text-2xl"
-                    : "text-primary text-2xl"
-                }
-              >
-                {statusBarState.error || statusBarState.success}
-              </h5>
-            )}
-          </div>
-          <div className="flex items-center">
-            <a
-              className={`${formView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-              onClick={() => {
-                setFormView(true);
-                setShowPreview(false);
-                setEditView(false);
-                setCompliaceView(false);
-              }}
-              children="Formulario"
-            />
-            <a
-              className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
-              onClick={() => {
-                setShowPreview(true);
-                setFormView(false);
-                setEditView(false);
-                setCompliaceView(false);
-              }}
-              children="Vista previa"
-            />
-            <a
-              className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-              onClick={() => {
-                setEditView(true);
-                setShowPreview(false);
-                setFormView(false);
-                setCompliaceView(false);
-              }}
-              children="Editor"
-            />
-            <a
-              className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-              onClick={() => {
-                setCompliaceView(true);
-                setEditView(false);
-                setShowPreview(false);
-                setFormView(false);
-              }}
-              children="Cumplimiento"
-            />
-            <div className="cursor-pointer ml-3" onClick={warning}>
-              <Tooltip title='Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' arrow>
-                <img src='/warning.png' className="w-8"></img>
-              </Tooltip>
+      <SnackbarProvider maxSnack={3}>
+        <TopBar>
+          <div className="flex flex-row justify-between w-full">
+            <div>
+              {(statusBarState.error || statusBarState.success) && (
+                <h5
+                  className={
+                    statusBarState.error
+                      ? "text-error text-2xl"
+                      : "text-primary text-2xl"
+                  }
+                >
+                  {statusBarState.error || statusBarState.success}
+                </h5>
+              )}
             </div>
-            <a
-              className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
-              onClick={saveDocument}
-              children="Guardar"
-            />
+            <div className="flex items-center">
+              <a
+                className={`${formView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+                onClick={() => {
+                  setFormView(true);
+                  setShowPreview(false);
+                  setEditView(false);
+                  setCompliaceView(false);
+                }}
+                children="Formulario"
+              />
+              <a
+                className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
+                onClick={() => {
+                  setShowPreview(true);
+                  setFormView(false);
+                  setEditView(false);
+                  setCompliaceView(false);
+                }}
+                children="Vista previa"
+              />
+              <a
+                className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+                onClick={() => {
+                  setEditView(true);
+                  setShowPreview(false);
+                  setFormView(false);
+                  setCompliaceView(false);
+                }}
+                children="Editor"
+              />
+              <a
+                className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+                onClick={() => {
+                  setCompliaceView(true);
+                  setEditView(false);
+                  setShowPreview(false);
+                  setFormView(false);
+                }}
+                children="Cumplimiento"
+              />
+              <div className="cursor-pointer ml-3">
+                <Tooltip title={allPass ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'} arrow>
+                  {allPass ? (
+                    <div className="sprinkle-container">
+                      <img width="30" height="auto" className="thumb-up" src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png" alt="good-quality--v1" />
+                      <div className="sprinkles">
+                        {/* Creating multiple sprinkles */}
+                        {Array.from({ length: 15 }).map((_, index) => (
+                          <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <img src='/warning.png' className="w-8"></img>
+                  )}
+                </Tooltip>
+              </div>
+              <a
+                className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
+                onClick={handleSave}
+                children="Guardar"
+              />
+            </div>
           </div>
-        </div>
-      </TopBar>
-      <PostForm
-        refs={refs}
-        form={formState}
-        doSubmit={doSubmit}
-        clearForm={clearSubmitForm}
-        onChange={onChange}
-        requestApproval={requestApproval}
-        formHasChanged={formHasChanged}
-        user={user}
-        setAgreedterms={setAgreedterms}
-        setCoAuthors={setCoAuthors}
-        removeCoAuthor={removeCoAuthor}
-        formView={formView}
-        {...props}
-      />
-      <PostView
-        post={formState}
-        user={user}
-        previewIframe={previewIframe}
-        editView={editView}
-        showPreview={showPreview}
-        complianceView={complianceView}
-        setIsSaved={setIsSaved}
-        {...props}
-      />
-      <Loader show={showLoadingScreen} />
+        </TopBar>
+        <PostForm
+          refs={refs}
+          form={formState}
+          doSubmit={doSubmit}
+          clearForm={clearSubmitForm}
+          onChange={onChange}
+          requestApproval={requestApproval}
+          formHasChanged={formHasChanged}
+          user={user}
+          setAgreedterms={setAgreedterms}
+          setCoAuthors={setCoAuthors}
+          removeCoAuthor={removeCoAuthor}
+          formView={formView}
+          {...props}
+        />
+        <PostView
+          post={formState}
+          user={user}
+          previewIframe={previewIframe}
+          editView={editView}
+          showPreview={showPreview}
+          complianceView={complianceView}
+          setIsSaved={setIsSaved}
+          logicCheck={logicCheck}
+          setAllPass={setAllPass}
+          {...props}
+        />
+        <Loader show={showLoadingScreen} />
+      </SnackbarProvider>
     </Main>
   );
 };

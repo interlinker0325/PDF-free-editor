@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
-const Compliance = ({ form, check, sections, sectionCheckBadge, numerationCheckBadge, noteCheckBadge }) => {
+const Compliance = ({
+    form,
+    check,
+    sections,
+    sectionCheckBadge,
+    numerationCheckBadge,
+    noteCheckBadge,
+    coherenceCheckBadge,
+    titleLengthCheckBadge,
+    wordCheckBadge
+}) => {
 
     return (
         <>
             <div className='text-red-500 text-center mt-2'>- Ante cualquier incumplimiento, revisa el documento por las secciones marcadas en rojo -</div>
-            <div className="flex justify-around mt-5 leading-8 text-xl">
+            <div id='compliance' className="flex justify-around mt-5 leading-8 text-xl">
                 <div className="w-7/12">
                     <div className="my-2 border border-blue-500 p-3 relative">
                         <div className="flex justify-between px-5">
@@ -39,9 +49,9 @@ const Compliance = ({ form, check, sections, sectionCheckBadge, numerationCheckB
                                 <div>Coherencia</div>
                             </div>
                             <div>
-                                <div className="text-orange-400">Revisar</div>
-                                <div className="text-orange-400">Revisar</div>
-                                <div className="text-orange-400">Revisar</div>
+                                <div className="text-orange-400">{titleLengthCheckBadge}</div>
+                                <div className="text-orange-400">{wordCheckBadge}</div>
+                                <div className="text-orange-400">{coherenceCheckBadge}</div>
                             </div>
                         </div>
                         <div className="flex p-5 justify-between">

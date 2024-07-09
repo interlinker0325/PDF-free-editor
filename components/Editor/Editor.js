@@ -15,6 +15,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const [loadingStatus, setLoadingStatus] = useState(false);
 
   const [isChanged, setIsChanged] = useState(false)
+  const [checkPressed, setCheckPressed] = useState(false)
 
   const options = [
     'customParagraph', '|',
@@ -80,6 +81,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             imagesExtensions: ['jpg', 'png', 'jpeg', 'gif'],
             url: null
           },
+          disablePlugins: ['paste'],
           // custom buttons
           extraButtons: [
             // add insert tooltip button
@@ -272,13 +274,10 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               icon: 'ok',
               exec: (editor) => {
                 setChangedContent(editor.value);
-                const updatedConfig = { ...config };
-                updatedConfig.extraButtons[13].icon = 'ok';
-                setConfig(updatedConfig);
                 setIsChanged(false);
+                setCheckPressed(true);
               }
             },
-            '|',
 
 
 
@@ -290,7 +289,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       const img = editorContent?.querySelector('img');
       if (img) {
         const updatedConfig = { ...config };
-        updatedConfig.extraButtons = ( updatedConfig.extraButtons || []).concat([
+        updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
           {
             name: 'img_increase',
             tooltip: 'Aumentar',
@@ -398,6 +397,15 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   }, [editorContent]);
 
   // Dynamic change the insertCheck button icon
+  useEffect(() => {
+    if (checkPressed == true) {
+      const updatedConfig = { ...config };
+      updatedConfig.extraButtons[13].icon = 'ok';
+      setConfig(updatedConfig);
+      setCheckPressed(false);
+    }
+  }, [checkPressed]);
+  
   useEffect(() => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = model;
