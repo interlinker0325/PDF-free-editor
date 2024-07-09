@@ -16,6 +16,8 @@ const PostView = ({
   showPreview,
   complianceView,
   setIsSaved,
+  logicCheck,
+  setAllPass,
 }) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
   const [editorContent, setEditorContent] = useState("Select the tag");
@@ -65,8 +67,12 @@ const PostView = ({
   const [sectionCheckBadge, setSectionCheckBadge] = useState(baseSectionCheckBadge);
   const [numerationCheckBadge, setNumerationCheckBadge] = useState(baseNumerationCheckBadge);
   const [noteCheckBadge, setNoteCheckBadge] = useState(baseNoteCheckBadge);
+  const [coherenceCheckBadge, setCoherenceCheckBadge] = useState(check);
+  const [titleLengthCheckBadge, setTitleLengthCheckBadge] = useState('Revisar');
+  const [wordCheckBadge, setWordCheckBadge] = useState(check);
 
-  const gratidudeSections = ['agradecimiento', 'agradecimientos', 'reconocimiento', 'gratitud', 'honor']
+  const gratidudeSections = ['agradecimiento', 'agradecimientos', 'reconocimiento', 'gratitud', 'honor'];
+  const inAppropriateWords = ['cabrón', 'cabrona', 'caca', 'cagada', 'cago', 'me cago', 'chinga', 'chingado', 'comecaca', 'come caca', 'comecoño', 'comecoños', 'come coño', 'come coños', 'comeculo', 'comeculos', 'come culo', 'come culos', 'comemierda', 'come mierda', 'comepicha', 'comepichas', 'come picha', 'come pichas', 'comepito', 'comepitos', 'come pito', 'come pitos', 'coño', 'culada', 'culeada', 'culiada', 'culero', 'fantoche', 'gilipollas', 'guey', 'hijo de puta', 'hijo deputa', 'hijoputa', 'idiota', 'imbécil', 'joder', 'lamecoño', 'lamecoños', 'lame coño', 'lame coños', 'lameculo', 'lameculos', 'lame culo', 'lame culos', 'lamepicha', 'lamepichas', 'lame picha', 'lame pichas', 'lamepito', 'lamepitos', 'lame pito', 'lame pitos', 'lameverga', 'lamevergas', 'lame verga', 'lame vergas', 'malparido', 'malparidos', 'mal parido', 'mal paridos', 'marica', 'maricón', 'maricones', 'mequetrefe', 'mequetrefes', 'metepicha', 'metepichas', 'mete picha', 'mete pichas', 'metepinga', 'metepingas', 'mete pinga', 'mete pingas', 'metepito', 'metepitos', 'mete pito', 'mete pitos', 'meteverga', 'metevergas', 'mete verga', 'mete vergas', 'mierda', 'papanatas', 'patán', 'pedorro', 'pedorros', 'pelele', 'peleles', 'pelmazo', 'pelmazos', 'pelotudo', 'pelotudos', 'pendejo', 'pendeja', 'picha', 'pinga', 'playo', 'ponecoños', 'ponecoño', 'pone coños', 'pone coño', 'poneculo', 'poneculos', 'pone culo', 'pone culos', 'ponepicha', 'ponepichas', 'pone picha', 'pone pichas', 'ponepinga', 'ponepingas', 'pone pinga', 'pone pingas', 'poneverga', 'ponevergas', 'pone verga', 'pone vergas', 'puta', 'puto', 'puteada', 'soplacoños', 'soplacoño', 'sopla coños', 'sopla coño', 'soplaculo', 'soplaculos', 'sopla culo', 'sopla culos', 'soplapedo', 'soplapedos', 'sopla pedo', 'sopla pedos', 'soplapinga', 'soplapingas', 'sopla pinga', 'sopla pingas', 'soplaverga', 'soplavergas', 'sopla verga', 'sopla vergas', 'tarado', 'tarados', 'tetas', 'tocapichas', 'tocapicha', 'toca pichas', 'toca picha', 'tocapelotas', 'toca pelota', 'tocapenes', 'tocapene', 'toca penes', 'toca pene', 'tocapichas', 'tocapicha', 'toca pichas', 'toca picha', 'tocavergas', 'tocaverga', 'toca vergas', 'toca verga', 'tontos', 'tontas', 'verga', 'vergas', 'violador', 'violadores'];
 
   // author of the post
   const author = post?.author;
@@ -102,54 +108,150 @@ const PostView = ({
     // section compliance check
     const iframe = document.getElementById("documentWindow");
     const standardTitles = sections[post.type];
-    // get section titles when first loaded
-    iframe.onload = function () {
-      if (iframe.contentWindow.document.body.textContent && standardTitles) {
-        // get section titles after some changes
-        try {
-          setIsAnexos(false);
-          setSectionCheckBadge(baseSectionCheckBadge);
-          setNumerationCheckBadge(baseNumerationCheckBadge);
-          setNoteCheckBadge(baseNoteCheckBadge);
-          const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
-          Array.from(sectionTitleElements).forEach((sectionElement, index) => {
-            const title = sectionElement.textContent.toLowerCase().trim();
-            if (title == 'anexos') {
-              setIsAnexos(true);
+    setCoherenceCheckBadge(check);
+    setWordCheckBadge(check);
+    // Title length check
+    const title = document.getElementById('title')
+    const title_length = title.textContent.length;
+    if (title_length > 100) {
+      setTitleLengthCheckBadge(check);
+      title.style.border = 'none';
+      title.title = '';
+    }
+    else {
+      title.style.padding = '10px 20px'
+      title.style.border = "solid red 2.5px";
+      title.title = "La longitud del título debe ser mayor que 10.";
+      setTitleLengthCheckBadge('Revisar');
+    }
+    if (iframe.contentWindow.document.body.textContent) {
+      // get section titles after some changes
+      try {
+        setIsAnexos(false);
+        setSectionCheckBadge(baseSectionCheckBadge);
+        setNumerationCheckBadge(baseNumerationCheckBadge);
+        setNoteCheckBadge(baseNoteCheckBadge);
+        const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
+        const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
+        const liElements = iframe.contentWindow.document.body.getElementsByTagName('li');
+
+
+
+        // Inappropriate words and Logic check of divElements
+        // div element check
+        Array.from(divElements).forEach((divElement) => {
+          if (divElement.id !== 'preview-content' && divElement.id !== 'preview') {
+            let logic_flag = false;
+            let word_flag = '';
+
+            // Check for logic flags
+            logicCheck?.tags?.forEach((tag, index) => {
+              if (divElement.textContent.includes(tag)) {
+                logic_flag = index + 1;
+              }
+            });
+
+            // Check for inappropriate words
+            inAppropriateWords.forEach((word) => {
+              const wordsArray = divElement.textContent.split(/\W+/);
+              if (wordsArray.includes(word)) {
+                console.log(wordsArray);
+                word_flag = word;
+              }
+            });
+
+            // Apply styles and titles based on the checks
+            if (word_flag) {
+              divElement.style.border = 'solid red 2.5px';
+              divElement.title = `No puedes usar la palabra inapropiada "${word_flag}" en este documento.`;
+              setWordCheckBadge('Revisar');
+            } else if (logic_flag) {
+              divElement.style.border = 'solid 2.5px red';
+              divElement.title = logicCheck?.reasons[logic_flag - 1];
+              setCoherenceCheckBadge('Revisar');
+            } else {
+              divElement.style.border = 'none';
+              divElement.title = '';
             }
-            if (standardTitles.includes(title)) {
-              // section order check
-              // scientific paper check
-              if (post.type == 'Art. Científico') {
-                if (sectionElement.textContent.toLowerCase().trim() == standardTitles[index]) {
-                  sectionElement.style.border = 'none';
-                  sectionElement.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post?.type]];
-                    updatedState[index] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  })
-                }
-                else {
-                  // if the title belong to standard titles but the position doesn't equal to origin postion. In this case, first find the index in standard title and then set state to 'order'
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[index] = pendiente;
-                    updatedState[standardTitles.indexOf(title)] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                  sectionElement.style.border = '2.5px solid red';
-                  sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional) Ajusta su posición para continuar';
-                }
+          }
+        });
+        // li elements check
+        Array.from(liElements).forEach((liElement) => {
+          if (liElement.id !== 'preview-content' && liElement.id !== 'preview') {
+            let logic_flag = false;
+            let word_flag = '';
+
+            // Check for logic flags
+            logicCheck?.tags?.forEach((tag, index) => {
+              if (liElement.textContent.includes(tag)) {
+                logic_flag = index + 1;
+              }
+            });
+
+            // Check for inappropriate words
+            inAppropriateWords.forEach((word) => {
+              const regex = new RegExp(`\\b${word}\\b`, 'i');
+              if (regex.test(liElement.textContent)) {
+                word_flag = word;
+              }
+            });
+
+            // Apply styles and titles based on the checks
+            if (word_flag) {
+              liElement.style.border = 'solid red 2.5px';
+              liElement.title = `No puedes usar la palabra inapropiada "${word_flag}" en este documento.`;
+              setWordCheckBadge('Revisar');
+            } else if (logic_flag) {
+              liElement.style.border = 'solid 2.5px red';
+              liElement.title = logicCheck?.reasons[logic_flag - 1];
+              setCoherenceCheckBadge('Revisar');
+            } else {
+              liElement.style.border = 'none';
+              liElement.title = '';
+            }
+          }
+        });
+
+
+        Array.from(sectionTitleElements).forEach((sectionElement, index) => {
+          const title = sectionElement.textContent.toLowerCase().trim();
+          if (title == 'anexos') {
+            setIsAnexos(true);
+          }
+          if (standardTitles?.includes(title)) {
+            // section order check
+            // scientific paper check
+            if (post.type == 'Art. Científico') {
+              if (sectionElement.textContent.toLowerCase().trim() == standardTitles[index]) {
+                sectionElement.style.border = 'none';
+                sectionElement.title = '';
+                setSectionCheckBadge(prevState => {
+                  const updatedState = [...prevState[post?.type]];
+                  updatedState[index] = check;
+                  return {
+                    ...prevState,
+                    [post.type]: updatedState,
+                  };
+                })
+              }
+              else {
+                // if the title belong to standard titles but the position doesn't equal to origin postion. In this case, first find the index in standard title and then set state to 'order'
+                setSectionCheckBadge(prevState => {
+                  const updatedState = [...prevState[post.type]];
+                  updatedState[index] = pendiente;
+                  updatedState[standardTitles?.indexOf(title)] = order;
+                  return {
+                    ...prevState,
+                    [post.type]: updatedState,
+                  };
+                });
+                sectionElement.style.border = '2.5px solid red';
+                sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional) Ajusta su posición para continuar';
               }
             }
-            else {
+          }
+          else {
+            if (post.type) {
               setSectionCheckBadge(prevState => {
                 const updatedState = [...prevState[post.type]];
                 if (updatedState[index] != order && index < sectionCheckBadge[post.type].length) {
@@ -160,13 +262,15 @@ const PostView = ({
                   [post.type]: updatedState,
                 };
               })
-              // un-neccessary section title check in scientific paper
-              if (post.type == 'Art. Científico') {
-                sectionElement.style.border = '2.5px solid red';
-                sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional)';
-              }
+            };
+            // un-neccessary section title check in scientific paper
+            if (post.type == 'Art. Científico') {
+              sectionElement.style.border = '2.5px solid red';
+              sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional)';
             }
-          });
+          }
+        });
+        if (post.type) {
           // anxios optional section check
           Array.from(sectionTitleElements).forEach((sectionElement, index) => {
             const title = sectionElement.textContent.toLowerCase().trim();
@@ -230,95 +334,95 @@ const PostView = ({
                 [post.type]: updatedState,
               };
             });
-            // essay paper section check
-            if (post.type == 'Ensayo') {
-              Array.from(sectionTitleElements).some((title, index) => {
-                if (title.textContent.toLowerCase().trim() == 'conclusiones') {
-                  if (index == sectionTitleElements.length - 2) {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = 'none';
-                      title.title = '';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                }
-                // essay paper bibliografia section check
-                if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                  if (index == sectionTitleElements.length - 1) {
+          }
+          // essay paper section check
+          if (post.type == 'Ensayo') {
+            Array.from(sectionTitleElements).some((title, index) => {
+              if (title.textContent.toLowerCase().trim() == 'conclusiones') {
+                if (index == sectionTitleElements.length - 2) {
+                  setSectionCheckBadge(prevState => {
                     title.style.border = 'none';
                     title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[1] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
                 }
-              })
-            }
-            if (post.type == 'Doc. Académico') {
-              Array.from(sectionTitleElements).some((title, index) => {
-                // essay paper bibliografia section check
-                if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                  if (index == sectionTitleElements.length - 1) {
-                    title.style.border = 'none';
-                    title.title = '';
-                    setSectionCheckBadge(prevState => {
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = check;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
-                  else {
-                    setSectionCheckBadge(prevState => {
-                      title.style.border = '2.5px solid red';
-                      title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                      const updatedState = [...prevState[post.type]];
-                      updatedState[0] = order;
-                      return {
-                        ...prevState,
-                        [post.type]: updatedState,
-                      };
-                    });
-                  }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
                 }
-              })
-            }
+              }
+              // essay paper bibliografia section check
+              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
+                if (index == sectionTitleElements.length - 1) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[1] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+            })
+          }
+          if (post.type == 'Doc. Académico') {
+            Array.from(sectionTitleElements).some((title, index) => {
+              // essay paper bibliografia section check
+              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
+                if (index == sectionTitleElements.length - 1) {
+                  title.style.border = 'none';
+                  title.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = check;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+                else {
+                  setSectionCheckBadge(prevState => {
+                    title.style.border = '2.5px solid red';
+                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
+                    const updatedState = [...prevState[post.type]];
+                    updatedState[0] = order;
+                    return {
+                      ...prevState,
+                      [post.type]: updatedState,
+                    };
+                  });
+                }
+              }
+            })
           }
           // If anexos exist
           if (isAnexos) {
@@ -463,7 +567,7 @@ const PostView = ({
               })
             }
           }
-  
+
           // methodology subsection check
           const methodologySubsections = ["dato", "información", "fuente", "teórico", "teoría", "concept", "descrip", "analisis", "metodolog"]
           const subsectionElements = iframe.contentWindow.document.body.getElementsByTagName('h3')
@@ -483,564 +587,16 @@ const PostView = ({
                   };
                 });
               }
-  
+
             }
             else {
               subsection.style.border = 'none';
               subsection.title = ''
             }
           });
-  
-          // numeration compliance check
-          const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
-          const tablePattern = /^Tabla \d+:/;
-          const figurePattern = /^Figura \d+:/;
-          let tableIndex = 0;
-          let tableNumber = 0;
-          let figureIndex = 0;
-          let figureNumber = 0;
-          Array.from(divElements).map((divElement) => {
-            if (tablePattern.test(divElement.textContent)) {
-              tableIndex++;
-              tableNumber = divElement.textContent.split(':')[0].split(' ')[1];
-              if (tableIndex != tableNumber) {
-                divElement.style.border = 'solid 2.5px red';
-                divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
-                setNumerationCheckBadge(prevState => {
-                  return {
-                    ...prevState,
-                    'tables': revisa,
-                  };
-                });
-              }
-              else {
-                divElement.style.border = 'none';
-                divElement.title = '';
-              }
-            };
-            if (figurePattern.test(divElement.textContent)) {
-              figureIndex++;
-              figureNumber = divElement.textContent.split(':')[0].split(' ')[1];
-              if (figureIndex != figureNumber) {
-                divElement.style.border = 'solid 2.5px red';
-                divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
-                setNumerationCheckBadge(prevState => {
-                  return {
-                    ...prevState,
-                    'figures': revisa,
-                  };
-                });
-              }
-              else {
-                divElement.style.border = 'none';
-                divElement.title = '';
-              }
-            };
-          })
-          // Anxeos numeration check
-          Array.from(sectionTitleElements).forEach((sectionTitleElement) => {
-            if (sectionTitleElement.textContent.toLowerCase().trim() === "anexos") {
-              const h3Elements = sectionTitleElement.querySelectorAll('h3');
-  
-              Array.from(h3Elements).forEach((h3Element) => {
-                const textContent = h3Element.textContent.trim();
-  
-                if (anexosPattern.test(textContent)) {
-                  // Increment anexos index
-                  anexosIndex++;
-                  // Extract the number from the Anexo pattern and parse it
-                  const parsedNumber = parseInt(textContent.split(':')[0].split(' ')[1], 10);
-  
-                  if (anexosIndex !== parsedNumber) {
-                    // If numbers don't match, highlight the <h3> and set a warning badge
-                    h3Element.style.border = 'solid 2.5px red';
-                    h3Element.title = 'Revisa la numeración de esta sección';
-                    setNumerationCheckBadge(prevState => ({
-                      ...prevState,
-                      'anexos': 'revisa',
-                    }));
-                  } else {
-                    // If numbers match, reset border and tooltip
-                    h3Element.style.border = 'none';
-                    h3Element.title = '';
-                    // Uncomment this if you want to clear the error badge when everything's correct
-                    // setNumerationCheckBadge(prevState => ({
-                    //     ...prevState,
-                    //     'anexos': 'check',
-                    // }));
-                  }
-                } else {
-                  // If pattern doesn't match, highlight the <h3> and set a warning badge
-                  h3Element.style.border = 'solid 2.5px red';
-                  h3Element.title = 'Los títulos de los anexos deben empezar con el texto: Anexo #: ';
-                  setNumerationCheckBadge(prevState => ({
-                    ...prevState,
-                    'anexos': 'revisa',
-                  }));
-                }
-              });
-            }
-          });
-  
-          // Figure and Table Note check
-          // Figure check
-          const notePattern = /^Fuente:/;
-          const figureElements = iframe.contentWindow.document.body.getElementsByTagName('figure');
-          Array.from(figureElements).forEach((figure) => {
-            const hasNote = figure.parentNode.nextElementSibling.style.cssText.includes('0.9rem');
-            if (!hasNote) {
-              figure.style.border = 'solid 2.5px red';
-              figure.title = 'Esta Figura requiere una nota inferior empezando por el texto: "Fuente:"';
-              setNoteCheckBadge(prevState => ({
-                ...prevState,
-                'figures': revisa,
-              }));
-            }
-            else {
-              figure.style.border = 'none';
-              figure.title = '';
-              const noteElement = figure.parentNode.nextElementSibling;
-              // check if note element start with Fuente:
-              if (notePattern.test(noteElement.textContent)) {
-                noteElement.style.border = 'none';
-                noteElement.title = '';
-              }
-              else {
-                setNoteCheckBadge(prevState => ({
-                  ...prevState,
-                  'figures': revisa,
-                }));
-                noteElement.style.border = 'solid 2.5px red';
-                noteElement.title = 'Esta nota debe empezar con el texto: “Fuente: “';
-              }
-            }
-          })
-          // table note check
-          const tableElements = iframe.contentWindow.document.body.getElementsByTagName('table');
-          Array.from(tableElements).forEach((table) => {
-            const hasNote = table.nextElementSibling.style.cssText.includes('0.9rem');
-            if (!hasNote) {
-              table.style.border = 'solid 2.5px red';
-              table.title = 'Esta Tabla requiere una nota inferior empezando por el texto: "Fuente:"';
-              setNoteCheckBadge(prevState => ({
-                ...prevState,
-                'tables': revisa,
-              }));
-            }
-            else {
-              table.style.border = 'none';
-              table.title = '';
-              const noteElement = table.nextElementSibling;
-              // check if note element start with Fuente:
-              if (notePattern.test(noteElement.textContent)) {
-                noteElement.style.border = 'none';
-                noteElement.title = '';
-              }
-              else {
-                setNoteCheckBadge(prevState => ({
-                  ...prevState,
-                  'tables': revisa,
-                }));
-                noteElement.style.border = 'solid 2.5px red';
-                noteElement.title = 'Esta nota debe empezar con el texto: “Fuente: “';
-              }
-            }
-          })
-  
-        } catch (error) {
-          console.error("Error accessing iframe content:", error);
-        }
-      }
-    };
-    if (iframe.contentWindow.document.body.textContent && standardTitles) {
-      // get section titles after some changes
-      try {
-        setIsAnexos(false);
-        setSectionCheckBadge(baseSectionCheckBadge);
-        setNumerationCheckBadge(baseNumerationCheckBadge);
-        setNoteCheckBadge(baseNoteCheckBadge);
-        const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
-        Array.from(sectionTitleElements).forEach((sectionElement, index) => {
-          const title = sectionElement.textContent.toLowerCase().trim();
-          if (title == 'anexos') {
-            setIsAnexos(true);
-          }
-          if (standardTitles.includes(title)) {
-            // section order check
-            // scientific paper check
-            if (post.type == 'Art. Científico') {
-              if (sectionElement.textContent.toLowerCase().trim() == standardTitles[index]) {
-                sectionElement.style.border = 'none';
-                sectionElement.title = '';
-                setSectionCheckBadge(prevState => {
-                  const updatedState = [...prevState[post?.type]];
-                  updatedState[index] = check;
-                  return {
-                    ...prevState,
-                    [post.type]: updatedState,
-                  };
-                })
-              }
-              else {
-                // if the title belong to standard titles but the position doesn't equal to origin postion. In this case, first find the index in standard title and then set state to 'order'
-                setSectionCheckBadge(prevState => {
-                  const updatedState = [...prevState[post.type]];
-                  updatedState[index] = pendiente;
-                  updatedState[standardTitles.indexOf(title)] = order;
-                  return {
-                    ...prevState,
-                    [post.type]: updatedState,
-                  };
-                });
-                sectionElement.style.border = '2.5px solid red';
-                sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional) Ajusta su posición para continuar';
-              }
-            }
-          }
-          else {
-            setSectionCheckBadge(prevState => {
-              const updatedState = [...prevState[post.type]];
-              if (updatedState[index] != order && index < sectionCheckBadge[post.type].length) {
-                // updatedState[index] = pendiente;
-              };
-              return {
-                ...prevState,
-                [post.type]: updatedState,
-              };
-            })
-            // un-neccessary section title check in scientific paper
-            if (post.type == 'Art. Científico') {
-              sectionElement.style.border = '2.5px solid red';
-              sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional)';
-            }
-          }
-        });
-        // anxios optional section check
-        Array.from(sectionTitleElements).forEach((sectionElement, index) => {
-          const title = sectionElement.textContent.toLowerCase().trim();
-          if (gratidudeSections.includes(title)) {
-            setIsAnexos(true);
-            sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe debe estar en la sección final de Anexos.\n1. Mueve esta sección al área correspondiente, debajo de la Bibliografía. \n2. Declara el título correspondiente de Anexos arriba de esta sección con formato "Título 1".\n3. Cambia el título de esta sección a "Anexo 1: Reconocimiento"  y cambia su formato a "Título 2".';
-            // If anxios exist, set badge to 'order'
-            setSectionCheckBadge(prevState => {
-              const updatedState = [...prevState[post.type]];
-              if (Array.from(sectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
-                updatedState[6] = order;
-              };
-              return {
-                ...prevState,
-                [post.type]: updatedState,
-              };
-            });
-          }
-          // people may include graphs and images or tables below the bibliography, so these are anexus, but do not include the correspondent "Anexos" title, so the anexus section is not declare, this is another "Pendiente" bridge on anexos.
-          if (title == 'bibliografía') {
-            const bibliographySection = Array.from(sectionTitleElements)[index]?.parentNode;
-            if (bibliographySection.querySelector('img') || bibliographySection.querySelector('table')) {
-              setIsAnexos(true);
-              bibliographySection.style.border = '2.5px solid red';
-              bibliographySection.title = 'Hay elementos no reconocidos en la bibliografía, elimínalos o revisa si debes agregar una sección de anexos al final';
-              setSectionCheckBadge(prevState => {
-                const updatedState = [...prevState[post.type]];
-                if (Array.from(sectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
-                  updatedState[5] = order;
-                  updatedState[6] = order;
-                }
-                else {
-                  updatedState[5] = order;
-                  updatedState[6] = pendiente;
-                }
-                return {
-                  ...prevState,
-                  [post.type]: updatedState,
-                };
-              });
-            }
-            else {
-              const bibliographySection = Array.from(sectionTitleElements)[index]?.parentNode;
-              bibliographySection.style.border = 'none';
-              bibliographySection.title = '';
-            }
-          }
-          else {
-            const tempSection = Array.from(sectionTitleElements)[index]?.parentNode;
-            tempSection.style.border = 'none';
-            tempSection.title = '';
-          }
-        });
-        // if anexos section isn't detected, set the value to null
-        if (!isAnexos && post.type) {
-          setSectionCheckBadge(prevState => {
-            const updatedState = [...prevState[post.type]];
-            updatedState[sectionCheckBadge[post?.type].length - 1] = null;
-            return {
-              ...prevState,
-              [post.type]: updatedState,
-            };
-          });
-          // essay paper section check
-          if (post.type == 'Ensayo') {
-            Array.from(sectionTitleElements).some((title, index) => {
-              if (title.textContent.toLowerCase().trim() == 'conclusiones') {
-                if (index == sectionTitleElements.length - 2) {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = 'none';
-                    title.title = '';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-              // essay paper bibliografia section check
-              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                if (index == sectionTitleElements.length - 1) {
-                  title.style.border = 'none';
-                  title.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[1] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[1] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-            })
-          }
-          if (post.type == 'Doc. Académico') {
-            Array.from(sectionTitleElements).some((title, index) => {
-              // essay paper bibliografia section check
-              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                if (index == sectionTitleElements.length - 1) {
-                  title.style.border = 'none';
-                  title.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-            })
-          }
-        }
-        // If anexos exist
-        if (isAnexos) {
-          if (post.type == 'Ensayo') {
-            Array.from(sectionTitleElements).some((title, index) => {
-              if (title.textContent.toLowerCase().trim() == 'conclusiones') {
-                if (index == sectionTitleElements.length - 3) {
-                  title.style.border = 'none';
-                  title.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-              // essay paper bibliografia section check
-              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                if (index == sectionTitleElements.length - 2) {
-                  title.style.border = 'none';
-                  title.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[1] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[1] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-              if (title.textContent.toLowerCase().trim() == 'anexos') {
-                if (index == sectionTitleElements.length - 1) {
-                  title.style.border = 'none';
-                  title.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[2] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Conclusiones, Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[2] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-            })
-          }
-          if (post.type == 'Doc. Académico') {
-            Array.from(sectionTitleElements).some((title, index) => {
-              // essay paper bibliografia section check
-              if (title.textContent.toLowerCase().trim() == 'bibliografía') {
-                if (index == sectionTitleElements.length - 2) {
-                  title.style.border = 'none';
-                  title.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[0] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-              if (title.textContent.toLowerCase().trim() == 'anexos') {
-                if (index == sectionTitleElements.length - 1) {
-                  title.style.border = 'none';
-                  title.title = '';
-                  setSectionCheckBadge(prevState => {
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[1] = check;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-                else {
-                  setSectionCheckBadge(prevState => {
-                    title.style.border = '2.5px solid red';
-                    title.title = 'Esta sección no corresponde al orden requerido para las secciones finales: Bibliografía, y Anexos (opcional). Ajusta su posición para continuar';
-                    const updatedState = [...prevState[post.type]];
-                    updatedState[1] = order;
-                    return {
-                      ...prevState,
-                      [post.type]: updatedState,
-                    };
-                  });
-                }
-              }
-            })
-          }
-        }
-
-        // methodology subsection check
-        const methodologySubsections = ["dato", "información", "fuente", "teórico", "teoría", "concept", "descrip", "analisis", "metodolog"]
-        const subsectionElements = iframe.contentWindow.document.body.getElementsByTagName('h3')
-        Array.from(subsectionElements).forEach((subsection) => {
-          // if subsection is methodology subsection
-          if (methodologySubsections.includes(subsection.textContent.toLowerCase().trim())) {
-            const sectionTitleOfSubsection = subsection.parentNode.querySelector('h2')?.textContent.toLowerCase().trim();
-            if (sectionTitleOfSubsection == 'resumen' || sectionTitleOfSubsection == 'introducción') {
-              subsection.style.border = 'solid 2.5px red';
-              subsection.title = 'Toda información sobre datos y temas metodológicos deben estar en la sección Metodología. Mueve estas secciones al área correspondiente, o declara la Metodología arriba de esta sección para continuar';
-              setSectionCheckBadge(prevState => {
-                const updatedState = [...prevState[post.type]];
-                updatedState[2] = order;
-                return {
-                  ...prevState,
-                  [post.type]: updatedState,
-                };
-              });
-            }
-
-          }
-          else {
-            subsection.style.border = 'none';
-            subsection.title = ''
-          }
-        });
+        };
 
         // numeration compliance check
-        const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
         const tablePattern = /^Tabla \d+:/;
         const figurePattern = /^Figura \d+:/;
         let tableIndex = 0;
@@ -1198,8 +754,30 @@ const PostView = ({
       } catch (error) {
         console.error("Error accessing iframe content:", error);
       }
-    }
-  }, [complianceView, changedContent]);
+    };
+  }, [complianceView, changedContent, editorContent, editView, showPreview]);
+
+  useEffect(() => {
+    // Check the document if pass the all requirements
+    const formPass = Boolean(post.course && post.coverimage && post.description && post.tags && post.agreedterms);
+
+    const type = post.type;
+    const sectionPass = !Boolean(sectionCheckBadge[type]?.filter((item) => {
+      return item?.props.children == "Pendiente";
+    }).length);
+    const documentPass = Boolean((titleLengthCheckBadge != 'Revisar') && (wordCheckBadge != 'Revisar') && (coherenceCheckBadge != 'Revisar') && type && sectionPass);
+
+    const numericPass = !Boolean(Object.values(numerationCheckBadge).filter((item) => {
+      return item?.props.children == "Revisar"
+    }).length);
+
+    const notePass = !Boolean(Object.values(noteCheckBadge).filter((item) => {
+      return item?.props.children == "Revisar"
+    }).length);
+
+    setAllPass(Boolean(formPass && documentPass && numericPass && notePass))
+
+  }, [post, titleLengthCheckBadge, sectionCheckBadge, numerationCheckBadge, noteCheckBadge])
 
 
 
@@ -1289,15 +867,23 @@ const PostView = ({
         )}
         {complianceView && (
           <aside className="col-span-4 flex flex-col pl-5">
-            <Compliace form={post} sectionTitles={sectionTitles} sections={sections} sectionCheckBadge={sectionCheckBadge} numerationCheckBadge={numerationCheckBadge} noteCheckBadge={noteCheckBadge} check={check} />
+            <Compliace
+              form={post}
+              sectionTitles={sectionTitles}
+              sections={sections}
+              sectionCheckBadge={sectionCheckBadge}
+              numerationCheckBadge={numerationCheckBadge}
+              noteCheckBadge={noteCheckBadge}
+              check={check}
+              coherenceCheckBadge={coherenceCheckBadge}
+              titleLengthCheckBadge={titleLengthCheckBadge}
+              wordCheckBadge={wordCheckBadge}
+            />
           </aside>
         )}
       </div>
-      <div className="p-2 mt-2 w-[100%] inline-block text-center">
-        <span className="font-semibold text-[1.2rem] text-red-600">
-          Límites de publicación
-        </span>
-        <span className="ps-2">(Incorrección política, Falta de coherencia, Exceder el nivel aceptable de contenido generado por IA, Longitud del título)</span>
+      <div className="p-2 mt-2 w-[100%] inline-block text-center font-semibold text-red-400">
+        Por seguridad, antes de publicar, se revisará nuevamente la coherencia del documento completo.
       </div>
     </article>
   );
