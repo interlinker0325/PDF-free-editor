@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import axios from "axios";
 import useUser from "utils/useUser";
 import withSession from "utils/withSession";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import {
   createEntry,
   updateEntry,
@@ -55,6 +56,10 @@ const NewPost = ({ setIsSaved, ...props }) => {
 
   // set post form view PostForm : PostView
   const [formView, setFormView] = useState(true)
+
+  // Dialog setting
+  const [open, setOpen] = useState(false);
+  
   const clearSubmitForm = () => {
     setFormState(formBaseState);
   };
@@ -212,6 +217,7 @@ const NewPost = ({ setIsSaved, ...props }) => {
   );
 
   const requestApproval = useCallback(async () => {
+    setOpen(false);
     triggerLoading(true);
     await publishEntry(formState.id);
     setStatusBarState({
@@ -220,6 +226,16 @@ const NewPost = ({ setIsSaved, ...props }) => {
         "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
     });
     triggerLoading(false);
+    enqueueSnackbar(
+      'Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto',
+      {
+        variant: 'success',
+        preventDuplicate: true,
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center'
+        }
+      });
   }, [formState]);
 
 
@@ -315,7 +331,6 @@ const NewPost = ({ setIsSaved, ...props }) => {
     const isContent = Boolean(iframe.contentWindow.document.body.innerText.trim());
     const isTitle = Boolean(formState.title.trim())
 
-    console.log('sdf', allPass)
     if (isContent && isTitle) {
       saveDocument();
     }
@@ -331,6 +346,11 @@ const NewPost = ({ setIsSaved, ...props }) => {
         });
     }
   };
+
+  const handlePublication = () => {
+    setOpen(true);
+  };
+
   return (
     <Main>
       <SnackbarProvider maxSnack={3}>
@@ -412,6 +432,11 @@ const NewPost = ({ setIsSaved, ...props }) => {
                 onClick={handleSave}
                 children="Guardar"
               />
+              {allPass && (<a
+                className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
+                onClick={handlePublication}
+                children="Publicar"
+              />)}
             </div>
           </div>
         </TopBar>
@@ -421,7 +446,6 @@ const NewPost = ({ setIsSaved, ...props }) => {
           doSubmit={doSubmit}
           clearForm={clearSubmitForm}
           onChange={onChange}
-          requestApproval={requestApproval}
           formHasChanged={formHasChanged}
           user={user}
           setAgreedterms={setAgreedterms}
@@ -443,6 +467,27 @@ const NewPost = ({ setIsSaved, ...props }) => {
           {...props}
         />
         <Loader show={showLoadingScreen} />
+        <Dialog
+                open={open}
+                onClose={() => {setOpen(false);}}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">Confirmación</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                    Una vez enviado a publicación, no podrás modificarlo, pero una vez aprobado, podrás solicitar modificaciones vía correo electrónico a info@adlyceum.com. Deseas continuar?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {setOpen(false);}} color="primary">
+                        No
+                    </Button>
+                    <Button onClick={requestApproval} color="primary" autoFocus>
+                        Si
+                    </Button>
+                </DialogActions>
+            </Dialog>
       </SnackbarProvider>
     </Main>
   );
