@@ -4,16 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons';
 import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { log } from "../../utils/logs";
 
 const PostForm = ({
     form,
     courses,
-    clearForm,
     onChange,
     doSubmit,
-    requestApproval,
-    formHasChanged,
     user,
     setAgreedterms,
     setCoAuthors,
@@ -197,35 +193,6 @@ const PostForm = ({
                                 </div>
                             </span>
                         </label>
-                    </div>
-                </section>
-                <section className='row-auto items-center flex flex-row w-full justify-between'>
-                    <div className='form-control flex flex-row gap-4'>
-                        <button
-                            type='submit'
-                            disabled={(
-                                formHasChanged &&
-                                form.agreedterms &&
-                                form.title &&
-                                form.monograph &&
-                                form.coverimage &&
-                                form.description &&
-                                form.tags
-                            ) ? '' : 'disabled'}
-                            className={styles.button}>
-                            Guardar
-                        </button>
-                        <button
-                            type='button'
-                            onClick={clearForm}
-                            className={styles.button}>
-                            Cancelar
-                        </button>
-                        <button
-                            type='button'
-                            onClick={requestApproval}
-                            disabled={(formHasChanged && form.id) ? '' : 'disabled'}
-                            className={styles.button}>Solicitar Aprobación</button>
                     </div>
                 </section>
             </form>
