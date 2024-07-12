@@ -58,7 +58,7 @@ function MyApp({ Component, pageProps }) {
             <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>
                 {!Component.hideNav ?
                     <Header items={navItems} isSaved={isSaved} setIsSaved={setIsSaved} /> : null}
-                <Component {...pageProps} setIsSaved={setIsSaved} />
+                <Component {...pageProps} isSaved={isSaved} setIsSaved={setIsSaved} />
                 {!Component.hideFooter ?
                     <Footer /> : null}
             </div>

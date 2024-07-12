@@ -19,7 +19,7 @@ const IFrame = ({
     if (clickedElement.tagName === 'TD' || clickedElement.tagName === 'TH') {
       clickedElement = clickedElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG'];
+    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id) || clickedElement.tagName.includes('MJX')) {
       // Do nothing for these elements
@@ -32,7 +32,7 @@ const IFrame = ({
 
       if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
         const iframeDoc = iframe.contentWindow.document;
-        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section, mjx-container, math, mrow, msub, mi, mo, msqrt, mfrac, mn, svg');
+        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section, mjx-container, math, mrow, msub, mi, mo, msqrt, mfrac, mn, svg, sup');
 
         elements.forEach(element => {
           element.style.background = 'none';
@@ -49,7 +49,7 @@ const IFrame = ({
     if (hoveredElement.tagName === 'TD' || hoveredElement.tagName === 'TH') {
       hoveredElement = hoveredElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG'];
+    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id) || hoveredElement.tagName.includes('MJX')) {
     } else {
@@ -66,7 +66,7 @@ const IFrame = ({
     if (leftElement.tagName === 'TD' || leftElement.tagName === 'TH') {
       leftElement = leftElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG'];
+    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(leftElement.tagName) || ids.includes(leftElement.id) || leftElement.tagName.includes('MJX')) {
     } else {
@@ -172,6 +172,14 @@ const IFrame = ({
     if (window.MathJax) {
       window.MathJax.typeset();
     }
+    // automatic tooltip number
+    const iframe = document.getElementById("documentWindow");
+    const iframeDoc = iframe.contentWindow.document;
+    const tooltipElements = iframeDoc.querySelectorAll('sup');
+    Array.from(tooltipElements).forEach((element, index) => {
+      element.textContent = '[' + (index+1) + ']';
+    })
+
   }, [changedContent]);
 
   return (
