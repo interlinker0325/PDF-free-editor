@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import axios from "axios";
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
@@ -12,10 +13,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const [config, setConfig] = useState(null);
 
   const [improvedText, setImprovedText] = useState("");
-  const [loadingStatus, setLoadingStatus] = useState(false);
-
-  const [isChanged, setIsChanged] = useState(false)
-  const [checkPressed, setCheckPressed] = useState(false)
 
   const options = [
     'customParagraph', '|',
@@ -26,12 +23,12 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     'table',
     'link', '|',
     'undo', 'redo', '|',
-    'eraser', '|'
+    'eraser', '|',
+    'insertTooltip'
   ];
 
   useEffect(() => {
     setIsBrowser(true);
-    setIsChanged(false);
     import('jodit-react').then((module) => {
 
       //add tooltip icon
@@ -84,24 +81,15 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           disablePlugins: ['paste'],
           // custom buttons
           extraButtons: [
-            // add insert tooltip button
-            {
-              name: 'insertTooltip',
-              tooltip: 'Insert Tooltip',
-              icon: 'tooltip',
-              exec: () => {
-                alert('Hello from insert tooltip')
-              }
-            },
             // add new div blank block bellow selected one
             {
               name: 'addNewBlock',
               tooltip: 'Add New Block',
               icon: 'plus',
               exec: () => {
+                const newDiv = document.createElement('div');
+                newDiv.innerText = 'Nuevo párrafo';
                 if (editorContent && editorContent.parentNode) {
-                  const newDiv = document.createElement('div');
-                  newDiv.innerText = 'new paragraph';
                   const nextElement = editorContent.nextSibling;
                   if (nextElement) {
                     editorContent.parentNode.insertBefore(newDiv, nextElement);
@@ -115,7 +103,136 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                     'cancelable': false
                   });
                   newDiv.dispatchEvent(clickEvent);
-                }
+                };
+                const iframe = document.getElementById("documentWindow");
+                const iframeDoc = iframe.contentWindow.document;
+                const body = iframeDoc.getElementsByTagName('body');
+                if (!body.textContent) {
+                  const style = document.createElement('style');
+                  const cssRules = `
+                    body {
+                      padding: 0;
+                      margin: 0;
+                      color: #606c71;
+                      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                    }
+
+                    #container-ruller {
+                        width: 100vw;
+                        height: 48px;
+                        background-image: linear-gradient(120deg, rgb(21, 87, 153), rgb(21, 153, 87)) !important;
+                    }
+
+                    #preview-content {
+                        margin: 0 auto;
+                        padding: 2rem 4rem;
+                        max-width: 70rem;
+                    }
+
+                    h2 {
+                        color: rgb(21, 153, 87);
+                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                        font-size: 1.5rem;
+                        font-weight: 400;
+                        margin: 0 0 16px 0
+                    }
+                    
+                    div {
+                        padding: 10px;
+                    }
+                    
+                    p {
+                        border: 0 !important;
+                        margin: 0 !important;
+                    }
+                    
+                    section div, span, 
+                    li {
+                        margin: 15.6px 0;
+                        color: rgb(96, 108, 113);
+                        font-size: 1.1rem;
+                        line-height: 26.4px;
+                        text-align: justify;
+                        font-weight: 200;
+                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                    }
+
+                    .math-block {
+                        display: flex;
+                        justify-content: center;
+                    }
+
+                    img {
+                        width: 80%;
+                        height: auto;
+                    }
+
+                    .Wirisformula {
+                        width: auto!important;
+                        height: auto;
+                        margin: auto;
+                    }
+
+                    table {
+                        display: table;
+                        border-color: gray;
+                        border-collapse: collapse;
+                        border-spacing: 0;
+                        word-break: keep-all;
+                        font-size: 0.8em;
+                    }
+
+                    tr {
+                        display: table-row;
+                    }
+
+                    th {
+                        display: table-cell;
+                        font-weight: 700;
+                        background-color: #159957 !important;
+                        color: white;
+                        padding: 0.5rem 1rem;
+                        border-bottom: 1px solid #e9ebec;
+                        text-align: left;
+                    }
+
+                    td {
+                        padding: .5rem 1rem;
+                        border-bottom: 1px solid #e9ebec;
+                        text-align: left;
+                    }
+
+                    tbody {
+                        display: table-row-group;
+                        vertical-align: middle;
+                        unicode-bidi: isolate;
+                        border-color: inherit;
+                    }
+                    table tr:nth-child(odd) {
+                        background-color: #f2f2f2;
+                    }
+                    a {
+                        color: #1e6bb8;
+                        text-decoration: none;
+                    }
+                    td svg {
+                        height: 0.8rem;
+                    }
+
+                    blockquote {
+                        border-left: 5px solid #ccc;
+                        margin-bottom: 1em;
+                        margin-left: 20px;
+                        margin-right: 0;
+                        padding-left: 1.5em;
+                        padding-right: 1.5em;
+                    }
+                  `
+                  style.appendChild(document.createTextNode(cssRules));
+                  iframeDoc.head.appendChild(style);
+                  body[0].appendChild(newDiv);
+                };
+
               }
             },
             {
@@ -238,7 +355,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                         },
                       })
                       .then(function (response) {
-                        setLoadingStatus(false);
                         setImprovedText(response["data"].improvedText);
                       })
                       .catch(function (error) {
@@ -271,11 +387,9 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             {
               name: 'insertCheck',
               tooltip: 'Apply Changes',
-              icon: 'ok',
+              icon: 'greenCheck',
               exec: (editor) => {
                 setChangedContent(editor.value);
-                setIsChanged(false);
-                setCheckPressed(true);
               }
             },
 
@@ -393,31 +507,30 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
 
         }
       };
+      // Create insert tooltip button
+      module.Jodit.defaultOptions.controls.insertTooltip = {
+        tooltip: 'Insert Tooltip',
+        icon: 'tooltip',
+        popup: (editor, current, self, close) => {
+          const selectedText = window.getSelection()?.toString();
+          const form = editor.create.fromHTML(
+            `<form  class="bg-white m-0">
+                <input type="text" class="shadow appearance-none border rounded text-gray-700 focus:outline-none "/>
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded focus:outline-none focus:shadow-outline">Insert</button>
+            </form>`
+          );
+          editor.e.on(form, 'submit', (e) => {
+            e.preventDefault();
+            const tooltipText = form.querySelector('input').value;
+            var tooltipHTML = selectedText + '<sup class="custom-tooltip" style="color: #00ccff" title="' + tooltipText + '">[auto]</span>';
+            editor.s.insertHTML(tooltipHTML);
+          });
+
+          return form;
+        }
+      }
     })
   }, [editorContent]);
-
-  // Dynamic change the insertCheck button icon
-  useEffect(() => {
-    if (checkPressed == true) {
-      const updatedConfig = { ...config };
-      updatedConfig.extraButtons[13].icon = 'ok';
-      setConfig(updatedConfig);
-      setCheckPressed(false);
-    }
-  }, [checkPressed]);
-  
-  useEffect(() => {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = model;
-    const modelContent = tempDiv.textContent;
-
-    if (modelContent != editorContent?.textContent && isBrowser && editorContent && !isChanged) {
-      const updatedConfig = { ...config };
-      updatedConfig.extraButtons[13].icon = 'greenCheck';
-      setConfig(updatedConfig);
-      setIsChanged(true);
-    }
-  }, [model])
 
   useEffect(() => {
     setModel(editorContent ? editorContent.outerHTML : '');

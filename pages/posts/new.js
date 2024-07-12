@@ -41,7 +41,7 @@ const formBaseState = {
   type: "",
 };
 
-const NewPost = ({ setIsSaved, ...props }) => {
+const NewPost = ({ isSaved, setIsSaved, ...props }) => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const { user } = useUser({ redirectTo: "/" });
   const [showPreview, setShowPreview] = useState(false);
@@ -219,6 +219,9 @@ const NewPost = ({ setIsSaved, ...props }) => {
   const requestApproval = useCallback(async () => {
     setOpen(false);
     triggerLoading(true);
+    if (!isSaved) {
+      await saveDocument();
+    }
     await publishEntry(formState.id);
     setStatusBarState({
       error: null,
