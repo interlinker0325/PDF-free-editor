@@ -87,6 +87,9 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               tooltip: 'Add New Block',
               icon: 'plus',
               exec: () => {
+                const iframe = document.getElementById("documentWindow");
+                const iframeDoc = iframe.contentWindow.document;
+                const body = iframeDoc.getElementsByTagName('body');
                 const newDiv = document.createElement('div');
                 newDiv.innerText = 'Nuevo párrafo';
                 if (editorContent && editorContent.parentNode) {
@@ -104,10 +107,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                   });
                   newDiv.dispatchEvent(clickEvent);
                 };
-                const iframe = document.getElementById("documentWindow");
-                const iframeDoc = iframe.contentWindow.document;
-                const body = iframeDoc.getElementsByTagName('body');
-                if (!body.textContent) {
+                if (!body[0].textContent) {
                   const style = document.createElement('style');
                   const cssRules = `
                     body {
@@ -254,7 +254,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
 
                   // Create a new div element
                   const newDiv = document.createElement('div');
-                  newDiv.innerText = 'new paragraph';
+                  newDiv.innerText = 'Nuevo párrafo';
 
                   subcontainer1.appendChild(clonedEditorContent);
                   subcontainer2.appendChild(newDiv);
