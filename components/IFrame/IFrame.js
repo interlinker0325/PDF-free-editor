@@ -32,7 +32,7 @@ const IFrame = ({
 
       if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
         const iframeDoc = iframe.contentWindow.document;
-        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section, mjx-container, math, mrow, msub, mi, mo, msqrt, mfrac, mn, svg, sup');
+        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section, mjx-container, math, mrow, msub, mi, mo, msqrt, mfrac, mn, svg, sup, strong');
 
         elements.forEach(element => {
           element.style.background = 'none';

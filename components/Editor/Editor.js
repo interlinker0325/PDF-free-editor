@@ -55,7 +55,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           sizeMD: 700,
           sizeSM: 400,
           language: 'es',
-          colors: ['#159957', '#52b788', '#f2f2f2', '#fcf9e7', '#fff', '#000'],
+          colors: ['#159957', '#7DC9A5', '#f2f2f2', '#fcf9e7', '#fff', '#000'],
           uploader: {
             insertImageAsBase64URI: true,
             imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
@@ -77,7 +77,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             imagesExtensions: ['jpg', 'png', 'jpeg', 'gif'],
             url: null
           },
-          disablePlugins: ['paste'],
+          disablePlugins: ['paste', 'imageProperties'],
           // custom buttons
           extraButtons: [
             // add new div blank block bellow selected one
@@ -406,9 +406,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                 setChangedContent(editor.value);
               }
             },
-
-
-
           ],
         }
       );
@@ -459,6 +456,43 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
         ]);
         setConfig(updatedConfig);
       }
+
+      // // If selected block is Footnote, add block size increase and decrease button
+      const calssList = Array.from(editorContent.classList);
+      if (calssList.includes('footnote')) {
+        const updatedConfig = { ...config };
+        updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
+          {
+            name: 'block_increase',
+            tooltip: 'Aumentar',
+            icon: 'angle-up',
+            exec: () => {
+              const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
+              if (padding && padding > 5) {
+                editorContent.style.setProperty('padding', `10px ${padding - 5}px`, 'important');
+              }
+              else {
+                editorContent.style.setProperty('padding', `10px 5px`, 'important');
+              };
+            }
+          },
+          {
+            name: 'block_decrease',
+            tooltip: 'Reducir',
+            icon: 'angle-down',
+            exec: () => {
+              const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
+              if (padding && padding < 200) {
+                editorContent.style.setProperty('padding', `10px ${padding + 5}px`, 'important');
+              }
+              else {
+                editorContent.style.setProperty('padding', `10px 15px`, 'important');
+              };
+            }
+          },
+        ]);
+        setConfig(updatedConfig);
+      };
 
 
       // add custom button by Jodit method
@@ -513,7 +547,8 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           }
           else if (value == 'Nota de Tabla/Figura') {
             const tempElement = document.createElement('div');
-            tempElement.style.cssText = 'font-size: 0.9rem; text-align: center'
+            tempElement.style.cssText = 'font-size: 0.9rem; text-align: justify;'
+            tempElement.classList.add('footnote');
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
