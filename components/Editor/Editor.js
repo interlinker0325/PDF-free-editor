@@ -300,10 +300,18 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               icon: 'arrowup',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
-                  const previousElement = editorContent.previousElementSibling;
-                  if (previousElement) {
-                    editorContent.parentNode.insertBefore(editorContent, previousElement);
-                  } else {
+                  try {
+                    const previousElement = editorContent.previousElementSibling;
+                    console.log(previousElement)
+                    if (previousElement) {
+                      editorContent.parentNode.insertBefore(editorContent, previousElement);
+                    } else {
+                      const previousSection = editorContent.parentNode.previousElementSibling;
+                      const divElements = Array.from(previousSection.getElementsByTagName('div'));
+                      const lastDivOfPreviousSection = divElements[divElements.length - 1]
+                      previousSection.insertBefore(editorContent, lastDivOfPreviousSection);
+                    }
+                  } catch {
                     alert('can not move')
                   }
                 }
@@ -316,11 +324,18 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               icon: 'arrowdown',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
-                  const nextElement = editorContent.nextElementSibling;
-                  if (nextElement) {
-                    editorContent.parentNode.insertBefore(nextElement, editorContent);
-                  } else {
-                    alert('Cannot move down - there are no more elements below.')
+                  try {
+                    const nextElement = editorContent.nextElementSibling;
+                    if (nextElement) {
+                      editorContent.parentNode.insertBefore(nextElement, editorContent);
+                    } else {
+                      const nextSection = editorContent.parentNode.nextElementSibling
+                      const firstDivOfNextSection = Array.from(nextSection.getElementsByTagName('div'))[0]
+                      nextSection.insertBefore(editorContent, firstDivOfNextSection);
+                    }
+                  }
+                  catch {
+                    alert("Can't move");
                   }
                 }
               },
