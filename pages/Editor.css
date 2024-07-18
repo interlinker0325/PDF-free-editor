@@ -62,6 +62,10 @@
   background: #f2f9ff!important;
 }
 
+.jodit-ui-button_Border {
+  display: none!important;
+}
+
 /* Sprinkle */
 .sprinkle-container {
   position: relative;
