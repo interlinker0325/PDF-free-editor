@@ -476,7 +476,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           // change div tag to h2 tag
           if (value == 'Título 1') {
             const tempElement = document.createElement('h2');
-            tempElement.innerHTML = editorContent.innerHTML;
+            tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }

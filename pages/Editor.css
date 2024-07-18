@@ -58,6 +58,10 @@
   overflow: hidden;
 }
 
+.jodit-popup__content {
+  background: #f2f9ff!important;
+}
+
 /* Sprinkle */
 .sprinkle-container {
   position: relative;
