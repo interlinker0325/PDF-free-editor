@@ -873,9 +873,6 @@ const PostView = ({
           </aside>
         )}
       </div>
-      <div className="p-2 mt-2 w-[100%] inline-block text-center font-semibold text-red-400">
-        Por seguridad, antes de publicar, se revisará nuevamente la coherencia del documento completo.
-      </div>
     </article>
   );
 };

@@ -458,41 +458,43 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       }
 
       // // If selected block is Footnote, add block size increase and decrease button
-      const calssList = Array.from(editorContent.classList);
-      if (calssList.includes('footnote')) {
-        const updatedConfig = { ...config };
-        updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
-          {
-            name: 'block_increase',
-            tooltip: 'Aumentar',
-            icon: 'angle-up',
-            exec: () => {
-              const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
-              if (padding && padding > 5) {
-                editorContent.style.setProperty('padding', `10px ${padding - 5}px`, 'important');
+      if (editorContent?.classList) {
+        const calssList = Array.from(editorContent?.classList);
+        if (calssList.includes('footnote')) {
+          const updatedConfig = { ...config };
+          updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
+            {
+              name: 'block_increase',
+              tooltip: 'Aumentar',
+              icon: 'angle-up',
+              exec: () => {
+                const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
+                if (padding && padding > 5) {
+                  editorContent.style.setProperty('padding', `10px ${padding - 5}px`, 'important');
+                }
+                else {
+                  editorContent.style.setProperty('padding', `10px 5px`, 'important');
+                };
               }
-              else {
-                editorContent.style.setProperty('padding', `10px 5px`, 'important');
-              };
-            }
-          },
-          {
-            name: 'block_decrease',
-            tooltip: 'Reducir',
-            icon: 'angle-down',
-            exec: () => {
-              const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
-              if (padding && padding < 200) {
-                editorContent.style.setProperty('padding', `10px ${padding + 5}px`, 'important');
+            },
+            {
+              name: 'block_decrease',
+              tooltip: 'Reducir',
+              icon: 'angle-down',
+              exec: () => {
+                const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
+                if (padding && padding < 200) {
+                  editorContent.style.setProperty('padding', `10px ${padding + 5}px`, 'important');
+                }
+                else {
+                  editorContent.style.setProperty('padding', `10px 15px`, 'important');
+                };
               }
-              else {
-                editorContent.style.setProperty('padding', `10px 15px`, 'important');
-              };
-            }
-          },
-        ]);
-        setConfig(updatedConfig);
-      };
+            },
+          ]);
+          setConfig(updatedConfig);
+        };
+      }
 
 
       // add custom button by Jodit method
