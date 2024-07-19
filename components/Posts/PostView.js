@@ -596,39 +596,44 @@ const PostView = ({
         let figureIndex = 0;
         let figureNumber = 0;
         Array.from(divElements).map((divElement) => {
-          if (tablePattern.test(divElement.textContent)) {
-            tableIndex++;
-            tableNumber = divElement.textContent.split(':')[0].split(' ')[1];
-            if (tableIndex !== tableNumber) {
-              divElement.style.border = 'solid 2.5px red';
-              divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
-              setNumerationCheckBadge(prevState => {
-                return {
-                  ...prevState,
-                  'tables': revisa,
-                };
-              });
-            } else {
-              divElement.style.border = 'none';
-              divElement.title = '';
-            }
-          }
-          if (figurePattern.test(divElement.textContent)) {
-            figureIndex++;
-            figureNumber = divElement.textContent.split(':')[0].split(' ')[1];
-            if (figureIndex !== figureNumber) {
-              divElement.style.border = 'solid 2.5px red';
-              divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
-              setNumerationCheckBadge(prevState => {
-                return {
-                  ...prevState,
-                  'figures': revisa,
-                };
-              });
-            } else {
-              divElement.style.border = 'none';
-              divElement.title = '';
-            }
+          if (!divElement.querySelector('div')) {
+
+            if (tablePattern.test(divElement.textContent)) {
+              tableIndex++;
+              tableNumber = divElement.textContent.split(':')[0].split(' ')[1];
+              if (tableIndex != tableNumber) {
+                divElement.style.border = 'solid 2.5px red';
+                divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
+                setNumerationCheckBadge(prevState => {
+                  return {
+                    ...prevState,
+                    'tables': revisa,
+                  };
+                });
+              }
+              else {
+                divElement.style.border = 'none';
+                divElement.title = '';
+              }
+            };
+            if (figurePattern.test(divElement.textContent)) {
+              figureIndex++;
+              figureNumber = divElement.textContent.split(':')[0].split(' ')[1];
+              if (figureIndex != figureNumber) {
+                divElement.style.border = 'solid 2.5px red';
+                divElement.title = 'Revisa la numeración de esta sección, y adecúa sus referencias dentro del documento';
+                setNumerationCheckBadge(prevState => {
+                  return {
+                    ...prevState,
+                    'figures': revisa,
+                  };
+                });
+              }
+              else {
+                divElement.style.border = 'none';
+                divElement.title = '';
+              }
+            };
           }
         })
         let anexosIndex = 0;  // Initialized here
