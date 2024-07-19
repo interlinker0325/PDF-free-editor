@@ -113,7 +113,7 @@ const FroalaEditorComponent = dynamic(
       });
 
       FroalaEditor.RegisterCommand("tooltip", {
-        title: "Insert Tooltip",
+        title: "Insertar Nota",
         focus: false,
         undo: false,
         popup: true,
