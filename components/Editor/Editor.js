@@ -364,7 +364,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                     axios
                       .post(`${process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL}/sectionCheck`, null, {
                         params: {
-                          content: editor.value,
+                          content: String(editor.value),
                           title: section
                         },
                       })
@@ -372,7 +372,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                         setImprovedText(response["data"].improvedText);
                       })
                       .catch(function (error) {
-                        setImprovedText(error)
+                        setImprovedText(String(error))
                       });
                   };
                   sectionCheck();
@@ -414,6 +414,10 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       const img = editorContent?.querySelector('img');
       if (img) {
         const updatedConfig = { ...config };
+        console.log(updatedConfig.extraButtons.length);
+        if (updatedConfig.extraButtons.length == 15) {
+          updatedConfig.extraButtons.splice(-2, 2);
+        }
         updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
           {
             name: 'img_increase',
@@ -502,7 +506,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       module.Jodit.defaultOptions.controls.customParagraph = {
         tooltip: 'Select the type of the block',
         icon: 'paragraph',
-        list: ['Título 1', 'Título 2', 'Título 3', 'Cuerpo', 'Texto recuadro', 'Título de Tabla/Figura', 'Nota de Tabla/Figura'],
+        list: ['Título 1', 'Título 2', 'Título 3', 'Cuerpo', 'Texto recuadro', 'Título de Tabla/Figura', 'Nota de Tabla/Figura', 'Fórmula centrada'],
 
         childTemplate: (editor, key, value) =>
           `<span class="${key}">${editor.i18n(value)}</span>`,
@@ -555,12 +559,19 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
+          else if (value == 'Fórmula centrada') {
+            const tempElement = document.createElement('div');
+            tempElement.style.cssText = 'text-align: center;';
+            tempElement.innerHTML = editorContent.innerHTML;
+            editorContent.parentNode.replaceChild(tempElement, editorContent);
+            setEditorContent(tempElement);
+          }
 
         }
       };
       // Create insert tooltip button
       module.Jodit.defaultOptions.controls.insertTooltip = {
-        tooltip: 'Insert Tooltip',
+        tooltip: 'Insertar Nota',
         icon: 'tooltip',
         popup: (editor, current, self, close) => {
           const selectedText = window.getSelection()?.toString();
