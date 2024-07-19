@@ -167,7 +167,6 @@ const FroalaEditorComponent = dynamic(
           this.customPlugin.hidePopup();
         } else{
           // No text selected, you can handle this case as needed
-          console.log('Please select some text to add a tooltip.');
         }
       },
     });
@@ -196,7 +195,6 @@ const Editor = ({
 
   useEffect(() => {
     setModel(editorContent.innerHTML);
-    console.log(editorContent.innerHTML);
     setChangedContent(editorContent.innerHTML)
     try {
       const sectionTitleElement = editorContent.parentNode.getElementsByTagName("h2")[0];
@@ -204,7 +202,6 @@ const Editor = ({
         setSection(sectionTitleElement.textContent);
       }
     } catch (e) {
-      console.log("Please select correct section");
     }
   }, [editorContent]);
 

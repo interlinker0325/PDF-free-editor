@@ -155,7 +155,6 @@ const PostView = ({
             inAppropriateWords.forEach((word) => {
               const wordsArray = divElement.textContent.split(/\W+/);
               if (wordsArray.includes(word)) {
-                console.log(wordsArray);
                 word_flag = word;
               }
             });

@@ -276,7 +276,6 @@ const styles = {
 
 export const getServerSideProps = withSession(async function ({req}) {
     const currentUser = req.session.get('user');
-    console.log({currentUser})
     if (!currentUser) {
         return {props: {}};
     }

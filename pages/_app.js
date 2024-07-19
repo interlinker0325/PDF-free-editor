@@ -12,14 +12,12 @@ import "./Editor.css"
 
 function MyApp({ Component, pageProps }) {
     const [displayModal, setDisplayModal] = useState(false);
-    // check if document is saved
     const [isSaved, setIsSaved] = useState(true);
     const closeModal = () => setDisplayModal(false);
     const { mutateUser, user = {} } = useUser();
 
     const sessionText = `${user.isLoggedIn ? 'Cerrar' : 'Iniciar'} sesión`;
     const doLogout = async () => {
-        console.log('hahaha');
         mutateUser(
             await fetchJson('/api/logout', { method: 'POST' }),
             false,

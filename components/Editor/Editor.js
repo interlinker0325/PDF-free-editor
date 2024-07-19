@@ -302,7 +302,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                 if (editorContent && editorContent.parentNode) {
                   try {
                     const previousElement = editorContent.previousElementSibling;
-                    console.log(previousElement)
                     if (previousElement) {
                       editorContent.parentNode.insertBefore(editorContent, previousElement);
                     } else {
@@ -415,7 +414,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       const img = editorContent?.querySelector('img');
       if (img) {
         const updatedConfig = { ...config };
-        console.log(updatedConfig.extraButtons.length);
         if (updatedConfig.extraButtons.length == 15) {
           updatedConfig.extraButtons.splice(-2, 2);
         }

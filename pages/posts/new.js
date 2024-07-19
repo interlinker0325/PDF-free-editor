@@ -177,7 +177,6 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
                   }
                 );
                 setLogicCheck(check_result.data)
-                console.log('hahaha-->', check_result.data);
                 const htmlFile = new File([response.data], `${file_name}.html`, {
                   type: "text/html",
                 });
