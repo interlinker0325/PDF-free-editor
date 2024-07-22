@@ -125,10 +125,11 @@ const PostView = ({
       setTitleLengthCheckBadge(check);
       title.style.border = 'none';
       title.title = '';
-    } else {
+    }
+    else {
       title.style.padding = '10px 20px'
       title.style.border = "solid red 2.5px";
-      title.title = "La longitud del título debe serpostApproved mayor que 10.";
+      title.title = "La longitud del título debe ser mayor que 100.";
       setTitleLengthCheckBadge('Revisar');
     }
     if (iframe.contentWindow.document.body.textContent) {
