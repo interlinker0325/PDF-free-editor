@@ -473,10 +473,10 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               exec: () => {
                 const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
                 if (padding && padding > 5) {
-                  editorContent.style.setProperty('padding', `10px ${padding - 5}px`, 'important');
+                  editorContent.style.setProperty('padding', `0px ${padding - 5}px`, 'important');
                 }
                 else {
-                  editorContent.style.setProperty('padding', `10px 5px`, 'important');
+                  editorContent.style.setProperty('padding', `0px 5px`, 'important');
                 };
               }
             },

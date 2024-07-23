@@ -113,7 +113,7 @@ const PostView = ({
     // Title length check
     const title = document.getElementById('title')
     const title_length = title.textContent.length;
-    if (title_length > 100) {
+    if (title_length >= 25 && title_length <= 160 ) {
       setTitleLengthCheckBadge(check);
       title.style.border = 'none';
       title.title = '';
@@ -121,7 +121,7 @@ const PostView = ({
     else {
       title.style.padding = '10px 20px'
       title.style.border = "solid red 2.5px";
-      title.title = "La longitud del título debe ser mayor que 100.";
+      title.title = "El título debe tener entre 25 y 160 caracteres";
       setTitleLengthCheckBadge('Revisar');
     }
     if (iframe.contentWindow.document.body.textContent) {
@@ -135,10 +135,7 @@ const PostView = ({
         const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
         const liElements = iframe.contentWindow.document.body.getElementsByTagName('li');
 
-
-
         // Inappropriate words and Logic check of divElements
-        // div element check
         Array.from(divElements).forEach((divElement) => {
           if (divElement.id !== 'preview-content' && divElement.id !== 'preview') {
             let logic_flag = false;
