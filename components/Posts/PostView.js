@@ -10,18 +10,18 @@ import ErrorBoundary from "components/Editor/ErrorBoundary";
 let options = {year: "numeric", month: "long", day: "numeric"};
 
 const PostView = ({
-                    user,
-                    post,
-                    courses,
-                    editMode = false,
-                    previewIframe,
-                    editView,
-                    showPreview,
-                    complianceView,
-                    setIsSaved,
-                    logicCheck,
-                    setAllPass,
-                  }) => {
+  user,
+  post,
+  courses,
+  editMode = false,
+  previewIframe,
+  editView,
+  showPreview,
+  complianceView,
+  setIsSaved,
+  logicCheck,
+  setAllPass,
+}) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
   const [editorContent, setEditorContent] = useState("Select the tag");
   // once the editorContent(HTML object of the Iframe) is changed, changedContent is set as its html string
@@ -45,8 +45,7 @@ const PostView = ({
   const check = (
     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 48 48">
       <path fill="#2775db" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path>
-      <path fill="#fff"
-            d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
+      <path fill="#fff" d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
     </svg>
   );
 
@@ -121,7 +120,7 @@ const PostView = ({
     // Title length check
     const title = document.getElementById('title')
     const title_length = title.textContent.length;
-    if (title_length >= 25 && title_length <= 160 ) {
+    if (title_length >= 25 && title_length <= 160) {
       setTitleLengthCheckBadge(check);
       title.style.border = 'none';
       title.title = '';
@@ -140,6 +139,7 @@ const PostView = ({
         setNumerationCheckBadge(baseNumerationCheckBadge);
         setNoteCheckBadge(baseNoteCheckBadge);
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
+        const subSectionTitleElements = iframe.contentWindow.document.body.querySelectorAll("h2, h3, h4");
         const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
         const liElements = iframe.contentWindow.document.body.getElementsByTagName('li');
 
@@ -274,15 +274,16 @@ const PostView = ({
         });
         if (post.post_type) {
           // anxios optional section check
-          Array.from(sectionTitleElements).forEach((sectionElement, index) => {
+          Array.from(subSectionTitleElements).forEach((sectionElement) => {
             const title = sectionElement.textContent.toLowerCase().trim();
             if (gratidudeSections.includes(title)) {
               setIsAnexos(true);
+              sectionElement.style.border = '2.5px solid red';
               sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe debe estar en la sección final de Anexos.\n1. Mueve esta sección al área correspondiente, debajo de la Bibliografía. \n2. Declara el título correspondiente de Anexos arriba de esta sección con formato "Título 1".\n3. Cambia el título de esta sección a "Anexo 1: Reconocimiento"  y cambia su formato a "Título 2".';
               // If anxios exist, set badge to 'order'
               setSectionCheckBadge(prevState => {
                 const updatedState = [...prevState[post.post_type]];
-                if (Array.from(sectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
+                if (Array.from(subSectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
                   updatedState[6] = order;
                 }
                 return {
@@ -291,6 +292,13 @@ const PostView = ({
                 };
               });
             }
+            else {
+              sectionElement.style.border = 'none';
+              sectionElement.title = '';
+            }
+          });
+          Array.from(sectionTitleElements).forEach((sectionElement, index) => {
+            const title = sectionElement.textContent.toLowerCase().trim();
             // people may include graphs and images or tables below the bibliography, so these are anexus, but do not include the correspondent "Anexos" title, so the anexus section is not declare, this is another "Pendiente" bridge on anexos.
             if (title === 'bibliografía') {
               const bibliographySection = Array.from(sectionTitleElements)[index]?.parentNode;
@@ -578,10 +586,9 @@ const PostView = ({
                   };
                 });
               }
-
-            } else {
+              else {
               subsection.style.border = 'none';
-              subsection.title = ''
+              subsection.title = ''}
             }
           });
         }
