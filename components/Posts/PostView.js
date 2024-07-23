@@ -113,7 +113,7 @@ const PostView = ({
     // Title length check
     const title = document.getElementById('title')
     const title_length = title.textContent.length;
-    if (title_length >= 25 && title_length <= 160 ) {
+    if (title_length >= 25 && title_length <= 160) {
       setTitleLengthCheckBadge(check);
       title.style.border = 'none';
       title.title = '';
@@ -132,6 +132,7 @@ const PostView = ({
         setNumerationCheckBadge(baseNumerationCheckBadge);
         setNoteCheckBadge(baseNoteCheckBadge);
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
+        const subSectionTitleElements = iframe.contentWindow.document.body.querySelectorAll("h2, h3, h4");
         const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
         const liElements = iframe.contentWindow.document.body.getElementsByTagName('li');
 
@@ -268,15 +269,16 @@ const PostView = ({
         });
         if (post.type) {
           // anxios optional section check
-          Array.from(sectionTitleElements).forEach((sectionElement, index) => {
+          Array.from(subSectionTitleElements).forEach((sectionElement) => {
             const title = sectionElement.textContent.toLowerCase().trim();
             if (gratidudeSections.includes(title)) {
               setIsAnexos(true);
+              sectionElement.style.border = '2.5px solid red';
               sectionElement.title = 'Toda información sobre agradecimiento y reconocimiento debe debe estar en la sección final de Anexos.\n1. Mueve esta sección al área correspondiente, debajo de la Bibliografía. \n2. Declara el título correspondiente de Anexos arriba de esta sección con formato "Título 1".\n3. Cambia el título de esta sección a "Anexo 1: Reconocimiento"  y cambia su formato a "Título 2".';
               // If anxios exist, set badge to 'order'
               setSectionCheckBadge(prevState => {
                 const updatedState = [...prevState[post.type]];
-                if (Array.from(sectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
+                if (Array.from(subSectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
                   updatedState[6] = order;
                 };
                 return {
@@ -285,6 +287,13 @@ const PostView = ({
                 };
               });
             }
+            else {
+              sectionElement.style.border = 'none';
+              sectionElement.title = '';
+            }
+          });
+          Array.from(sectionTitleElements).forEach((sectionElement, index) => {
+            const title = sectionElement.textContent.toLowerCase().trim();
             // people may include graphs and images or tables below the bibliography, so these are anexus, but do not include the correspondent "Anexos" title, so the anexus section is not declare, this is another "Pendiente" bridge on anexos.
             if (title == 'bibliografía') {
               const bibliographySection = Array.from(sectionTitleElements)[index]?.parentNode;
@@ -313,8 +322,7 @@ const PostView = ({
                 bibliographySection.style.border = 'none';
                 bibliographySection.title = '';
               }
-            }
-            else {
+            } else {
               const tempSection = Array.from(sectionTitleElements)[index]?.parentNode;
               tempSection.style.border = 'none';
               tempSection.title = '';
@@ -583,11 +591,10 @@ const PostView = ({
                   };
                 });
               }
-
-            }
-            else {
-              subsection.style.border = 'none';
-              subsection.title = ''
+              else {
+                subsection.style.border = 'none';
+                subsection.title = ''
+              }
             }
           });
         };
