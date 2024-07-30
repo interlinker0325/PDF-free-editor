@@ -1,8 +1,8 @@
-import { useState, useRef, useCallback } from "react";
+import {useState, useRef, useCallback} from "react";
 import axios from "axios";
 import useUser from "utils/useUser";
 import withSession from "utils/withSession";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button} from '@mui/material';
 import {
   createEntry,
   updateEntry,
@@ -15,7 +15,7 @@ import {
   GET_ALL_COURSES,
   GET_ALL_STUDENTS,
 } from "utils/graphqlRequest";
-import { POST_REVIEW_STATUS, isUserTeacherOfCourse } from "utils";
+import {POST_REVIEW_STATUS, isUserTeacherOfCourse} from "utils";
 
 import Main from "components/Main/Main";
 import PostForm from "components/Posts/PostForm";
@@ -23,8 +23,8 @@ import PostView from "components/Posts/PostView";
 import TopBar from "components/TopBar/TopBar";
 import Loader from "components/Loader/Loader";
 
-import { Tooltip } from "@mui/material";
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import {Tooltip} from "@mui/material";
+import {SnackbarProvider, enqueueSnackbar} from 'notistack';
 
 const formBaseState = {
   title: "",
@@ -41,9 +41,9 @@ const formBaseState = {
   type: "",
 };
 
-const NewPost = ({ isSaved, setIsSaved, ...props }) => {
+const NewPost = ({isSaved, setIsSaved, ...props}) => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
-  const { user } = useUser({ redirectTo: "/" });
+  const {user} = useUser({redirectTo: "/"});
   const [showPreview, setShowPreview] = useState(false);
   // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
@@ -59,7 +59,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
 
   // Dialog setting
   const [open, setOpen] = useState(false);
-  
+
   const clearSubmitForm = () => {
     setFormState(formBaseState);
   };
@@ -97,7 +97,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
     async (e) => {
       e.preventDefault();
       triggerLoading(true);
-      const { id, error, monographView, ...postData } = formState;
+      const {id, error, monographView, ...postData} = formState;
 
       if (isUserTeacherOfCourse(user, props.courses)) {
         postData.review = POST_REVIEW_STATUS.APPROVED;
@@ -120,7 +120,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
           error: "No se pudo guardar la entrada",
         });
       } else {
-        setFormState({ ...entry, ...postData });
+        setFormState({...entry, ...postData});
         setStatusBarState({
           error: null,
           success:
@@ -130,7 +130,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
 
       triggerLoading(false);
     },
-    [formState]
+    [formState, user, props.courses]
   );
 
   const onChange = useCallback(
@@ -144,11 +144,11 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
             let file_type = _files[0].name.split(".").pop();
             let file_name = _files[0].name.split('.')[0]
             if (
-              file_type == "html" ||
-              file_type == "pdf" ||
-              file_type == "docx" ||
-              file_type == "doc" ||
-              file_type == "rtf"
+              file_type === "html" ||
+              file_type === "pdf" ||
+              file_type === "docx" ||
+              file_type === "doc" ||
+              file_type === "rtf"
             ) {
               const formData = new FormData();
               formData.append("file", _files[0]);
@@ -191,17 +191,16 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
                   )}`
                 );
                 setPreviewIframe(loadedMonograph);
+                console.log("Fle uploaded");
               } catch (error) {
                 console.log("Error uploading file:", error);
               }
-            }
-            else {
+            } else {
               enqueueSnackbar("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
               e.target.value = null;
             }
           } else {
-            const files = await upload(_files, true);
-            itemValue = files;
+            itemValue = await upload(_files, true);
           }
           triggerLoading(false);
         } else {
@@ -211,9 +210,9 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
         itemValue = e.target.value;
       }
       delete formState[name];
-      setFormState({ [name]: itemValue, ...formState });
+      setFormState({[name]: itemValue, ...formState});
     },
-    [formState]
+    [refs, formState]
   );
 
   const requestApproval = useCallback(async () => {
@@ -239,7 +238,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
           horizontal: 'center'
         }
       });
-  }, [formState]);
+  }, [isSaved, formState.id]);
 
 
   const doShowPreview = useCallback(
@@ -248,7 +247,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
       if (!previewIframe && formState?.monograph) {
         const loadedMonograph = await getHTML(
           `/api/${formState?.monograph.url.replace(
-            "https://www.datocms-assets.com/",
+            process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL,
             ""
           )}`
         );
@@ -256,13 +255,13 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
       }
       setShowPreview(true);
     },
-    [formState]
+    [previewIframe, formState?.monograph]
   );
 
   const setAgreedterms = useCallback(
     async (e) => {
       e.preventDefault();
-      const { agreedterms, ...restFormState } = formState;
+      const {agreedterms, ...restFormState} = formState;
       restFormState.agreedterms = !agreedterms;
       setFormState(restFormState);
     },
@@ -272,7 +271,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
   const setCoAuthors = useCallback(
     async (e, selectedCoAuthor) => {
       e.preventDefault();
-      const { coauthors, ...restFormState } = formState;
+      const {coauthors, ...restFormState} = formState;
       let selectedCoauthors = coauthors || [];
       selectedCoauthors.push(selectedCoAuthor);
       restFormState.coauthors = selectedCoauthors;
@@ -284,7 +283,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
   const removeCoAuthor = useCallback(
     async (e, coAuthorId) => {
       e.preventDefault();
-      const { coauthors, ...restFormState } = formState;
+      const {coauthors, ...restFormState} = formState;
       const removeCoAuthorIndex = coauthors.findIndex(
         (coAuthor) => coAuthor.id === coAuthorId
       );
@@ -311,12 +310,12 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
     triggerLoading(true);
     const files = await upload([htmlFile], true);
     const loadedMonograph = await getHTML(
-      `/api/${files.url.replace("https://www.datocms-assets.com/", "")}`
+      `/api/${files.url.replace(process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL, "")}`
     );
     setPreviewIframe(loadedMonograph);
     triggerLoading(false);
     delete formState["monograph"];
-    setFormState({ ["monograph"]: files, ...formState });
+    setFormState({["monograph"]: files, ...formState});
     enqueueSnackbar('Tu documento se ha guardado satisfactoriamente',
       {
         variant: 'success',
@@ -336,8 +335,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
 
     if (isContent && isTitle) {
       saveDocument();
-    }
-    else {
+    } else {
       enqueueSnackbar('Para guardar anota el título en la sección de Formulario, incluye un documento Word o PDF, o pasa directamente al Editor donde puedes agregar bloques de texto e iniciar tu publicación directamente',
         {
           variant: 'warning',
@@ -414,14 +412,18 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
                 children="Cumplimiento"
               />
               <div className="cursor-pointer ml-3">
-                <Tooltip title={allPass ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'} arrow>
+                <Tooltip
+                  title={allPass ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'}
+                  arrow>
                   {allPass ? (
                     <div className="sprinkle-container">
-                      <img width="30" height="auto" className="thumb-up" src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png" alt="good-quality--v1" />
+                      <img width="30" height="auto" className="thumb-up"
+                           src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
+                           alt="good-quality--v1"/>
                       <div className="sprinkles">
                         {/* Creating multiple sprinkles */}
-                        {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
+                        {Array.from({length: 15}).map((_, index) => (
+                          <div key={index} className={`sprinkle sprinkle-${index + 1}`}/>
                         ))}
                       </div>
                     </div>
@@ -450,6 +452,7 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
           clearForm={clearSubmitForm}
           onChange={onChange}
           formHasChanged={formHasChanged}
+          // setShowPreview={doShowPreview}
           user={user}
           setAgreedterms={setAgreedterms}
           setCoAuthors={setCoAuthors}
@@ -469,44 +472,49 @@ const NewPost = ({ isSaved, setIsSaved, ...props }) => {
           setAllPass={setAllPass}
           {...props}
         />
-        <Loader show={showLoadingScreen} />
+        <Loader show={showLoadingScreen}/>
         <Dialog
-                open={open}
-                onClose={() => {setOpen(false);}}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">Confirmación</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                    Una vez enviado a publicación, no podrás modificarlo, pero una vez aprobado, podrás solicitar modificaciones vía correo electrónico a info@adlyceum.com. Deseas continuar?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => {setOpen(false);}} color="primary">
-                        No
-                    </Button>
-                    <Button onClick={requestApproval} color="primary" autoFocus>
-                        Si
-                    </Button>
-                </DialogActions>
-            </Dialog>
+          open={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Confirmación</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Una vez enviado a publicación, no podrás modificarlo, pero una vez aprobado, podrás solicitar
+              modificaciones vía correo electrónico a info@adlyceum.com. Deseas continuar?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => {
+              setOpen(false);
+            }} color="primary">
+              No
+            </Button>
+            <Button onClick={requestApproval} color="primary" autoFocus>
+              Si
+            </Button>
+          </DialogActions>
+        </Dialog>
       </SnackbarProvider>
     </Main>
   );
 };
 export default NewPost;
 
-export const getServerSideProps = withSession(async function ({ req }) {
+export const getServerSideProps = withSession(async function ({req}) {
   const currentUser = req.session.get("user");
   if (!currentUser) {
-    return { props: {} };
+    return {props: {}};
   }
-  const { allUsers, allCourses } = await request([
+  const {allUsers, allCourses} = await request([
     GET_ALL_COURSES(currentUser.id),
     GET_ALL_STUDENTS,
   ]);
   return {
-    props: { courses: allCourses, students: allUsers },
+    props: {courses: allCourses, students: allUsers},
   };
 });

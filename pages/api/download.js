@@ -1,7 +1,4 @@
-const fs = require('fs');
-const request = require('request');
-
-const IMAGE_HOST = 'https://www.datocms-assets.com';
+const IMAGE_HOST = process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL.slice(0, -1);
 
 import stream from 'stream';
 import { promisify } from 'util';
