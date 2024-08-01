@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import {useEffect, useState} from "react";
 import IFrame from "components/IFrame/IFrame";
-import { isPostApproved } from "utils";
+import {isPostDraft} from "utils";
 import Editor from "components/Editor/Editor";
 import Compliace from "components/Compliance/Compliance"
-let options = { year: "numeric", month: "long", day: "numeric" };
 import ErrorBoundary from "components/Editor/ErrorBoundary";
+
+let options = { year: "numeric", month: "long", day: "numeric" };
 
 const PostView = ({
   user,
@@ -98,7 +99,7 @@ const PostView = ({
   let course = post?.course;
   if (courses) course = courses.find((someCourse) => someCourse.id === course);
 
-  const postApproved = isPostApproved(post);
+  const postDraft = isPostDraft(post);
   let formattedDate = new Date(post.createdAt).toLocaleDateString(
     "es-ES",
     options
@@ -121,7 +122,7 @@ const PostView = ({
     else {
       title.style.padding = '10px 20px'
       title.style.border = "solid red 2.5px";
-      title.title = "La longitud del título debe ser mayor que 10.";
+      title.title = "La longitud del título debe serpostApproved mayor que 10.";
       setTitleLengthCheckBadge('Revisar');
     }
     if (iframe.contentWindow.document.body.textContent) {
@@ -256,13 +257,13 @@ const PostView = ({
                 const updatedState = [...prevState[post.type]];
                 if (updatedState[index] != order && index < sectionCheckBadge[post.type].length) {
                   // updatedState[index] = pendiente;
-                };
+                }
                 return {
                   ...prevState,
                   [post.type]: updatedState,
                 };
               })
-            };
+            }
             // un-neccessary section title check in scientific paper
             if (post.type == 'Art. Científico') {
               sectionElement.style.border = '2.5px solid red';
@@ -282,7 +283,7 @@ const PostView = ({
                 const updatedState = [...prevState[post.type]];
                 if (Array.from(sectionTitleElements).some(element => element.textContent.toLowerCase().trim().includes("anxeos"))) {
                   updatedState[6] = order;
-                };
+                }
                 return {
                   ...prevState,
                   [post.type]: updatedState,
@@ -594,7 +595,7 @@ const PostView = ({
               subsection.title = ''
             }
           });
-        };
+        }
 
         // numeration compliance check
         const tablePattern = /^Tabla \d+:/;
@@ -621,7 +622,7 @@ const PostView = ({
               divElement.style.border = 'none';
               divElement.title = '';
             }
-          };
+          }
           if (figurePattern.test(divElement.textContent)) {
             figureIndex++;
             figureNumber = divElement.textContent.split(':')[0].split(' ')[1];
@@ -639,7 +640,7 @@ const PostView = ({
               divElement.style.border = 'none';
               divElement.title = '';
             }
-          };
+          }
         })
         // Anxeos numeration check
         Array.from(sectionTitleElements).forEach((sectionTitleElement) => {
@@ -754,7 +755,7 @@ const PostView = ({
       } catch (error) {
         console.error("Error accessing iframe content:", error);
       }
-    };
+    }
   }, [complianceView, changedContent, editorContent, editView, showPreview]);
 
   useEffect(() => {
@@ -785,7 +786,7 @@ const PostView = ({
     <article className={(showPreview || editView || complianceView) ? "flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
       <div className="flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black">
         <h2 id="title" className="col-span-4 text-4xl cursor-pointer">{post.title}</h2>
-        {isCurrentUserAuthor && !editMode && !postApproved && (
+        {isCurrentUserAuthor && !editMode && postDraft && (
           <a
             href={`/posts/${post.id}/edit`}
             className="align-self-end text-primary text-2xl"
