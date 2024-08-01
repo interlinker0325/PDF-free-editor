@@ -1,7 +1,7 @@
 import nextConnect from 'next-connect';
 import multer from 'multer';
 import fs from 'fs';
-import { createUpload } from 'utils/server/dato';
+import {createUpload} from 'utils/server/dato';
 
 const DIR = './uploads'
 
