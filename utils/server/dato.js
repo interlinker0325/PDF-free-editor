@@ -1,8 +1,5 @@
-import { SiteClient, buildModularBlock } from 'datocms-client';
-
-const API_TOKEN = process.env.DATOCMS_API_TOKEN;
-
-const client = new SiteClient(API_TOKEN);
+import { buildModularBlock } from 'datocms-client';
+import client from "./dato-singleton"
 
 export const getRecord = async (recordId) => {
     try {
