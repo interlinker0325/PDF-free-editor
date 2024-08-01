@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPeopleGroup, faTags, faFileCode, faFileArrowDown, faImages } from '@fortawesome/free-solid-svg-icons';
-import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
+import React, {useState} from 'react';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faFileArrowDown, faFileCode, faImages, faPeopleGroup, faTags} from '@fortawesome/free-solid-svg-icons';
+import {TERMS_AND_CONDITIONS_TEXT} from 'utils/copy';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 
 const PostForm = ({
@@ -11,14 +11,14 @@ const PostForm = ({
     onChange,
     doSubmit,
     user,
-    setAgreedterms,
+    setAgreedTerms,
     setCoAuthors,
     removeCoAuthor,
     refs,
     formView
 }) => {
-    const selectedCourse = (courses || []).find(c => c.id === form.course);
-    const courseStudents = (selectedCourse?.students || []).filter(student => student.id !== user.id);
+    const selectedCourse = (courses || []).find(c => c?.id === form?.course);
+    const courseStudents = (selectedCourse?.students || []).filter(student => student?.id !== user?.id);
 
     const [open, setOpen] = useState(false);
 
@@ -189,7 +189,7 @@ const PostForm = ({
                                 <h4 className='not-italic text-black font-normal '>Los terminos y condiciones deben ser aceptados para publicar una publicación*</h4>
                                 <div className='w-full h-[300px] overflow-scroll border p-4 rounded-lg'>
                                     {TERMS_AND_CONDITIONS_TEXT}
-                                    <a onClick={setAgreedterms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
+                                    <a onClick={setAgreedTerms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
                                 </div>
                             </span>
                         </label>
