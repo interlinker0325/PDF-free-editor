@@ -1,4 +1,4 @@
-import { get, post, put } from 'utils/axios';
+import {get, post, put} from 'utils/axios';
 
 export const createEntry = async (
     {
@@ -97,3 +97,7 @@ export const upload = async (files, returnUrl = false) => {
 };
 
 export const getHTML = async (url) => (await get(url, true)).text;
+
+export const getMonograph = (file)=>getHTML(
+  `/api/${file.url.replace(process.env.NEXT_PUBLIC_DATOCMS_STORAGE_URL, "")}`
+);
