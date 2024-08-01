@@ -1,4 +1,4 @@
-import { buildModularBlock } from 'datocms-client';
+import {buildModularBlock} from 'datocms-client';
 import client from "./dato-singleton"
 
 export const getRecord = async (recordId) => {
