@@ -62,7 +62,7 @@ const PostForm = ({
                                     className={styles.select(form.course)}
                                     value={form.course || ''}
                                     onChange={(e) => onChange(e, 'course')}>
-                                    <option value='' style={{ color: 'gray' }}>Curso de la publicacion *</option>
+                                    <option value='' style={{ color: 'gray' }}>Curso de la publicación *</option>
                                     {courses.map(course =>
                                         <option key={`select_course_${course.id}`} value={course.id}>{course.name}</option>
                                     )}
@@ -87,12 +87,12 @@ const PostForm = ({
                             </label>
                             <label className={styles.label}>
                                 <select
-                                    className={styles.type(form.type)}
-                                    value={form.type || ''}
-                                    onChange={(e) => onChange(e, 'type')}
+                                    className={styles.type(form.post_type)}
+                                    value={form.post_type || ''}
+                                    onChange={(e) => onChange(e, 'post_type')}
                                 >
                                     <option value='' style={{ color: 'gray' }}>
-                                        Tipo de publicacion *
+                                        Tipo de publicación *
                                     </option>
                                     <option value='Ensayo'>Ensayo</option>
                                     <option value='Doc. Académico'>Doc. Académico</option>
@@ -142,13 +142,13 @@ const PostForm = ({
                         <div>
                             <h4 className='text-base font-normal font-roboto mb-2'>Autores: <span className='font-caslon text-base font-normal text-other'>{user?.fullname}</span></h4>
                             {' '}
-                            {form.coauthors?.map(coauth =>
-                                <span key={`coAuthor_${coauth.id}`} className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
-                                    {coauth.fullname}
+                            {form.coauthors?.map(coauthor =>
+                                <span key={`coAuthor_${coauthor.id}`} className='font-caslon text-base font-normal text-other gap-1 inline-flex flex-row'>
+                                    {coauthor.fullname}
                                     <a
                                         className='underline cursor-pointer'
-                                        id={coauth.id}
-                                        onClick={async (e) => removeCoAuthor(e, coauth.id)}>
+                                        id={coauthor.id}
+                                        onClick={async (e) => removeCoAuthor(e, coauthor.id)}>
                                         (-)
                                     </a>
                                 </span>
@@ -186,7 +186,7 @@ const PostForm = ({
                                 }
                             </div>
                             <span className='label-text normal-case text-checkbox font-thin italic max-w-[97%]'>
-                                <h4 className='not-italic text-black font-normal '>Los terminos y condiciones deben ser aceptados para publicar una publicación*</h4>
+                                <h4 className='not-italic text-black font-normal '>Los términos y condiciones deben ser aceptados para publicar una publicación*</h4>
                                 <div className='w-full h-[300px] overflow-scroll border p-4 rounded-lg'>
                                     {TERMS_AND_CONDITIONS_TEXT}
                                     <a onClick={setAgreedTerms} htmlFor='agreedterms' className={styles.link} >Acepto</a>

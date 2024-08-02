@@ -15,7 +15,7 @@ import RequestApprovalDialog from "../../../components/Posts/RequestApprovalDial
 import {SnackbarProvider} from "notistack";
 import TopBar from "../../../components/TopBar/TopBar";
 
-const EditPost = ({post, courses, ...props}) => {
+const EditPost = ({post, courses, setIsSaved}) => {
   const router = useRouter();
   const {user} = useUser({redirectTo: '/'});
   useEffect(() => {
@@ -54,12 +54,14 @@ const EditPost = ({post, courses, ...props}) => {
     requestApproval,
     statusBarState,
     showLoadingScreen,
-  } = usePost({post, user, courses});
+  } = usePost({post, user, courses, setIsSaved});
 
   const hidePreview = (e) => {
     e.preventDefault();
     setShowEditView(false);
   }
+
+  // console.log({post})
 
   return (
     <Main>
@@ -109,7 +111,7 @@ const EditPost = ({post, courses, ...props}) => {
           editView={editView}
           showPreview={showPreview}
           complianceView={complianceView}
-          setIsSaved={true}
+          setIsSaved={setIsSaved}
           logicCheck={logicCheck}
           setAllPass={setAllPass}
         />

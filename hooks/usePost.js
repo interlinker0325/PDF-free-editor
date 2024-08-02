@@ -4,7 +4,6 @@ import {createEntry, getMonograph, publishEntry, updateEntry, upload} from "../h
 import {enqueueSnackbar} from "notistack";
 import {checkCompliance, fileToHTML} from "../utils/server/windows";
 
-
 const formBaseState = {
   title: "",
   description: "",
@@ -17,7 +16,7 @@ const formBaseState = {
   coauthors: null,
   agreedterms: false,
   review: POST_REVIEW_STATUS.PENDING,
-  type: "",
+  post_type: "",
 };
 
 export default function usePost({user, post, isSaved, setIsSaved, courses} = {}) {
@@ -110,14 +109,18 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       type: "text/html",
     });
     triggerLoading(true);
-    const file = await upload([htmlFile], true);
+    const oldFileId = post?.monograph?.id || null
+    console.log({oldFileId})
+    const file = await upload([htmlFile], true, oldFileId);
+    console.log({file});
     const loadedMonograph = await getMonograph(file)
     setPreviewIframe(loadedMonograph);
     const {id, error, monographView, ...postData} = formState;
 
-// TODO: I have to listen to post id so i update entry and not create a new one
-    const entry = await createEntry({
+    const action = post?.id ? updateEntry : createEntry
+    const entry = await action({
       ...postData,
+      ...(post?.id ? {id: post?.id} : {}),
       author: user.id,
       review: POST_REVIEW_STATUS.DRAFT,
       monograph: file
@@ -261,11 +264,22 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     const iframe = document.getElementById("documentWindow");
     const isContent = Boolean(iframe.contentWindow.document.body.innerText.trim());
     const isTitle = Boolean(formState.title.trim())
-
-    if (isContent && isTitle) {
+    const haveType = !!formState.post_type;
+    console.log({formState})
+    if (isContent && isTitle && haveType) {
       await saveDocument();
+    } else if (!haveType) {
+      enqueueSnackbar('Para guardar, seleccionar el tipo de publicación.',
+        {
+          variant: 'warning',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
     } else {
-      enqueueSnackbar('Para guardar anota el título en la sección de Formulario, incluye un documento Word o PDF, o pasa directamente al Editor donde puedes agregar bloques de texto e iniciar tu publicación directamente',
+      enqueueSnackbar('Para guardar, anota el título en la sección de Formulario, incluye un documento Word o PDF, o pasa directamente al Editor donde puedes agregar bloques de texto e iniciar tu publicación directamente',
         {
           variant: 'warning',
           preventDuplicate: true,
@@ -282,9 +296,6 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     setFormState(post);
     setPreviewIframe(post?.monographView);
   }, [post]);
-
-  console.log(formState);
-
 
   return {
     refs,

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import dynamic from 'next/dynamic';
 import axios from "axios";
-import { icon } from '@fortawesome/fontawesome-svg-core';
 
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
@@ -11,7 +10,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const [isBrowser, setIsBrowser] = useState(false);
   const [model, setModel] = useState('');
   const [config, setConfig] = useState(null);
-
+  console.log({editorContent})
   const [improvedText, setImprovedText] = useState("");
 
   const options = [
@@ -103,7 +102,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                     'cancelable': false
                   });
                   newDiv.dispatchEvent(clickEvent);
-                };
+                }
                 const iframe = document.getElementById("documentWindow");
                 const iframeDoc = iframe.contentWindow.document;
                 const body = iframeDoc.getElementsByTagName('body');
@@ -231,7 +230,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                   style.appendChild(document.createTextNode(cssRules));
                   iframeDoc.head.appendChild(style);
                   body[0].appendChild(newDiv);
-                };
+                }
 
               }
             },
@@ -420,7 +419,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                 else {
                   img.style.width = '85%'
                 }
-              };
+              }
             }
           },
           {
@@ -439,12 +438,12 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                 else {
                   img.style.width = '75%'
                 }
-              };
+              }
             }
           },
         ]);
         setConfig(updatedConfig);
-      };
+      }
 
 
       // add custom button by Jodit method

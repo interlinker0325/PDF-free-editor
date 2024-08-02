@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const Compliance = ({
     form,
@@ -68,16 +68,16 @@ const Compliance = ({
                             <div>
                                 <div>Secciones requeridas</div>
                                 <div className="">
-                                    {sections[form.type]?.map((section, index) => (
+                                    {sections[form.post_type]?.map((section, index) => (
                                         <div key={index}>{section.toUpperCase()}</div>
                                     ))}
                                 </div>
                             </div>
                             <div className="flex flex-col">
                                 <div className="text-sky-500">
-                                    {form.type ? form.type : <div className="text-red-600">Tipo de publicacion</div>}
+                                    {form.post_type ? form.post_type : <div className="text-red-600">Tipo de publicación</div>}
                                 </div>
-                                {sectionCheckBadge[form.type]?.map((state, index) => (
+                                {sectionCheckBadge[form.post_type]?.map((state, index) => (
                                     <div key={index} className='2xl:h-8'>{state}</div>
                                 ))}
                             </div>

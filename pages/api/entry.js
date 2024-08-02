@@ -1,4 +1,4 @@
-import { publish, createRecord, updateRecord } from 'utils/server/dato';
+import {createRecord, updateRecord} from 'utils/server/dato';
 
 export default async (req, res) => {
     let result = { success: false, data: {} };
@@ -33,7 +33,7 @@ export default async (req, res) => {
 
         rest.coverimage = coverimage ? { uploadId: coverimage.id } : null;
         rest.monograph = monograph ? { uploadId: monograph.id } : null;
-        rest.author = author.id;
+        rest.author = author;
         rest.course = course.id;
         rest.coauthors = coauthors ? coauthors.map(coauthor => coauthor.id) : null;
 
@@ -45,7 +45,7 @@ export default async (req, res) => {
         const record = await updateRecord(id, rest);
 
         if (!record.error) {
-            await publish(record.id);
+            // await publish(record.id);
             result.success = true;
             result.data = record;
         } else {
