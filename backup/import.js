@@ -1,6 +1,5 @@
 const {uniq} = require('lodash');
-const SiteClient = require('datocms-client').SiteClient;
-const client = new SiteClient('e8376677be32f8c84c4994117df1f7');
+import client from "../utils/server/dato-singleton"
 
 const data = [
     {

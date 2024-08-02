@@ -12,7 +12,7 @@ export default function Header({ items, isSaved, setIsSaved }) {
     const handleClick = (item) => {
         setTempItem(item);
         if (!isSaved) {
-            setOpen(true);
+            setOpen(true); // Open the dialog
         }
     };
 

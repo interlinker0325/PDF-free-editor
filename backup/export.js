@@ -1,8 +1,7 @@
-const SiteClient = require('datocms-client').SiteClient;
 const fs = require('fs');
 const path = require('path');
 const request = require('request');
-const client = new SiteClient('7ad237f32747f77cb5b29241594b58');
+import client from "../utils/server/dato-singleton"
 
 async function downloadRecords() {
     console.log('Downloading records...');
@@ -27,6 +26,7 @@ async function downloadRecords() {
         });
     }
 
+    console.log('Done!');
 }
 
 downloadRecords();

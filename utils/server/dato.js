@@ -1,8 +1,5 @@
-import { SiteClient, buildModularBlock } from 'datocms-client';
-
-const API_TOKEN = process.env.DATOCMS_API_TOKEN;
-
-const client = new SiteClient(API_TOKEN);
+import {buildModularBlock} from 'datocms-client';
+import client from "./dato-singleton"
 
 export const getRecord = async (recordId) => {
     try {
@@ -19,6 +16,15 @@ export const createUpload = async (file) => {
     try {
         const path = await client.createUploadPath(file);
         return await client.uploads.create({ path });
+    } catch (error) {
+        console.error(error);
+        return { error };
+    }
+};
+
+export const deleteUpload = async (fileId) => {
+    try {
+        return await client.uploads.destroy(fileId);
     } catch (error) {
         console.error(error);
         return { error };

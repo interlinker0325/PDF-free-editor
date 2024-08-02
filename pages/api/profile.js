@@ -1,4 +1,4 @@
-import { publish, createRecord, updateRecord, buildBlock } from 'utils/server/dato';
+import { publish, updateRecord, } from 'utils/server/dato';
 
 export default async (req, res) => {
     let result = { success: false, data: {} };

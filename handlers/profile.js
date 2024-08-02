@@ -1,4 +1,4 @@
-import { get, post, put } from 'utils/axios';
+import {put} from 'utils/axios';
 
 export const updateProfile = async (
     id,

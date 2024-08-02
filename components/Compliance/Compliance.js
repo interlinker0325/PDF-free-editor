@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const Compliance = ({
     form,
@@ -14,10 +14,7 @@ const Compliance = ({
 
     return (
         <div className=''>
-            <div className='text-red-500 text-center mt-2 text-sm'>- Ante cualquier incumplimiento, revisa las secciones marcas en rojo en el documento -</div>
-            <div className="text-red-500 text-center mt-2 text-sm">
-                Por seguridad, antes de publicar, se revisará nuevamente la coherencia del documento completo.
-            </div>
+            <div className='text-red-500 text-center mt-2 text-sm'>- Ante cualquier incumplimiento, revisa el documento por las secciones marcadas en rojo -</div>
             <div id='compliance' className="flex justify-around mt-5 leading-6 text-[14px] 2xl:text-xl 2xl:leading-8">
                 <div className="w-7/12">
                     <div className="my-2 border border-blue-500 py-3 relative">
@@ -71,16 +68,16 @@ const Compliance = ({
                             <div>
                                 <div>Secciones requeridas</div>
                                 <div className="">
-                                    {sections[form.type]?.map((section, index) => (
+                                    {sections[form.post_type]?.map((section, index) => (
                                         <div key={index}>{section.toUpperCase()}</div>
                                     ))}
                                 </div>
                             </div>
                             <div className="flex flex-col">
                                 <div className="text-sky-500">
-                                    {form.type ? form.type : <div className="text-red-600">Tipo de publicacion</div>}
+                                    {form.post_type ? form.post_type : <div className="text-red-600">Tipo de publicación</div>}
                                 </div>
-                                {sectionCheckBadge[form.type]?.map((state, index) => (
+                                {sectionCheckBadge[form.post_type]?.map((state, index) => (
                                     <div key={index} className='2xl:h-8'>{state}</div>
                                 ))}
                             </div>
