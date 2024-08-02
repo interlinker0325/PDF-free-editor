@@ -22,6 +22,15 @@ export const createUpload = async (file) => {
     }
 };
 
+export const deleteUpload = async (fileId) => {
+    try {
+        return await client.uploads.destroy(fileId);
+    } catch (error) {
+        console.error(error);
+        return { error };
+    }
+};
+
 export const createRecord = async (recordData) => {
     try {
         return await client.items.create(recordData);
