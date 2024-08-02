@@ -747,6 +747,7 @@ const PostView = ({
   }, [complianceView, changedContent, editorContent, editView, showPreview]);
 
   useEffect(() => {
+    if (!setAllPass) return;
     // Check the document if pass the all requirements
     const formPass = Boolean(post.course && post.coverimage && post.description && post.tags && post.agreedterms);
 

@@ -277,13 +277,6 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     }
   };
 
-  const hidePreview = (e) => {
-    e.preventDefault();
-    setShowPreview(false);
-  }
-
-
-
   useEffect(() => {
     if (!post) return
     setFormState(post);
@@ -318,7 +311,6 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     allPass,
     setAllPass,
     onChange,
-    hidePreview,
     handleSave,
     handlePublication,
     saveDocument,
