@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {isUserTeacherOfCourse, isValidFileType, POST_REVIEW_STATUS} from "../utils";
-import {createEntry, getMonograph, publishEntry, updateEntry, upload} from "../handlers/bll";
+import {createEntry, getMonograph, updateEntry, upload} from "../handlers/bll";
 import {enqueueSnackbar} from "notistack";
 import {checkCompliance, fileToHTML} from "../utils/server/windows";
 
@@ -97,32 +97,32 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     }
   };
 
-  // first check all section title exist, if not display error and then save edited html
-  const saveDocument = async () => {
+  function getFrameContent() {
     const iframe = document.getElementById("documentWindow");
-    // upload edited html document
-    setIsSaved(true);
-    const iframeContent =
-      iframe.contentWindow.document.head.innerHTML +
+    return iframe.contentWindow.document.head.innerHTML +
       iframe.contentWindow.document.body.innerHTML;
+  }
+
+// first check all section title exist, if not display error and then save edited HTML
+  const saveDocument = async (approval) => {
+    setIsSaved(true);
+    const iframeContent = getFrameContent();
     const htmlFile = new File([iframeContent], "monograph.html", {
       type: "text/html",
     });
     triggerLoading(true);
-    const oldFileId = post?.monograph?.id || null
-    console.log({oldFileId})
+    const oldFileId = formState?.monograph?.id || null
     const file = await upload([htmlFile], true, oldFileId);
-    console.log({file});
     const loadedMonograph = await getMonograph(file)
     setPreviewIframe(loadedMonograph);
     const {id, error, monographView, ...postData} = formState;
 
-    const action = post?.id ? updateEntry : createEntry
+    const action = formState?.id ? updateEntry : createEntry
     const entry = await action({
       ...postData,
-      ...(post?.id ? {id: post?.id} : {}),
+      ...(formState?.id ? {id: formState?.id} : {}),
       author: user.id,
-      review: POST_REVIEW_STATUS.DRAFT,
+      review: approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
       monograph: file
     });
     console.log({entry})
@@ -143,10 +143,13 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
   const requestApproval = useCallback(async () => {
     setOpen(false);
     triggerLoading(true);
-    if (!isSaved && !post) {
-      await saveDocument();
-    }
-    await publishEntry(formState.id);
+    const iframeContent = getFrameContent();
+    const checkResult = await checkCompliance(iframeContent);
+    console.log({checkResult})
+    setLogicCheck(checkResult.data);
+
+    await saveDocument(true);
+
     setStatusBarState({
       error: null,
       success:

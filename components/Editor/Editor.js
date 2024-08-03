@@ -10,7 +10,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   const [isBrowser, setIsBrowser] = useState(false);
   const [model, setModel] = useState('');
   const [config, setConfig] = useState(null);
-  console.log({editorContent})
+
   const [improvedText, setImprovedText] = useState("");
 
   const options = [
@@ -55,7 +55,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           sizeMD: 700,
           sizeSM: 400,
           language: 'es',
-          colors: ['#159957', '#52b788', '#f2f2f2', '#fcf9e7', '#fff', '#000'],
+          colors: ['#159957', '#7DC9A5', '#f2f2f2', '#fcf9e7', '#fff', '#000'],
           uploader: {
             insertImageAsBase64URI: true,
             imagesExtensions: ['jpg', 'png', 'jpeg', 'gif', 'svg', 'webp']
@@ -77,7 +77,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             imagesExtensions: ['jpg', 'png', 'jpeg', 'gif'],
             url: null
           },
-          disablePlugins: ['paste'],
+          disablePlugins: ['paste', 'imageProperties'],
           // custom buttons
           extraButtons: [
             // add new div blank block bellow selected one
@@ -86,6 +86,9 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               tooltip: 'Add New Block',
               icon: 'plus',
               exec: () => {
+                const iframe = document.getElementById("documentWindow");
+                const iframeDoc = iframe.contentWindow.document;
+                const body = iframeDoc.getElementsByTagName('body');
                 const newDiv = document.createElement('div');
                 newDiv.innerText = 'Nuevo párrafo';
                 if (editorContent && editorContent.parentNode) {
@@ -102,11 +105,8 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                     'cancelable': false
                   });
                   newDiv.dispatchEvent(clickEvent);
-                }
-                const iframe = document.getElementById("documentWindow");
-                const iframeDoc = iframe.contentWindow.document;
-                const body = iframeDoc.getElementsByTagName('body');
-                if (!body.textContent) {
+                };
+                if (!body[0].textContent) {
                   const style = document.createElement('style');
                   const cssRules = `
                     body {
@@ -253,7 +253,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
 
                   // Create a new div element
                   const newDiv = document.createElement('div');
-                  newDiv.innerText = 'new paragraph';
+                  newDiv.innerText = 'Nuevo párrafo';
 
                   subcontainer1.appendChild(clonedEditorContent);
                   subcontainer2.appendChild(newDiv);
@@ -299,10 +299,17 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               icon: 'arrowup',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
-                  const previousElement = editorContent.previousElementSibling;
-                  if (previousElement) {
-                    editorContent.parentNode.insertBefore(editorContent, previousElement);
-                  } else {
+                  try {
+                    const previousElement = editorContent.previousElementSibling;
+                    if (previousElement) {
+                      editorContent.parentNode.insertBefore(editorContent, previousElement);
+                    } else {
+                      const previousSection = editorContent.parentNode.previousElementSibling;
+                      const divElements = Array.from(previousSection.getElementsByTagName('div'));
+                      const lastDivOfPreviousSection = divElements[divElements.length - 1]
+                      previousSection.insertBefore(editorContent, lastDivOfPreviousSection);
+                    }
+                  } catch {
                     alert('can not move')
                   }
                 }
@@ -315,11 +322,18 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
               icon: 'arrowdown',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
-                  const nextElement = editorContent.nextElementSibling;
-                  if (nextElement) {
-                    editorContent.parentNode.insertBefore(nextElement, editorContent);
-                  } else {
-                    alert('Cannot move down - there are no more elements below.')
+                  try {
+                    const nextElement = editorContent.nextElementSibling;
+                    if (nextElement) {
+                      editorContent.parentNode.insertBefore(nextElement, editorContent);
+                    } else {
+                      const nextSection = editorContent.parentNode.nextElementSibling
+                      const firstDivOfNextSection = Array.from(nextSection.getElementsByTagName('div'))[0]
+                      nextSection.insertBefore(editorContent, firstDivOfNextSection);
+                    }
+                  }
+                  catch {
+                    alert("Can't move");
                   }
                 }
               },
@@ -349,7 +363,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                     axios
                       .post(`${process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL}/sectionCheck`, null, {
                         params: {
-                          content: editor.value,
+                          content: String(editor.value),
                           title: section
                         },
                       })
@@ -357,7 +371,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                         setImprovedText(response["data"].improvedText);
                       })
                       .catch(function (error) {
-                        setImprovedText(error)
+                        setImprovedText(String(error))
                       });
                   };
                   sectionCheck();
@@ -391,9 +405,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                 setChangedContent(editor.value);
               }
             },
-
-
-
           ],
         }
       );
@@ -402,6 +413,9 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       const img = editorContent?.querySelector('img');
       if (img) {
         const updatedConfig = { ...config };
+        if (updatedConfig.extraButtons.length == 15) {
+          updatedConfig.extraButtons.splice(-2, 2);
+        }
         updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
           {
             name: 'img_increase',
@@ -445,13 +459,52 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
         setConfig(updatedConfig);
       }
 
+      // // If selected block is Footnote, add block size increase and decrease button
+      if (editorContent?.classList) {
+        const calssList = Array.from(editorContent?.classList);
+        if (calssList.includes('footnote')) {
+          const updatedConfig = { ...config };
+          updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
+            {
+              name: 'block_increase',
+              tooltip: 'Aumentar',
+              icon: 'angle-up',
+              exec: () => {
+                const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
+                if (padding && padding > 5) {
+                  editorContent.style.setProperty('padding', `0px ${padding - 5}px`, 'important');
+                }
+                else {
+                  editorContent.style.setProperty('padding', `0px 5px`, 'important');
+                };
+              }
+            },
+            {
+              name: 'block_decrease',
+              tooltip: 'Reducir',
+              icon: 'angle-down',
+              exec: () => {
+                const padding = parseInt(editorContent.style.padding?.split(' ')[1]);
+                if (padding && padding < 200) {
+                  editorContent.style.setProperty('padding', `10px ${padding + 5}px`, 'important');
+                }
+                else {
+                  editorContent.style.setProperty('padding', `10px 15px`, 'important');
+                };
+              }
+            },
+          ]);
+          setConfig(updatedConfig);
+        };
+      }
+
 
       // add custom button by Jodit method
       // create custom paragraph type button
       module.Jodit.defaultOptions.controls.customParagraph = {
         tooltip: 'Select the type of the block',
         icon: 'paragraph',
-        list: ['Título 1', 'Título 2', 'Título 3', 'Cuerpo', 'Texto recuadro', 'Título de Tabla/Figura', 'Nota de Tabla/Figura'],
+        list: ['Título 1', 'Título 2', 'Título 3', 'Cuerpo', 'Texto recuadro', 'Título de Tabla/Figura', 'Nota de Tabla/Figura', 'Fórmula centrada'],
 
         childTemplate: (editor, key, value) =>
           `<span class="${key}">${editor.i18n(value)}</span>`,
@@ -461,7 +514,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           // change div tag to h2 tag
           if (value == 'Título 1') {
             const tempElement = document.createElement('h2');
-            tempElement.innerHTML = editorContent.innerHTML;
+            tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
           }
@@ -498,7 +551,15 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
           }
           else if (value == 'Nota de Tabla/Figura') {
             const tempElement = document.createElement('div');
-            tempElement.style.cssText = 'font-size: 0.9rem; text-align: center'
+            tempElement.style.cssText = 'font-size: 0.9rem; text-align: justify;'
+            tempElement.classList.add('footnote');
+            tempElement.innerHTML = editorContent.innerHTML;
+            editorContent.parentNode.replaceChild(tempElement, editorContent);
+            setEditorContent(tempElement);
+          }
+          else if (value == 'Fórmula centrada') {
+            const tempElement = document.createElement('div');
+            tempElement.style.cssText = 'text-align: center;';
             tempElement.innerHTML = editorContent.innerHTML;
             editorContent.parentNode.replaceChild(tempElement, editorContent);
             setEditorContent(tempElement);
@@ -508,7 +569,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
       };
       // Create insert tooltip button
       module.Jodit.defaultOptions.controls.insertTooltip = {
-        tooltip: 'Insert Tooltip',
+        tooltip: 'Insertar Nota',
         icon: 'tooltip',
         popup: (editor, current, self, close) => {
           const selectedText = window.getSelection()?.toString();

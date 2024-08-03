@@ -26,7 +26,6 @@ async function downloadRecords() {
         });
     }
 
-    console.log('Done!');
 }
 
 downloadRecords();
