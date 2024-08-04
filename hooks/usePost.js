@@ -214,15 +214,17 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
   };
 
   const onChange = useCallback(async (e, name) => {
-    const {name: fileName, value} = e.target;
+    const {name: inputName, value} = e.target;
     const _files = refs[name]?.current?.files;
 
     let itemValue = value;
 
-    if (_files && fileName === "monograph") {
+    if (_files && inputName === "monograph") {
       itemValue = await handleMonographFile(e, _files[0]);
+    } else if (_files) {
+      itemValue = await upload(_files, true);
     } else if (refs[name]) {
-      itemValue = refs[name].current.checked;
+      itemValue = refs[name]?.current?.checked;
     }
 
     setFormState({
