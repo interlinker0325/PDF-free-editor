@@ -148,24 +148,51 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     console.log({checkResult})
     setLogicCheck(checkResult.data);
 
-    await saveDocument(true);
+    if (checkResult.data?.isTrue === "true") {
+      await saveDocument(true);
 
-    setStatusBarState({
-      error: null,
-      success:
-        "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
-    });
-    triggerLoading(false);
-    enqueueSnackbar(
-      'Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto',
-      {
-        variant: 'success',
-        preventDuplicate: true,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center'
-        }
+      setStatusBarState({
+        error: null,
+        success:
+          "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
       });
+      enqueueSnackbar(
+        'Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto',
+        {
+          variant: 'success',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
+    } else if (checkResult.data?.reasons?.length) {
+      checkResult.data.reasons.map(reason => (
+        enqueueSnackbar(
+          reason,
+          {
+            variant: 'warning',
+            preventDuplicate: true,
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'center'
+            }
+          })
+      ))
+    } else {
+      enqueueSnackbar(
+        'Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde.',
+        {
+          variant: 'error',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
+    }
+    triggerLoading(false);
+
   }, [isSaved, formState.id]);
 
   const doSubmit = useCallback(
@@ -214,15 +241,17 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
   };
 
   const onChange = useCallback(async (e, name) => {
-    const {name: fileName, value} = e.target;
+    const {name: inputName, value} = e.target;
     const _files = refs[name]?.current?.files;
 
     let itemValue = value;
 
-    if (_files && fileName === "monograph") {
+    if (_files && inputName === "monograph") {
       itemValue = await handleMonographFile(e, _files[0]);
+    } else if (_files) {
+      itemValue = await upload(_files, true);
     } else if (refs[name]) {
-      itemValue = refs[name].current.checked;
+      itemValue = refs[name]?.current?.checked;
     }
 
     setFormState({
@@ -246,6 +275,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       triggerLoading(true);
       const htmlData = await fileToHTML(file);
       const checkResult = await checkCompliance(htmlData.data);
+      console.log(checkResult.data);
       setLogicCheck(checkResult.data);
       const htmlFile = new File([htmlData.data], `${fileName}.html`, {
         type: "text/html",
