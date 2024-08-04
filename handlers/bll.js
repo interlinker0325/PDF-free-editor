@@ -1,4 +1,4 @@
-import {get, post, put} from 'utils/axios';
+import {del, get, post, put} from 'utils/axios';
 
 export const createEntry = async (
   {
@@ -39,6 +39,16 @@ export const createEntry = async (
 
 export const updateEntry = async (requestData) => {
   const response = await put('/api/entry', requestData);
+
+  if (response?.success) {
+    return response.data;
+  } else {
+    return {error: response.error};
+  }
+};
+
+export const deleteEntry = async (requestData) => {
+  const response = await del('/api/entry', requestData);
 
   if (response?.success) {
     return response.data;
