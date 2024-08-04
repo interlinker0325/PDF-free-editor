@@ -10,18 +10,18 @@ import ErrorBoundary from "components/Editor/ErrorBoundary";
 let options = {year: "numeric", month: "long", day: "numeric"};
 
 const PostView = ({
-  user,
-  post,
-  courses,
-  editMode = false,
-  previewIframe,
-  editView,
-  showPreview,
-  complianceView,
-  setIsSaved,
-  logicCheck,
-  setAllPass,
-}) => {
+                    user,
+                    post,
+                    courses,
+                    editMode = false,
+                    previewIframe,
+                    editView,
+                    showPreview,
+                    complianceView,
+                    setIsSaved,
+                    logicCheck,
+                    setAllPass,
+                  }) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
   const [editorContent, setEditorContent] = useState("Select the tag");
   // once the editorContent(HTML object of the Iframe) is changed, changedContent is set as its html string
@@ -45,7 +45,8 @@ const PostView = ({
   const check = (
     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 48 48">
       <path fill="#2775db" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path>
-      <path fill="#fff" d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
+      <path fill="#fff"
+            d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
     </svg>
   );
 
@@ -124,8 +125,7 @@ const PostView = ({
       setTitleLengthCheckBadge(check);
       title.style.border = 'none';
       title.title = '';
-    }
-    else {
+    } else {
       title.style.padding = '10px 20px'
       title.style.border = "solid red 2.5px";
       title.title = "El título debe tener entre 25 y 160 caracteres";
@@ -291,8 +291,7 @@ const PostView = ({
                   [post.post_type]: updatedState,
                 };
               });
-            }
-            else {
+            } else {
               sectionElement.style.border = 'none';
               sectionElement.title = '';
             }
@@ -585,10 +584,10 @@ const PostView = ({
                     [post.post_type]: updatedState,
                   };
                 });
+              } else {
+                subsection.style.border = 'none';
+                subsection.title = ''
               }
-              else {
-              subsection.style.border = 'none';
-              subsection.title = ''}
             }
           });
         }
@@ -615,12 +614,12 @@ const PostView = ({
                     'tables': revisa,
                   };
                 });
-              }
-              else {
+              } else {
                 divElement.style.border = 'none';
                 divElement.title = '';
               }
-            };
+            }
+
             if (figurePattern.test(divElement.textContent)) {
               figureIndex++;
               figureNumber = divElement.textContent.split(':')[0].split(' ')[1];
@@ -633,12 +632,12 @@ const PostView = ({
                     'figures': revisa,
                   };
                 });
-              }
-              else {
+              } else {
                 divElement.style.border = 'none';
                 divElement.title = '';
               }
-            };
+            }
+
           }
         })
         let anexosIndex = 0;  // Initialized here
@@ -779,7 +778,7 @@ const PostView = ({
 
   }, [post, titleLengthCheckBadge, sectionCheckBadge, numerationCheckBadge, noteCheckBadge])
 
-
+  console.log({editMode, postDraft})
   return (
     <article
       className={(showPreview || editView || complianceView) ? "flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
