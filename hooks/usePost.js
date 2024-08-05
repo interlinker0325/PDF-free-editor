@@ -105,18 +105,17 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
 
 // first check all section title exist, if not display error and then save edited HTML
   const saveDocument = async (approval) => {
-    setIsSaved(true);
+    triggerLoading(true);
     const iframeContent = getFrameContent();
     const htmlFile = new File([iframeContent], "monograph.html", {
       type: "text/html",
     });
-    triggerLoading(true);
     const oldFileId = formState?.monograph?.id || null
     const file = await upload([htmlFile], true, oldFileId);
     const loadedMonograph = await getMonograph(file)
     setPreviewIframe(loadedMonograph);
     const {id, error, monographView, ...postData} = formState;
-
+    console.log("FORM STATE:", formState);
     const action = formState?.id ? updateEntry : createEntry
     const entry = await action({
       ...postData,
@@ -126,6 +125,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       monograph: file
     });
     console.log({entry})
+    setIsSaved(true);
     triggerLoading(false);
     setFormState({...formState, ["monograph"]: file,});
     enqueueSnackbar('Tu documento se ha guardado satisfactoriamente',

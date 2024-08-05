@@ -10,6 +10,7 @@ export const createEntry = async (
     monograph,
     author,
     coauthors,
+    post_type,
     review,
     agreedterms,
     tags
@@ -24,6 +25,7 @@ export const createEntry = async (
     monograph,
     author,
     coauthors,
+    post_type,
     review,
     agreedterms,
     tags
