@@ -1,4 +1,4 @@
-import { selector } from 'gql';
+import {selector} from 'gql';
 
 export const GET_USER_LOGIN_DATA = email => `
     user(filter: { email: { eq: "${email}" } }) {
