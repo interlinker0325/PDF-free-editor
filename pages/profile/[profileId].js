@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {updateProfile} from 'handlers/profile';
 import {upload} from 'handlers/bll';
 import withSession from 'utils/withSession';
@@ -14,7 +14,7 @@ import Publications from 'components/Profile/Publications';
 import EditProfile from 'components/Profile/EditProfile';
 import TopBar from 'components/TopBar/TopBar';
 import Loader from 'components/Loader/Loader';
-import {verifyMutipleFields, INPUT_TYPES} from 'utils/form';
+import {INPUT_TYPES, verifyMutipleFields} from 'utils/form';
 import useUser from 'utils/useUser';
 
 import {isProfessor as isUserProfessor} from 'utils';
@@ -239,10 +239,10 @@ function Profile({profile, courses, posts, archivePosts, isProfessor}) {
                             <Courses items={courses}/>
                         }
                         {activeView === VIEW_STATES.POSTS &&
-                            <Publications items={posts}/>
+                            <Publications items={posts} label={"Publicaciones"}/>
                         }
                         {activeView === VIEW_STATES.ARCHIVE &&
-                            <Publications items={archivePosts}/>
+                            <Publications items={archivePosts} label={"Tutorías"}/>
                         }
                         {activeView === VIEW_STATES.EDIT &&
                             <EditProfile
