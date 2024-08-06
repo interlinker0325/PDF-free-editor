@@ -3,6 +3,7 @@ const DEFAULT = `id
     updatedAt
     description
     createdAt
+    post_type:postType
     review`;
 
 const AUTHOR = `author {

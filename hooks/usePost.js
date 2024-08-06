@@ -143,54 +143,55 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
   const requestApproval = useCallback(async () => {
     setOpen(false);
     triggerLoading(true);
-    const iframeContent = getFrameContent();
-    const checkResult = await checkCompliance(iframeContent);
-    console.log({checkResult})
-    setLogicCheck(checkResult.data);
+    // TODO: Validate with Hao
+    // const iframeContent = getFrameContent();
+    // const checkResult = await checkCompliance(iframeContent);
+    // console.log({checkResult})
+    // setLogicCheck(checkResult.data);
 
-    if (checkResult.data?.isTrue === "true") {
-      await saveDocument(true);
+    // if (checkResult.data?.isTrue === "true") {
+    await saveDocument(true);
 
-      setStatusBarState({
-        error: null,
-        success:
-          "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
+    setStatusBarState({
+      error: null,
+      success:
+        "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
+    });
+    enqueueSnackbar(
+      'Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto',
+      {
+        variant: 'success',
+        preventDuplicate: true,
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center'
+        }
       });
-      enqueueSnackbar(
-        'Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto',
-        {
-          variant: 'success',
-          preventDuplicate: true,
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center'
-          }
-        });
-    } else if (checkResult.data?.reasons?.length) {
-      checkResult.data.reasons.map(reason => (
-        enqueueSnackbar(
-          reason,
-          {
-            variant: 'warning',
-            preventDuplicate: true,
-            anchorOrigin: {
-              vertical: 'bottom',
-              horizontal: 'center'
-            }
-          })
-      ))
-    } else {
-      enqueueSnackbar(
-        'Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde.',
-        {
-          variant: 'error',
-          preventDuplicate: true,
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center'
-          }
-        });
-    }
+    // } else if (checkResult.data?.reasons?.length) {
+    //   checkResult.data.reasons.map(reason => (
+    //     enqueueSnackbar(
+    //       reason,
+    //       {
+    //         variant: 'warning',
+    //         preventDuplicate: true,
+    //         anchorOrigin: {
+    //           vertical: 'bottom',
+    //           horizontal: 'center'
+    //         }
+    //       })
+    //   ))
+    // } else {
+    //   enqueueSnackbar(
+    //     'Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde.',
+    //     {
+    //       variant: 'error',
+    //       preventDuplicate: true,
+    //       anchorOrigin: {
+    //         vertical: 'bottom',
+    //         horizontal: 'center'
+    //       }
+    //     });
+    // }
     triggerLoading(false);
 
   }, [isSaved, formState.id]);
@@ -326,6 +327,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
 
   useEffect(() => {
     if (!post) return
+    console.log({post})
     setFormState(post);
     setPreviewIframe(post?.monographView);
   }, [post]);
