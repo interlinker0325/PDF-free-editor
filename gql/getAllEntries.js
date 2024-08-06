@@ -10,6 +10,7 @@ export const GET_ALL_ENTRIES = (page = 1, limit = 10) => `
         title
         description
         id
+        post_type:postType
         coverimage {
             filename
             title

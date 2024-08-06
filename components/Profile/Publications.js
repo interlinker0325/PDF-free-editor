@@ -1,6 +1,6 @@
-import {isOdd} from 'utils';
+import {isOdd, POST_REVIEW_STATUS} from 'utils';
 
-const Publications = ({items, label}) => (
+const Publications = ({items, label, user}) => (
   <div className='overflow-x-auto'>
     <table className='w-full'>
       <tbody>
@@ -22,7 +22,7 @@ const Publications = ({items, label}) => (
               children={item.title}/>
           </td>
           <td className={`${styles.status} ${styles[item.review]}`}>
-            {item.review}
+            {item.review} <br/>{item.review === POST_REVIEW_STATUS.DRAFT ? `(${user?.id === item?.author?.id ? "Editable" : "Lectura"})` : ""}
           </td>
         </tr>
       )}
@@ -34,7 +34,7 @@ const Publications = ({items, label}) => (
 const styles = {
   tableRow: 'flex flex-row justify-between w-full py-2 px-4 text-2xl font-normal',
   title: 'rounded-l-none rounded-r-none w-full hover:text-primary hover:underline hover:underline-offset-1',
-  status: 'rounded-l-none rounded-r-none font-thin',
+  status: 'rounded-l-none rounded-r-none font-thin text-right',
   Aprobado: 'text-success',
   Denegado: 'text-error',
   Pendiente: 'text-black'
