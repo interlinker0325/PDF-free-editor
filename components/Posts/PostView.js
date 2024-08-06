@@ -785,14 +785,6 @@ const PostView = ({
       <div
         className="flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black">
         <h2 id="title" className="col-span-4 text-4xl cursor-pointer">{post.title}</h2>
-        {isCurrentUserAuthor && !editMode && postDraft && (
-          <a
-            href={`/posts/${post.id}/edit`}
-            className="align-self-end text-primary text-2xl"
-          >
-            {"Editar Publicación >"}
-          </a>
-        )}
       </div>
       <div className="grid grid-cols-10 gap-5 h-[75vh]">
         <aside className='h-[76vh] col-span-6 pr-5 border-[1px] border-transparent border-r-black'>
