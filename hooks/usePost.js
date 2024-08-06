@@ -105,39 +105,53 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
 
 // first check all section title exist, if not display error and then save edited HTML
   const saveDocument = async (approval) => {
-    triggerLoading(true);
-    const iframeContent = getFrameContent();
-    const htmlFile = new File([iframeContent], "monograph.html", {
-      type: "text/html",
-    });
-    const oldFileId = formState?.monograph?.id || null
-    const file = await upload([htmlFile], true, oldFileId);
-    const loadedMonograph = await getMonograph(file)
-    setPreviewIframe(loadedMonograph);
-    const {id, error, monographView, ...postData} = formState;
-    console.log("FORM STATE:", formState);
-    const action = formState?.id ? updateEntry : createEntry
-    const entry = await action({
-      ...postData,
-      ...(formState?.id ? {id: formState?.id} : {}),
-      author: user.id,
-      review: approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
-      monograph: file
-    });
-    console.log({entry})
-    setIsSaved(true);
-    triggerLoading(false);
-    setFormState({...formState, ["monograph"]: file,});
-    enqueueSnackbar('Tu documento se ha guardado satisfactoriamente',
-      {
-        variant: 'success',
-        preventDuplicate: true,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center'
-        }
-      });
+    try {
 
+      triggerLoading(true);
+      const iframeContent = getFrameContent();
+      const htmlFile = new File([iframeContent], "monograph.html", {
+        type: "text/html",
+      });
+      const oldFileId = formState?.monograph?.id || null
+      const file = await upload([htmlFile], true, oldFileId);
+      const loadedMonograph = await getMonograph(file)
+      setPreviewIframe(loadedMonograph);
+      const {id, error, monographView, ...postData} = formState;
+      console.log("FORM STATE:", formState);
+      const action = formState?.id ? updateEntry : createEntry
+      const entry = await action({
+        ...postData,
+        ...(formState?.id ? {id: formState?.id} : {}),
+        author: formState?.author?.id || user?.id,
+        review: approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
+        monograph: file
+      });
+      console.log({entry})
+      setIsSaved(true);
+      setFormState({...formState, ["monograph"]: file,});
+      enqueueSnackbar('Tu documento se ha guardado satisfactoriamente',
+        {
+          variant: 'success',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Algo salio mal guardando la publicación',
+        {
+          variant: 'error',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
+    } finally {
+      triggerLoading(false);
+    }
   };
 
   const requestApproval = useCallback(async () => {
