@@ -118,13 +118,17 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       setPreviewIframe(loadedMonograph);
       const {id, error, monographView, ...postData} = formState;
       console.log("FORM STATE:", formState);
-      const action = formState?.id ? updateEntry : createEntry
+      const action = formState?.id ? updateEntry : createEntry;
       const entry = await action({
-        ...postData,
-        ...(formState?.id ? {id: formState?.id} : {}),
-        author: formState?.author?.id || user?.id,
-        review: approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
-        monograph: file
+          ...postData,
+          ...(formState?.id ? { id: formState?.id } : {}),
+          author: formState?.author?.id || user?.id,
+          review: isUserTeacherOfCourse(user, courses)
+              ? POST_REVIEW_STATUS.APPROVED
+                : approval
+                  ? POST_REVIEW_STATUS.PENDING
+                  : POST_REVIEW_STATUS.DRAFT,
+          monograph: file
       });
       console.log({entry})
       setIsSaved(true);
@@ -208,48 +212,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     // }
     triggerLoading(false);
 
-  }, [isSaved, formState.id]);
-
-  const doSubmit = useCallback(
-    async (e) => {
-      e && e.preventDefault();
-      triggerLoading(true);
-      const {id, error, monographView, ...postData} = formState;
-
-      if (isUserTeacherOfCourse(user, courses)) {
-        postData.review = POST_REVIEW_STATUS.APPROVED;
-      }
-
-      let entry;
-      if (postData.id) {
-        entry = await updateEntry(postData);
-      } else {
-        entry = await createEntry({
-          author: user.id,
-          ...postData,
-        });
-      }
-      console.log({entry})
-
-      if (entry?.error) {
-        console.error("No se pudo actualizar la entrada", entry?.error);
-        setStatusBarState({
-          success: null,
-          error: "No se pudo guardar la entrada",
-        });
-      } else {
-        setFormState({...entry, ...postData});
-        setStatusBarState({
-          error: null,
-          success:
-            'Publicación guardada. Debes "Solicitar aprobación" para ser enviada a aprobación',
-        });
-      }
-
-      triggerLoading(false);
-    },
-    [formState, user, courses]
-  );
+  }, [formState.id, courses]);
 
   const handlePublication = () => {
     setOpen(true);
@@ -359,7 +322,6 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     removeCoAuthor,
     showPreview,
     setShowPreview,
-    doSubmit,
     editView,
     setEditView,
     complianceView,
