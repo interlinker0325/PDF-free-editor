@@ -38,7 +38,6 @@ const EditPost = ({post, courses, setIsSaved}) => {
     showPreview,
     setShowPreview,
     logicCheck,
-    doSubmit,
     editView,
     setEditView,
     complianceView,
@@ -93,7 +92,6 @@ const EditPost = ({post, courses, setIsSaved}) => {
         <PostForm
           refs={refs}
           form={formState}
-          doSubmit={doSubmit}
           clearForm={clearSubmitForm}
           onChange={onChange}
           user={user}

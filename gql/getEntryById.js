@@ -1,5 +1,5 @@
 export const GET_ENTRY_BY_ID = (entryId) => `
-    post(filter: { id: { eq: ${entryId} } }) {
+    post(filter: { id: { eq: "${entryId}" } }) {
         author {
             fullname
             id
