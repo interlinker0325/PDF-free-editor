@@ -777,8 +777,7 @@ const PostView = ({
     setAllPass(Boolean(formPass && documentPass && numericPass && notePass))
 
   }, [post, titleLengthCheckBadge, sectionCheckBadge, numerationCheckBadge, noteCheckBadge])
-
-  console.log({editMode, postDraft})
+  
   return (
     <article
       className={(showPreview || editView || complianceView) ? "flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>

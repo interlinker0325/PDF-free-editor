@@ -2,8 +2,10 @@ import { useEffect } from 'react';
 import useUser from 'utils/useUser';
 import Main from 'components/Main/Main';
 import PostStatusBar from 'components/Posts/PostStatusBar';
-import PublicView from 'components/Posts/PublicView';
 import { useRouter } from 'next/router';
+import dynamic from "next/dynamic";
+
+const PublicView = dynamic(() => import('./PublicView'), { ssr: false })
 
 const Post = ({ post,  updatePost }) => {
     const router = useRouter();

@@ -9,7 +9,6 @@ const PostForm = ({
     form,
     courses,
     onChange,
-    doSubmit,
     user,
     setAgreedTerms,
     setCoAuthors,
@@ -41,7 +40,7 @@ const PostForm = ({
 
     return (
         <>
-            <form className={!formView ? 'hidden' : 'font-roboto grid auto-rows-auto gap-8 p-6 bg-white shadow-lg rounded-lg'} onSubmit={doSubmit}>
+            <form className={!formView ? 'hidden' : 'font-roboto grid auto-rows-auto gap-8 p-6 bg-white shadow-lg rounded-lg'}>
                 <section className='row-auto'>
                     <div className='form-control'>
                         <input
