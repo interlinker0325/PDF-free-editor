@@ -116,7 +116,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       setPreviewIframe(loadedMonograph);
       const {id, error, monographView, ...postData} = formState;
       console.log("FORM STATE:", formState);
-      const action = formState?.id ? updateEntry : createEntry
+      const action = formState?.id ? updateEntry : createEntry;
       const entry = await action({
         ...postData,
         ...(formState?.id ? {id: formState?.id} : {}),
@@ -206,7 +206,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     // }
     triggerLoading(false);
 
-  }, [isSaved, formState.id]);
+  }, []);
 
   const doSubmit = useCallback(
     async (e) => {
@@ -357,7 +357,6 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     removeCoAuthor,
     showPreview,
     setShowPreview,
-    doSubmit,
     editView,
     setEditView,
     complianceView,

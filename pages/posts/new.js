@@ -25,7 +25,6 @@ const NewPost = ({isSaved, setIsSaved, courses}) => {
     removeCoAuthor,
     showPreview,
     setShowPreview,
-    doSubmit,
     editView,
     setEditView,
     complianceView,
@@ -65,7 +64,6 @@ const NewPost = ({isSaved, setIsSaved, courses}) => {
         <PostForm
           refs={refs}
           form={formState}
-          doSubmit={doSubmit}
           clearForm={clearSubmitForm}
           onChange={onChange}
           user={user}
