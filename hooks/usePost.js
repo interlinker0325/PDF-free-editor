@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {isAdmin, isUserTeacherOfCourse, isValidFileType, POST_REVIEW_STATUS} from "../utils";
+import {isAdmin, isUserTeacherOfCourse, isValidFileType, isValidImageType, POST_REVIEW_STATUS} from "../utils";
 import {createEntry, getMonograph, updateEntry, upload} from "../handlers/bll";
 import {enqueueSnackbar} from "notistack";
 import {checkCompliance, fileToHTML} from "../utils/server/windows";
@@ -19,7 +19,7 @@ const formBaseState = {
   post_type: "",
 };
 
-export default function usePost({user, post, isSaved, setIsSaved, courses} = {}) {
+export default function usePost({ user, post, isSaved, setIsSaved, courses } = {}) {
   const [formState, setFormState] = useState(formBaseState);
   const [open, setOpen] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);// this is converted HTML content. once upload is completed, set iframe content by previewIframe from loaded monograph
@@ -51,7 +51,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
   const setAgreedTerms = useCallback(
     async (e) => {
       e.preventDefault();
-      const {agreedterms, ...restFormState} = formState;
+      const { agreedterms, ...restFormState } = formState;
       restFormState.agreedterms = !agreedterms;
       setFormState(restFormState);
     },
@@ -61,7 +61,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
   const setCoAuthors = useCallback(
     async (e, selectedCoAuthor) => {
       e.preventDefault();
-      const {coauthors, ...restFormState} = formState;
+      const { coauthors, ...restFormState } = formState;
       let selectedCoauthors = coauthors || [];
       selectedCoauthors.push(selectedCoAuthor);
       restFormState.coauthors = selectedCoauthors;
@@ -72,7 +72,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
 
   const removeCoAuthor = useCallback(async (e, coAuthorId) => {
     e.preventDefault();
-    const {coauthors, ...restFormState} = formState;
+    const { coauthors, ...restFormState } = formState;
     const removeCoAuthorIndex = coauthors.findIndex(coAuthor => coAuthor.id === coAuthorId);
     coauthors.splice(removeCoAuthorIndex, 1);
     restFormState.coauthors = coauthors;
@@ -114,7 +114,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       const file = await upload([htmlFile], true, oldFileId);
       const loadedMonograph = await getMonograph(file)
       setPreviewIframe(loadedMonograph);
-      const {id, error, monographView, ...postData} = formState;
+      const { id, error, monographView, ...postData } = formState;
       console.log("FORM STATE:", formState);
       const action = formState?.id ? updateEntry : createEntry;
       const entry = await action({
@@ -124,9 +124,9 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
         review: isAdmin(user?.role?.id) ? postData.review : approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
         monograph: file
       });
-      console.log({entry})
+      console.log({ entry })
       setIsSaved(true);
-      setFormState({...formState, ["monograph"]: file,});
+      setFormState({ ...formState, ["monograph"]: file, });
       enqueueSnackbar('Tu documento se ha guardado satisfactoriamente',
         {
           variant: 'success',
@@ -254,15 +254,25 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
   };
 
   const onChange = useCallback(async (e, name) => {
-    const {name: inputName, value} = e.target;
+    const { name: inputName, value } = e.target;
     const _files = refs[name]?.current?.files;
+    const file_length = _files?.length;
 
     let itemValue = value;
 
     if (_files && inputName === "monograph") {
-      itemValue = await handleMonographFile(e, _files[0]);
+      if (!e.target.files || e.target.files.length === 0) {
+        // No files selected, user canceled the upload
+        return;
+      }
+      itemValue = await handleMonographFile(e, _files[file_length - 1]);
+      e.target.value = '';
+    } else if (_files && inputName === "coverimage") {   //image validate
+      itemValue = await handleImageFile(e, _files);
     } else if (_files) {
+      triggerLoading(true);                 //loading is added
       itemValue = await upload(_files, true);
+      triggerLoading(false);                //loading is
     } else if (refs[name]) {
       itemValue = refs[name]?.current?.checked;
     }
@@ -273,7 +283,29 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
 
   }, [refs, formState]);
 
-// Handler function for monograph files
+  //image validate fuction
+  const handleImageFile = async (event, _files) => {
+    let itemValue;
+    const imageType = _files[_files.length - 1].name.split(".").pop();
+
+    if (!isValidImageType(imageType)) {
+      enqueueSnackbar("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo Image.");
+      event.target.value = null;
+      return;
+    }
+    triggerLoading(true);
+    try {
+      itemValue = await upload(_files, true);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    } finally {
+      triggerLoading(false);
+    }
+
+    return itemValue;
+  }
+
+  // Handler function for monograph files
   const handleMonographFile = async (event, file) => {
     const fileType = file.name.split(".").pop();
     const fileName = file.name.split('.')[0];
@@ -288,12 +320,13 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       triggerLoading(true);
       const htmlData = await fileToHTML(file);
       const checkResult = await checkCompliance(htmlData.data);
-      console.log(checkResult.data);
+      console.log(checkResult.data, "-----data check-----");
       setLogicCheck(checkResult.data);
       const htmlFile = new File([htmlData.data], `${fileName}.html`, {
         type: "text/html",
       });
       const uploadedFiles = await upload([htmlFile], true);
+      console.log(uploadedFiles, "-----upload file----");
       const loadedMonograph = await getMonograph(uploadedFiles);
       setPreviewIframe(loadedMonograph);
       triggerLoading(false);
@@ -311,7 +344,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     const isContent = Boolean(iframe.contentWindow.document.body.innerText.trim());
     const isTitle = Boolean(formState.title.trim())
     const haveType = !!formState.post_type;
-    console.log({formState})
+    console.log({ formState })
     if (isContent && isTitle && haveType) {
       await saveDocument();
     } else if (!haveType) {
@@ -325,7 +358,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
           }
         });
     } else {
-      enqueueSnackbar('Para guardar, anota el título en la sección de Formulario, incluye un documento Word o PDF, o pasa directamente al Editor donde puedes agregar bloques de texto e iniciar tu publicación directamente',
+      enqueueSnackbar('Para guardar un borrador debes tener lo siguiente: 1. Título de la publicación en la sección de formulario. \n 2.	Contenido, importado o creado por ti mismo en el editor. \n 3.Tipo de publicación.',
         {
           variant: 'warning',
           preventDuplicate: true,
@@ -339,7 +372,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
 
   useEffect(() => {
     if (!post) return
-    console.log({post})
+    console.log({ post })
     setFormState(post);
     setPreviewIframe(post?.monographView);
   }, [post]);

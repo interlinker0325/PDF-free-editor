@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faFileArrowDown, faFileCode, faImages, faPeopleGroup, faTags} from '@fortawesome/free-solid-svg-icons';
-import {TERMS_AND_CONDITIONS_TEXT} from 'utils/copy';
+import React, { useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBookAtlas, faFileArrowDown, faFileCode, faImages, faPeopleGroup, faTags } from '@fortawesome/free-solid-svg-icons';
+import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-
+import { useAtom } from 'jotai';
+import { colorAtom } from 'store/color';
 const PostForm = ({
     form,
     courses,
@@ -21,16 +22,26 @@ const PostForm = ({
 
     const [open, setOpen] = useState(false);
 
+    const [monograColor,] = useAtom(colorAtom);
+    const [monographChange, setMonographChange] = useState(false);
+
     const handleClick = (event) => {
-        if (form.monograph) {
-            event.preventDefault();
-            setOpen(true);
+        setMonographChange(!monographChange);
+        if (!monographChange) {
+            return;
         }
+
+        event.preventDefault();
+        setOpen(true);
+        // if (form.monograph) {
+        //     setMonographChange(true);
+        // }
     };
 
     const handleYes = () => {
         setOpen(false);
-        form.monograph = null;
+        // form.monograph = null;
+        setMonographChange(false);
         refs.monograph.current.click();
     };
 
@@ -54,9 +65,9 @@ const PostForm = ({
                 </section>
                 <section className='row-span-3 grid lg:grid-cols-2 auto-rows-auto gap-6'>
                     <div className='flex flex-col form-control gap-6 pt-4'>
-                        <div className={styles.formControl}>
+                        <div className={`${styles.formControl} flex jusfity-between`}>
                             <FontAwesomeIcon className={styles.icon} icon={faTags} size='lg' />
-                            <label className={styles.label}>
+                            <label className={`${styles.label} ml-[6px]`}>
                                 <select
                                     className={styles.select(form.course)}
                                     value={form.course || ''}
@@ -68,23 +79,9 @@ const PostForm = ({
                                 </select>
                             </label>
                         </div>
-                        <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faFileCode} size='lg'  />
-                            <label className={styles.label}>
-                                <div>
-                                    <input
-                                        className={styles.fileInput}
-                                        type='file'
-                                        name='monograph'
-                                        id='monograph'
-                                        ref={refs.monograph}
-                                        onChange={(e) => onChange(e, 'monograph')}
-                                        onClick={handleClick}
-                                    />
-                                    <span htmlFor='monograph' className={styles.fileLabel(form.monograph)}>Agregar documento(HTML, PDF, DOC, DOCX, RTF) *<span className='font-thin'>{'  >'}</span></span>
-                                </div>
-                            </label>
-                            <label className={styles.label}>
+                        <div className={`${styles.formControl} flex jusfity-between`}>
+                            <FontAwesomeIcon className={styles.icon} icon={faBookAtlas} size='lg' />
+                            <label className={`${styles.label} ml-[4px]`}>
                                 <select
                                     className={styles.type(form.post_type)}
                                     value={form.post_type || ''}
@@ -99,9 +96,25 @@ const PostForm = ({
                                 </select>
                             </label>
                         </div>
+                        <div className={`${styles.formControl} flex jusfity-between`}>
+                            <FontAwesomeIcon className={styles.icon} icon={faFileCode} size='lg' />
+                            <label className={`${styles.label} ml-[5px]`}>
 
-                        <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faImages} size='lg'  />
+                                <input
+                                    className={styles.fileInput}
+                                    type='file'
+                                    name='monograph'
+                                    id='monograph'
+                                    ref={refs.monograph}
+                                    onChange={(e) => onChange(e, 'monograph')}
+                                    onClick={handleClick}
+                                />
+                                <span htmlFor='monograph' className={`${styles.fileLabel(form.monograph)} ${monograColor === true ? "text-[#88a9fe]" : ""}`}>Agregar documento(PDF, Word, Dock) *<span className='font-thin float-right'>{'  >'}</span></span>
+
+                            </label>
+                        </div>
+                        <div className={`${styles.formControl} flex jusfity-between`}>
+                            <FontAwesomeIcon className={styles.icon} icon={faImages} size='lg' />
                             <label className={styles.label}>
                                 <input
                                     className={styles.fileInput}
@@ -109,14 +122,16 @@ const PostForm = ({
                                     name='coverimage'
                                     id='coverimage'
                                     ref={refs.coverimage}
-                                    onChange={(e) => onChange(e, 'coverimage')} />
-                                <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado * <span className='font-thin'>{'>'}</span></span>
+                                    onChange={(e) => onChange(e, 'coverimage')}
+                                />
+                                <span htmlFor='coverimage' className={styles.fileLabel(form.coverimage)}>Agregar imagen de encabezado * <span className='font-thin float-right'>{'>'}</span></span>
                             </label>
                         </div>
 
-                        <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} size='lg'  />
-                            <label className={styles.label}>
+                        <div className={`${styles.formControl} flex jusfity-between`}>
+                            <FontAwesomeIcon className={styles.icon} icon={faFileArrowDown} size='lg' />
+
+                            <label className={`${styles.label} ml-[7px]`}>
                                 <input
                                     className={styles.fileInput}
                                     type='file'
@@ -125,12 +140,13 @@ const PostForm = ({
                                     multiple
                                     ref={refs.attachments}
                                     onChange={(e) => onChange(e, 'attachments')} />
-                                <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto <span className='font-thin'>{'>'}</span></span>
+                                <span className={styles.fileLabel(form.attachments)}>Agregar contenido adjunto <span className='font-thin float-right'>{'>'}</span></span>
                             </label>
+
                         </div>
 
-                        <div className={styles.formControl}>
-                            <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} size='lg'  />
+                        <div className={`${styles.formControl} flex jusfity-between`}>
+                            <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} size='md' />
                             <Autocomplete
                                 coAuthors={form.coauthors}
                                 placeholder='Co-autores'
@@ -179,17 +195,23 @@ const PostForm = ({
                 <section className='row-auto'>
                     <div className='form-control'>
                         <label className={styles.labelNoCursor}>
-                            <div className='h-[23px] w-[23px] border-black border-[1px] flex flex-col justify-center items-center basis-6'>
-                                {form.agreedterms &&
-                                    <div className='h-[20px] w-[20px] rounded-full bg-other' />
-                                }
-                            </div>
+
                             <span className='label-text normal-case text-checkbox font-thin italic max-w-[97%]'>
                                 <h4 className='not-italic text-black font-normal '>Los términos y condiciones deben ser aceptados para publicar una publicación*</h4>
+
                                 <div className='w-full h-[300px] overflow-scroll border p-4 rounded-lg'>
                                     {TERMS_AND_CONDITIONS_TEXT}
-                                    <a onClick={setAgreedTerms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
+                                    <div className='flex gap-5'>
+
+                                        <a onClick={setAgreedTerms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
+                                        <div className='h-[23px] w-[23px] border-black border-[1px] flex flex-col justify-center items-center basis-6'>
+                                            {form.agreedterms &&
+                                                <div className='h-[20px] w-[20px] rounded-full bg-other' />
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
+
                             </span>
                         </label>
                     </div>
@@ -227,13 +249,13 @@ const STYLE_INACTIVE = 'text-titleInput border-b-black';
 const styles = {
     formControl: 'form-control flex-row gap-4 items-end',
     titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input drop-shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
-    label: 'cursor-pointer font-normal label justify-start gap-4 p-0',
+    label: 'cursor-pointer font-normal label justify-start gap-4 p-0 w-[380px]',
     labelNoCursor: 'font-normal label justify-start gap-4 p-0',
     icon: 'w-[10px]',
-    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
-    type: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-full max-w-xs pl-0 border-2 border-transparent rounded-none`,
+    select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-[380px] pl-0 border-2 border-transparent rounded-none`,
+    type: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-[380px] pl-0 border-2 border-transparent rounded-none`,
     fileInput: 'input hidden input-ghost w-full',
-    fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text drop-shadow-lg font-normal text-lg border-2 border-transparent py-2 rounded-none`,
+    fileLabel: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} label-text drop-shadow-lg font-normal text-lg border-2 border-transparent py-2 rounded-none w-full`,
     textarea: val => `${val ? 'border-other' : ''} textarea font-normal drop-shadow-lg p-5 text-lg font-caslon h-36 rounded-none resize-none bg-secondary w-full`,
     checkbox: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} checkbox font-normal rounded-none checked:!bg-none checked:bg-other`,
     button: 'btn min-h-min h-min py-[10px] px-[20px] bg-other hover:btn-primary hover:text-white capitalize text-white rounded-full',

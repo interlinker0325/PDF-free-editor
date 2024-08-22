@@ -6,6 +6,9 @@ import PostCard from "components/PostCard/PostCard";
 import useUser from "utils/useUser";
 import { query } from "gql";
 import TopBar from "components/TopBar/TopBar";
+import dynamic from "next/dynamic";
+const JotaiProvider = dynamic(() => import("../provider/jotaiProvider"), { ssr: false });
+
 
 const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
   const { user = {} } = useUser();
@@ -29,34 +32,35 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
 
   return (
     <>
-	
-      <Main>
-        {user.isLoggedIn && (
-          <TopBar className="justify-end">
-            <h3 className="text-primary text-2xl self-center justify-self-end">
-              ¡Bienvenid@ {user.fullname}!
-            </h3>
-          </TopBar>
-        )}
-        <HeroCards bannerGroups={banners} />
-        <div className="flex flex-row items-center justify-between pt-20 pb-2 border-[1px] border-transparent rounded-none border-b-black">
-          <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>
-        </div>
-        <div className="my-8 grid grid-cols-5 gap-6">
-          {state.posts &&
-            state.posts.map((post) => (
-              <PostCard key={`Post-Home-${post.id}`} {...post} />
-            ))}
-        </div>
-        {state.showMore && (
-          <a
-            onClick={getNextPage}
-            className="text-other cursor-pointer hover:text-primary underline underline-offset-1 mt-4 mb-20"
-          >
-            Cargar más publicaciones &gt;
-          </a>
-        )}
-      </Main>
+      <JotaiProvider>
+        <Main>
+          {user.isLoggedIn && (
+            <TopBar className="justify-end">
+              <h3 className="text-primary text-2xl self-center justify-self-end">
+                ¡Bienvenid@ {user.fullname}!
+              </h3>
+            </TopBar>
+          )}
+          <HeroCards bannerGroups={banners} />
+          <div className="flex flex-row items-center justify-between pt-20 pb-2 border-[1px] border-transparent rounded-none border-b-black">
+            <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>
+          </div>
+          <div className="my-8 grid grid-cols-5 gap-6">
+            {state.posts &&
+              state.posts.map((post) => (
+                <PostCard key={`Post-Home-${post.id}`} {...post} />
+              ))}
+          </div>
+          {state.showMore && (
+            <a
+              onClick={getNextPage}
+              className="text-other cursor-pointer hover:text-primary underline underline-offset-1 mt-4 mb-20"
+            >
+              Cargar más publicaciones &gt;
+            </a>
+          )}
+        </Main>
+      </JotaiProvider>
     </>
   );
 };
