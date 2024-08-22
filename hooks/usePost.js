@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {isUserTeacherOfCourse, isValidFileType, POST_REVIEW_STATUS} from "../utils";
+import {isAdmin, isUserTeacherOfCourse, isValidFileType, POST_REVIEW_STATUS} from "../utils";
 import {createEntry, getMonograph, updateEntry, upload} from "../handlers/bll";
 import {enqueueSnackbar} from "notistack";
 import {checkCompliance, fileToHTML} from "../utils/server/windows";
@@ -103,10 +103,8 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       iframe.contentWindow.document.body.innerHTML;
   }
 
-// first check all section title exist, if not display error and then save edited HTML
   const saveDocument = async (approval) => {
     try {
-
       triggerLoading(true);
       const iframeContent = getFrameContent();
       const htmlFile = new File([iframeContent], "monograph.html", {
@@ -120,15 +118,11 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       console.log("FORM STATE:", formState);
       const action = formState?.id ? updateEntry : createEntry;
       const entry = await action({
-          ...postData,
-          ...(formState?.id ? { id: formState?.id } : {}),
-          author: formState?.author?.id || user?.id,
-          review: isUserTeacherOfCourse(user, courses)
-              ? POST_REVIEW_STATUS.APPROVED
-                : approval
-                  ? POST_REVIEW_STATUS.PENDING
-                  : POST_REVIEW_STATUS.DRAFT,
-          monograph: file
+        ...postData,
+        ...(formState?.id ? {id: formState?.id} : {}),
+        author: formState?.author?.id || user?.id,
+        review: isAdmin(user?.role?.id) ? postData.review : approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
+        monograph: file
       });
       console.log({entry})
       setIsSaved(true);
@@ -212,7 +206,48 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
     // }
     triggerLoading(false);
 
-  }, [formState.id, courses]);
+  }, []);
+
+  const doSubmit = useCallback(
+    async (e) => {
+      e && e.preventDefault();
+      triggerLoading(true);
+      const {id, error, monographView, ...postData} = formState;
+
+      if (isUserTeacherOfCourse(user, courses)) {
+        postData.review = POST_REVIEW_STATUS.APPROVED;
+      }
+
+      let entry;
+      if (postData.id) {
+        entry = await updateEntry(postData);
+      } else {
+        entry = await createEntry({
+          author: user.id,
+          ...postData,
+        });
+      }
+      console.log({entry})
+
+      if (entry?.error) {
+        console.error("No se pudo actualizar la entrada", entry?.error);
+        setStatusBarState({
+          success: null,
+          error: "No se pudo guardar la entrada",
+        });
+      } else {
+        setFormState({...entry, ...postData});
+        setStatusBarState({
+          error: null,
+          success:
+            'Publicación guardada. Debes "Solicitar aprobación" para ser enviada a aprobación',
+        });
+      }
+
+      triggerLoading(false);
+    },
+    [formState, user, courses]
+  );
 
   const handlePublication = () => {
     setOpen(true);

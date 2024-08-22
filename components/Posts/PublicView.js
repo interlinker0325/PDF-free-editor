@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import PublicIFrame from 'components/IFrame/PublicIFrame';
-import {isPostDraft} from 'utils';
+import {isAdmin as isUserAdmin, isPostDraft} from 'utils';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {deleteEntry} from "../../handlers/bll";
 import {useRouter} from "next/router";
@@ -24,6 +24,8 @@ const PublicView = ({
   const toggleShowFiles = () => setshowFiles(!showFiles);
   const author = post?.author;
   const isCurrentUserAuthor = author?.id === user?.id;
+  console.log({user})
+  const isAdmin = isUserAdmin(user?.role?.id);
 
   const files = Array.isArray(post?.attachments) ? post?.attachments?.map(file =>
     <a
@@ -40,7 +42,7 @@ const PublicView = ({
 
   const postDraft = isPostDraft(post);
   let formattedDate = new Date(post.createdAt).toLocaleDateString('es-ES', options);
-
+  console.log({isAdmin})
   return (
     <>
       <Dialog open={deletePrompt} onClose={() => setDeletePrompt(false)}>
@@ -79,7 +81,7 @@ const PublicView = ({
         <div
           className='flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black'>
           <h2 className="col-span-4 text-4xl">{post.title}</h2>
-          {isCurrentUserAuthor && !editMode && postDraft && (
+          {(isAdmin || (isCurrentUserAuthor && !editMode && postDraft)) && (
             <div className="flex space-x-2">
               <a
                 href={`/posts/${post.id}/edit`}
