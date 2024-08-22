@@ -1,4 +1,8 @@
+import { faL } from "@fortawesome/free-solid-svg-icons";
+import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
+import { colorAtom } from "store/color";
+
 
 const IFrame = ({
   url,
@@ -11,6 +15,7 @@ const IFrame = ({
   ...props
 }) => {
   const [editElement, setEditElement] = useState();
+  const [, setMonograColor] = useAtom(colorAtom);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -43,7 +48,7 @@ const IFrame = ({
 
     }
   };
-  
+
   const handleMouseOver = (event) => {
     var hoveredElement = event.target;
     if (hoveredElement.tagName === 'TD' || hoveredElement.tagName === 'TH') {
@@ -87,11 +92,14 @@ const IFrame = ({
     if (iframe && iframe.contentWindow && iframe.contentWindow.document) {
       const iframeDoc = iframe.contentWindow.document;
       const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, body');
+      elements.forEach(element => {
+        element.style.background = 'none';
+      });
 
-        elements.forEach(element => {
-          element.style.background = 'none';
-        });
-      }
+      if (iframe.contentWindow.document.body.textContent) {
+        setMonograColor(true)
+      } else setMonograColor(false);
+    }
   }, [editView])
 
 
@@ -177,7 +185,7 @@ const IFrame = ({
     const iframeDoc = iframe.contentWindow.document;
     const tooltipElements = iframeDoc.querySelectorAll('sup');
     Array.from(tooltipElements).forEach((element, index) => {
-      element.textContent = '[' + (index+1) + ']';
+      element.textContent = '[' + (index + 1) + ']';
     })
 
   }, [changedContent]);
