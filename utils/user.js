@@ -14,10 +14,13 @@ export const USER_TYPE_BY_ID = {
     '122038958': USER_TYPE_NAMES.ADMINISTRADOR
 };
 
-export const isProfessor = (typeId) =>
+export const  isProfessor = (typeId) =>
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.PROFESOR ||
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.ADMINISTRADOR ||
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.SUPLENTE;
+
+export const isAdmin = (typeId) =>
+  USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.ADMINISTRADOR;
 
 export const isStudent = (typeId) =>
     USER_TYPE_BY_ID[typeId] === USER_TYPE_NAMES.ESTUDIANTE;

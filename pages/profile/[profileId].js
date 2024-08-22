@@ -16,7 +16,7 @@ import TopBar from 'components/TopBar/TopBar';
 import Loader from 'components/Loader/Loader';
 import {INPUT_TYPES, verifyMutipleFields} from 'utils/form';
 
-import {isProfessor as isUserProfessor} from 'utils';
+import {isProfessor as isUserProfessor, isAdmin as isUserAdmin} from 'utils';
 import useUser from "../../utils/useUser";
 
 const DEFAULT_USER_ID = 'me'
@@ -31,7 +31,7 @@ const VIEW_STATES = {
 
 const DEFAULT_ERRORFORM = {field: null, msg: null};
 
-function Profile({profile, courses, posts, archivePosts, isProfessor}) {
+function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) {
   const {user} = useUser({redirectTo: '/'})
   const router = useRouter();
   useEffect(() => {
@@ -64,10 +64,9 @@ function Profile({profile, courses, posts, archivePosts, isProfessor}) {
     if (refs[name]) {
       triggerLoading(true);
       const _files = refs[name]?.current?.files;
-      const files = await upload(_files);
-      itemValue = files;
+      itemValue = await upload(_files);
       if (FileReader && _files && _files.length) {
-        var fr = new FileReader();
+        const fr = new FileReader();
         fr.onload = function () {
           setAvatarImage(fr.result);
         }
@@ -87,7 +86,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor}) {
     }
     delete formState[name];
     setFormState({[name]: itemValue, ...formState})
-  }, [formState]);
+  }, [formState, refs]);
 
   const submitUpdateProfile = useCallback(async (e) => {
     e.preventDefault();
@@ -149,10 +148,10 @@ function Profile({profile, courses, posts, archivePosts, isProfessor}) {
     setFormState(profile);
     setAvatarImage(null);
     setActiveView(VIEW_STATES.USER);
-  }, [formState])
+  }, [profile])
 
   const avatarView = avatarImage || formState.avatar?.url ? (
-    <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url}/>
+    <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
   ) : (
     <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
       <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
@@ -242,7 +241,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor}) {
               <Publications items={posts} label={"Publicaciones"} user={user}/>
             }
             {activeView === VIEW_STATES.ARCHIVE &&
-              <Publications items={archivePosts} label={"Tutorías"} user={user}/>
+              <Publications items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
             }
             {activeView === VIEW_STATES.EDIT &&
               <EditProfile
@@ -283,6 +282,7 @@ export const getServerSideProps = withSession(async function ({req}) {
   const userIdParam = urlSplit[urlSplit.length - 1];
   const isCurrentUserProfile = userIdParam === DEFAULT_USER_ID && currentUser;
   const isProfessor = isUserProfessor(currentUser.role?.id);
+  const isAdmin = isUserAdmin(currentUser.role?.id);
   const profileId = isCurrentUserProfile ? currentUser.id : userIdParam
   const profileQuery = isCurrentUserProfile ?
     query.user.GET_PRIVATE_USER_PROFILE : query.user.GET_PUBLIC_USER_PROFILE;
@@ -295,8 +295,12 @@ export const getServerSideProps = withSession(async function ({req}) {
   ]);
 
   let archivePosts = {};
-  if (isProfessor && isCurrentUserProfile) {
-    const profesorCourses = allCourses.filter(course => course.professor.id === profileId).map(course => course.id);
+  if (isAdmin && isCurrentUserProfile) {
+    archivePosts = await request(
+      query.posts.GET_ADMIN_COURSES_POSTS(allCourses.map(course => course.id))
+    );
+  } else if (isProfessor && isCurrentUserProfile) {
+    const profesorCourses = allCourses.filter(course => course?.professor?.id === profileId).map(course => course.id);
     archivePosts = await request(
       query.posts.GET_PROFESOR_COURSES_POSTS(profesorCourses)
     );
@@ -306,8 +310,9 @@ export const getServerSideProps = withSession(async function ({req}) {
       profile,
       courses: allCourses,
       posts: posts,
-      archivePosts: archivePosts.allPosts || [],
-      isProfessor
+      archivePosts: archivePosts?.allPosts || [],
+      isProfessor,
+      isAdmin
     }
   };
 });

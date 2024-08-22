@@ -14,12 +14,16 @@ import PostTopBar from "../../../components/Posts/PostTopBar";
 import RequestApprovalDialog from "../../../components/Posts/RequestApprovalDialog";
 import {SnackbarProvider} from "notistack";
 import TopBar from "../../../components/TopBar/TopBar";
+import {isAdmin} from "../../../utils";
 
 const EditPost = ({post, courses, setIsSaved}) => {
   const router = useRouter();
   const {user} = useUser({redirectTo: '/'});
   useEffect(() => {
-    if (user && !user.isLoggedIn || user && user.isLoggedIn && user.id !== post.author?.id) {
+    const userWithoutCredentials = user && !user.isLoggedIn;
+    const userNotAuthor = user && user.isLoggedIn && user.id !== post.author?.id
+
+    if (userWithoutCredentials || (userNotAuthor && !isAdmin(user?.role?.id))) {
       router.push('/');
     }
   }, [user]);
