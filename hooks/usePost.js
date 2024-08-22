@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {isUserTeacherOfCourse, isValidFileType, POST_REVIEW_STATUS} from "../utils";
+import {isAdmin, isUserTeacherOfCourse, isValidFileType, POST_REVIEW_STATUS} from "../utils";
 import {createEntry, getMonograph, updateEntry, upload} from "../handlers/bll";
 import {enqueueSnackbar} from "notistack";
 import {checkCompliance, fileToHTML} from "../utils/server/windows";
@@ -103,10 +103,8 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
       iframe.contentWindow.document.body.innerHTML;
   }
 
-// first check all section title exist, if not display error and then save edited HTML
   const saveDocument = async (approval) => {
     try {
-
       triggerLoading(true);
       const iframeContent = getFrameContent();
       const htmlFile = new File([iframeContent], "monograph.html", {
@@ -123,7 +121,7 @@ export default function usePost({user, post, isSaved, setIsSaved, courses} = {})
         ...postData,
         ...(formState?.id ? {id: formState?.id} : {}),
         author: formState?.author?.id || user?.id,
-        review: approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
+        review: isAdmin(user?.role?.id) ? postData.review : approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
         monograph: file
       });
       console.log({entry})

@@ -1,10 +1,10 @@
 * {
     box-sizing: border-box;
-};
+}
 
 svg path {
     transition: fill ease .5s;
-};
+}
 
 .htmlBackgroundBackdrop {
     overflow: hidden;
