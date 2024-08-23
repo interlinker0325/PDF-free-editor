@@ -14,8 +14,8 @@ export const GET_PROFESOR_COURSES_POSTS = (coursesIds) => `
     }
 `;
 
-export const GET_ADMIN_COURSES_POSTS = (coursesIds) => `
-    allPosts(filter: {course: {in: [${[...coursesIds]}]}}) {
+export const GET_ADMIN_COURSES_POSTS = () => `
+    allPosts() {
         review
         createdAt
         id
