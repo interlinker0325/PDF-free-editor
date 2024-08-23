@@ -1,9 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import axios from "axios";
 
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
+// import 'jodit/build/jodit.min.css';
+// import "https://cdnjs.cloudflare.com/ajax/libs/jodit/3.6.5/jodit.min.css"
 
 const Editor = ({ editorContent, setEditorContent, setChangedContent, section, setSection }) => {
   const editor = useRef(null);
@@ -18,8 +20,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     'bold',
     'underline',
     'italic', '|',
-    'image',
-    'table',
+
     'link', '|',
     'undo', 'redo', '|',
     'eraser', '|',
@@ -234,6 +235,8 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
 
               }
             },
+            'image',
+            'table',
             {
               name: 'addDividedBlock',
               tooltip: 'Add Divided Block',

@@ -1,4 +1,4 @@
-import {del, get, post, put} from 'utils/axios';
+import { del, get, post, put } from 'utils/axios';
 
 export const createEntry = async (
   {
@@ -35,7 +35,7 @@ export const createEntry = async (
   if (response?.success) {
     return response.data;
   } else {
-    return {error: response.error};
+    return { error: response.error };
   }
 };
 
@@ -45,7 +45,7 @@ export const updateEntry = async (requestData) => {
   if (response?.success) {
     return response.data;
   } else {
-    return {error: response.error};
+    return { error: response.error };
   }
 };
 
@@ -55,18 +55,18 @@ export const deleteEntry = async (requestData) => {
   if (response?.success) {
     return response.data;
   } else {
-    return {error: response.error};
+    return { error: response.error };
   }
 };
 
 export const publishEntry = async (recordId) => {
-  const requestData = {recordId}
+  const requestData = { recordId }
   const response = await post('/api/record', requestData);
 
   if (response?.success) {
     return response.data;
   } else {
-    return {error: response.error};
+    return { error: response.error };
   }
 };
 
@@ -79,18 +79,18 @@ export const newSection = async (
     sections
   };
 
-  requestData.sections = requestData.sections.map(({imageRef, monographRef, ...rest}) => rest);
+  requestData.sections = requestData.sections.map(({ imageRef, monographRef, ...rest }) => rest);
   const response = await post('/api/section', requestData);
 
   if (response?.success) {
     return response.data;
   } else {
-    return {error: response.error};
+    return { error: response.error };
   }
 };
 
 export const upload = async (files, returnUrl = false, fileId) => {
-  if (!files) return {error: 'No file selected.'};
+  if (!files) return { error: 'No file selected.' };
 
   let formData = new FormData();
   fileId && formData.append('fileId', fileId);
@@ -102,10 +102,10 @@ export const upload = async (files, returnUrl = false, fileId) => {
   const response = await post('/api/upload', formData, true);
 
   if (response?.success) {
-    const data = response.data.uploads?.map(({id, url}) => returnUrl ? {id, url} : id);
+    const data = response.data.uploads?.map(({ id, url }) => returnUrl ? { id, url } : id);
     return (data.length === 1) ? data[0] : data;
   } else {
-    return {error: response.error};
+    return { error: response.error };
   }
 };
 

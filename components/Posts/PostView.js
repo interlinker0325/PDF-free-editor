@@ -1,27 +1,27 @@
 // noinspection JSNonASCIINames
-
-import {useEffect, useState} from "react";
+"use client"
+import { useEffect, useState } from "react";
 import IFrame from "components/IFrame/IFrame";
-import {isPostDraft} from "utils";
+import { isPostDraft } from "utils";
 import Editor from "components/Editor/Editor";
 import Compliance from "components/Compliance/Compliance"
 import ErrorBoundary from "components/Editor/ErrorBoundary";
 
-let options = {year: "numeric", month: "long", day: "numeric"};
+let options = { year: "numeric", month: "long", day: "numeric" };
 
 const PostView = ({
-                    user,
-                    post,
-                    courses,
-                    editMode = false,
-                    previewIframe,
-                    editView,
-                    showPreview,
-                    complianceView,
-                    setIsSaved,
-                    logicCheck,
-                    setAllPass,
-                  }) => {
+  user,
+  post,
+  courses,
+  editMode = false,
+  previewIframe,
+  editView,
+  showPreview,
+  complianceView,
+  setIsSaved,
+  logicCheck,
+  setAllPass,
+}) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
   const [editorContent, setEditorContent] = useState("Select the tag");
   // once the editorContent(HTML object of the Iframe) is changed, changedContent is set as its html string
@@ -34,7 +34,6 @@ const PostView = ({
   const [sectionTitles, setSectionTitles] = useState([]);
   const toggleShowFiles = () => setShowFiles(prev => !prev);
   const [isAnexos, setIsAnexos] = useState(false);
-
   // standard section titles
   const sections = {
     'Ensayo': ['conclusiones', 'bibliografía', 'anexos'],
@@ -46,7 +45,7 @@ const PostView = ({
     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 48 48">
       <path fill="#2775db" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path>
       <path fill="#fff"
-            d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
+        d="M34.602,14.602L21,28.199l-5.602-5.598l-2.797,2.797L21,33.801l16.398-16.402L34.602,14.602z"></path>
     </svg>
   );
 
@@ -777,7 +776,7 @@ const PostView = ({
     setAllPass(Boolean(formPass && documentPass && numericPass && notePass))
 
   }, [post, titleLengthCheckBadge, sectionCheckBadge, numerationCheckBadge, noteCheckBadge])
-  
+
   return (
     <article
       className={(showPreview || editView || complianceView) ? "flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
@@ -786,7 +785,7 @@ const PostView = ({
         <h2 id="title" className="col-span-4 text-4xl cursor-pointer">{post.title}</h2>
       </div>
       <div className="grid grid-cols-10 gap-5 h-[75vh]">
-        <aside className='h-[76vh] col-span-6 pr-5 border-[1px] border-transparent border-r-black'>
+        <aside className={`${showPreview ? "col-span-7" : "col-span-6"} h-[76vh] pr-5 border-[1px] border-transparent border-r-black`}>
           <IFrame
             className=""
             srcDoc={previewIframe || post.monographView}

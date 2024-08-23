@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 
 class Autocomplete extends Component {
     static defaultProps = {
@@ -22,14 +22,14 @@ class Autocomplete extends Component {
     }
 
     onChange = e => {
-        const {suggestions, coAuthors = []} = this.props;
+        const { suggestions, coAuthors = [] } = this.props;
         const userInput = e.currentTarget.value;
 
         let filteredSuggestions = coAuthors?.length ?
-            suggestions.filter(suggestion=>
-                !coAuthors.some(coauthor=>suggestion.fullname.toLowerCase() === coauthor.fullname.toLowerCase())
+            suggestions.filter(suggestion =>
+                !coAuthors.some(coauthor => suggestion.fullname.toLowerCase() === coauthor.fullname.toLowerCase())
             ) : suggestions;
-         filteredSuggestions = filteredSuggestions.filter(
+        filteredSuggestions = filteredSuggestions.filter(
             suggestion =>
                 suggestion.fullname.toLowerCase().includes(userInput.toLowerCase())
         );
@@ -56,7 +56,7 @@ class Autocomplete extends Component {
     };
 
     onKeyDown = e => {
-        const {activeSuggestion, filteredSuggestions} = this.state;
+        const { activeSuggestion, filteredSuggestions } = this.state;
 
         // User pressed the enter key
         if (e.keyCode === 13) {
@@ -68,7 +68,7 @@ class Autocomplete extends Component {
                 return;
             }
 
-            this.setState({activeSuggestion: activeSuggestion - 1});
+            this.setState({ activeSuggestion: activeSuggestion - 1 });
         }
         // User pressed the down arrow
         else if (e.keyCode === 40) {
@@ -76,12 +76,12 @@ class Autocomplete extends Component {
                 return;
             }
 
-            this.setState({activeSuggestion: activeSuggestion + 1});
+            this.setState({ activeSuggestion: activeSuggestion + 1 });
         }
     };
 
     render() {
-        const {activeSuggestion, filteredSuggestions, showSuggestions, userInput} = this.state;
+        const { activeSuggestion, filteredSuggestions, showSuggestions, userInput } = this.state;
 
         let suggestionsListComponent = (
             <div className='p-2 text-[#999] zindex-1'></div>
@@ -125,7 +125,7 @@ class Autocomplete extends Component {
                     placeholder={this.props.placeholder}
                     onChange={this.onChange}
                     onKeyDown={this.onKeyDown}
-                    value={userInput}/>
+                    value={userInput} />
                 {suggestionsListComponent}
             </div>
         );
