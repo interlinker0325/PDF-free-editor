@@ -294,11 +294,9 @@ export const getServerSideProps = withSession(async function ({req}) {
     query.user.GET_USER_POSTS(profileId)
   ]);
 
-  let archivePosts = {};
+  let archivePosts = {allPosts: []};
   if (isAdmin && isCurrentUserProfile) {
-    archivePosts = await request(
-      query.posts.GET_ADMIN_COURSES_POSTS(allCourses.map(course => course.id))
-    );
+    archivePosts = await request(query.posts.GET_ADMIN_COURSES_POSTS());
   } else if (isProfessor && isCurrentUserProfile) {
     const profesorCourses = allCourses.filter(course => course?.professor?.id === profileId).map(course => course.id);
     archivePosts = await request(
