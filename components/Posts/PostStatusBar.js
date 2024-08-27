@@ -1,26 +1,62 @@
+import { useState } from 'react';
 import TopBar from 'components/TopBar/TopBar';
-import {publishEntry, updateEntry} from 'handlers/bll';
-import {isPostApproved, POST_REVIEW_STATUS} from 'utils';
+import { publishEntry, updateEntry } from 'handlers/bll';
+import { isPostApproved, POST_REVIEW_STATUS } from 'utils';
+import { enqueueSnackbar } from "notistack";
 
-const PostStatusBar = ({post, user}) => {
-  if (!post?.course || !user) return null
+const PostStatusBar = ({ post, user }) => {
+  const [loading, setLoading] = useState(false);
+
+  if (!post?.course || !user) return null;
   if (isPostApproved(post) || post.course?.professor?.id !== user?.id) {
     return null;
   }
 
   const submitReview = async (e) => {
     e.preventDefault();
-    const {review, monographView, ...postData} = post;
-    const entry = await updateEntry({
-      review: e.target.id,
-      ...postData
-    });
+    setLoading(true);
 
-    if (entry.error) {
-      console.log(entry.error);
-    } else {
-      await publishEntry(entry.id);
-      location.href = '/profile/me';
+    try {
+      const { review, monographView, ...postData } = post;
+      const entry = await updateEntry({
+        review: e.target.id,
+        ...postData
+      });
+
+      if (entry.error) {
+        console.log(entry.error);
+        enqueueSnackbar('No se pudo actualizar la publicación', {
+          variant: 'error',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
+      } else {
+        await publishEntry(entry.id);
+        enqueueSnackbar('Tu publicación se ha guardado satisfactoriamente', {
+          variant: 'success',
+          preventDuplicate: true,
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        });
+        location.href = '/profile/me';
+      }
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar('Ocurrió un error durante el proceso', {
+        variant: 'error',
+        preventDuplicate: true,
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center'
+        }
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,14 +69,17 @@ const PostStatusBar = ({post, user}) => {
           type='button'
           onClick={submitReview}
           className={`${styles.btn} ${styles.btnApproved}`}
-          children='Aprobar'/>
-
+          disabled={loading}
+          children='Aprobar'
+        />
         <button
           id={POST_REVIEW_STATUS.DENIED}
           type='button'
           onClick={submitReview}
           className={`${styles.btn} ${styles.btnDenied}`}
-          children='Denegar'/>
+          disabled={loading}
+          children='Denegar'
+        />
       </div>
     </TopBar>
   );
