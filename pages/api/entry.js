@@ -33,9 +33,9 @@ export default async (req, res) => {
 
     rest.coverimage = coverimage ? {uploadId: coverimage.id} : null;
     rest.monograph = monograph ? {uploadId: monograph.id} : null;
-    rest.author = author;
+    rest.author = author?.id || author || null;
     rest.course = course?.id || course || null;
-    rest.coauthors = coauthors ? coauthors.map(coauthor => coauthor.id) : null;
+    rest.coauthors = Array.isArray(coauthors) ? coauthors.map(coauthor => coauthor?.id) : null;
 
     if (attachments) {
       if (!Array.isArray(attachments)) attachments = [attachments];
