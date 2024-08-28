@@ -208,46 +208,6 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
 
   }, []);
 
-  const doSubmit = useCallback(
-    async (e) => {
-      e && e.preventDefault();
-      triggerLoading(true);
-      const {id, error, monographView, ...postData} = formState;
-
-      if (isUserTeacherOfCourse(user, courses)) {
-        postData.review = POST_REVIEW_STATUS.APPROVED;
-      }
-
-      let entry;
-      if (postData.id) {
-        entry = await updateEntry(postData);
-      } else {
-        entry = await createEntry({
-          author: user.id,
-          ...postData,
-        });
-      }
-      console.log({entry})
-
-      if (entry?.error) {
-        console.error("No se pudo actualizar la entrada", entry?.error);
-        setStatusBarState({
-          success: null,
-          error: "No se pudo guardar la entrada",
-        });
-      } else {
-        setFormState({...entry, ...postData});
-        setStatusBarState({
-          error: null,
-          success:
-            'Publicación guardada. Debes "Solicitar aprobación" para ser enviada a aprobación',
-        });
-      }
-
-      triggerLoading(false);
-    },
-    [formState, user, courses]
-  );
 
   const handlePublication = () => {
     setOpen(true);

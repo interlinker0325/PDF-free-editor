@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import TopBar from 'components/TopBar/TopBar';
-import { publishEntry, updateEntry } from 'handlers/bll';
-import { isPostApproved, POST_REVIEW_STATUS } from 'utils';
-import { enqueueSnackbar } from "notistack";
+import {updateEntry} from 'handlers/bll';
+import {isPostApproved, POST_REVIEW_STATUS} from 'utils';
+import {enqueueSnackbar} from "notistack";
 
-const PostStatusBar = ({ post, user }) => {
+const errorConfig = {
+  variant: 'error',
+  preventDuplicate: true,
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'center'
+  }
+}
+
+const PostStatusBar = ({post, user}) => {
   const [loading, setLoading] = useState(false);
 
   if (!post?.course || !user) return null;
@@ -17,25 +26,16 @@ const PostStatusBar = ({ post, user }) => {
     setLoading(true);
 
     try {
-      const { review, monographView, ...postData } = post;
       const entry = await updateEntry({
         review: e.target.id,
-        ...postData
+        id: post.id,
       });
 
       if (entry.error) {
         console.log(entry.error);
-        enqueueSnackbar('No se pudo actualizar la publicación', {
-          variant: 'error',
-          preventDuplicate: true,
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center'
-          }
-        });
+        enqueueSnackbar('No se pudo actualizar la publicación', errorConfig);
       } else {
-        await publishEntry(entry.id);
-        enqueueSnackbar('Tu publicación se ha guardado satisfactoriamente', {
+        enqueueSnackbar('EL documento ha sido ' + e.target.id === POST_REVIEW_STATUS.APPROVED ? "aprobado" : "denegado", {
           variant: 'success',
           preventDuplicate: true,
           anchorOrigin: {
@@ -47,14 +47,7 @@ const PostStatusBar = ({ post, user }) => {
       }
     } catch (error) {
       console.log(error);
-      enqueueSnackbar('Ocurrió un error durante el proceso', {
-        variant: 'error',
-        preventDuplicate: true,
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center'
-        }
-      });
+      enqueueSnackbar('Ocurrió un error durante el proceso', errorConfig);
     } finally {
       setLoading(false);
     }
