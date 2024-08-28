@@ -10,6 +10,8 @@ import {SnackbarProvider} from 'notistack';
 import usePost from "../../hooks/usePost";
 import PostTopBar from "../../components/Posts/PostTopBar";
 import RequestApprovalDialog from "../../components/Posts/RequestApprovalDialog";
+import {isAdmin as isUserAdmin} from "../../utils";
+import {GET_ALL_COURSES_ADMIN} from "../../gql/queries/User";
 
 
 const NewPost = ({isSaved, setIsSaved, courses}) => {
@@ -98,8 +100,10 @@ export const getServerSideProps = withSession(async function ({req}) {
   if (!currentUser) {
     return {props: {}};
   }
+  const isAdmin = isUserAdmin(currentUser.role?.id);
+
   const {allUsers, allCourses} = await request([
-    GET_ALL_COURSES(currentUser.id),
+    isAdmin ? GET_ALL_COURSES_ADMIN() : GET_ALL_COURSES(currentUser.id),
     GET_ALL_STUDENTS,
   ]);
   return {

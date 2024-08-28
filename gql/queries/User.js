@@ -1,4 +1,5 @@
 import {selector} from 'gql';
+import {PROFESOR_COURSES} from "../selectors/courses";
 
 export const GET_USER_LOGIN_DATA = email => `
     user(filter: { email: { eq: "${email}" } }) {
@@ -27,6 +28,11 @@ export const GET_USER_COURSES = (id) => `
             ]
         }) {
         ${selector.courses.USER_COURSES}
+    }
+`;
+export const GET_ALL_COURSES_ADMIN = () => `
+    allCourses {
+        ${selector.courses.PROFESOR_COURSES}
     }
 `;
 
