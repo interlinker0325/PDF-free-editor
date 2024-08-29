@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import axios from "axios";
 
+
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
 // import 'jodit/build/jodit.min.css';
@@ -20,7 +21,6 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     'bold',
     'underline',
     'italic', '|',
-
     'link', '|',
     'undo', 'redo', '|',
     'eraser', '|',
@@ -344,7 +344,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
             // delete block button
             {
               name: 'deleteBlock',
-              tooltip: 'Delete Block',
+              tooltip: 'Borrar bloque',
               icon: 'bin',
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
@@ -504,6 +504,7 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
 
       // add custom button by Jodit method
       // create custom paragraph type button
+
       module.Jodit.defaultOptions.controls.customParagraph = {
         tooltip: 'Select the type of the block',
         icon: 'paragraph',
@@ -596,8 +597,15 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   }, [editorContent]);
 
   useEffect(() => {
-    setModel(editorContent ? editorContent.outerHTML : '');
-    setChangedContent(editorContent ? editorContent.outerHTML : '');
+    if (editorContent) {
+      let content = editorContent.outerHTML;
+      let contentChange = content.replace("2.5px solid red", "none");
+      setModel(contentChange);
+      setChangedContent(editorContent.outerHTML);
+    } else {
+      setModel("");
+      setChangedContent("");
+    }
     try {
       const sectionTitleElement = editorContent.parentNode.getElementsByTagName('h2')[0];
       if (sectionTitleElement?.id !== 'title') {
@@ -634,12 +642,12 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
   }, [editor.current])
 
   return (
-    <div className="w-full h-full p-1">
+    <div className="w-full px-1">
       <div id="mathtoolbar" className='hidden'></div>
       <div className="flex justify-between">
         <span className="font-semibold text-[30px]">{section}</span>
       </div>
-      <form className="w-full h-full mt-5">
+      <form className="w-full mt-1">
         {isBrowser && (() => {
           try {
             return (

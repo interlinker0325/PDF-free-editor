@@ -20,7 +20,9 @@ const PostView = ({
   complianceView,
   setIsSaved,
   logicCheck,
+  setLogicCheck,
   setAllPass,
+  setMonograColor
 }) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
   const [editorContent, setEditorContent] = useState("Select the tag");
@@ -138,7 +140,7 @@ const PostView = ({
         setNumerationCheckBadge(baseNumerationCheckBadge);
         setNoteCheckBadge(baseNoteCheckBadge);
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
-        const subSectionTitleElements = iframe.contentWindow.document.body.querySelectorAll("h2, h3, h4");
+        const subSectionTitleElements = iframe.contentWindow.document.body.querySelectorAll("h3, h4");
         const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
         const liElements = iframe.contentWindow.document.body.getElementsByTagName('li');
 
@@ -215,59 +217,61 @@ const PostView = ({
           }
         });
 
-
-        Array.from(sectionTitleElements).forEach((sectionElement, index) => {
-          const title = sectionElement.textContent.toLowerCase().trim();
-          if (title === 'anexos') {
-            setIsAnexos(true);
-          }
-          if (standardTitles?.includes(title)) {
-            // section order check
-            // scientific paper check
-            if (post.post_type === 'Art. Científico') {
-              if (sectionElement.textContent.toLowerCase().trim() === standardTitles[index]) {
-                sectionElement.style.border = 'none';
-                sectionElement.title = '';
+        // section title check
+        Array.from(sectionTitleElements).forEach((sectionTitleElement, index) => {
+          if (index < 7) {
+            const title = sectionTitleElement.textContent.toLowerCase().trim();
+            if (title === 'anexos') {
+              setIsAnexos(true);
+            }
+            if (standardTitles?.includes(title)) {
+              // section order check
+              // scientific paper check
+              if (post.post_type === 'Art. Científico') {
+                if (sectionTitleElement.textContent.toLowerCase().trim() === standardTitles[index]) {
+                  sectionTitleElement.style.border = 'none';
+                  sectionTitleElement.title = '';
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post?.post_type]];
+                    updatedState[index] = check;
+                    return {
+                      ...prevState,
+                      [post.post_type]: updatedState,
+                    };
+                  })
+                } else {
+                  // if the title belong to standard titles but the position doesn't equal to origin postion. In this case, first find the index in standard title and then set state to 'order'
+                  setSectionCheckBadge(prevState => {
+                    const updatedState = [...prevState[post.post_type]];
+                    updatedState[index] = pendiente;
+                    updatedState[standardTitles?.indexOf(title)] = order;
+                    return {
+                      ...prevState,
+                      [post.post_type]: updatedState,
+                    };
+                  });
+                  sectionTitleElement.style.border = '2.5px solid red';
+                  sectionTitleElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional) Ajusta su posición para continuar';
+                }
+              }
+            } else {
+              if (post.post_type) {
                 setSectionCheckBadge(prevState => {
-                  const updatedState = [...prevState[post?.post_type]];
-                  updatedState[index] = check;
+                  const updatedState = [...prevState[post.post_type]];
+                  if (updatedState[index] !== order && index < sectionCheckBadge[post.post_type].length) {
+                    // updatedState[index] = pendiente;
+                  }
                   return {
                     ...prevState,
                     [post.post_type]: updatedState,
                   };
                 })
-              } else {
-                // if the title belong to standard titles but the position doesn't equal to origin postion. In this case, first find the index in standard title and then set state to 'order'
-                setSectionCheckBadge(prevState => {
-                  const updatedState = [...prevState[post.post_type]];
-                  updatedState[index] = pendiente;
-                  updatedState[standardTitles?.indexOf(title)] = order;
-                  return {
-                    ...prevState,
-                    [post.post_type]: updatedState,
-                  };
-                });
-                sectionElement.style.border = '2.5px solid red';
-                sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional) Ajusta su posición para continuar';
               }
-            }
-          } else {
-            if (post.post_type) {
-              setSectionCheckBadge(prevState => {
-                const updatedState = [...prevState[post.post_type]];
-                if (updatedState[index] !== order && index < sectionCheckBadge[post.post_type].length) {
-                  // updatedState[index] = pendiente;
-                }
-                return {
-                  ...prevState,
-                  [post.post_type]: updatedState,
-                };
-              })
-            }
-            // un-neccessary section title check in scientific paper
-            if (post.post_type === 'Art. Científico') {
-              sectionElement.style.border = '2.5px solid red';
-              sectionElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional)';
+              // un-neccessary section title check in scientific paper
+              if (post.post_type === 'Art. Científico') {
+                sectionTitleElement.style.border = '2.5px solid red';
+                sectionTitleElement.title = 'Esta sección no tiene el nombre o el orden requerido: Resumen, Palabras Clave, Introducción, Metodología,  Resultados, Conclusiones, Bibliografía y Anexos (opcional)';
+              }
             }
           }
         });
@@ -721,7 +725,7 @@ const PostView = ({
         // table note check
         const tableElements = iframe.contentWindow.document.body.getElementsByTagName('table');
         Array.from(tableElements).forEach((table) => {
-          const hasNote = table.nextElementSibling.style.cssText.includes('0.9rem');
+          const hasNote = table.nextElementSibling?.style.cssText.includes('0.9rem');
           if (!hasNote) {
             table.style.border = 'solid 2.5px red';
             table.title = 'Esta Tabla requiere una nota inferior empezando por el texto: "Fuente:"';
@@ -747,11 +751,37 @@ const PostView = ({
             }
           }
         })
+        // Array.from(subSectionTitleElements).forEach((divElement) => {
+        //   console.log(divElement, "-------")
+        //   if (divElement.textcontent.includes("\footnotetext{")) {
+        //     divElement.style.border = "2.5px solid red"
+        //     divElement.style.title = "Si quieres preservar esta nota, ubica su posición en el párrafo que corresponde, e inserta el texto como nota informativa, de lo contrario procede a borrarla"
+        //   } else {
+        //     divElement.style.border = "none"
+        //     divElement.style.title = ""
+        //   }
+        // })
+
+        //footnotetext check
+        Array.from(subSectionTitleElements).map((divElement) => {
+          if (!divElement.querySelector('div')) {
+            const abstractPattern = /^\\footnotetext\{/;
+            if (abstractPattern.test(divElement.textContent)) {
+              divElement.style.border = "2.5px solid red"
+              divElement.title = "Si quieres preservar esta nota, ubica su posición en el párrafo que corresponde, e inserta el texto como nota informativa, de lo contrario procede a borrarla"
+            } else {
+              divElement.style.border = "none"
+              divElement.title = ""
+            }
+          }
+        })
 
       } catch (error) {
         console.error("Error accessing iframe content:", error);
       }
     }
+    // temporary test
+    // setLogicCheck(null);
   }, [complianceView, changedContent, editorContent, editView, showPreview]);
 
   useEffect(() => {
@@ -784,8 +814,8 @@ const PostView = ({
         className="flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black">
         <h2 id="title" className="col-span-4 text-4xl cursor-pointer">{post.title}</h2>
       </div>
-      <div className="grid grid-cols-10 gap-5 h-[75vh]">
-        <aside className={`${showPreview ? "col-span-7" : "col-span-6"} h-[76vh] pr-5 border-[1px] border-transparent border-r-black`}>
+      <div className="grid grid-cols-10 gap-5 h-[60vh]">
+        <aside className={`${showPreview ? "col-span-7" : "col-span-6"} h-[74vh] pr-5 border-[1px] border-transparent border-r-black`}>
           <IFrame
             className=""
             srcDoc={previewIframe || post.monographView}
@@ -794,10 +824,11 @@ const PostView = ({
             setIsSaved={setIsSaved}
             changedContent={changedContent}
             setSection={setSection}
+            setMonograColor={setMonograColor}
           />
         </aside>
         {editView && (
-          <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none h-full">
+          <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none]">
             <ErrorBoundary>
               <Editor
                 setChangedContent={setChangedContent}

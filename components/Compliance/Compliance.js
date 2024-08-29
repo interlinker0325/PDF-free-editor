@@ -14,9 +14,9 @@ const Compliance = ({
 
     return (
         <div className=''>
-            <div className='text-red-500 text-center mt-2 text-sm'>- Ante cualquier incumplimiento, revisa las secciones marcas en rojo en el documento -</div>
-            <div className="text-red-500 text-center mt-2 text-sm">
-                Por seguridad, antes de publicar, se revisará nuevamente la coherencia del documento completo.
+            <div className='text-red-500 text-left mt-2 ml-[7px] text-md'>- Revisa los cuadros rojos en el texto. -</div>
+            <div className="text-red-500 text-left mt-2 ml-[7px] text-md">
+                La coherencia se revisará nuevamente antes de publicar
             </div>
             <div id='compliance' className="flex justify-around mt-5 leading-6 text-[14px] 2xl:text-xl 2xl:leading-8">
                 <div className="w-7/12">
@@ -49,7 +49,7 @@ const Compliance = ({
                             </div>
                         </div>
                     </div>
-                    <div className="my-2 border border-blue-500 mt-10 p-3 relative">
+                    <div className="my-2 border border-blue-500 mt-6 p-2 relative">
                         <div className="absolute text-xl -top-3 -left-1 bg-white px-2">
                             Documento
                         </div>

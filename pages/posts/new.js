@@ -1,21 +1,21 @@
 import useUser from "utils/useUser";
 import withSession from "utils/withSession";
-import {GET_ALL_COURSES, GET_ALL_STUDENTS, request,} from "utils/graphqlRequest";
+import { GET_ALL_COURSES, GET_ALL_STUDENTS, request, } from "utils/graphqlRequest";
 
 import Main from "components/Main/Main";
 import PostForm from "components/Posts/PostForm";
 import PostView from "components/Posts/PostView";
 import Loader from "components/Loader/Loader";
-import {SnackbarProvider} from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import usePost from "../../hooks/usePost";
 import PostTopBar from "../../components/Posts/PostTopBar";
 import RequestApprovalDialog from "../../components/Posts/RequestApprovalDialog";
-import {isAdmin as isUserAdmin} from "../../utils";
-import {GET_ALL_COURSES_ADMIN} from "../../gql/queries/User";
+import { isAdmin as isUserAdmin } from "../../utils";
+import { GET_ALL_COURSES_ADMIN } from "../../gql/queries/User";
 
 
-const NewPost = ({isSaved, setIsSaved, courses}) => {
-  const {user} = useUser({redirectTo: "/"});
+const NewPost = ({ isSaved, setIsSaved, courses }) => {
+  const { user } = useUser({ redirectTo: "/" });
   const {
     refs,
     open,
@@ -34,6 +34,7 @@ const NewPost = ({isSaved, setIsSaved, courses}) => {
     formView,
     setFormView,
     logicCheck,
+    setLogicCheck,
     allPass,
     setAllPass,
     handleSave,
@@ -43,7 +44,9 @@ const NewPost = ({isSaved, setIsSaved, courses}) => {
     requestApproval,
     statusBarState,
     showLoadingScreen,
-  } = usePost({isSaved, setIsSaved, user, courses});
+    monograColor,
+    setMonograColor
+  } = usePost({ isSaved, setIsSaved, user, courses });
 
   return (
     <Main>
@@ -74,6 +77,7 @@ const NewPost = ({isSaved, setIsSaved, courses}) => {
           removeCoAuthor={removeCoAuthor}
           formView={formView}
           courses={courses}
+          monograColor={monograColor}
         />
         <PostView
           post={formState}
@@ -85,28 +89,28 @@ const NewPost = ({isSaved, setIsSaved, courses}) => {
           complianceView={complianceView}
           setIsSaved={setIsSaved}
           logicCheck={logicCheck}
+          setLogicCheck={setLogicCheck}
           setAllPass={setAllPass}
+          setMonograColor={setMonograColor}
         />
-        <Loader show={showLoadingScreen}/>
-        <RequestApprovalDialog {...{open, setOpen, requestApproval}}/>
+        <Loader show={showLoadingScreen} />
+        <RequestApprovalDialog {...{ open, setOpen, requestApproval }} />
       </SnackbarProvider>
     </Main>
   );
 };
 export default NewPost;
 
-export const getServerSideProps = withSession(async function ({req}) {
+export const getServerSideProps = withSession(async function ({ req }) {
   const currentUser = req.session.get("user");
   if (!currentUser) {
-    return {props: {}};
+    return { props: {} };
   }
-  const isAdmin = isUserAdmin(currentUser.role?.id);
-
-  const {allUsers, allCourses} = await request([
-    isAdmin ? GET_ALL_COURSES_ADMIN() : GET_ALL_COURSES(currentUser.id),
+  const { allUsers, allCourses } = await request([
+    GET_ALL_COURSES(currentUser.id),
     GET_ALL_STUDENTS,
   ]);
   return {
-    props: {courses: allCourses, students: allUsers},
+    props: { courses: allCourses, students: allUsers },
   };
 });

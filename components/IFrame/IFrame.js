@@ -1,7 +1,5 @@
 import { faL } from "@fortawesome/free-solid-svg-icons";
-import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
-import { colorAtom } from "store/color";
 
 
 const IFrame = ({
@@ -12,10 +10,10 @@ const IFrame = ({
   changedContent,
   setIsSaved,
   setSection,
+  setMonograColor,
   ...props
 }) => {
   const [editElement, setEditElement] = useState();
-  const [, setMonograColor] = useAtom(colorAtom);
 
   const handleClick = (event) => {
     event.preventDefault();
@@ -24,7 +22,7 @@ const IFrame = ({
     if (clickedElement.tagName === 'TD' || clickedElement.tagName === 'TH') {
       clickedElement = clickedElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY'];
+    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', 'SECTION'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id) || clickedElement.tagName.includes('MJX')) {
       // Do nothing for these elements
