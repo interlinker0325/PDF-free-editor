@@ -1,20 +1,21 @@
-import {Tooltip} from "@mui/material";
+import { Tooltip } from "@mui/material";
 import TopBar from "../TopBar/TopBar";
+import { useEffect, useState } from "react";
 
 export default function PostTopBar({
-                                     allPass,
-                                     complianceView,
-                                     showPreview,
-                                     editView,
-                                     formView,
-                                     handleSave,
-                                     handlePublication,
-                                     setFormView,
-                                     setShowPreview,
-                                     setEditView,
-                                     statusBarState,
-                                     setComplianceView,
-                                   }) {
+  allPass,
+  complianceView,
+  showPreview,
+  editView,
+  formView,
+  handleSave,
+  handlePublication,
+  setFormView,
+  setShowPreview,
+  setEditView,
+  statusBarState,
+  setComplianceView,
+}) {
   return (
     <TopBar>
       <div className="flex flex-row justify-between w-full">
@@ -79,12 +80,12 @@ export default function PostTopBar({
               {allPass ? (
                 <div className="sprinkle-container">
                   <img width="30" height="auto" className="thumb-up"
-                       src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
-                       alt="good-quality--v1"/>
+                    src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
+                    alt="good-quality--v1" />
                   <div className="sprinkles">
                     {/* Creating multiple sprinkles */}
-                    {Array.from({length: 15}).map((_, index) => (
-                      <div key={index} className={`sprinkle sprinkle-${index + 1}`}/>
+                    {Array.from({ length: 15 }).map((_, index) => (
+                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
                     ))}
                   </div>
                 </div>
@@ -105,6 +106,6 @@ export default function PostTopBar({
           />)}
         </div>
       </div>
-    </TopBar>
+    </TopBar >
   )
 }

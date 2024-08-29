@@ -1,8 +1,8 @@
-import {useCallback, useEffect, useRef, useState} from "react";
-import {isAdmin, isUserTeacherOfCourse, isValidFileType, isValidImageType, POST_REVIEW_STATUS} from "../utils";
-import {createEntry, getMonograph, updateEntry, upload} from "../handlers/bll";
-import {enqueueSnackbar} from "notistack";
-import {checkCompliance, fileToHTML} from "../utils/server/windows";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { isAdmin, isUserTeacherOfCourse, isValidFileType, isValidImageType, POST_REVIEW_STATUS } from "../utils";
+import { createEntry, getMonograph, updateEntry, upload } from "../handlers/bll";
+import { enqueueSnackbar } from "notistack";
+import { checkCompliance, fileToHTML } from "../utils/server/windows";
 
 const formBaseState = {
   title: "",
@@ -40,6 +40,8 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
     error: null,
     success: 'Los campos con (*) son requeridos.'
   });
+
+  const [monograColor, setMonograColor] = useState(false)
 
   const refs = {
     attachments: useRef(),
@@ -119,7 +121,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
       const action = formState?.id ? updateEntry : createEntry;
       const entry = await action({
         ...postData,
-        ...(formState?.id ? {id: formState?.id} : {}),
+        ...(formState?.id ? { id: formState?.id } : {}),
         author: formState?.author?.id || user?.id,
         review: isAdmin(user?.role?.id) ? postData.review : approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
         monograph: file
@@ -212,7 +214,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
     async (e) => {
       e && e.preventDefault();
       triggerLoading(true);
-      const {id, error, monographView, ...postData} = formState;
+      const { id, error, monographView, ...postData } = formState;
 
       if (isUserTeacherOfCourse(user, courses)) {
         postData.review = POST_REVIEW_STATUS.APPROVED;
@@ -227,7 +229,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
           ...postData,
         });
       }
-      console.log({entry})
+      console.log({ entry })
 
       if (entry?.error) {
         console.error("No se pudo actualizar la entrada", entry?.error);
@@ -236,7 +238,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
           error: "No se pudo guardar la entrada",
         });
       } else {
-        setFormState({...entry, ...postData});
+        setFormState({ ...entry, ...postData });
         setStatusBarState({
           error: null,
           success:
@@ -411,5 +413,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
     setStatusBarState,
     showLoadingScreen,
     setShowLoadingScreen,
+    monograColor,
+    setMonograColor
   }
 }
