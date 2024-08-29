@@ -10,6 +10,8 @@ import { SnackbarProvider } from 'notistack';
 import usePost from "../../hooks/usePost";
 import PostTopBar from "../../components/Posts/PostTopBar";
 import RequestApprovalDialog from "../../components/Posts/RequestApprovalDialog";
+import { isAdmin as isUserAdmin } from "../../utils";
+import { GET_ALL_COURSES_ADMIN } from "../../gql/queries/User";
 
 
 const NewPost = ({ isSaved, setIsSaved, courses }) => {

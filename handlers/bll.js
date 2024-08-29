@@ -59,17 +59,6 @@ export const deleteEntry = async (requestData) => {
   }
 };
 
-export const publishEntry = async (recordId) => {
-  const requestData = { recordId }
-  const response = await post('/api/record', requestData);
-
-  if (response?.success) {
-    return response.data;
-  } else {
-    return { error: response.error };
-  }
-};
-
 export const newSection = async (
   recordId,
   sections = []

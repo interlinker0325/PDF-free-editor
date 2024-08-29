@@ -16,7 +16,6 @@ const Publications = ({items, label, user, isAdmin}) => {
         {items && items.map((item, itemIndex) => {
             const draft = item.review === POST_REVIEW_STATUS.DRAFT;
             const amI = isCurrentUserAuthor(item);
-            console.log({user, item});
             return <tr
               key={`Publication_${item.id}_${itemIndex}`}
               className={`${styles.tableRow} ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>

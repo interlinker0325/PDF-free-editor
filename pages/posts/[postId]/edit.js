@@ -14,7 +14,8 @@ import PostTopBar from "../../../components/Posts/PostTopBar";
 import RequestApprovalDialog from "../../../components/Posts/RequestApprovalDialog";
 import {SnackbarProvider} from "notistack";
 import TopBar from "../../../components/TopBar/TopBar";
-import {isAdmin} from "../../../utils";
+import {isAdmin as isUserAdmin, isAdmin} from "../../../utils";
+import {GET_ALL_COURSES_ADMIN} from "../../../gql/queries/User";
 
 const EditPost = ({post, courses, setIsSaved}) => {
   const router = useRouter();
@@ -131,11 +132,13 @@ export const getServerSideProps = withSession(async function ({req, params}) {
   if (!currentUser) {
     return {props: {}};
   }
+  const isAdmin = isUserAdmin(currentUser.role?.id);
+
   const {
     post,
     allUsers,
     allCourses
-  } = await request([GET_ENTRY_BY_ID(params?.postId), GET_ALL_COURSES(currentUser.id), GET_ALL_STUDENTS]);
+  } = await request([GET_ENTRY_BY_ID(params?.postId), isAdmin ? GET_ALL_COURSES_ADMIN() : GET_ALL_COURSES(currentUser.id), GET_ALL_STUDENTS]);
   const {course, ...postData} = post;
 
   if (course) {
