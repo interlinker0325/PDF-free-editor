@@ -22,6 +22,9 @@ const IFrame = ({
     if (clickedElement.tagName === 'TD' || clickedElement.tagName === 'TH') {
       clickedElement = clickedElement.parentElement.parentElement.parentElement;
     }
+    if (clickedElement.tagName === "IMG" || clickedElement.tagName === "FIGURE") {
+      clickedElement = clickedElement.closest("div")
+    }
     const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', 'SECTION'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id) || clickedElement.tagName.includes('MJX')) {
