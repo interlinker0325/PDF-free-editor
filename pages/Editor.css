@@ -41,7 +41,7 @@
 
 /* Jodit Editor setting */
 .jodit-wysiwyg{
-  height: 62vh !important;
+  height: 56vh !important;
   overflow-y: scroll;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .thumb-up {
-  /* position: relative; */
+  position: relative;
   z-index: 1;
 }
 
@@ -86,147 +86,147 @@
 }
 
 .sprinkle {
-  width: 100px;
-  height: 100px;
+  width: 6px;
+  height: 6px;
   background-color: green;
   border-radius: 50%;
   position: absolute;
-  animation: sprinkle-animation 1s ease-out forwards;
+  animation: sprinkle-animation 0.6s ease-out forwards;
   opacity: 0;
 }
 
 .sprinkle:nth-child(1) {
-  top: 400px;
-  left: 400px;
+  top: -20px;
+  left: -20px;
   background-color: red;
-  width: 102px;
-  height: 102px;
+  width: 8px;
+  height: 8px;
   animation-delay: 0s;
 }
 
 .sprinkle:nth-child(2) {
-  top: -420px;
-  left: 420px;
+  top: -25px;
+  left: 20px;
   background-color: blue;
-  width: 99px;
-  height: 99px;
+  width: 5px;
+  height: 5px;
   animation-delay: 0.1s;
 }
 
 .sprinkle:nth-child(3) {
-  top: 340px;
-  left: 300px;
+  top: 10px;
+  left: 25px;
   background-color: yellow;
-  width: 101px;
-  height: 101px;
+  width: 7px;
+  height: 7px;
   animation-delay: 0.2s;
 }
 
 .sprinkle:nth-child(4) {
-  top: 478px;
-  left: -300px;
+  top: 25px;
+  left: -25px;
   background-color: orange;
-  width: 100px;
-  height: 100px;
+  width: 6px;
+  height: 6px;
   animation-delay: 0.3s;
 }
 
 .sprinkle:nth-child(5) {
-  top: -400px;
-  left: 340px;
+  top: -30px;
+  left: 10px;
   background-color: purple;
-  width: 103px;
-  height: 103px;
+  width: 9px;
+  height: 9px;
   animation-delay: 0.4s;
 }
 
 .sprinkle:nth-child(6) {
-  top: 430px;
-  left: -420%;
+  top: 5px;
+  left: -30px;
   background-color: pink;
-  width: 100px;
-  height: 100px;
+  width: 6px;
+  height: 6px;
   animation-delay: 0.5s;
 }
 
 .sprinkle:nth-child(7) {
-  top: -340px;
-  left: 470px;
+  top: -35px;
+  left: 5px;
   background-color: cyan;
-  width: 101px;
-  height: 101px;
+  width: 7px;
+  height: 7px;
   animation-delay: 0.6s;
 }
 
 .sprinkle:nth-child(8) {
-  top: 430px;
-  left: 300px;
+  top: 20px;
+  left: 30px;
   background-color: lime;
-  width: 102px;
-  height: 102px;
+  width: 8px;
+  height: 8px;
   animation-delay: 0.7s;
 }
 
 .sprinkle:nth-child(9) {
-  top: -400px;
-  left: -370px;
+  top: -40px;
+  left: -10px;
   background-color: magenta;
-  width: 100px;
-  height: 100px;
+  width: 6px;
+  height: 6px;
   animation-delay: 0.8s;
 }
 
 .sprinkle:nth-child(10) {
-  top: 300px;
-  left: -395px;
+  top: 30px;
+  left: -35px;
   background-color: teal;
-  width: 103px;
-  height: 103px;
+  width: 9px;
+  height: 9px;
   animation-delay: 0.9s;
 }
 
 .sprinkle:nth-child(11) {
-  top: -405px;
-  left: 395px;
+  top: -45px;
+  left: 15px;
   background-color: violet;
-  width: 100px;
-  height: 100px;
+  width: 6px;
+  height: 6px;
   animation-delay: 1s;
 }
 
 .sprinkle:nth-child(12) {
-  top: 385px;
-  left: -410px;
+  top: 35px;
+  left: -40px;
   background-color: navy;
-  width: 101px;
-  height: 101px;
+  width: 7px;
+  height: 7px;
   animation-delay: 1.1s;
 }
 
 .sprinkle:nth-child(13) {
-  top: -450px;
-  left: 370%;
+  top: -50px;
+  left: 20px;
   background-color: olive;
-  width: 99px;
-  height: 99px;
+  width: 5px;
+  height: 5px;
   animation-delay: 1.2s;
 }
 
 .sprinkle:nth-child(14) {
-  top: 430px;
-  left: -435px;
+  top: 40px;
+  left: -45px;
   background-color: coral;
-  width: 102px;
-  height: 102px;
+  width: 8px;
+  height: 8px;
   animation-delay: 1.3s;
 }
 
 .sprinkle:nth-child(15) {
-  top: -505px;
-  left: 295%;
+  top: -55px;
+  left: 25px;
   background-color: maroon;
-  width: 103px;
-  height: 103px;
+  width: 9px;
+  height: 9px;
   animation-delay: 1.4s;
 }
 

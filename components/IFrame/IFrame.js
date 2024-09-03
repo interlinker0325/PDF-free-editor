@@ -55,7 +55,7 @@ const IFrame = ({
     if (hoveredElement.tagName === 'TD' || hoveredElement.tagName === 'TH') {
       hoveredElement = hoveredElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY'];
+    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', "SECTION"];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id) || hoveredElement.tagName.includes('MJX')) {
     } else {
@@ -72,7 +72,7 @@ const IFrame = ({
     if (leftElement.tagName === 'TD' || leftElement.tagName === 'TH') {
       leftElement = leftElement.parentElement.parentElement.parentElement;
     }
-    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY'];
+    const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', "SECTION"];
     const ids = ['preview-content', 'preview', 'container-ruller'];
     if (tagNames.includes(leftElement.tagName) || ids.includes(leftElement.id) || leftElement.tagName.includes('MJX')) {
     } else {
@@ -196,7 +196,7 @@ const IFrame = ({
       <iframe
         id="documentWindow"
         src={url}
-        className={`border-none w-full h-full my-4 overflow-unset overflow-none ${className}`}
+        className={`border-none w-full h-[93%] my-4 overflow-unset overflow-none ${className}`}
         {...props}
       />
     </>

@@ -790,8 +790,8 @@ const PostView = ({
     const formPass = Boolean(post.course && post.coverimage && post.description && post.tags && post.agreedterms);
 
     const type = post.post_type;
-    const sectionPass = !Boolean(sectionCheckBadge[type]?.filter((item) => {
-      return item?.props.children === "Pendiente";
+    const sectionPass = !Boolean(sectionCheckBadge[type]?.some((item) => {
+      return item?.props.children === "Pendiente" || item?.props.children === "Ordenar";
     }).length);
     const documentPass = Boolean((titleLengthCheckBadge !== 'Revisar') && (wordCheckBadge !== 'Revisar') && (coherenceCheckBadge !== 'Revisar') && type && sectionPass);
 

@@ -645,9 +645,9 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
     <div className="w-full px-1">
       <div id="mathtoolbar" className='hidden'></div>
       <div className="flex justify-between">
-        <span className="font-semibold text-[30px]">{section}</span>
+        <span className="font-semibold text-[25px]">{section}</span>
       </div>
-      <form className="w-full mt-1">
+      <div className="w-full mt-1 h-[70%]">
         {isBrowser && (() => {
           try {
             return (
@@ -659,13 +659,14 @@ const Editor = ({ editorContent, setEditorContent, setChangedContent, section, s
                 tabIndex={1}
                 className="w-full"
               />
+
             );
           } catch (error) {
             console.error('Error in JoditEditor', error);
             return <h1>Error</h1>;
           }
         })()}
-      </form>
+      </div>
     </div>
   );
 };
