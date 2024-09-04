@@ -45,6 +45,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
     logicCheck,
     editView,
     setEditView,
+    setMonograColor,
     complianceView,
     setComplianceView,
     formView,
@@ -112,6 +113,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
           courses={courses}
           previewIframe={previewIframe}
           editView={editView}
+          setMonograColor={setMonograColor}
           showPreview={showPreview}
           complianceView={complianceView}
           setIsSaved={setIsSaved}
