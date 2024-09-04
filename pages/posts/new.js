@@ -90,6 +90,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
           setIsSaved={setIsSaved}
           logicCheck={logicCheck}
           setLogicCheck={setLogicCheck}
+          allPass={allPass}
           setAllPass={setAllPass}
           setMonograColor={setMonograColor}
         />

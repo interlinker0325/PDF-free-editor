@@ -21,6 +21,7 @@ const PostView = ({
   setIsSaved,
   logicCheck,
   setLogicCheck,
+  allPass,
   setAllPass,
   setMonograColor
 }) => {
@@ -140,7 +141,7 @@ const PostView = ({
         setNumerationCheckBadge(baseNumerationCheckBadge);
         setNoteCheckBadge(baseNoteCheckBadge);
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
-        const subSectionTitleElements = iframe.contentWindow.document.body.querySelectorAll("h3, h4");
+        const subSectionTitleElements = iframe.contentWindow.document.body.querySelectorAll("h3", "h4");
         const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
         const liElements = iframe.contentWindow.document.body.getElementsByTagName('li');
 
@@ -573,23 +574,31 @@ const PostView = ({
           const methodologySubsections = ["dato", "información", "fuente", "teórico", "teoría", "concept", "descrip", "analisis", "metodolog"]
           const subsectionElements = iframe.contentWindow.document.body.getElementsByTagName('h3')
           Array.from(subsectionElements).forEach((subsection) => {
+            const subsectionText = subsection.textContent.toLowerCase().trim();
+            const isMethodologySubsection = methodologySubsections.some(substring =>
+              subsectionText.includes(substring)
+            );
             // if subsection is methodology subsection
-            if (methodologySubsections.includes(subsection.textContent.toLowerCase().trim())) {
+            if (isMethodologySubsection) {
               const sectionTitleOfSubsection = subsection.parentNode.querySelector('h2')?.textContent.toLowerCase().trim();
+
               if (sectionTitleOfSubsection === 'resumen' || sectionTitleOfSubsection === 'introducción') {
                 subsection.style.border = 'solid 2.5px red';
                 subsection.title = 'Toda información sobre datos y temas metodológicos deben estar en la sección Metodología. Mueve estas secciones al área correspondiente, o declara la Metodología arriba de esta sección para continuar';
+
                 setSectionCheckBadge(prevState => {
                   const updatedState = [...prevState[post.post_type]];
                   updatedState[2] = order;
+
                   return {
                     ...prevState,
                     [post.post_type]: updatedState,
                   };
                 });
+
               } else {
                 subsection.style.border = 'none';
-                subsection.title = ''
+                subsection.title = '';
               }
             }
           });
@@ -751,30 +760,20 @@ const PostView = ({
             }
           }
         })
-        // Array.from(subSectionTitleElements).forEach((divElement) => {
-        //   console.log(divElement, "-------")
-        //   if (divElement.textcontent.includes("\footnotetext{")) {
-        //     divElement.style.border = "2.5px solid red"
-        //     divElement.style.title = "Si quieres preservar esta nota, ubica su posición en el párrafo que corresponde, e inserta el texto como nota informativa, de lo contrario procede a borrarla"
-        //   } else {
-        //     divElement.style.border = "none"
-        //     divElement.style.title = ""
-        //   }
-        // })
 
         //footnotetext check
-        Array.from(subSectionTitleElements).map((divElement) => {
-          if (!divElement.querySelector('div')) {
-            const abstractPattern = /^\\footnotetext\{/;
-            if (abstractPattern.test(divElement.textContent)) {
-              divElement.style.border = "2.5px solid red"
-              divElement.title = "Si quieres preservar esta nota, ubica su posición en el párrafo que corresponde, e inserta el texto como nota informativa, de lo contrario procede a borrarla"
-            } else {
-              divElement.style.border = "none"
-              divElement.title = ""
-            }
-          }
-        })
+        // Array.from(subSectionTitleElements).map((divElement) => {
+        //   if (!divElement.querySelector('div')) {
+        //     const abstractPattern = /^\\footnotetext\{/;
+        //     if (abstractPattern.test(divElement.textContent)) {
+        //       divElement.style.border = "2.5px solid red"
+        //       divElement.title = "Si quieres preservar esta nota, ubica su posición en el párrafo que corresponde, e inserta el texto como nota informativa, de lo contrario procede a borrarla"
+        //     } else {
+        //       divElement.style.border = "none"
+        //       divElement.title = ""
+        //     }
+        //   }
+        // })
 
       } catch (error) {
         console.error("Error accessing iframe content:", error);
@@ -790,9 +789,13 @@ const PostView = ({
     const formPass = Boolean(post.course && post.coverimage && post.description && post.tags && post.agreedterms);
 
     const type = post.post_type;
-    const sectionPass = !Boolean(sectionCheckBadge[type]?.some((item) => {
+    // const sectionPass = !Boolean(sectionCheckBadge[type]?.some((item) => {
+    //   console.log(sectionCheckBadge[type], "---type")
+    //   return item?.props.children === "Pendiente" || item?.props.children === "order";
+    // }).length);
+    const sectionPass = !sectionCheckBadge[type]?.some((item) => {
       return item?.props.children === "Pendiente" || item?.props.children === "Ordenar";
-    }).length);
+    });
     const documentPass = Boolean((titleLengthCheckBadge !== 'Revisar') && (wordCheckBadge !== 'Revisar') && (coherenceCheckBadge !== 'Revisar') && type && sectionPass);
 
     const numericPass = !Boolean(Object.values(numerationCheckBadge).filter((item) => {
@@ -803,7 +806,7 @@ const PostView = ({
       return item?.props.children === "Revisar"
     }).length);
 
-    setAllPass(Boolean(formPass && documentPass && numericPass && notePass))
+    setAllPass(Boolean(formPass && documentPass && numericPass && notePass && sectionPass))
 
   }, [post, titleLengthCheckBadge, sectionCheckBadge, numerationCheckBadge, noteCheckBadge])
 
@@ -899,6 +902,7 @@ const PostView = ({
               coherenceCheckBadge={coherenceCheckBadge}
               titleLengthCheckBadge={titleLengthCheckBadge}
               wordCheckBadge={wordCheckBadge}
+              allPass={allPass}
             />
           </aside>
         )}
