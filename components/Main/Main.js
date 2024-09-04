@@ -13,7 +13,7 @@ export default function Main({
 }
 
 const styles = {
-    main: 'flex min-h-[95vh] flex-col px-14 flex-auto font-roboto pt-10 pb-1',
+    main: 'flex min-h-[90vh] flex-col px-14 flex-auto font-roboto pt-10 pb-1',
     titleSection: 'flex flex-row justify-between py-4',
     title: 'text-4xl font-bold lowercase',
     btnGroup: 'btn-group shadow-xl',

@@ -15,7 +15,7 @@ export const GET_PROFESOR_COURSES_POSTS = (coursesIds) => `
 `;
 
 export const GET_ADMIN_COURSES_POSTS = () => `
-    allPosts() {
+    allPosts {
         review
         createdAt
         id

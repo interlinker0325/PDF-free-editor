@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookAtlas, faFileArrowDown, faFileCode, faImages, faPeopleGroup, faTags } from '@fortawesome/free-solid-svg-icons';
 import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
-import { useAtom } from 'jotai';
-import { colorAtom } from 'store/color';
 const PostForm = ({
     form,
     courses,
@@ -15,14 +13,14 @@ const PostForm = ({
     setCoAuthors,
     removeCoAuthor,
     refs,
-    formView
+    formView,
+    monograColor
 }) => {
     const selectedCourse = (courses || []).find(c => c?.id === form?.course);
     const courseStudents = (selectedCourse?.students || []).filter(student => student?.id !== user?.id);
 
     const [open, setOpen] = useState(false);
 
-    const [monograColor,] = useAtom(colorAtom);
     const [monographChange, setMonographChange] = useState(false);
 
     const handleClick = (event) => {
@@ -51,7 +49,7 @@ const PostForm = ({
 
     return (
         <>
-            <form className={!formView ? 'hidden' : 'font-roboto grid auto-rows-auto gap-8 p-6 bg-white shadow-lg rounded-lg'}>
+            <form className={!formView ? 'hidden' : 'font-roboto grid auto-rows-auto gap-8 p-6 bg-white shadow-lg rounded-lg h-screen'}>
                 <section className='row-auto'>
                     <div className='form-control'>
                         <input
@@ -109,7 +107,7 @@ const PostForm = ({
                                     onChange={(e) => onChange(e, 'monograph')}
                                     onClick={handleClick}
                                 />
-                                <span htmlFor='monograph' className={`${styles.fileLabel(form.monograph)} ${monograColor === true ? "text-[#88a9fe]" : ""}`}>Agregar documento(PDF, Word, Dock) *<span className='font-thin float-right'>{'  >'}</span></span>
+                                <span htmlFor='monograph' className={`${styles.fileLabel(form.monograph)} ${monograColor === true ? "text-[#88a9fe]" : ""}`}>Agregar documento(PDF, Word, Docx) *<span className='font-thin float-right'>{'  >'}</span></span>
 
                             </label>
                         </div>
@@ -146,7 +144,7 @@ const PostForm = ({
                         </div>
 
                         <div className={`${styles.formControl} flex jusfity-between`}>
-                            <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} size='md' />
+                            <FontAwesomeIcon className={styles.icon} icon={faPeopleGroup} size='lg' />
                             <Autocomplete
                                 coAuthors={form.coauthors}
                                 placeholder='Co-autores'
@@ -204,7 +202,7 @@ const PostForm = ({
                                     <div className='flex gap-5'>
 
                                         <a onClick={setAgreedTerms} htmlFor='agreedterms' className={styles.link} >Acepto</a>
-                                        <div className='h-[23px] w-[23px] border-black border-[1px] flex flex-col justify-center items-center basis-6'>
+                                        <div className='h-[23px] w-[23px] border-black border-[1px] flex flex-col justify-center items-center basis-6' onClick={setAgreedTerms}>
                                             {form.agreedterms &&
                                                 <div className='h-[20px] w-[20px] rounded-full bg-other' />
                                             }
@@ -250,7 +248,7 @@ const styles = {
     formControl: 'form-control flex-row gap-4 items-end',
     titleInput: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent input drop-shadow-lg font-normal text-4xl input-ghost border-transparent rounded-none w-full px-0`,
     label: 'cursor-pointer font-normal label justify-start gap-4 p-0 w-[380px]',
-    labelNoCursor: 'font-normal label justify-start gap-4 p-0',
+    labelNoCursor: 'font-normal label justify-start gap-4 p-0 mb-5',
     icon: 'w-[10px]',
     select: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-[380px] pl-0 border-2 border-transparent rounded-none`,
     type: val => `${val ? STYLE_ACTIVE : STYLE_INACTIVE} bg-transparent drop-shadow-lg font-normal text-lg h-8 min-h-8 w-[380px] pl-0 border-2 border-transparent rounded-none`,

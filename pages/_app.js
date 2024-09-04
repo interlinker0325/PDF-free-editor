@@ -9,6 +9,7 @@ import { SWRConfig } from 'swr';
 import fetchJson from 'utils/fetchJson';
 import useUser from 'utils/useUser';
 import "./Editor.css"
+import "../components/Compliance/Compliance.module.css"
 
 function MyApp({ Component, pageProps }) {
     const [displayModal, setDisplayModal] = useState(false);
