@@ -134,7 +134,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
           variant: 'success',
           preventDuplicate: true,
           anchorOrigin: {
-            vertical: 'bottom',
+           vertical: 'top',
             horizontal: 'center'
           }
         });
@@ -145,7 +145,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
           variant: 'error',
           preventDuplicate: true,
           anchorOrigin: {
-            vertical: 'bottom',
+           vertical: 'top',
             horizontal: 'center'
           }
         });
@@ -177,7 +177,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
         variant: 'success',
         preventDuplicate: true,
         anchorOrigin: {
-          vertical: 'bottom',
+         vertical: 'top',
           horizontal: 'center'
         }
       });
@@ -189,7 +189,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
     //         variant: 'warning',
     //         preventDuplicate: true,
     //         anchorOrigin: {
-    //           vertical: 'bottom',
+    //          vertical: 'top',
     //           horizontal: 'center'
     //         }
     //       })
@@ -201,7 +201,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
     //       variant: 'error',
     //       preventDuplicate: true,
     //       anchorOrigin: {
-    //         vertical: 'bottom',
+    //        vertical: 'top',
     //         horizontal: 'center'
     //       }
     //     });
@@ -315,7 +315,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
           variant: 'warning',
           preventDuplicate: true,
           anchorOrigin: {
-            vertical: 'bottom',
+           vertical: 'top',
             horizontal: 'center'
           }
         });
@@ -325,7 +325,7 @@ export default function usePost({ user, post, isSaved, setIsSaved, courses } = {
           variant: 'warning',
           preventDuplicate: true,
           anchorOrigin: {
-            vertical: 'bottom',
+           vertical: 'top',
             horizontal: 'center'
           }
         });

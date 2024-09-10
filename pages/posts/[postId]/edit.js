@@ -81,6 +81,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
         }
         <PostTopBar
           {...{
+            user,
             allPass,
             complianceView,
             showPreview,

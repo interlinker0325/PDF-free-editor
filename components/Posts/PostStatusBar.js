@@ -2,19 +2,22 @@ import {useState} from 'react';
 import TopBar from 'components/TopBar/TopBar';
 import {updateEntry} from 'handlers/bll';
 import {isPostApproved, POST_REVIEW_STATUS} from 'utils';
-import {enqueueSnackbar} from "notistack";
+
+import {useRouter} from "next/router";
+import {useSnackbar} from "notistack";
 
 const errorConfig = {
   variant: 'error',
-  preventDuplicate: true,
   anchorOrigin: {
-    vertical: 'bottom',
+   vertical: 'top',
     horizontal: 'center'
   }
 }
 
 const PostStatusBar = ({post, user}) => {
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const router = useRouter();
 
   if (!post?.course || !user) return null;
   if (isPostApproved(post) || post.course?.professor?.id !== user?.id) {
@@ -22,10 +25,10 @@ const PostStatusBar = ({post, user}) => {
   }
 
   const submitReview = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
     try {
+      e.preventDefault();
+      setLoading(true);
+
       const entry = await updateEntry({
         review: e.target.id,
         id: post.id,
@@ -37,13 +40,12 @@ const PostStatusBar = ({post, user}) => {
       } else {
         enqueueSnackbar('EL documento ha sido ' + e.target.id === POST_REVIEW_STATUS.APPROVED ? "aprobado" : "denegado", {
           variant: 'success',
-          preventDuplicate: true,
           anchorOrigin: {
-            vertical: 'bottom',
+           vertical: 'top',
             horizontal: 'center'
           }
         });
-        location.href = '/profile/me';
+        await router.push('/profile/me');
       }
     } catch (error) {
       console.log(error);

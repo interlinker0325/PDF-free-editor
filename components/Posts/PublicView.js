@@ -63,7 +63,7 @@ const PublicView = ({
                   variant: 'success',
                   preventDuplicate: true,
                   anchorOrigin: {
-                    vertical: 'bottom',
+                   vertical: 'top',
                     horizontal: 'center'
                   }
                 });
@@ -89,12 +89,12 @@ const PublicView = ({
               >
                 {"Editar"}
               </a>
-              <button
+              {!isAdmin && (<button
                 onClick={() => setDeletePrompt(true)}
                 className="text-2xl text-white bg-red-500 hover:bg-red-700 py-1 px-2 rounded"
               >
                 {"Eliminar"}
-              </button>
+              </button>)}
             </div>
           )}
         </div>

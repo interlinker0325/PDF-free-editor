@@ -1,29 +1,32 @@
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import useUser from 'utils/useUser';
 import Main from 'components/Main/Main';
 import PostStatusBar from 'components/Posts/PostStatusBar';
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import dynamic from "next/dynamic";
+import {SnackbarProvider} from "notistack";
 
-const PublicView = dynamic(() => import('./PublicView'), { ssr: false })
+const PublicView = dynamic(() => import('./PublicView'), {ssr: false})
 
-const Post = ({ post,  updatePost }) => {
-    const router = useRouter();
-    useEffect(() => {
-        if (!post) {
-            router.push('/');
-        }
-    }, [post]);
-    const { user } = useUser();
-    const showPreview = true;
+const Post = ({post, updatePost}) => {
+  const router = useRouter();
+  useEffect(() => {
+    if (!post) {
+      router.push('/');
+    }
+  }, [post]);
+  const {user} = useUser();
+  const showPreview = true;
 
-    if (!post) return null;
-    return (
-        <Main>
-            <PostStatusBar user={user} post={post} updatePost={updatePost} />
-            <PublicView {...{post, user, showPreview}} />
-        </Main>
-    );
+  if (!post) return null;
+  return (
+    <Main>
+      <SnackbarProvider>
+        <PostStatusBar user={user} post={post} updatePost={updatePost}/>
+        <PublicView {...{post, user, showPreview}} />
+      </SnackbarProvider>
+    </Main>
+  );
 };
 
 export default Post;

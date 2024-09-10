@@ -1,8 +1,10 @@
 import { Tooltip } from "@mui/material";
 import TopBar from "../TopBar/TopBar";
 import { useEffect, useState } from "react";
+import {isAdmin as isUserAdmin} from "../../utils";
 
 export default function PostTopBar({
+  user,
   allPass,
   complianceView,
   showPreview,
@@ -16,6 +18,7 @@ export default function PostTopBar({
   statusBarState,
   setComplianceView,
 }) {
+  const isAdmin = isUserAdmin(user?.role?.id);
   const [time, setTime] = useState(true)
   useEffect(() => {
     setTimeout(() => {
@@ -216,7 +219,7 @@ export default function PostTopBar({
             onClick={handleSave}
             children="Guardar"
           />
-          {allPass && (<a
+          {!isAdmin && allPass && (<a
             className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
             onClick={handlePublication}
             children="Publicar"
