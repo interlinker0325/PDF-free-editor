@@ -132,6 +132,7 @@ export default EditPost;
 
 export const getServerSideProps = withSession(async function ({req, params}) {
   const currentUser = req.session.get('user');
+  console.log({currentUser});
   if (!currentUser) {
     return {props: {}};
   }
@@ -151,6 +152,8 @@ export const getServerSideProps = withSession(async function ({req, params}) {
   if (postData?.monograph) {
     postData.monographView = await getHTML(postData.monograph.url);
   }
+
+  console.log("postData", postData.id);
 
   return {
     props: {courses: allCourses, students: allUsers, post: postData}
