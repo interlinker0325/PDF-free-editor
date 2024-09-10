@@ -9,14 +9,14 @@ import {useSnackbar} from "notistack";
 const errorConfig = {
   variant: 'error',
   anchorOrigin: {
-   vertical: 'top',
+    vertical: 'top',
     horizontal: 'center'
   }
 }
 
 const PostStatusBar = ({post, user}) => {
   const [loading, setLoading] = useState(false);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const router = useRouter();
 
   if (!post?.course || !user) return null;
@@ -24,13 +24,12 @@ const PostStatusBar = ({post, user}) => {
     return null;
   }
 
-  const submitReview = async (e) => {
+  const submitReview = async (review) => {
     try {
-      e.preventDefault();
       setLoading(true);
 
       const entry = await updateEntry({
-        review: e.target.id,
+        review,
         id: post.id,
       });
 
@@ -38,10 +37,11 @@ const PostStatusBar = ({post, user}) => {
         console.log(entry.error);
         enqueueSnackbar('No se pudo actualizar la publicación', errorConfig);
       } else {
-        enqueueSnackbar('EL documento ha sido ' + e.target.id === POST_REVIEW_STATUS.APPROVED ? "aprobado" : "denegado", {
-          variant: 'success',
+        const approved = review === POST_REVIEW_STATUS.APPROVED;
+        enqueueSnackbar('EL documento ha sido ' + (approved ? "aprobado" : "denegado"), {
+          variant: approved ? 'success' : 'error',
           anchorOrigin: {
-           vertical: 'top',
+            vertical: 'top',
             horizontal: 'center'
           }
         });
@@ -60,17 +60,21 @@ const PostStatusBar = ({post, user}) => {
       <a className={styles.link} href='/profile/me'>{'< Volver a archivo'}</a>
       <div>
         <button
-          id={POST_REVIEW_STATUS.APPROVED}
           type='button'
-          onClick={submitReview}
+          onClick={async (e) => {
+            e.preventDefault();
+            await submitReview(POST_REVIEW_STATUS.APPROVED);
+          }}
           className={`${styles.btn} ${styles.btnApproved}`}
           disabled={loading}
           children='Aprobar'
         />
         <button
-          id={POST_REVIEW_STATUS.DENIED}
           type='button'
-          onClick={submitReview}
+          onClick={async (e) => {
+            e.preventDefault();
+            await submitReview(POST_REVIEW_STATUS.DENIED);
+          }}
           className={`${styles.btn} ${styles.btnDenied}`}
           disabled={loading}
           children='Denegar'

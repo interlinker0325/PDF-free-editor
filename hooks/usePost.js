@@ -28,9 +28,9 @@ export default function usePost({user, post, setIsSaved,} = {}) {
   // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
   // compliance pannel display
-  const [complianceView, setComplianceView] = useState(false)
+  const [complianceView, setComplianceView] = useState(false);
   // set post form view PostForm : PostView
-  const [formView, setFormView] = useState(true)
+  const [formView, setFormView] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
 
   const [logicCheck, setLogicCheck] = useState(null)
@@ -41,7 +41,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     success: 'Los campos con (*) son requeridos.'
   });
 
-  const [monograColor, setMonograColor] = useState(false)
+  const [monograColor, setMonograColor] = useState(false);
 
   const refs = {
     attachments: useRef(),
