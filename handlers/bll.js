@@ -79,7 +79,7 @@ export const newSection = async (
 };
 
 export const upload = async (files, returnUrl = false, fileId) => {
-  if (!files) return { error: 'No file selected.' };
+  if (!files?.length) return { error: 'No file selected.' };
 
   let formData = new FormData();
   fileId && formData.append('fileId', fileId);

@@ -105,8 +105,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       iframe.contentWindow.document.body.innerHTML;
   }
 
-  console.log("FORM STATE RENDER:", formState);
-
+  // console.log("FORM STATE RENDER:", formState);
 
   const saveDocument = async (approval) => {
     try {
@@ -175,7 +174,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     // TODO: Validate with Hao
     // const iframeContent = getFrameContent();
     // const checkResult = await checkCompliance(iframeContent);
-    // console.log({checkResult})
+    // console.log({checkResult})8
     // setLogicCheck(checkResult.data);
 
     // if (checkResult.data?.isTrue === "true") {
@@ -272,7 +271,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     }
     triggerLoading(true);
     try {
-      itemValue = await upload(_files, true);
+      itemValue = await upload(_files, true, post?.coverimage?.id);
     } catch (error) {
       console.error("Error uploading file:", error);
     } finally {
@@ -302,7 +301,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       const htmlFile = new File([htmlData.data], `${fileName}.html`, {
         type: "text/html",
       });
-      const uploadedFiles = await upload([htmlFile], true);
+      const uploadedFiles = await upload([htmlFile], true, post?.monograph?.id);
       console.log(uploadedFiles, "-----upload file----");
       const loadedMonograph = await getMonograph(uploadedFiles);
       setPreviewIframe(loadedMonograph);
