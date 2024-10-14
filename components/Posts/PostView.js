@@ -117,6 +117,8 @@ const PostView = ({
   useEffect(() => {
     // section compliance check
     const iframe = document.getElementById("documentWindow");
+    console.log(iframe, "=======>iframe")
+    console.log(typeof iframe, "=====>typeof ifrmae")
     const standardTitles = sections[post.post_type];
     setCoherenceCheckBadge(check);
     setWordCheckBadge(check);
@@ -143,7 +145,9 @@ const PostView = ({
         const sectionTitleElements = iframe.contentWindow.document.body.getElementsByTagName("h2");
         const subSectionTitleElements = iframe.contentWindow.document.body.querySelectorAll("h3", "h4");
         const divElements = iframe.contentWindow.document.body.getElementsByTagName('div');
+        console.log(divElements, "dieElements=====>")
         const liElements = iframe.contentWindow.document.body.getElementsByTagName('li');
+        console.log(liElements, "liElements====>")
 
         // Inappropriate words and Logic check of divElements
         Array.from(divElements).forEach((divElement) => {
@@ -831,7 +835,7 @@ const PostView = ({
           />
         </aside>
         {editView && (
-          <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none]">
+          <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none">
             <ErrorBoundary>
               <Editor
                 setChangedContent={setChangedContent}

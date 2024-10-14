@@ -24,6 +24,7 @@
     "@wiris/mathtype-html-integration-devkit": "^1.17.2",
     "autoprefixer": "^10.4.16",
     "axios": "^0.21.4",
+    "canvas-confetti": "^1.9.3",
     "codemirror": "^6.0.1",
     "cors": "2.8.5",
     "daisyui": "^2.52.0",
