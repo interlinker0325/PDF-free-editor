@@ -1,7 +1,7 @@
 import { Tooltip } from "@mui/material";
 import TopBar from "../TopBar/TopBar";
 import { useEffect, useState } from "react";
-import {isAdmin as isUserAdmin} from "../../utils";
+import { isAdmin as isUserAdmin } from "../../utils";
 
 export default function PostTopBar({
   user,
