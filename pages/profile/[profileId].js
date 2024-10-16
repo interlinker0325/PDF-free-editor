@@ -64,8 +64,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     if (refs[name]) {
       triggerLoading(true);
       const _files = refs[name]?.current?.files;
-      itemValue = await upload(_files);
-      if (FileReader && _files && _files.length) {
+      itemValue = await upload(_files, false, profile?.avatar?.id);
+      if (FileReader && _files?.length) {
         const fr = new FileReader();
         fr.onload = function () {
           setAvatarImage(fr.result);

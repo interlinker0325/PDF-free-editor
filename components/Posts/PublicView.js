@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import PublicIFrame from 'components/IFrame/PublicIFrame';
-import {isAdmin as isUserAdmin, isPostDraft} from 'utils';
+import {isAdmin as isUserAdmin, isPostDraftOrDeclined} from 'utils';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {deleteEntry} from "../../handlers/bll";
 import {useRouter} from "next/router";
@@ -40,7 +40,7 @@ const PublicView = ({
   let course = post?.course;
   if (courses) course = courses.find(someCourse => someCourse.id === course);
 
-  const postDraft = isPostDraft(post);
+  const postDraft = isPostDraftOrDeclined(post);
   let formattedDate = new Date(post.createdAt).toLocaleDateString('es-ES', options);
   console.log({isAdmin})
   return (
@@ -63,7 +63,7 @@ const PublicView = ({
                   variant: 'success',
                   preventDuplicate: true,
                   anchorOrigin: {
-                    vertical: 'bottom',
+                   vertical: 'top',
                     horizontal: 'center'
                   }
                 });
@@ -89,12 +89,12 @@ const PublicView = ({
               >
                 {"Editar"}
               </a>
-              <button
+              {!isAdmin && (<button
                 onClick={() => setDeletePrompt(true)}
                 className="text-2xl text-white bg-red-500 hover:bg-red-700 py-1 px-2 rounded"
               >
                 {"Eliminar"}
-              </button>
+              </button>)}
             </div>
           )}
         </div>

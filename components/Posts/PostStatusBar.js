@@ -1,33 +1,35 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import TopBar from 'components/TopBar/TopBar';
-import {updateEntry} from 'handlers/bll';
-import {isPostApproved, POST_REVIEW_STATUS} from 'utils';
-import {enqueueSnackbar} from "notistack";
+import { updateEntry } from 'handlers/bll';
+import { isPostApproved, POST_REVIEW_STATUS } from 'utils';
+
+import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 
 const errorConfig = {
   variant: 'error',
-  preventDuplicate: true,
   anchorOrigin: {
-    vertical: 'bottom',
+    vertical: 'top',
     horizontal: 'center'
   }
 }
 
-const PostStatusBar = ({post, user}) => {
+const PostStatusBar = ({ post, user }) => {
   const [loading, setLoading] = useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const router = useRouter();
 
   if (!post?.course || !user) return null;
   if (isPostApproved(post) || post.course?.professor?.id !== user?.id) {
     return null;
   }
 
-  const submitReview = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
+  const submitReview = async (review) => {
     try {
+      setLoading(true);
+
       const entry = await updateEntry({
-        review: e.target.id,
+        review,
         id: post.id,
       });
 
@@ -35,15 +37,15 @@ const PostStatusBar = ({post, user}) => {
         console.log(entry.error);
         enqueueSnackbar('No se pudo actualizar la publicación', errorConfig);
       } else {
-        enqueueSnackbar('EL documento ha sido ' + e.target.id === POST_REVIEW_STATUS.APPROVED ? "aprobado" : "denegado", {
-          variant: 'success',
-          preventDuplicate: true,
+        const approved = review === POST_REVIEW_STATUS.APPROVED;
+        enqueueSnackbar('EL documento ha sido ' + (approved ? "aprobado" : "denegado"), {
+          variant: approved ? 'success' : 'error',
           anchorOrigin: {
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'center'
           }
         });
-        location.href = '/profile/me';
+        await router.push('/profile/me');
       }
     } catch (error) {
       console.log(error);
@@ -58,17 +60,21 @@ const PostStatusBar = ({post, user}) => {
       <a className={styles.link} href='/profile/me'>{'< Volver a archivo'}</a>
       <div>
         <button
-          id={POST_REVIEW_STATUS.APPROVED}
           type='button'
-          onClick={submitReview}
+          onClick={async (e) => {
+            e.preventDefault();
+            await submitReview(POST_REVIEW_STATUS.APPROVED);
+          }}
           className={`${styles.btn} ${styles.btnApproved}`}
           disabled={loading}
           children='Aprobar'
         />
         <button
-          id={POST_REVIEW_STATUS.DENIED}
           type='button'
-          onClick={submitReview}
+          onClick={async (e) => {
+            e.preventDefault();
+            await submitReview(POST_REVIEW_STATUS.DENIED);
+          }}
           className={`${styles.btn} ${styles.btnDenied}`}
           disabled={loading}
           children='Denegar'

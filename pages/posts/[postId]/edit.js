@@ -45,6 +45,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
     logicCheck,
     editView,
     setEditView,
+    setMonograColor,
     complianceView,
     setComplianceView,
     formView,
@@ -80,6 +81,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
         }
         <PostTopBar
           {...{
+            user,
             allPass,
             complianceView,
             showPreview,
@@ -112,6 +114,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
           courses={courses}
           previewIframe={previewIframe}
           editView={editView}
+          setMonograColor={setMonograColor}
           showPreview={showPreview}
           complianceView={complianceView}
           setIsSaved={setIsSaved}
@@ -129,6 +132,7 @@ export default EditPost;
 
 export const getServerSideProps = withSession(async function ({req, params}) {
   const currentUser = req.session.get('user');
+  console.log({currentUser});
   if (!currentUser) {
     return {props: {}};
   }
@@ -148,6 +152,8 @@ export const getServerSideProps = withSession(async function ({req, params}) {
   if (postData?.monograph) {
     postData.monographView = await getHTML(postData.monograph.url);
   }
+
+  console.log("postData", postData.id);
 
   return {
     props: {courses: allCourses, students: allUsers, post: postData}

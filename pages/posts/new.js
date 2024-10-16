@@ -53,6 +53,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
       <SnackbarProvider maxSnack={3}>
         <PostTopBar
           {...{
+            user,
             allPass,
             showPreview,
             editView,
