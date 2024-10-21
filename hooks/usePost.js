@@ -295,9 +295,15 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     try {
       triggerLoading(true);
       const htmlData = await fileToHTML(file);
+      const type = typeof (htmlData.data)
+      console.log(type, "---datatype")
+      console.log(htmlData.data, "----------->htmldata")
+      const length = htmlData.data.length
+      console.log(length, "---------length")
       const checkResult = await checkCompliance(htmlData.data);
       console.log(checkResult.data, "-----data check-----");
       setLogicCheck(checkResult.data);
+
       const htmlFile = new File([htmlData.data], `${fileName}.html`, {
         type: "text/html",
       });

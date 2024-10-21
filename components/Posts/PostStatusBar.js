@@ -1,10 +1,10 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import TopBar from 'components/TopBar/TopBar';
-import {updateEntry} from 'handlers/bll';
-import {isPostApproved, POST_REVIEW_STATUS} from 'utils';
+import { updateEntry } from 'handlers/bll';
+import { isPostApproved, POST_REVIEW_STATUS } from 'utils';
 
-import {useRouter} from "next/router";
-import {useSnackbar} from "notistack";
+import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 
 const errorConfig = {
   variant: 'error',
@@ -14,9 +14,9 @@ const errorConfig = {
   }
 }
 
-const PostStatusBar = ({post, user}) => {
+const PostStatusBar = ({ post, user }) => {
   const [loading, setLoading] = useState(false);
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
 
   if (!post?.course || !user) return null;

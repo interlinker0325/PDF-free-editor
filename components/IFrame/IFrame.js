@@ -157,6 +157,8 @@ const IFrame = ({
   }, [editView]);
 
   useEffect(() => {
+    console.log(changedContent, "==changedcontent")
+    console.log(editElement, "==editElement")
     if (!editElement) return
     const tempContainer = document.createElement('div');
     tempContainer.innerHTML = changedContent;
