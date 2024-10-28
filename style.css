@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+}
+
+svg path {
+    transition: fill ease .5s;
+}
+
+.htmlBackgroundBackdrop {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background-color: #000000;
+}
+
+.fr-table-colors{
+    padding-bottom: 20px;
+}
+
+textarea.fr-code {
+    height: 100%;
+}

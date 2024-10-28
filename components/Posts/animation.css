@@ -1,0 +1,44 @@
+/* h1 {
+    position: absolute;
+    margin-top: 30vh;
+    width: 100%;
+    text-align: center;
+    font-size: 333%;
+    font-family: sans-serif;
+    color: grey;
+    opacity: 0.5;
+}
+
+canvas {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+} */
+
+ body {
+     font-family: 'Shojumaru', cursive;
+     background-color: #b38867;
+ }
+
+ .title {
+     font-size: 100px;
+     color: white;
+     text-align: center;
+ }
+
+ .emoji-container {
+     margin-bottom: 25px;
+     margin-top: 25px;
+     text-align: center;
+ }
+
+ .emoji {
+     font-size: 200px;
+ }
+
+ .button-container {
+     text-align: center;
+ }
+
+ 
