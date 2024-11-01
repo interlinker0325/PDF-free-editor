@@ -80,8 +80,8 @@ export default function PostTopBar({
   };
 
   const startAnimation = () => {
-    // First animation
-    const firstEndTime = Date.now() + (4 * 1000);
+    // First animation - 2 seconds
+    const firstEndTime = Date.now() + (2 * 1000);
     (function firstFrame() {
       confetti({
         particleCount: 7,
@@ -96,7 +96,7 @@ export default function PostTopBar({
 
     // Second animation after 2 second delay
     setTimeout(() => {
-      const secondEndTime = Date.now() + (4 * 1000);
+      const secondEndTime = Date.now() + (2 * 1000);
       (function secondFrame() {
         confetti({
           particleCount: 7,
@@ -108,7 +108,7 @@ export default function PostTopBar({
           requestAnimationFrame(secondFrame);
         }
       })();
-    }, 6000); // 4s (first animation) + 2s (gap) = 6s delay
+    }, 4000); // 2s (first animation) + 2s (gap) = 4s delay
   };
 
   useEffect(() => {
