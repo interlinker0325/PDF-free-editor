@@ -31,98 +31,36 @@ export default function PostTopBar({
 
   const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
-  const basic = () => {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-  };
-
-  const randomDirection = () => {
-    confetti({
-      angle: randomInRange(55, 125),
-      spread: randomInRange(50, 70),
-      particleCount: randomInRange(50, 100),
-      origin: { y: 0.6 }
-    });
-  };
-
-  const makeItRain = () => {
-    const button = document.getElementById("makeItRain");
-    button.disabled = true;
-    const end = Date.now() + (2 * 1000);
-    const colors = ['#bb0000', '#ffffff'];
-
-    const frame = () => {
-      confetti({
-        particleCount: 2,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: colors
-      });
-      confetti({
-        particleCount: 2,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: colors
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      } else {
-        button.disabled = false;
-      }
-    };
-    frame();
-  };
-
   const startAnimation = () => {
-    let repeatCount = 0;
+    // First animation - 2 seconds
+    const firstEndTime = Date.now() + 2000; // 2 seconds
+    (function firstFrame() {
+      confetti({
+        particleCount: 7,
+        angle: randomInRange(55, 125),
+        spread: randomInRange(50, 70),
+        origin: { y: 0.6 }
+      });
+      if (Date.now() < firstEndTime) {
+        requestAnimationFrame(firstFrame);
+      }
+    })();
 
-    const runSequence = () => {
-      // First burst
-      const firstEndTime = Date.now() + (1 * 1000);
-      (function firstFrame() {
+    // Second animation after 2-second delay
+    setTimeout(() => {
+      const secondEndTime = Date.now() + 2000;
+      (function secondFrame() {
         confetti({
           particleCount: 7,
           angle: randomInRange(55, 125),
           spread: randomInRange(50, 70),
           origin: { y: 0.6 }
         });
-        if (Date.now() < firstEndTime) {
-          requestAnimationFrame(firstFrame);
+        if (Date.now() < secondEndTime) {
+          requestAnimationFrame(secondFrame);
         }
       })();
-
-      // Schedule remaining 3 bursts with 1s gaps
-      for (let i = 1; i < 4; i++) {
-        setTimeout(() => {
-          const burstEndTime = Date.now() + (1 * 1000);
-          (function burstFrame() {
-            confetti({
-              particleCount: 7,
-              angle: randomInRange(55, 125),
-              spread: randomInRange(50, 70),
-              origin: { y: 0.6 }
-            });
-            if (Date.now() < burstEndTime) {
-              requestAnimationFrame(burstFrame);
-            }
-          })();
-        }, i * 2000); // 2s gap between bursts
-      }
-
-      // Schedule next sequence if not done
-      repeatCount++;
-      if (repeatCount < 3) {
-        setTimeout(runSequence, 8000); // Wait for previous sequence to finish (4 bursts * 2s = 8s)
-      }
-    };
-
-    runSequence(); // Start the first sequence
+    }, 3000);
   };
 
   useEffect(() => {
@@ -156,9 +94,8 @@ export default function PostTopBar({
               setEditView(false);
               setComplianceView(false);
             }}
-          >
             children="Formulario"
-          </a>
+          />
           <a
             className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
             onClick={() => {
@@ -167,9 +104,8 @@ export default function PostTopBar({
               setEditView(false);
               setComplianceView(false);
             }}
-          >
             children="Vista previa"
-          </a>
+          />
           <a
             className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
             onClick={() => {
@@ -178,9 +114,8 @@ export default function PostTopBar({
               setFormView(false);
               setComplianceView(false);
             }}
-          >
             children="Editor"
-          </a>
+          />
           <a
             className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
             onClick={() => {
@@ -189,36 +124,43 @@ export default function PostTopBar({
               setShowPreview(false);
               setFormView(false);
             }}
-          >
             children="Cumplimiento"
-          </a>
+          />
           <div className="cursor-pointer ml-3">
             <Tooltip
-             
+              title={
+                allPass
+                  ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes'
+                  : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'
+              }
+              arrow
             >
               {allPass ? (
-                <>
-                  {/* {time && (
-                    <div>
-                      <canvas id="celebration" className="absolute z-30 top-0 -translate-x-[50%]"></canvas>
-                    </div>
-                  )} */}
-                </>
-              ) : (
-                <img src="/warning.png" className="w-8" />
-              )}
+                <div className="sprinkle-container">
+                  <img width="30" height="auto" className="thumb-up"
+                    src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
+                    alt="good-quality--v1" />
+                  <div className="sprinkles">
+                    {Array.from({ length: 15 }).map((_, index) => (
+                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </Tooltip>
           </div>
           <a
-            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
+            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
             onClick={handleSave}
-            children="Guardar"
+            children="Cumplimiento"
           />
-          {!isAdmin && allPass && (<a
-            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
-            onClick={handlePublication}
-            children="Publicar"
-          />)}
+          {!isAdmin && allPass && (
+            <a
+              className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
+              onClick={handlePublication}
+              children="Publicar"
+            />
+          )}
         </div>
       </div>
     </TopBar>
