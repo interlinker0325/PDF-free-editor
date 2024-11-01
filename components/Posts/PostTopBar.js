@@ -152,7 +152,7 @@ export default function PostTopBar({
           <a
             className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
             onClick={handleSave}
-            children="Cumplimiento"
+            children="Guardar"
           />
           {!isAdmin && allPass && (
             <a
