@@ -117,11 +117,6 @@ export default function PostTopBar({
     }
   }, [allPass]);
 
-  // Add new useEffect to run animation on mount
-  useEffect(() => {
-    startAnimation();
-  }, []); // Empty dependency array means it runs once on mount
-
   return (
     <TopBar>
       <div className="flex flex-row justify-between w-full">
