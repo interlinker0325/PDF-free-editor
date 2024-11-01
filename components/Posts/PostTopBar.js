@@ -108,7 +108,7 @@ export default function PostTopBar({
           requestAnimationFrame(secondFrame);
         }
       })();
-    }, 4000); // 2s (first animation) + 2s (gap) = 4s delay
+    }, 2000); // 2s (first animation) + 2s (gap) = 4s delay
   };
 
   useEffect(() => {
