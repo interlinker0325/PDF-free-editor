@@ -95,19 +95,26 @@ const Editor = ({
               return name.toLowerCase();
             },
             defaultHandlerSuccess: (response) => {
-              // Handle successful upload
-              if (response.files && response.files.length) {
-                response.files.forEach(file => {
-                  const image = editor.current?.createInside.element('img');
-                  if (image) {
-                    image.setAttribute('src', file);
-                    image.style.width = '80%';
-                    image.setAttribute('tabindex', '0');
-                    editor.current?.selection?.insertNode(image);
-                  }
-                });
+              try {
+                if (response.files && response.files.length) {
+                  response.files.forEach(file => {
+                    const image = editor.current?.createInside.element('img');
+                    if (image) {
+                      image.setAttribute('src', file);
+                      image.style.width = '80%';
+                      image.setAttribute('tabindex', '0');
+                      editor.current?.selection?.insertNode(image);
+                    }
+                  });
+                }
+              } catch (error) {
+                console.error('Error handling image upload:', error);
               }
             },
+            defaultHandlerError: (error) => {
+              console.error('Error uploading image:', error);
+            },
+            url: null,
           },
           allowTabNavigation: false,
           link: {
@@ -641,6 +648,22 @@ const Editor = ({
                 setConfig(updatedConfig);
               }
             },
+            beforeImageInsert: (image) => {
+              try {
+                // Validate image before insertion
+                if (!image.src) {
+                  console.error('Invalid image source');
+                  return false;
+                }
+                return true;
+              } catch (error) {
+                console.error('Error in beforeImageInsert:', error);
+                return false;
+              }
+            },
+            errorHandler: (error) => {
+              console.error('Jodit Editor error:', error);
+            }
           },
           processSVG: (svg) => {
             return svg;
