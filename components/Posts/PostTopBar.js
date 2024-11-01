@@ -32,34 +32,28 @@ export default function PostTopBar({
   const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
   const startAnimation = () => {
-    // First animation - 2 seconds
-    const firstEndTime = Date.now() + 2000; // 2 seconds
-    (function firstFrame() {
-      confetti({
-        particleCount: 7,
-        angle: randomInRange(55, 125),
-        spread: randomInRange(50, 70),
-        origin: { y: 0.6 }
-      });
-      if (Date.now() < firstEndTime) {
-        requestAnimationFrame(firstFrame);
-      }
-    })();
+    const rect = document.querySelector('.thumb-up').getBoundingClientRect();
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
 
-    // Second animation after 2-second delay
+    const confettiConfig = {
+      particleCount: 7,
+      angle: randomInRange(55, 125),
+      spread: randomInRange(30, 40),
+      origin: { x, y },
+      scalar: 0.7,     // Makes the confetti smaller
+      gravity: 0.3,    // Reduces how far the confetti falls
+      drift: 0.2,      // Adds some horizontal movement
+      ticks: 150,      // Limits how long the particles render
+      shapes: ['circle'], // Use only circular particles
+      colors: ['#40C057', '#2B8A3E', '#69DB7C'], // Green colors to match the icon
+    };
+
+    confetti(confettiConfig);
+    
+    // Second burst after delay
     setTimeout(() => {
-      const secondEndTime = Date.now() + 2000;
-      (function secondFrame() {
-        confetti({
-          particleCount: 7,
-          angle: randomInRange(55, 125),
-          spread: randomInRange(50, 70),
-          origin: { y: 0.6 }
-        });
-        if (Date.now() < secondEndTime) {
-          requestAnimationFrame(secondFrame);
-        }
-      })();
+      confetti(confettiConfig);
     }, 3000);
   };
 
@@ -126,20 +120,22 @@ export default function PostTopBar({
             }}
             children="Cumplimiento"
           />
-          <div className="cursor-pointer ml-3">
-          <Tooltip
-              title={allPass ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'}
-              arrow>
+          <div className="cursor-pointer ml-3 relative">
+            <Tooltip
+              title={allPass ? 'Tu documento ahora cumple...' : 'Consulte el panel...'}>
               {allPass ? (
-                <div className="sprinkle-container">
-                  <img width="30" height="auto" className="thumb-up"
+                <div className="relative">
+                  <img 
+                    width="30" 
+                    height="auto" 
+                    className="thumb-up"
+                    style={{
+                      position: 'relative',
+                      zIndex: 2
+                    }}
                     src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
-                    alt="good-quality--v1" />
-                  <div className="sprinkles">
-                    {Array.from({ length: 15 }).map((_, index) => (
-                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
-                    ))}
-                  </div>
+                    alt="good-quality--v1" 
+                  />
                 </div>
               ) : null}
             </Tooltip>
