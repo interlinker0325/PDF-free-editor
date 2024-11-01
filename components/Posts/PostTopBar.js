@@ -80,35 +80,49 @@ export default function PostTopBar({
   };
 
   const startAnimation = () => {
-    // First animation - 2 seconds
-    const firstEndTime = Date.now() + (2 * 1000);
-    (function firstFrame() {
-      confetti({
-        particleCount: 7,
-        angle: randomInRange(55, 125),
-        spread: randomInRange(50, 70),
-        origin: { y: 0.6 }
-      });
-      if (Date.now() < firstEndTime) {
-        requestAnimationFrame(firstFrame);
-      }
-    })();
+    let repeatCount = 0;
 
-    // Second animation after 2 second delay
-    setTimeout(() => {
-      const secondEndTime = Date.now() + (2 * 1000);
-      (function secondFrame() {
+    const runSequence = () => {
+      // First burst
+      const firstEndTime = Date.now() + (1 * 1000);
+      (function firstFrame() {
         confetti({
           particleCount: 7,
           angle: randomInRange(55, 125),
           spread: randomInRange(50, 70),
           origin: { y: 0.6 }
         });
-        if (Date.now() < secondEndTime) {
-          requestAnimationFrame(secondFrame);
+        if (Date.now() < firstEndTime) {
+          requestAnimationFrame(firstFrame);
         }
       })();
-    }, 2000); // 2s (first animation) + 2s (gap) = 4s delay
+
+      // Schedule remaining 3 bursts with 1s gaps
+      for (let i = 1; i < 4; i++) {
+        setTimeout(() => {
+          const burstEndTime = Date.now() + (1 * 1000);
+          (function burstFrame() {
+            confetti({
+              particleCount: 7,
+              angle: randomInRange(55, 125),
+              spread: randomInRange(50, 70),
+              origin: { y: 0.6 }
+            });
+            if (Date.now() < burstEndTime) {
+              requestAnimationFrame(burstFrame);
+            }
+          })();
+        }, i * 2000); // 2s gap between bursts
+      }
+
+      // Schedule next sequence if not done
+      repeatCount++;
+      if (repeatCount < 3) {
+        setTimeout(runSequence, 8000); // Wait for previous sequence to finish (4 bursts * 2s = 8s)
+      }
+    };
+
+    runSequence(); // Start the first sequence
   };
 
   useEffect(() => {
@@ -180,20 +194,15 @@ export default function PostTopBar({
           </a>
           <div className="cursor-pointer ml-3">
             <Tooltip
-              title={
-                allPass
-                  ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes'
-                  : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'
-              }
-              arrow
+             
             >
               {allPass ? (
                 <>
-                  {time && (
+                  {/* {time && (
                     <div>
                       <canvas id="celebration" className="absolute z-30 top-0 -translate-x-[50%]"></canvas>
                     </div>
-                  )}
+                  )} */}
                 </>
               ) : (
                 <img src="/warning.png" className="w-8" />
