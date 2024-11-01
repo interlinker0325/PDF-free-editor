@@ -127,24 +127,21 @@ export default function PostTopBar({
             children="Cumplimiento"
           />
           <div className="cursor-pointer ml-3">
-            <Tooltip
-              title={
-                allPass
-                  ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes'
-                  : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'
-              }
-              arrow
-            >
+          <Tooltip
+              title={allPass ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'}
+              arrow>
               {allPass ? (
                 <div className="sprinkle-container">
-                  {/* Creating multiple sprinkles */}
-                  {Array.from({ length: 15 }).map((_, index) => (
-                    <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
-                  ))}
+                  <img width="30" height="auto" className="thumb-up"
+                    src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
+                    alt="good-quality--v1" />
+                  <div className="sprinkles">
+                    {Array.from({ length: 15 }).map((_, index) => (
+                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <img src='/warning.png' className="w-8" />
-              )}
+              ) : null}
             </Tooltip>
           </div>
         </div>
