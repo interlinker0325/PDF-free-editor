@@ -122,9 +122,13 @@ export default function PostTopBar({
       <div className="flex flex-row justify-between w-full">
         <div>
           {(statusBarState.error || statusBarState.success) && (
-            <h5 className={
-              statusBarState.error ? "text-error text-2xl" : "text-primary text-2xl"
-            }>
+            <h5
+              className={
+                statusBarState.error
+                  ? "text-error text-2xl"
+                  : "text-primary text-2xl"
+              }
+            >
               {statusBarState.error || statusBarState.success}
             </h5>
           )}
@@ -139,7 +143,7 @@ export default function PostTopBar({
               setComplianceView(false);
             }}
           >
-            Formulario
+            children="Formulario"
           </a>
           <a
             className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
@@ -150,7 +154,7 @@ export default function PostTopBar({
               setComplianceView(false);
             }}
           >
-            Vista previa
+            children="Vista previa"
           </a>
           <a
             className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
@@ -161,7 +165,7 @@ export default function PostTopBar({
               setComplianceView(false);
             }}
           >
-            Editor
+            children="Editor"
           </a>
           <a
             className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
@@ -172,26 +176,40 @@ export default function PostTopBar({
               setFormView(false);
             }}
           >
-            Cumplimiento
+            children="Cumplimiento"
           </a>
           <div className="cursor-pointer ml-3">
             <Tooltip
-              title={allPass ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'}
-              arrow>
+              title={
+                allPass
+                  ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes'
+                  : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'
+              }
+              arrow
+            >
               {allPass ? (
-                <div className="sprinkle-container">
-                  <img width="30" height="auto" className="thumb-up"
-                    src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
-                    alt="good-quality--v1" />
-                  <div className="sprinkles">
-                    {Array.from({ length: 15 }).map((_, index) => (
-                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
-                    ))}
-                  </div>
-                </div>
-              ) : null}
+                <>
+                  {time && (
+                    <div>
+                      <canvas id="celebration" className="absolute z-30 top-0 -translate-x-[50%]"></canvas>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <img src="/warning.png" className="w-8" />
+              )}
             </Tooltip>
           </div>
+          <a
+            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
+            onClick={handleSave}
+            children="Guardar"
+          />
+          {!isAdmin && allPass && (<a
+            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-3 text-2xl`}
+            onClick={handlePublication}
+            children="Publicar"
+          />)}
         </div>
       </div>
     </TopBar>
