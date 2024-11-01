@@ -137,32 +137,30 @@ export default function PostTopBar({
             >
               {allPass ? (
                 <div className="sprinkle-container">
-                  <img width="30" height="auto" className="thumb-up"
-                    src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
-                    alt="good-quality--v1" />
-                  <div className="sprinkles">
-                    {Array.from({ length: 15 }).map((_, index) => (
-                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
-                    ))}
-                  </div>
+                  {/* Creating multiple sprinkles */}
+                  {Array.from({ length: 15 }).map((_, index) => (
+                    <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
+                  ))}
                 </div>
-              ) : null}
+              ) : (
+                <img src='/warning.png' className="w-8" />
+              )}
             </Tooltip>
           </div>
-          <a
-            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
-            onClick={handleSave}
-            children="Guardar"
-          />
-          {!isAdmin && allPass && (
-            <a
-              className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
-              onClick={handlePublication}
-              children="Publicar"
-            />
-          )}
         </div>
       </div>
+      <a
+        className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
+        onClick={handleSave}
+        children="Guardar"
+      />
+      {!isAdmin && allPass && (
+        <a
+          className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
+          onClick={handlePublication}
+          children="Publicar"
+        />
+      )}
     </TopBar>
   );
 }
