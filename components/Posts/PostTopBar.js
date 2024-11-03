@@ -37,14 +37,14 @@ export default function PostTopBar({
 
     const rect = thumbUpButton.getBoundingClientRect();
     const x = (rect.left + rect.width / 2) / window.innerWidth;
-    const y = (rect.top + rect.height / 2) / window.innerHeight;
+    const y = (rect.top + rect.height / 2) / window.innerHeight + 0.1;
 
     const confettiConfig = {
-        particleCount: 50,  // Reduced particle count
+        particleCount: 50,
         angle: randomInRange(55, 125),
-        spread: randomInRange(30, 50),  // Adjusted spread for a tighter area
+        spread: randomInRange(30, 50),
         origin: { x, y },
-        scalar: 0.5,  // Smaller size for particles
+        scalar: 0.5,
         gravity: 0.5,
         drift: 0.2,
         ticks: 200,
@@ -52,15 +52,19 @@ export default function PostTopBar({
         colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
     };
 
+    // Initial burst
     confetti(confettiConfig);
     
-    setTimeout(() => {
-        confetti({
-            ...confettiConfig,
-            angle: randomInRange(45, 135),
-            spread: randomInRange(40, 60),  // Adjusted spread for a tighter area
-        });
-    }, 150);
+    // Three additional bursts with slight delays
+    for (let i = 1; i <= 3; i++) {
+        setTimeout(() => {
+            confetti({
+                ...confettiConfig,
+                angle: randomInRange(45, 135),
+                spread: randomInRange(40, 60),
+            });
+        }, i * 150);
+    }
 };
 
   return (
