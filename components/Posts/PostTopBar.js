@@ -60,11 +60,22 @@ export default function PostTopBar({
       confetti({
         ...confettiConfig,
         angle: randomInRange(45, 135),
-        spread: randomInRange(40, 60),
+        spread: randomInRange(40, 60),  // Adjusted spread for a tighter area
       });
     }, 150);
 
   }
+  useEffect(() => {
+    if (allPass) {
+      const thumbUpButton = document.querySelector('.thumb-up');
+      if (thumbUpButton) {
+        const rect = thumbUpButton.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          startAnimation();
+        }
+      }
+    }
+  }, [allPass]);
   return (
     <TopBar>
       <div className="flex flex-row justify-between w-full">
