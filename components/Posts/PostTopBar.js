@@ -25,7 +25,7 @@ export default function PostTopBar({
   useEffect(() => {
     const timer = setTimeout(() => {
       setTime(false);
-    }, 3000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -37,7 +37,7 @@ export default function PostTopBar({
 
     const rect = thumbUpButton.getBoundingClientRect();
     const x = (rect.left + rect.width / 2) / window.innerWidth;
-    const y = (rect.top + rect.height / 2) / window.innerHeight + 0.1;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
 
     const confettiConfig = {
       particleCount: 50,
@@ -47,7 +47,7 @@ export default function PostTopBar({
       scalar: 0.5,
       gravity: 0.5,
       drift: 0.2,
-      ticks: 600,
+      ticks: 400,
       shapes: ['square', 'circle'],
       colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
     };
@@ -63,6 +63,22 @@ export default function PostTopBar({
         spread: randomInRange(40, 60),
       });
     }, 150);
+
+    setTimeout(() => {
+      confetti({
+        ...confettiConfig,
+        angle: randomInRange(45, 135),
+        spread: randomInRange(40, 60),
+      });
+    }, 600); // Increased delay to 600 milliseconds
+
+    setTimeout(() => {
+      confetti({
+        ...confettiConfig,
+        angle: randomInRange(45, 135),
+        spread: randomInRange(40, 60),
+      });
+    }, 900);
 
   }
   useEffect(() => {
