@@ -137,7 +137,9 @@ export default function PostTopBar({
                     alt="good-quality--v1" 
                   />
                 </div>
-              ) : null}
+              ) : (
+                <img src='/warning.png' className="w-8" />
+              )}
             </Tooltip>
           </div>
         </div>
