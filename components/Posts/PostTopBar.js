@@ -55,14 +55,13 @@ export default function PostTopBar({
     // Initial burst
     confetti(confettiConfig);
 
-    // Three additional bursts with slight delays
     setTimeout(() => {
       confetti({
         ...confettiConfig,
         angle: randomInRange(45, 135),
         spread: randomInRange(40, 60),
       });
-    }, 150);
+    }, 100); // First additional burst
 
     setTimeout(() => {
       confetti({
@@ -70,7 +69,7 @@ export default function PostTopBar({
         angle: randomInRange(45, 135),
         spread: randomInRange(40, 60),
       });
-    }, 300);
+    }, 200); // Second additional burst
 
     setTimeout(() => {
       confetti({
@@ -78,8 +77,15 @@ export default function PostTopBar({
         angle: randomInRange(45, 135),
         spread: randomInRange(40, 60),
       });
-    }, 450);
+    }, 300); // Third additional burst
 
+    setTimeout(() => {
+      confetti({
+        ...confettiConfig,
+        angle: randomInRange(45, 135),
+        spread: randomInRange(40, 60),
+      });
+    }, 400);
   }
   useEffect(() => {
     if (allPass) {
