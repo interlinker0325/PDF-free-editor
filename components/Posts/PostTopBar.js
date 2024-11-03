@@ -61,7 +61,7 @@ export default function PostTopBar({
         angle: randomInRange(45, 135),
         spread: randomInRange(40, 60),
       });
-    }, 100); // First additional burst
+    }, 200);
   }
   useEffect(() => {
     if (allPass) {
