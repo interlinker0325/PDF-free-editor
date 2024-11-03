@@ -33,41 +33,44 @@ export default function PostTopBar({
 
   const startAnimation = () => {
     const rect = document.querySelector('.thumb-up').getBoundingClientRect();
-    const x = (rect.left + rect.width / 2) / window.innerWidth; // Center the x position
-    const y = (rect.top + rect.height / 2) / window.innerHeight; // Center the y position
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
   
     const confettiConfig = {
-      particleCount: 100, // Increase particle count for a more dense effect
-      angle: randomInRange(70, 110), // Narrow the angle for a more focused burst
-      spread: randomInRange(20, 30), // Reduce the spread
-      origin: { x, y }, // Origin of confetti burst is around the button
-      scalar: 0.7,     // Makes the confetti smaller
-      gravity: 0.3,    // Reduces how far the confetti falls
-      drift: 0.1,      // Adds a slight horizontal movement
-      ticks: 150,      // Limits how long the particles render
-      shapes: ['circle'], // Use only circular particles
-      colors: ['#40C057', '#2B8A3E', '#69DB7C'], // Green colors to match the icon
+      particleCount: 100,
+      angle: randomInRange(55, 125),
+      spread: randomInRange(50, 70),
+      origin: { x, y },
+      scalar: 0.8,
+      gravity: 0.5,
+      drift: 0.2,
+      ticks: 200,
+      shapes: ['square', 'circle'],
+      colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
     };
 
     confetti(confettiConfig);
     
-    // Second burst after delay
     setTimeout(() => {
-      confetti(confettiConfig);
-    }, 3000);
+      confetti({
+        ...confettiConfig,
+        angle: randomInRange(45, 135),
+        spread: randomInRange(60, 80),
+      });
+    }, 150);
   };
 
-useEffect(() => {
-  if (allPass) {
-    const thumbUpButton = document.querySelector('.thumb-up');
-    if (thumbUpButton) {
-      const rect = thumbUpButton.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) { // Check if the button is visible
-        startAnimation();
+  useEffect(() => {
+    if (allPass) {
+      const thumbUpButton = document.querySelector('.thumb-up');
+      if (thumbUpButton) {
+        const rect = thumbUpButton.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          startAnimation();
+        }
       }
     }
-  }
-}, [allPass]);
+  }, [allPass]);
 
   return (
     <TopBar>
@@ -137,7 +140,8 @@ useEffect(() => {
                     className="thumb-up"
                     style={{
                       position: 'relative',
-                      zIndex: 2
+                      zIndex: 2,
+                      cursor: 'pointer'
                     }}
                     src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
                     alt="good-quality--v1" 
