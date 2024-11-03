@@ -70,7 +70,7 @@ export default function PostTopBar({
         angle: randomInRange(45, 135),
         spread: randomInRange(40, 60),
       });
-    }, 600); // Increased delay to 600 milliseconds
+    }, 300);
 
     setTimeout(() => {
       confetti({
@@ -78,7 +78,7 @@ export default function PostTopBar({
         angle: randomInRange(45, 135),
         spread: randomInRange(40, 60),
       });
-    }, 900);
+    }, 450);
 
   }
   useEffect(() => {
