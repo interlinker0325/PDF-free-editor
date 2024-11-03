@@ -47,7 +47,7 @@ export default function PostTopBar({
       scalar: 0.5,
       gravity: 0.5,
       drift: 0.2,
-      ticks: 200,
+      ticks: 400,
       shapes: ['square', 'circle'],
       colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
     };
