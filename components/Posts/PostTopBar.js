@@ -32,45 +32,52 @@ export default function PostTopBar({
   const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
   const startAnimation = () => {
-    const rect = document.querySelector('.thumb-up').getBoundingClientRect();
+    const thumbUpButton = document.querySelector('.thumb-up');
+    if (!thumbUpButton) return;
+
+    const rect = thumbUpButton.getBoundingClientRect();
     const x = (rect.left + rect.width / 2) / window.innerWidth;
-    const y = (rect.top + rect.height / 2) / window.innerHeight;
-  
+    const y = ((rect.top + rect.height / 2) / window.innerHeight) + 0.3;
+
     const confettiConfig = {
-      particleCount: 100,
-      angle: randomInRange(55, 125),
-      spread: randomInRange(50, 70),
-      origin: { x, y },
-      scalar: 0.8,
-      gravity: 0.5,
-      drift: 0.2,
-      ticks: 200,
-      shapes: ['square', 'circle'],
-      colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
+        particleCount: 50,
+        angle: randomInRange(55, 125),
+        spread: randomInRange(30, 50),
+        origin: { x, y },
+        scalar: 0.5,
+        gravity: 0.5,
+        drift: 0.2,
+        ticks: 200,
+        shapes: ['square', 'circle'],
+        colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
     };
 
     confetti(confettiConfig);
     
     setTimeout(() => {
-      confetti({
-        ...confettiConfig,
-        angle: randomInRange(45, 135),
-        spread: randomInRange(60, 80),
-      });
+        confetti({
+            ...confettiConfig,
+            angle: randomInRange(45, 135),
+            spread: randomInRange(40, 60),
+        });
     }, 150);
-  };
 
-  useEffect(() => {
-    if (allPass) {
-      const thumbUpButton = document.querySelector('.thumb-up');
-      if (thumbUpButton) {
-        const rect = thumbUpButton.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          startAnimation();
-        }
-      }
-    }
-  }, [allPass]);
+    setTimeout(() => {
+        confetti({
+            ...confettiConfig,
+            angle: randomInRange(55, 125),
+            spread: randomInRange(30, 50),
+        });
+    }, 300);
+
+    setTimeout(() => {
+        confetti({
+            ...confettiConfig,
+            angle: randomInRange(45, 135),
+            spread: randomInRange(40, 60),
+        });
+    }, 450);
+};
 
   return (
     <TopBar>
