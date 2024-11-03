@@ -47,7 +47,7 @@ export default function PostTopBar({
       scalar: 0.5,
       gravity: 0.5,
       drift: 0.2,
-      ticks: 400,
+      ticks: 200,
       shapes: ['square', 'circle'],
       colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
     };
@@ -62,30 +62,6 @@ export default function PostTopBar({
         spread: randomInRange(40, 60),
       });
     }, 100); // First additional burst
-
-    setTimeout(() => {
-      confetti({
-        ...confettiConfig,
-        angle: randomInRange(45, 135),
-        spread: randomInRange(40, 60),
-      });
-    }, 200); // Second additional burst
-
-    setTimeout(() => {
-      confetti({
-        ...confettiConfig,
-        angle: randomInRange(45, 135),
-        spread: randomInRange(40, 60),
-      });
-    }, 300); // Third additional burst
-
-    setTimeout(() => {
-      confetti({
-        ...confettiConfig,
-        angle: randomInRange(45, 135),
-        spread: randomInRange(40, 60),
-      });
-    }, 400);
   }
   useEffect(() => {
     if (allPass) {
