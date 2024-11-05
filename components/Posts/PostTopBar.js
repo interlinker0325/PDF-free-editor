@@ -39,41 +39,51 @@ export default function PostTopBar({
     const x = (rect.left + rect.width / 2) / window.innerWidth;
     const y = (rect.top + rect.height / 2) / window.innerHeight;
 
-    const confettiConfig = {
+    const defaults = {
       particleCount: 50,
-      angle: randomInRange(55, 125),
-      spread: randomInRange(30, 50),
+      spread: 55,
       origin: { x, y },
-      scalar: 0.5,
-      gravity: 0.5,
-      drift: 0.2,
-      ticks: 200,
-      shapes: ['square', 'circle'],
       colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
+      startVelocity: 30,
+      gravity: 0.6,
+      ticks: 300,
+      shapes: ['circle'],
+      scalar: 1,
+      disableForReducedMotion: true
     };
 
-    // Initial burst
-    confetti(confettiConfig);
+    confetti({
+      ...defaults,
+      particleCount: 40,
+      spread: 60,
+    });
 
-    setTimeout(() => {
-      confetti({
-        ...confettiConfig,
-        angle: randomInRange(45, 135),
-        spread: randomInRange(40, 60),
-      });
-    }, 200);
+    const intervals = [150, 300, 450, 600, 750];
+    intervals.forEach(delay => {
+      setTimeout(() => {
+        confetti({
+          ...defaults,
+          particleCount: 25 + Math.floor(Math.random() * 15),
+          spread: 80 + Math.floor(Math.random() * 40),
+        });
+      }, delay);
+    });
   }
+
   useEffect(() => {
     if (allPass) {
-      const thumbUpButton = document.querySelector('.thumb-up');
-      if (thumbUpButton) {
-        const rect = thumbUpButton.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          startAnimation();
+      setTimeout(() => {
+        const thumbUpButton = document.querySelector('.thumb-up');
+        if (thumbUpButton) {
+          const rect = thumbUpButton.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            startAnimation();
+          }
         }
-      }
+      }, 100);
     }
   }, [allPass]);
+
   return (
     <TopBar>
       <div className="flex flex-row justify-between w-full">
