@@ -25,96 +25,76 @@ export default function PostTopBar({
   useEffect(() => {
     const timer = setTimeout(() => {
       setTime(false);
-    }, 3000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
   const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
-  const basic = () => {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-  };
-
-  const randomDirection = () => {
-    confetti({
-      angle: randomInRange(55, 125),
-      spread: randomInRange(50, 70),
-      particleCount: randomInRange(50, 100),
-      origin: { y: 0.6 }
-    });
-  };
-
-  const makeItRain = () => {
-    const button = document.getElementById("makeItRain");
-    button.disabled = true;
-    const end = Date.now() + (2 * 1000);
-    const colors = ['#bb0000', '#ffffff'];
-
-    const frame = () => {
-      confetti({
-        particleCount: 2,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: colors
-      });
-      confetti({
-        particleCount: 2,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: colors
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      } else {
-        button.disabled = false;
-      }
-    };
-    frame();
-  };
-
   const startAnimation = () => {
-    // First animation - 2 seconds
-    const firstEndTime = Date.now() + (2 * 1000);
-    (function firstFrame() {
-      confetti({
-        particleCount: 7,
-        angle: randomInRange(55, 125),
-        spread: randomInRange(50, 70),
-        origin: { y: 0.6 }
-      });
 
-      if (Date.now() < firstEndTime) {
-        requestAnimationFrame(firstFrame);
-      }
-    })();
+    const thumbUpButton = document.querySelector('.thumb-up');
+    if (!thumbUpButton) return;
+    const rect = thumbUpButton.getBoundingClientRect();
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
 
-    // Second animation after 2 second delay
-    setTimeout(() => {
-      const secondEndTime = Date.now() + (2 * 1000);
-      (function secondFrame() {
+    const defaults = {
+      particleCount: 50,
+      spread: 55,
+      origin: { x, y },
+      colors: [
+        '#1E90FF', // DodgerBlue
+        '#6B8E23', // OliveDrab
+        '#FFD700', // Gold
+        '#FFC0CB', // Pink
+        '#6A5ACD', // SlateBlue
+        '#ADD8E6', // LightBlue
+        '#FFD700', // Gold
+        '#EE82EE', // Violet
+        '#98FB98', // PaleGreen
+        '#4682B4', // SteelBlue
+        '#F4A460', // SandyBrown
+        '#D2691E', // Chocolate
+        '#DC143C'  // Crimson
+      ],
+      startVelocity: 30,
+      gravity: 0.6,
+      ticks: 300,
+      shapes: ['circle'],
+      scalar: 1,
+      disableForReducedMotion: true
+    };
+
+    confetti({
+      ...defaults,
+      particleCount: 40,
+      spread: 60,
+    });
+
+    const intervals = [150, 300, 450, 600, 750];
+    intervals.forEach(delay => {
+      setTimeout(() => {
         confetti({
-          particleCount: 7,
-          angle: randomInRange(55, 125),
-          spread: randomInRange(50, 70),
-          origin: { y: 0.6 }
+          ...defaults,
+          particleCount: 25 + Math.floor(Math.random() * 15),
+          spread: 80 + Math.floor(Math.random() * 40),
         });
-        if (Date.now() < secondEndTime) {
-          requestAnimationFrame(secondFrame);
-        }
-      })();
-    }, 4000); // 2s (first animation) + 2s (gap) = 4s delay
-  };
+      }, delay);
+    });
+  }
 
   useEffect(() => {
     if (allPass) {
-      startAnimation();
+      setTimeout(() => {
+        const thumbUpButton = document.querySelector('.thumb-up');
+        if (thumbUpButton) {
+          const rect = thumbUpButton.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            startAnimation();
+          }
+        }
+      }, 100);
     }
   }, [allPass]);
   return (
@@ -123,9 +103,13 @@ export default function PostTopBar({
         <div>
           {(statusBarState.error || statusBarState.success) && (
 
-            <h5 className={
-              statusBarState.error ? "text-error text-2xl" : "text-primary text-2xl"
-            }>
+            <h5
+              className={
+                statusBarState.error
+                  ? "text-error text-2xl"
+                  : "text-primary text-2xl"
+              }
+            >
               {statusBarState.error || statusBarState.success}
             </h5>
           )}
@@ -140,9 +124,8 @@ export default function PostTopBar({
               setComplianceView(false);
             }}
 
-          >
-            Formulario
-          </a>
+            children="Formulario"
+          />
           <a
             className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
             onClick={() => {
@@ -152,9 +135,8 @@ export default function PostTopBar({
               setComplianceView(false);
             }}
 
-          >
-            Vista previa
-          </a>
+            children="Vista previa"
+          />
           <a
             className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
             onClick={() => {
@@ -164,9 +146,8 @@ export default function PostTopBar({
               setComplianceView(false);
             }}
 
-          >
-            Editor
-          </a>
+            children="Editor"
+          />
           <a
             className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
             onClick={() => {
@@ -176,33 +157,55 @@ export default function PostTopBar({
               setFormView(false);
             }}
 
-          >
-            Cumplimiento
-          </a>
-          <div className="cursor-pointer ml-3">
+            children="Cumplimiento"
+          />
+          <div className="cursor-pointer ml-3 relative">
             <Tooltip
-              title={allPass ? 'Tu documento ahora cumple con todos los requerimientos, puedes enviarlo a publicar cuando gustes' : 'Consulte el panel de cumplimiento para cumplir con todos los requisitos de publicación.'}
-              arrow>
+              title={allPass ? 'Tu documento ahora cumple...' : 'Consulte el panel...'}>
               {allPass ? (
-                <div className="sprinkle-container">
-                  <img width="30" height="auto" className="thumb-up"
+                <div className="relative">
+                  <img
+                    width="30"
+                    height="auto"
+                    className="thumb-up"
+                    style={{
+                      position: 'relative',
+                      zIndex: 2,
+                      cursor: 'pointer'
+                    }}
                     src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
-                    alt="good-quality--v1" />
+                    alt="good-quality--v1"
+                  />
                   <div className="sprinkles">
 
-                    {
-                      Array.from({ length: 15 }).map((_, index) => (
-                        <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
-                      ))
-                    }
-                  </div >
-
-                </div>
-              ) : null}
-            </Tooltip>
-          </div>
-        </div>
-      </div>
-    </TopBar>
+                    {/* Creating multiple sprinkles */}
+                    {Array.from({ length: 15 }).map((_, index) => (
+                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
+                    ))}
+                  </div>
+                </div >
+              ) : (
+                <img src='/warning.png' className="w-8" />
+              )
+              }
+            </Tooltip >
+          </div >
+        </div >
+      </div >
+      <a
+        className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
+        onClick={handleSave}
+        children="Guardar"
+      />
+      {
+        !isAdmin && allPass && (
+          <a
+            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
+            onClick={handlePublication}
+            children="Publicar"
+          />
+        )
+      }
+    </TopBar >
   );
 }
