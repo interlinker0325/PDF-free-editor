@@ -172,6 +172,12 @@ export default function PostTopBar({
                     src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
                     alt="good-quality--v1"
                   />
+                  <div className="sprinkles">
+                    {/* Creating multiple sprinkles */}
+                    {Array.from({ length: 15 }).map((_, index) => (
+                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <img src='/warning.png' className="w-8" />
