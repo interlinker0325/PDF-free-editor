@@ -71,13 +71,19 @@ const Editor = ({
         safeIconSet("rightarrow", "https://cdn-icons-png.flaticon.com/256/724/724954.png");
         safeIconSet("arrowup", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAY1BMVEX///8AAADg4OClpaWSkpIPDw/Y2NjHx8caGhorKyswMDCVlZXc3Nzv7++3t7cdHR3m5ubS0tJ8fHyFhYWrq6txcXEkJCS+vr4+Pj45OTlMTExSUlJaWlpHR0cICAj19fVlZWWaRJuaAAADY0lEQVR4nO3c6XqiUAwG4OhUUCr7oq21ev9XOVJtB+EsyVk7z5P8DvD6gQgSBeDi+o21L/pTWZ6aYh9b8lN5O6weNbR5bM290tVTHWJ7xupWs3qNLQL4MzetVi+/0BRdJTRFVklMUY8rqSliVgpTtKyUpkhZaUxRVFpTBBXCFFyFMgVWIU1BVWhTQBXBFExFMgVSEU1BVGRTAJWBybvKyORZZWjyqjI2ebySsTB5y8rK5CkrS5OXrKxNHrJyYHKelROTY5Ujk1OVM5NDlUOTM5VTkyOVY5MTlXOTg/OVB5N1Vl5Mlll5Mlll5c1kkZVHk3FWXk2GKs8mI5V3k4EqgImsCmIiqgKZSKpgJoIqoAmtCmpCqgKbUKrgJoQqgkmrimLSqCKZlFcy0UyKrCKapFlFNUmyimwSqqKbBCqqaeOsSa6imobFMImoukHfI1dRTWVSYdqqpDRXUU3bFNaYvjWkW1MValdMqkwAiwJyVo/zVf1JW+yWEx5Fz2pcO1yIC22/RtzQKNhTVeOsWks0fb0SAoqcVUt+Idv7higoWNM2Ue7hQDOlQEdRszpAT2kvvzdDQ8Ga9B7s4UzoHr5zoqIgpZzbj0D4fBomo6VEFOwJqg0BNcmJjqJktYEj2vQ0gktGEbI6og/0XQ12KKh3yE1docA1DgnYoiBBZlUgT57Zc05mKKgzzFLj51iD6NstRrqNULDH7MHm1pjr27JkvnZDFCSIrKqxUXtU7ZYmUxQk2qy6e6PmwlOQkzlKm9XPpeeLqkuUkwVKk1Xzr/FV3pUJ12yBgrUiq3baKM1KuO/sUIo92Dw3SrKS5GSHkmbVzhuFWYmPJ2uU5Lhqlo2CrLJKtlZLFFSCrIRfuyyykudkjRJktdh395qdRY+q3+XYoiCfXTN1ssZ0Gqr6t0LWKMin93ZZqugsrm/j/XL53ipX6AJ1W0f7Pt5QfL5dC3UjVHWapon2F1UuULe0ktvGavnbiVhuUI6LUYxiFKMYxShGMYpRjGIUoxjFKEYxilGMYtT/gMJNmgVGoQacLoFRgHjumoU2qR9c3iv8v83U2nmUzXxsIEBpRwcET8q810UzJXMMfpiPVZ1UplPo88GjcsXwTh/v//LSD+GM6OeH6kmZ/6q7/lxuJlWe+y7C246LS1l/AcaKNidexH1dAAAAAElFTkSuQmCC");
         safeIconSet("arrowdown", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJkAAACUCAMAAAC3HHtWAAAAYFBMVEX///8AAAD5+flmZmbIyMisrKyPj4+Tk5Obm5uoqKigoKCJiYmWlpa6urrDw8OMjIy0tLTS0tLz8/NPT0/s7Ozj4+NxcXFJSUl6enpAQEAICAiCgoJgYGA0NDQPDw8vLy9s7q0LAAADpklEQVR4nO2c22KqMBBFidVai9WC1ku1nv//y2NKsUBuM5PL9GH2cyCrK2RCBVJV8dk3zXyYptknOGt8Pg5HNc3x8MGNVbUnA6vLqWUGOzjAlDrwoj05we5onGBvHjCl3vjA2rOX7Mw3nptPL9nnho3sxQum1JqNrA6QXbjAZr6ZqfM0EzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhE7LMZLP9HnjCZGSzFtDl5nLd7a6XeUGyedel/5Hj5qs/6ReALQlZ83h6+8/Dthqc9bYqQra4Ddo7u5w8rlwWIFuOD6hBrZR6yU5mPFS22tiaZw5YiyZbm4dYrBnGwmixZNYun6etnu3n9j6jjyRzvB+wBYEZ7RKSWY0ZXVqusT4ea1FknjcqBmgeMOdMjiRzDtKoS28rj7UIssA7KD/TwDJ3x3Fda3Qy5zXW59vGPNTKWXLJZK/hLu/LdrsLN3NYo5IFjd2za6sG0MxhjUgGMKa0tAuonXWG0sgC863PqfK/3PYbizUSGcyYUufqFm7UxbRGIQMau98fwslMawQyqDFNZr6m68zUGp4MbEypo39lmmQZSRZ6+3CYLbBqPJrHkEHq2CMNrNLa0ZBkKLDr/VCUtNEtJ44suDyP0uDmi05NJEMZ6/+/w6FtSWQ4Ywva31MTyHA9vNKm82/xgJPhjI3+VccdWiPJyMbwaEsUGW5EJmDYw2sEGWJJUtZfXXDK12Ay3Mw3jFXoU9RAMpyxhQ0Ma20JIou8xqjWgmTIP9ZhDH+xbt2fFHU54Ga89/e6Vfj4bHn3gWGtpUzoF85qwQQG+DiKx1rQGNe1FrjG+uCmeoo46xi3NaAxHVwdig3YmA5uNYiLp/LbglvvYhJ+vsVkDWmsnDUCWBk09FB2yT+gJGMlrBGN6eQtuYgCW9ZahDGdfDdF0d+E51reUUtSSWtJvqLPYS2BMZ301pLtO5D6piiRMZ20dS2qjk2Tsq5F1rFp0llLakwn1fJOXsTdSWMtuTGdFNYyGNOJt5bFWAq0bGCxA5ppKLvELFSZt8KhW8tqTIdqrcDmQbSFKvGSZM87AazQzkF4a0WM6WCtFdygCmetmDEdzAwtvKUXvK5lr2PTQK0xbIIGW96LG9OBWGPaNi5sLeNtTxwaG1hoQBl3APRbYzSm416oWI3puKwxG9OxW+PbMHEQ20LFUmDNmHt0/gljOtOboj9iTGdkjXFTTkvmjw/y1Bn0tWA4/wF3FDc+MwStlQAAAABJRU5ErkJggg");
+        onSet("arrowdown", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJkAAACUCAMAAAC3HHtWAAAAYFBMVEX///8AAAD5+flmZmbIyMisrKyPj4+Tk5Obm5uoqKigoKCJiYmWlpa6urrDw8OMjIy0tLTS0tLz8/NPT0/s7Ozj4+NxcXFJSUl6enpAQEAICAiCgoJgYGA0NDQPDw8vLy9s7q0LAAADpklEQVR4nO2c22KqMBBFidVai9WC1ku1nv//y2NKsUBuM5PL9GH2cyCrK2RCBVJV8dk3zXyYptknOGt8Pg5HNc3x8MGNVbUnA6vLqWUGOzjAlDrwoj05we5onGBvHjCl3vjA2rOX7Mw3nptPL9nnho3sxQum1JqNrA6QXbjAZr6ZqfM0EzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIhEzIh7LMZLP9HnjCZGSzFtDl5nLd7a6XeUGyedel/5Hj5qs/6ReALQlZ83h6+8/Dthqc9bYqQra4Ddo7u5w8rlwWIFuOD6hBrZR6yU5mPFS22tiaZw5YiyZbm4dYrBnGwmixZNYun6etnu3n9j6jjyRzvB+wBYEZ7RKSWY0ZXVqusT4ea1FknjcqBmgeMOdMjiRzDtKoS28rj7UIssA7KD/TwDJ3x3Fda3Qy5zXW59vGPNTKWXLJZK/hLu/LdrsLN3NYo5IFjd2za6sG0MxhjUgGMKa0tAuonXWG0sgC863PqfK/3PYbizUSGcyYUufqFm7UxbRGIQMau98fwslMawQyqDFNZr6m68zUGp4MbEypo39lmmQZSRZ6+3CYLbBqPJrHkEHq2CMNrNLa0ZBkKLDr/VCUtNEtJ44suDyP0uDmi05NJEMZ6/+/w6FtSWQ4Ywva31MTyHA9vNKm82/xgJPhjI3+VccdWiPJyMbwaEsUGW5EJmDYw2sEGWJJUtZfXXDK12Ay3Mw3jFXoU9RAMpyxhQ0Ma20JIou8xqjWgmTIP9ZhDH+xbt2fFHU54Ga89/e6Vfj4bHn3gWGtpUzoF85qwQQG+DiKx1rQGNe1FrjG+uCmeoo46xi3NaAxHVwdig3YmA5uNYiLp/LbglvvYhJ+vsVkDWmsnDUCWBk09FB2yT+gJGMlrBGN6eQtuYgCW9ZahDGdfDdF0d+E51reUUtSSWtJvqLPYS2BMZ301pLtO5D6piiRMZ20dS2qjk2Tsq5F1rFp0llLakwn1fJOXsTdSWMtuTGdFNYyGNOJt5bFWAq0bGCxA5ppKLvELFSZt8KhW8tqTIdqrcDmQbSFKvGSZM87AazQzkF4a0WM6WCtFdygCmetmDEdzAwtvKUXvK5lr2PTQK0xbIIGW96LG9OBWGPaNi5sLeNtTxwaG1hoQBl3APRbYzSm416oWI3puKwxG9OxW+PbMHEQ20LFUmDNmHt0/gljOtOboj9iTGdkjXFTTkvmjw/y1Bn0tWA4/wF3FDc+MwStlQAAAABJRU5ErkJggg==");
+
 
         setConfig({
           readonly: false,
           placeholder: "Edite aquí su contenido!",
-          defaultActionOnPaste: "insert_as_html",
+          //           defaultActionOnPaste: "insert_as_html",
+          //           defaultLineHeight: 1.5,
+          //           enter: "p",
+          defaultActionOnPaste: "insert_only_text",
           defaultLineHeight: 1.5,
-          enter: "p",
+          enter: "div",
+
           buttons: options,
           buttonsMD: options,
           buttonsSM: options,
@@ -91,6 +97,30 @@ const Editor = ({
           uploader: {
             insertImageAsBase64URI: true,
             imagesExtensions: ["jpg", "png", "jpeg", "gif", "svg", "webp"],
+            processFileName: (name) => {
+              return name.toLowerCase();
+            },
+            defaultHandlerSuccess: (response) => {
+              try {
+                if (response.files && response.files.length) {
+                  response.files.forEach(file => {
+                    const image = editor.current?.createInside.element('img');
+                    if (image) {
+                      image.setAttribute('src', file);
+                      image.style.width = '80%';
+                      image.setAttribute('tabindex', '0');
+                      editor.current?.selection?.insertNode(image);
+                    }
+                  });
+                }
+              } catch (error) {
+                console.error('Error handling image upload:', error);
+              }
+            },
+            defaultHandlerError: (error) => {
+              console.error('Error uploading image:', error);
+            },
+            url: null,
           },
           allowTabNavigation: false,
           link: {
@@ -146,6 +176,8 @@ const Editor = ({
                         margin: 0;
                         color: #606c71;
                         font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+                        text-align: left;
                       }
 
                       #container-ruller {
@@ -167,23 +199,24 @@ const Editor = ({
                           font-weight: 400;
                           margin: 0 0 16px 0
                       }
-                      
+
                       div {
                           padding: 10px;
                       }
-                      
+
                       p {
                           border: 0 !important;
                           margin: 0 !important;
                       }
-                      
-                      section div, span, 
+
+                      section div, span,
                       li {
                           margin: 15.6px 0;
                           color: rgb(96, 108, 113);
                           font-size: 1.1rem;
                           line-height: 26.4px;
-                          text-align: justify;
+
+                          text-align: left;
                           font-weight: 200;
                           font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                       }
@@ -457,67 +490,251 @@ const Editor = ({
               tooltip: "Apply Changes",
               icon: "greenCheck",
               exec: (editor) => {
-                setChangedContent(editor.value);
+                // setChangedContent(editor.value);
+                console.log("editor", editor);
+                let content = editor.value;
+                content = content.replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/<br\s*\/?>/g, '');
+                setChangedContent(content);
               },
             },
           ],
           events: {
             beforeCommand: (command) => {
+              if (command === 'enter') {
+                const selection = editor.current?.selection;
+                if (selection) {
+                  const currentBlock = selection.current();
+                  if (currentBlock) {
+                    const alignment = window.getComputedStyle(currentBlock).textAlign;
+                    setTimeout(() => {
+                      const newBlock = selection.current();
+                      if (newBlock) {
+                        newBlock.style.textAlign = alignment;
+                      }
+                    }, 0);
+                  }
+                }
+              }
+            },
+            afterInit: (editor) => {
+              // Set default alignment for the editor container
+              if (editor.editor) {
+                editor.editor.style.textAlign = 'left';
+              }
+
+              // Ensure cursor starts from the left
+              editor.s?.focus();
+            },
+            change: (newContent) => {
+              // Keep existing alignment logic
+              const selection = editor.current?.selection;
+              if (selection) {
+                const currentBlock = selection.current();
+                if (currentBlock && !currentBlock.style.textAlign) {
+                  currentBlock.style.textAlign = 'left';
+                }
+              }
+
+              // Check for images and add resize buttons if needed
+              const images = editor.current?.editor?.querySelectorAll('img');
+              if (images?.length && config) {
+                images.forEach(img => {
+                  // Ensure each image has the necessary attributes and event listeners
+                  if (!img.getAttribute('tabindex')) {
+                    img.setAttribute('tabindex', '0');
+                    img.addEventListener('click', () => {
+                      editor.current?.selection?.select(img);
+                    });
+                  }
+                });
+
+                // Add image buttons if they don't exist
+                const hasImageButtons = config.extraButtons?.some(
+                  button => button.name === 'img_increase' || button.name === 'img_decrease'
+                );
+
+                if (!hasImageButtons) {
+                  const updatedConfig = { ...config };
+                  updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
+                    {
+                      name: "img_increase",
+                      tooltip: "Aumentar",
+                      icon: "angle-up",
+                      exec: () => {
+                        const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
+                          editor.current?.editor?.querySelector('img:focus');
+                        if (selectedImage) {
+                          const currentWidth = parseInt(selectedImage.style.width) || 80;
+                          if (currentWidth < 100) {
+                            selectedImage.style.width = `${currentWidth + 5}%`;
+                          }
+                        }
+                      },
+                    },
+                    {
+                      name: "img_decrease",
+                      tooltip: "Reducir",
+                      icon: "angle-down",
+                      exec: () => {
+                        const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
+                          editor.current?.editor?.querySelector('img:focus');
+                        if (selectedImage) {
+                          const currentWidth = parseInt(selectedImage.style.width) || 80;
+                          if (currentWidth > 50) {
+                            selectedImage.style.width = `${currentWidth - 5}%`;
+                          }
+                        }
+                      },
+                    },
+                  ]);
+                  setConfig(updatedConfig);
+                }
+              }
+            },
+            focus: (e) => {
+              // Ensure cursor position is maintained when focusing
+              const selection = editor.current?.selection;
+              if (selection && !selection.isCollapsed) {
+                selection.save();
+              }
+            },
+            blur: (e) => {
+              // Restore cursor position when editor loses focus
+              const selection = editor.current?.selection;
+              if (selection) {
+                selection.restore();
+              }
+            },
+            afterInsertImage: (image) => {
+              // Set default width for newly inserted images
+              image.style.width = '80%';
+
+              // Ensure the image is selectable
+              image.setAttribute('tabindex', '0');
+
+              // Add click handler to make the image the current selection
+              image.addEventListener('click', () => {
+                editor.current?.selection?.select(image);
+              });
+
+              // Add image resize buttons if they don't exist
+              const updatedConfig = { ...config };
+              if (!updatedConfig.extraButtons?.some(
+                button => button.name === 'img_increase' || button.name === 'img_decrease'
+              )) {
+                updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
+                  {
+                    name: "img_increase",
+                    tooltip: "Aumentar",
+                    icon: "angle-up",
+                    exec: () => {
+                      const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
+                        editor.current?.editor?.querySelector('img:focus');
+                      if (selectedImage) {
+                        const currentWidth = parseInt(selectedImage.style.width) || 80;
+                        if (currentWidth < 100) {
+                          selectedImage.style.width = `${currentWidth + 5}%`;
+                        }
+                      }
+                    },
+                  },
+                  {
+                    name: "img_decrease",
+                    tooltip: "Reducir",
+                    icon: "angle-down",
+                    exec: () => {
+                      const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
+                        editor.current?.editor?.querySelector('img:focus');
+                      if (selectedImage) {
+                        const currentWidth = parseInt(selectedImage.style.width) || 80;
+                        if (currentWidth > 50) {
+                          selectedImage.style.width = `${currentWidth - 5}%`;
+                        }
+                      }
+                    },
+                  },
+                ]);
+                setConfig(updatedConfig);
+              }
+            },
+            beforeImageInsert: (image) => {
+              try {
+                // Validate image before insertion
+                if (!image.src) {
+                  console.error('Invalid image source');
+                  return false;
+                }
+                return true;
+              } catch (error) {
+                console.error('Error in beforeImageInsert:', error);
+                return false;
+              }
             },
             errorHandler: (error) => {
-              return false;
+              console.error('Jodit Editor error:', error);
+
             }
           },
           processSVG: (svg) => {
             return svg;
-          }
+
+          },
+          defaultStyle: {
+            textAlign: 'left'  // Remove this as we'll handle alignment differently
+          },
+          askBeforePasteHTML: false,
+          askBeforePasteFromWord: false,
         });
 
         const img = editorContent?.querySelector("img");
         if (img) {
           const updatedConfig = { ...config };
-          if (updatedConfig.extraButtons.length == 15) {
-            updatedConfig.extraButtons.splice(-2, 2);
+          // Check if buttons don't already exist before adding them
+          const hasImageButtons = updatedConfig.extraButtons?.some(
+            button => button.name === "img_increase" || button.name === "img_decrease"
+          );
+
+          if (!hasImageButtons) {
+            updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
+              {
+                name: "img_increase",
+                tooltip: "Aumentar",
+                icon: "angle-up",
+                exec: () => {
+                  const img = editorContent.querySelector("img");
+                  if (img) {
+                    if (img?.style.width) {
+                      const img_width = parseInt(img.style.width);
+                      if (img_width <= 100) {
+                        img.style.width = `${img_width + 5}%`;
+                      }
+                    } else {
+                      img.style.width = "85%";
+                    }
+                  }
+                },
+              },
+              {
+                name: "img_decrease",
+                tooltip: "Reducir",
+                icon: "angle-down",
+                exec: () => {
+                  const img = editorContent.querySelector("img");
+                  if (img) {
+                    if (img?.style.width) {
+                      const img_width = parseInt(img.style.width);
+                      if (img_width >= 50) {
+                        img.style.width = `${img_width - 5}%`;
+                      }
+                    } else {
+                      img.style.width = "75%";
+                    }
+                  }
+                },
+              },
+            ]);
+            setConfig(updatedConfig);
           }
-          updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
-            {
-              name: "img_increase",
-              tooltip: "Aumentar",
-              icon: "angle-up",
-              exec: () => {
-                const img = editorContent.querySelector("img");
-                if (img) {
-                  if (img?.style.width) {
-                    const img_width = parseInt(img.style.width);
-                    if (img_width <= 100) {
-                      img.style.width = `${img_width + 5}%`;
-                    }
-                  } else {
-                    img.style.width = "85%";
-                  }
-                }
-              },
-            },
-            {
-              name: "img_decrease",
-              tooltip: "Reducir",
-              icon: "angle-down",
-              exec: () => {
-                const img = editorContent.querySelector("img");
-                if (img) {
-                  if (img?.style.width) {
-                    const img_width = parseInt(img.style.width);
-                    if (img_width >= 50) {
-                      img.style.width = `${img_width - 5}%`;
-                    }
-                  } else {
-                    img.style.width = "75%";
-                  }
-                }
-              },
-            },
-          ]);
-          setConfig(updatedConfig);
         }
 
         // // If selected block is Footnote, add block size increase and decrease button
@@ -801,5 +1018,6 @@ const Editor = ({
     </div>
   );
 };
+
 
 export default Editor;
