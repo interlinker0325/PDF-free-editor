@@ -43,7 +43,21 @@ export default function PostTopBar({
       particleCount: 50,
       spread: 55,
       origin: { x, y },
-      colors: ['#40C057', '#2B8A3E', '#69DB7C', '#A9E34B'],
+      colors: [
+        '#1E90FF', // DodgerBlue
+        '#6B8E23', // OliveDrab
+        '#FFD700', // Gold
+        '#FFC0CB', // Pink
+        '#6A5ACD', // SlateBlue
+        '#ADD8E6', // LightBlue
+        '#FFD700', // Gold
+        '#EE82EE', // Violet
+        '#98FB98', // PaleGreen
+        '#4682B4', // SteelBlue
+        '#F4A460', // SandyBrown
+        '#D2691E', // Chocolate
+        '#DC143C'  // Crimson
+      ],
       startVelocity: 30,
       gravity: 0.6,
       ticks: 300,
