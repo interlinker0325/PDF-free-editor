@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+
 import axios from "axios";
+import dynamic from "next/dynamic";
 
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -817,53 +818,43 @@ const Editor = ({
             `<span class="${key}">${editor.i18n(value)}</span>`,
 
           exec(editor, _, { control }) {
-            let value = control.args && control.args[0]; // h1, h2 ...
-            // change div tag to h2 tag
+            let value = control.args && control.args[0];
+            let newElement;
+            
+            // Create temporary element but don't replace the original content yet
             if (value == "Título 1") {
-              const tempElement = document.createElement("h2");
-              tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("h2");
+              newElement.innerHTML = editor.value.toUpperCase();
             } else if (value == "Título 2") {
-              const tempElement = document.createElement("h3");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("h3");
+              newElement.innerHTML = editor.value;
             } else if (value == "Título 3") {
-              const tempElement = document.createElement("h4");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("h4");
+              newElement.innerHTML = editor.value;
             } else if (value == "Cuerpo") {
-              const tempElement = document.createElement("div");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("div");
+              newElement.innerHTML = editor.value;
             } else if (value == "Texto recuadro") {
-              const tempElement = document.createElement("blockquote");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("blockquote");
+              newElement.innerHTML = editor.value;
             } else if (value == "Título de Tabla/Figura") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText = "text-align: center;";
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("div");
+              newElement.style.cssText = "text-align: center;";
+              newElement.innerHTML = editor.value;
             } else if (value == "Nota de Tabla/Figura") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText =
-                "font-size: 0.9rem; text-align: justify;";
-              tempElement.classList.add("footnote");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("div");
+              newElement.style.cssText = "font-size: 0.9rem; text-align: justify;";
+              newElement.classList.add("footnote");
+              newElement.innerHTML = editor.value;
             } else if (value == "Fórmula centrada") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText = "text-align: center;";
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newElement = document.createElement("div");
+              newElement.style.cssText = "text-align: center;";
+              newElement.innerHTML = editor.value;
+            }
+
+            // Update only the editor content
+            if (newElement) {
+              editor.value = newElement.outerHTML;
             }
           },
         };
@@ -943,6 +934,7 @@ const Editor = ({
       });
     });
 
+    // Only update the editor model, not the iframe content
     setModel(doc.body.innerHTML);
   };
 

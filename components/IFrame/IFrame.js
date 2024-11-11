@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 
 const IFrame = ({
   url,
@@ -156,40 +155,56 @@ const IFrame = ({
   }, [editView]);
 
   useEffect(() => {
-    console.log(changedContent, "==changedcontent")
-    console.log(editElement, "==editElement")
-    if (!editElement) return
+    if (!editElement || !changedContent) return;
+    
     const tempContainer = document.createElement('div');
     tempContainer.innerHTML = changedContent;
-    editElement.innerHTML = '';
-
-    while (tempContainer.firstChild) {
-      const firstChild = tempContainer.firstChild;
-
-      while (firstChild.firstChild) {
-        const childNode = firstChild.firstChild;
-        editElement.appendChild(childNode);
-      }
-
-      try {
-        tempContainer.removeChild(firstChild);
-      }
-      catch {
+    
+    // Check if the new content has a different tag than the current element
+    const newFirstChild = tempContainer.firstChild;
+    if (newFirstChild && newFirstChild.tagName !== editElement.tagName) {
+      // Create a new element of the correct type
+      const newElement = document.createElement(newFirstChild.tagName);
+      newElement.innerHTML = newFirstChild.innerHTML;
+      
+      // Copy all attributes
+      Array.from(newFirstChild.attributes).forEach(attr => {
+        newElement.setAttribute(attr.name, attr.value);
+      });
+      
+      // Replace the old element with the new one
+      editElement.parentNode.replaceChild(newElement, editElement);
+      setEditElement(newElement);
+    } else {
+      // Update content normally
+      editElement.innerHTML = '';
+      while (tempContainer.firstChild) {
+        const firstChild = tempContainer.firstChild;
+        while (firstChild.firstChild) {
+          editElement.appendChild(firstChild.firstChild);
+        }
+        try {
+          tempContainer.removeChild(firstChild);
+        } catch {
+          // Handle error if needed
+        }
       }
     }
+    
     setIsSaved(false);
+
     // Re-render MathJax content
     if (window.MathJax) {
       window.MathJax.typeset();
     }
-    // automatic tooltip number
+
+    // Update tooltip numbers
     const iframe = document.getElementById("documentWindow");
     const iframeDoc = iframe.contentWindow.document;
     const tooltipElements = iframeDoc.querySelectorAll('sup');
     Array.from(tooltipElements).forEach((element, index) => {
       element.textContent = '[' + (index + 1) + ']';
-    })
-
+    });
   }, [changedContent]);
 
   return (
