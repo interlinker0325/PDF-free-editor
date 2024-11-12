@@ -818,30 +818,53 @@ const Editor = ({
 
           exec(editor, _, { control }) {
             let value = control.args && control.args[0];
-            let newContent = '';
-
-            // Instead of directly manipulating the DOM, prepare the new content
+            // change div tag to h2 tag
             if (value == "Título 1") {
-              newContent = `<h2>${editorContent.innerHTML.toUpperCase()}</h2>`;
+              const tempElement = document.createElement("h2");
+              tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título 2") {
-              newContent = `<h3>${editorContent.innerHTML}</h3>`;
+              const tempElement = document.createElement("h3");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título 3") {
-              newContent = `<h4>${editorContent.innerHTML}</h4>`;
+              const tempElement = document.createElement("h4");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Cuerpo") {
-              newContent = `<div>${editorContent.innerHTML}</div>`;
+              const tempElement = document.createElement("div");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Texto recuadro") {
-              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
+              const tempElement = document.createElement("blockquote");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título de Tabla/Figura") {
-              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText = "text-align: center;";
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Nota de Tabla/Figura") {
-              newContent = `<div class="footnote" style="font-size: 0.9rem; text-align: justify;">${editorContent.innerHTML}</div>`;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText =
+                "font-size: 0.9rem; text-align: justify;";
+              tempElement.classList.add("footnote");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Fórmula centrada") {
-              newContent = `<div style="text-align: center;">${editorContent.innerHTML}</div>`;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText = "text-align: center;";
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             }
-
-            // Update the editor content first
-            editor.value = newContent;
-            setModel(newContent);
           },
         };
         // Create insert tooltip button
