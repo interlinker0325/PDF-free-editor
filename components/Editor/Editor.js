@@ -500,8 +500,6 @@ const Editor = ({
               tooltip: "Apply Changes",
               icon: "greenCheck",
               exec: (editor) => {
-                // setChangedContent(editor.value);
-                console.log("editor", editor);
                 let content = editor.value;
                 content = content.replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/<br\s*\/?>/g, '');
                 setChangedContent(content);
@@ -828,43 +826,30 @@ const Editor = ({
 
           exec(editor, _, { control }) {
             let value = control.args && control.args[0];
-            let newElement;
-            
-            // Create temporary element but don't replace the original content yet
+            let newContent = '';
+
+            // Instead of directly manipulating the DOM, prepare the new content
             if (value == "Título 1") {
-              newElement = document.createElement("h2");
-              newElement.innerHTML = editor.value.toUpperCase();
+              newContent = `<h2>${editorContent.innerHTML.toUpperCase()}</h2>`;
             } else if (value == "Título 2") {
-              newElement = document.createElement("h3");
-              newElement.innerHTML = editor.value;
+              newContent = `<h3>${editorContent.innerHTML}</h3>`;
             } else if (value == "Título 3") {
-              newElement = document.createElement("h4");
-              newElement.innerHTML = editor.value;
+              newContent = `<h4>${editorContent.innerHTML}</h4>`;
             } else if (value == "Cuerpo") {
-              newElement = document.createElement("div");
-              newElement.innerHTML = editor.value;
+              newContent = `<div>${editorContent.innerHTML}</div>`;
             } else if (value == "Texto recuadro") {
-              newElement = document.createElement("blockquote");
-              newElement.innerHTML = editor.value;
+              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
             } else if (value == "Título de Tabla/Figura") {
-              newElement = document.createElement("div");
-              newElement.style.cssText = "text-align: center;";
-              newElement.innerHTML = editor.value;
+              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
             } else if (value == "Nota de Tabla/Figura") {
-              newElement = document.createElement("div");
-              newElement.style.cssText = "font-size: 0.9rem; text-align: justify;";
-              newElement.classList.add("footnote");
-              newElement.innerHTML = editor.value;
+              newContent = `<div class="footnote" style="font-size: 0.9rem; text-align: justify;">${editorContent.innerHTML}</div>`;
             } else if (value == "Fórmula centrada") {
-              newElement = document.createElement("div");
-              newElement.style.cssText = "text-align: center;";
-              newElement.innerHTML = editor.value;
+              newContent = `<div style="text-align: center;">${editorContent.innerHTML}</div>`;
             }
 
-            // Update only the editor content
-            if (newElement) {
-              editor.value = newElement.outerHTML;
-            }
+            // Update the editor content first
+            editor.value = newContent;
+            setModel(newContent);
           },
         };
         // Create insert tooltip button
