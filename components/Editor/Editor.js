@@ -818,38 +818,55 @@ const Editor = ({
             `<span class="${key}">${editor.i18n(value)}</span>`,
 
           exec(editor, _, { control }) {
-            let value = control.args && control.args[0];
+            let value = control.args && control.args[0]; // h1, h2 ...
             let newElement;
-            
+            // change div tag to h2 tag
+
             // Create temporary element but don't replace the original content yet
             if (value == "Título 1") {
-              newElement = document.createElement("h2");
-              newElement.innerHTML = editor.value.toUpperCase();
+              const tempElement = document.createElement("h2");
+              tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título 2") {
-              newElement = document.createElement("h3");
-              newElement.innerHTML = editor.value;
+              const tempElement = document.createElement("h3");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título 3") {
-              newElement = document.createElement("h4");
-              newElement.innerHTML = editor.value;
+              const tempElement = document.createElement("h4");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Cuerpo") {
-              newElement = document.createElement("div");
-              newElement.innerHTML = editor.value;
+              const tempElement = document.createElement("div");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Texto recuadro") {
-              newElement = document.createElement("blockquote");
-              newElement.innerHTML = editor.value;
+              const tempElement = document.createElement("blockquote");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título de Tabla/Figura") {
-              newElement = document.createElement("div");
-              newElement.style.cssText = "text-align: center;";
-              newElement.innerHTML = editor.value;
+              const tempElement = document.createElement("blockquote");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Nota de Tabla/Figura") {
-              newElement = document.createElement("div");
-              newElement.style.cssText = "font-size: 0.9rem; text-align: justify;";
-              newElement.classList.add("footnote");
-              newElement.innerHTML = editor.value;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText =
+                "font-size: 0.9rem; text-align: justify;";
+              tempElement.classList.add("footnote");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Fórmula centrada") {
-              newElement = document.createElement("div");
-              newElement.style.cssText = "text-align: center;";
-              newElement.innerHTML = editor.value;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText = "text-align: center;";
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             }
 
             // Update only the editor content

@@ -155,42 +155,30 @@ const IFrame = ({
   }, [editView]);
 
   useEffect(() => {
-    if (!editElement || !changedContent) return;
-    
+    console.log(changedContent, "==changedcontent")
+    console.log(editElement, "==editElement")
+    if (!editElement) return
     const tempContainer = document.createElement('div');
     tempContainer.innerHTML = changedContent;
-    
-    // Check if the new content has a different tag than the current element
-    const newFirstChild = tempContainer.firstChild;
-    if (newFirstChild && newFirstChild.tagName !== editElement.tagName) {
-      // Create a new element of the correct type
-      const newElement = document.createElement(newFirstChild.tagName);
-      newElement.innerHTML = newFirstChild.innerHTML;
-      
-      // Copy all attributes
-      Array.from(newFirstChild.attributes).forEach(attr => {
-        newElement.setAttribute(attr.name, attr.value);
-      });
-      
-      // Replace the old element with the new one
-      editElement.parentNode.replaceChild(newElement, editElement);
-      setEditElement(newElement);
-    } else {
-      // Update content normally
-      editElement.innerHTML = '';
-      while (tempContainer.firstChild) {
-        const firstChild = tempContainer.firstChild;
-        while (firstChild.firstChild) {
-          editElement.appendChild(firstChild.firstChild);
-        }
-        try {
-          tempContainer.removeChild(firstChild);
-        } catch {
-          // Handle error if needed
-        }
+    editElement.innerHTML = '';
+
+    while (tempContainer.firstChild) {
+      const firstChild = tempContainer.firstChild;
+
+      while (firstChild.firstChild) {
+        const childNode = firstChild.firstChild;
+        editElement.appendChild(childNode);
+      }
+
+      try {
+        tempContainer.removeChild(firstChild);
+      }
+      // Check if the new content has a different tag than the current element
+      catch {
+        // Handle error if needed
       }
     }
-    
+
     setIsSaved(false);
 
     // Re-render MathJax content
