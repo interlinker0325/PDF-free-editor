@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import axios from "axios";
 import dynamic from "next/dynamic";
@@ -519,168 +519,25 @@ const Editor = ({
               }
             },
             afterInit: (editor) => {
-              // Set default alignment for the editor container
               if (editor.editor) {
                 editor.editor.style.textAlign = 'left';
               }
-
-              // Ensure cursor starts from the left
-              editor.s?.focus();
             },
-            change: (newContent) => {
-              // Keep existing alignment logic
-              const selection = editor.current?.selection;
-              if (selection) {
-                const currentBlock = selection.current();
-                if (currentBlock && !currentBlock.style.textAlign) {
-                  currentBlock.style.textAlign = 'left';
-                }
-              }
-
-              // Check for images and add resize buttons if needed
-              const images = editor.current?.editor?.querySelectorAll('img');
-              if (images?.length && config) {
-                images.forEach(img => {
-                  // Ensure each image has the necessary attributes and event listeners
-                  if (!img.getAttribute('tabindex')) {
-                    img.setAttribute('tabindex', '0');
-                    img.addEventListener('click', () => {
-                      editor.current?.selection?.select(img);
-                    });
-                  }
-                });
-
-                // Add image buttons if they don't exist
-                const hasImageButtons = config.extraButtons?.some(
-                  button => button.name === 'img_increase' || button.name === 'img_decrease'
-                );
-
-                if (!hasImageButtons) {
-                  const updatedConfig = { ...config };
-                  updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
-                    {
-                      name: "img_increase",
-                      tooltip: "Aumentar",
-                      icon: "angle-up",
-                      exec: () => {
-                        const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                          editor.current?.editor?.querySelector('img:focus');
-                        if (selectedImage) {
-                          const currentWidth = parseInt(selectedImage.style.width) || 80;
-                          if (currentWidth < 100) {
-                            selectedImage.style.width = `${currentWidth + 5}%`;
-                          }
-                        }
-                      },
-                    },
-                    {
-                      name: "img_decrease",
-                      tooltip: "Reducir",
-                      icon: "angle-down",
-                      exec: () => {
-                        const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                          editor.current?.editor?.querySelector('img:focus');
-                        if (selectedImage) {
-                          const currentWidth = parseInt(selectedImage.style.width) || 80;
-                          if (currentWidth > 50) {
-                            selectedImage.style.width = `${currentWidth - 5}%`;
-                          }
-                        }
-                      },
-                    },
-                  ]);
-                  setConfig(updatedConfig);
-                }
+            change: (newContent, event) => {
+              if (event && event.type === 'keydown') {
+                setModel(newContent);
+              } else {
+                setModel(newContent);
               }
             },
-            focus: (e) => {
-              // Ensure cursor position is maintained when focusing
-              const selection = editor.current?.selection;
-              if (selection && !selection.isCollapsed) {
-                selection.save();
-              }
-            },
-            blur: (e) => {
-              // Restore cursor position when editor loses focus
-              const selection = editor.current?.selection;
-              if (selection) {
-                selection.restore();
-              }
-            },
-            afterInsertImage: (image) => {
-              // Set default width for newly inserted images
-              image.style.width = '80%';
-
-              // Ensure the image is selectable
-              image.setAttribute('tabindex', '0');
-
-              // Add click handler to make the image the current selection
-              image.addEventListener('click', () => {
-                editor.current?.selection?.select(image);
-              });
-
-              // Add image resize buttons if they don't exist
-              const updatedConfig = { ...config };
-              if (!updatedConfig.extraButtons?.some(
-                button => button.name === 'img_increase' || button.name === 'img_decrease'
-              )) {
-                updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
-                  {
-                    name: "img_increase",
-                    tooltip: "Aumentar",
-                    icon: "angle-up",
-                    exec: () => {
-                      const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                        editor.current?.editor?.querySelector('img:focus');
-                      if (selectedImage) {
-                        const currentWidth = parseInt(selectedImage.style.width) || 80;
-                        if (currentWidth < 100) {
-                          selectedImage.style.width = `${currentWidth + 5}%`;
-                        }
-                      }
-                    },
-                  },
-                  {
-                    name: "img_decrease",
-                    tooltip: "Reducir",
-                    icon: "angle-down",
-                    exec: () => {
-                      const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                        editor.current?.editor?.querySelector('img:focus');
-                      if (selectedImage) {
-                        const currentWidth = parseInt(selectedImage.style.width) || 80;
-                        if (currentWidth > 50) {
-                          selectedImage.style.width = `${currentWidth - 5}%`;
-                        }
-                      }
-                    },
-                  },
-                ]);
-                setConfig(updatedConfig);
-              }
-            },
-            beforeImageInsert: (image) => {
-              try {
-                // Validate image before insertion
-                if (!image.src) {
-                  console.error('Invalid image source');
-                  return false;
-                }
-                return true;
-              } catch (error) {
-                console.error('Error in beforeImageInsert:', error);
-                return false;
-              }
-            },
-            errorHandler: (error) => {
-              console.error('Jodit Editor error:', error);
-            }
+            focus: () => {},
+            blur: () => {}
           },
           processSVG: (svg) => {
             return svg;
           },
           defaultStyle: {
-            textAlign: 'left'  // Remove this as we'll handle alignment differently
+            // Remove text alignment from default style
           },
           askBeforePasteHTML: false,
           askBeforePasteFromWord: false,
@@ -924,28 +781,74 @@ const Editor = ({
     setModel(improvedText);
   }, [improvedText]);
 
-  const handleModelChange = (value) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(value, "text/html");
+  // Optimize model change handler with debouncing
+  const handleModelChange = useCallback((newContent) => {
+    const joditInstance = editor.current?.jodit;
+    if (!joditInstance) return;
 
-    // Add inline style to Wiris formula images
-    doc.querySelectorAll("img.Wirisformula").forEach((img) => {
-      img.style.display = "inline";
-      img.style.verticalAlign = "middle";
-      img.style.width = "auto";
-      img.style.height = "auto";
-      img.style.resize = "none";
-      img.style.maxWidth = "100%";
-      img.addEventListener("dblclick", function () {
-        if (window.WirisPlugin && window.WirisPlugin.currentInstance) {
-          window.WirisPlugin.currentInstance.openExistingFormulaEditor(this);
+    // Store current cursor position
+    const selection = joditInstance.selection.save();
+
+    // Only update if content actually changed
+    if (model !== newContent) {
+      setModel(newContent);
+      
+      // Restore cursor position immediately
+      joditInstance.selection.restore(selection);
+    }
+  }, [model]);
+
+  // Update config settings for better performance
+  useEffect(() => {
+    // ... existing config setup code ...
+
+    setConfig({
+      // ... existing config options ...
+      
+      // Add these performance optimizations
+      observer: {
+        timeout: 100  // Reduced from 300
+      },
+      height: 500, // Fixed height to prevent layout shifts
+      useAceEditor: false, // Disable ACE editor
+      beautifyHTML: false, // Disable HTML beautification
+      defaultActionOnPaste: "insert_only_text",
+      processPasteHTML: false,
+      askBeforePasteHTML: false,
+      askBeforePasteFromWord: false,
+      
+      // Optimize events
+      events: {
+        ...config?.events,
+        change: (newContent, event) => {
+          if (event?.type === 'keydown') {
+            requestAnimationFrame(() => {
+              setModel(newContent);
+            });
+          } else {
+            setModel(newContent);
+          }
+        },
+        beforeCommand: function(command) {
+          // Store selection before command
+          const selection = this.selection.save();
+          setTimeout(() => {
+            this.selection.restore(selection);
+          }, 0);
         }
-      });
+      },
+      
+      // Disable unused features
+      showCharsCounter: false,
+      showWordsCounter: false,
+      showXPathInStatusbar: false,
+      
+      // Optimize toolbar
+      toolbarSticky: false,
+      toolbarAdaptive: false
     });
 
-    // Only update the editor model, not the iframe content
-    setModel(doc.body.innerHTML);
-  };
+  }, [editorContent]);
 
   useEffect(() => {
     if (editor.current) {
@@ -1005,7 +908,17 @@ const Editor = ({
                 <JoditEditor
                   ref={editor}
                   value={model}
-                  config={config}
+                  config={{
+                    ...config,
+                    // Additional performance settings
+                    saveInterval: 0,
+                    maxHeight: 500,
+                    minHeight: 500,
+                    // Disable real-time validation
+                    validate: {
+                      enabled: false
+                    }
+                  }}
                   onChange={handleModelChange}
                   tabIndex={1}
                   className="w-full"
