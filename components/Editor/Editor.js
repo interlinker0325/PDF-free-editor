@@ -494,7 +494,6 @@ const Editor = ({
               tooltip: "Apply Changes",
               icon: "greenCheck",
               exec: (editor) => {
-                console.log("editor", editor);
                 let content = editor.value;
                 content = content.replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/<br\s*\/?>/g, '');
                 setChangedContent(content);
@@ -818,61 +817,31 @@ const Editor = ({
             `<span class="${key}">${editor.i18n(value)}</span>`,
 
           exec(editor, _, { control }) {
-            let value = control.args && control.args[0]; // h1, h2 ...
-            let newElement;
-            // change div tag to h2 tag
+            let value = control.args && control.args[0];
+            let newContent = '';
 
-            // Create temporary element but don't replace the original content yet
+            // Instead of directly manipulating the DOM, prepare the new content
             if (value == "Título 1") {
-              const tempElement = document.createElement("h2");
-              tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<h2>${editorContent.innerHTML.toUpperCase()}</h2>`;
             } else if (value == "Título 2") {
-              const tempElement = document.createElement("h3");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<h3>${editorContent.innerHTML}</h3>`;
             } else if (value == "Título 3") {
-              const tempElement = document.createElement("h4");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<h4>${editorContent.innerHTML}</h4>`;
             } else if (value == "Cuerpo") {
-              const tempElement = document.createElement("div");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<div>${editorContent.innerHTML}</div>`;
             } else if (value == "Texto recuadro") {
-              const tempElement = document.createElement("blockquote");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
             } else if (value == "Título de Tabla/Figura") {
-              const tempElement = document.createElement("blockquote");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
             } else if (value == "Nota de Tabla/Figura") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText =
-                "font-size: 0.9rem; text-align: justify;";
-              tempElement.classList.add("footnote");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<div class="footnote" style="font-size: 0.9rem; text-align: justify;">${editorContent.innerHTML}</div>`;
             } else if (value == "Fórmula centrada") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText = "text-align: center;";
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+              newContent = `<div style="text-align: center;">${editorContent.innerHTML}</div>`;
             }
 
-            // Update only the editor content
-            if (newElement) {
-              editor.value = newElement.outerHTML;
-            }
+            // Update the editor content first
+            editor.value = newContent;
+            setModel(newContent);
           },
         };
         // Create insert tooltip button

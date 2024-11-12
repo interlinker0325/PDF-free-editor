@@ -155,9 +155,9 @@ const IFrame = ({
   }, [editView]);
 
   useEffect(() => {
-    console.log(changedContent, "==changedcontent")
-    console.log(editElement, "==editElement")
-    if (!editElement) return
+    // Only update the iframe content if changedContent exists and we have an editElement
+    if (!changedContent || !editElement) return;
+
     const tempContainer = document.createElement('div');
     tempContainer.innerHTML = changedContent;
     editElement.innerHTML = '';
@@ -172,10 +172,8 @@ const IFrame = ({
 
       try {
         tempContainer.removeChild(firstChild);
-      }
-      // Check if the new content has a different tag than the current element
-      catch {
-        // Handle error if needed
+      } catch (error) {
+        console.error('Error removing child:', error);
       }
     }
 
