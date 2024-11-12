@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import axios from "axios";
 import dynamic from "next/dynamic";
@@ -525,13 +525,9 @@ const Editor = ({
               }
             },
             afterInit: (editor) => {
-              // Set default alignment for the editor container
               if (editor.editor) {
                 editor.editor.style.textAlign = 'left';
               }
-
-              // Ensure cursor starts from the left
-              editor.s?.focus();
             },
             change: (newContent) => {
               // Keep existing alignment logic
@@ -688,7 +684,7 @@ const Editor = ({
 
           },
           defaultStyle: {
-            textAlign: 'left'  // Remove this as we'll handle alignment differently
+            // Remove text alignment from default style
           },
           askBeforePasteHTML: false,
           askBeforePasteFromWord: false,
@@ -826,30 +822,53 @@ const Editor = ({
 
           exec(editor, _, { control }) {
             let value = control.args && control.args[0];
-            let newContent = '';
-
-            // Instead of directly manipulating the DOM, prepare the new content
+            // change div tag to h2 tag
             if (value == "Título 1") {
-              newContent = `<h2>${editorContent.innerHTML.toUpperCase()}</h2>`;
+              const tempElement = document.createElement("h2");
+              tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título 2") {
-              newContent = `<h3>${editorContent.innerHTML}</h3>`;
+              const tempElement = document.createElement("h3");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título 3") {
-              newContent = `<h4>${editorContent.innerHTML}</h4>`;
+              const tempElement = document.createElement("h4");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Cuerpo") {
-              newContent = `<div>${editorContent.innerHTML}</div>`;
+              const tempElement = document.createElement("div");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Texto recuadro") {
-              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
+              const tempElement = document.createElement("blockquote");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Título de Tabla/Figura") {
-              newContent = `<blockquote>${editorContent.innerHTML}</blockquote>`;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText = "text-align: center;";
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Nota de Tabla/Figura") {
-              newContent = `<div class="footnote" style="font-size: 0.9rem; text-align: justify;">${editorContent.innerHTML}</div>`;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText =
+                "font-size: 0.9rem; text-align: justify;";
+              tempElement.classList.add("footnote");
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             } else if (value == "Fórmula centrada") {
-              newContent = `<div style="text-align: center;">${editorContent.innerHTML}</div>`;
+              const tempElement = document.createElement("div");
+              tempElement.style.cssText = "text-align: center;";
+              tempElement.innerHTML = editorContent.innerHTML;
+              editorContent.parentNode.replaceChild(tempElement, editorContent);
+              setEditorContent(tempElement);
             }
-
-            // Update the editor content first
-            editor.value = newContent;
-            setModel(newContent);
           },
         };
         // Create insert tooltip button
@@ -909,9 +928,13 @@ const Editor = ({
     setModel(improvedText);
   }, [improvedText]);
 
-  const handleModelChange = (value) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(value, "text/html");
+  // Optimize model change handler with debouncing
+  const handleModelChange = useCallback((newContent) => {
+    const joditInstance = editor.current?.jodit;
+    if (!joditInstance) return;
+
+    // Store current cursor position
+    const selection = joditInstance.selection.save();
 
     // Add inline style to Wiris formula images
     doc.querySelectorAll("img.Wirisformula").forEach((img) => {
@@ -990,7 +1013,17 @@ const Editor = ({
                 <JoditEditor
                   ref={editor}
                   value={model}
-                  config={config}
+                  config={{
+                    ...config,
+                    // Additional performance settings
+                    saveInterval: 0,
+                    maxHeight: 500,
+                    minHeight: 500,
+                    // Disable real-time validation
+                    validate: {
+                      enabled: false
+                    }
+                  }}
                   onChange={handleModelChange}
                   tabIndex={1}
                   className="w-full"
