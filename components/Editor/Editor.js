@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
 import axios from "axios";
+import dynamic from "next/dynamic";
 
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -20,6 +21,13 @@ const Editor = ({
   const [config, setConfig] = useState(null);
 
   const [improvedText, setImprovedText] = useState("");
+
+  // Add new state for tracking editor content
+  const [editorValue, setEditorValue] = useState("");
+  const [pendingChanges, setPendingChanges] = useState(false);
+
+  // Add state for tracking formatted content
+  const [formattedContent, setFormattedContent] = useState("");
 
   const options = [
     "customParagraph",
@@ -86,13 +94,9 @@ const Editor = ({
         setConfig({
           readonly: false,
           placeholder: "Edite aquí su contenido!",
-          //           defaultActionOnPaste: "insert_as_html",
-          //           defaultLineHeight: 1.5,
-          //           enter: "p",
           defaultActionOnPaste: "insert_only_text",
           defaultLineHeight: 1.5,
           enter: "div",
-
           buttons: options,
           buttonsMD: options,
           buttonsSM: options,
@@ -185,7 +189,6 @@ const Editor = ({
                         margin: 0;
                         color: #606c71;
                         font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-
                         text-align: left;
                       }
 
@@ -208,23 +211,22 @@ const Editor = ({
                           font-weight: 400;
                           margin: 0 0 16px 0
                       }
-
+                      
                       div {
                           padding: 10px;
                       }
-
+                      
                       p {
                           border: 0 !important;
                           margin: 0 !important;
                       }
-
-                      section div, span,
+                      
+                      section div, span, 
                       li {
                           margin: 15.6px 0;
                           color: rgb(96, 108, 113);
                           font-size: 1.1rem;
                           line-height: 26.4px;
-
                           text-align: left;
                           font-weight: 200;
                           font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -437,8 +439,59 @@ const Editor = ({
               tooltip: "Borrar bloque",
               icon: "bin",
               exec: () => {
-                if (editorContent && editorContent.parentNode) {
-                  editorContent.parentNode.removeChild(editorContent);
+                if (!editorContent) {
+                  const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
+                  if (confirmDelete) {
+                    deleteBlock();
+                  }
+                  return;
+                }
+                
+                // Check if the block contains an image
+                const hasImage = editorContent.querySelector('img');
+                
+                if (hasImage) {
+                  const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
+                  if (confirmDelete) {
+                    deleteBlock();
+                  }
+                } else {
+                  deleteBlock();
+                }
+                
+                function deleteBlock() {
+                  try {
+                    if (editorContent && editorContent.parentNode) {
+                      // Remove the element from the editor
+                      editorContent.parentNode.removeChild(editorContent);
+                      
+                      // Remove the image from the iframe as well
+                      const iframe = document.getElementById("documentWindow");
+                      const iframeDoc = iframe.contentWindow.document;
+                      const targetElement = iframeDoc.querySelector(`[data-content-id="${editorContent.getAttribute('data-content-id')}"]`);
+                      if (targetElement) {
+                        targetElement.parentNode.removeChild(targetElement);
+                      }
+                      
+                      // Reset states
+                      setEditorContent(null);
+                      setModel('');
+                      setEditorValue('');
+                      setPendingChanges(false);
+                      setFormattedContent('');
+                      setImprovedText('');
+                      
+                      // Clear editor selection if exists
+                      if (editor.current?.jodit?.selection) {
+                        editor.current.jodit.selection.clear();
+                      }
+                    } else {
+                      alert("Error: El bloque no se pudo borrar."); // Alert if block deletion fails
+                    }
+                  } catch (error) {
+                    console.error('Error deleting block:', error);
+                    alert("Error al intentar borrar el bloque."); // Alert on error
+                  }
                 }
               },
             },
@@ -499,12 +552,53 @@ const Editor = ({
               tooltip: "Apply Changes",
               icon: "greenCheck",
               exec: (editor) => {
-                // setChangedContent(editor.value);
-                console.log("editor", editor);
-                let content = editor.value;
-                content = content.replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/<br\s*\/?>/g, '');
-                setChangedContent(content);
-              },
+                try {
+                  let content = editor.value;
+                  
+                  // Create a temporary div to parse the HTML
+                  const tempDiv = document.createElement('div');
+                  tempDiv.innerHTML = content;
+                  
+                  // Process elements with data-editor-only attribute
+                  const formattedElements = tempDiv.querySelectorAll('[data-editor-only]');
+                  formattedElements.forEach(el => {
+                    // Remove the data-editor-only attribute but keep the formatting
+                    el.removeAttribute('data-editor-only');
+                    
+                    // Apply the correct final formatting based on element type
+                    if (el.tagName === 'H2') {
+                      el.className = 'title-1';
+                    } else if (el.tagName === 'H3') {
+                      el.className = 'title-2';
+                    } else if (el.tagName === 'H4') {
+                      el.className = 'title-3';
+                    } else if (el.tagName === 'BLOCKQUOTE') {
+                      el.className = 'text-box';
+                    }
+                  });
+                  
+                  // Get the cleaned content
+                  content = tempDiv.innerHTML;
+                  
+                  // Update the iframe content
+                  const iframe = document.getElementById("documentWindow");
+                  if (iframe && iframe.contentWindow) {
+                    const targetElement = iframe.contentWindow.document.querySelector(
+                      `[data-content-id="${editorContent.getAttribute('data-content-id')}"]`
+                    );
+                    
+                    if (targetElement) {
+                      targetElement.innerHTML = content;
+                      // Apply changes to the main document
+                      setChangedContent(content);
+                      setEditorContent(targetElement);
+                      setPendingChanges(false);
+                    }
+                  }
+                } catch (error) {
+                  console.error("Error applying changes:", error);
+                }
+              }
             },
           ],
           events: {
@@ -526,170 +620,25 @@ const Editor = ({
               }
             },
             afterInit: (editor) => {
-              // Set default alignment for the editor container
               if (editor.editor) {
                 editor.editor.style.textAlign = 'left';
               }
-
-              // Ensure cursor starts from the left
-              editor.s?.focus();
             },
-            change: (newContent) => {
-              // Keep existing alignment logic
-              const selection = editor.current?.selection;
-              if (selection) {
-                const currentBlock = selection.current();
-                if (currentBlock && !currentBlock.style.textAlign) {
-                  currentBlock.style.textAlign = 'left';
-                }
-              }
-
-              // Check for images and add resize buttons if needed
-              const images = editor.current?.editor?.querySelectorAll('img');
-              if (images?.length && config) {
-                images.forEach(img => {
-                  // Ensure each image has the necessary attributes and event listeners
-                  if (!img.getAttribute('tabindex')) {
-                    img.setAttribute('tabindex', '0');
-                    img.addEventListener('click', () => {
-                      editor.current?.selection?.select(img);
-                    });
-                  }
-                });
-
-                // Add image buttons if they don't exist
-                const hasImageButtons = config.extraButtons?.some(
-                  button => button.name === 'img_increase' || button.name === 'img_decrease'
-                );
-
-                if (!hasImageButtons) {
-                  const updatedConfig = { ...config };
-                  updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
-                    {
-                      name: "img_increase",
-                      tooltip: "Aumentar",
-                      icon: "angle-up",
-                      exec: () => {
-                        const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                          editor.current?.editor?.querySelector('img:focus');
-                        if (selectedImage) {
-                          const currentWidth = parseInt(selectedImage.style.width) || 80;
-                          if (currentWidth < 100) {
-                            selectedImage.style.width = `${currentWidth + 5}%`;
-                          }
-                        }
-                      },
-                    },
-                    {
-                      name: "img_decrease",
-                      tooltip: "Reducir",
-                      icon: "angle-down",
-                      exec: () => {
-                        const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                          editor.current?.editor?.querySelector('img:focus');
-                        if (selectedImage) {
-                          const currentWidth = parseInt(selectedImage.style.width) || 80;
-                          if (currentWidth > 50) {
-                            selectedImage.style.width = `${currentWidth - 5}%`;
-                          }
-                        }
-                      },
-                    },
-                  ]);
-                  setConfig(updatedConfig);
-                }
+            change: (newContent, event) => {
+              if (event && event.type === 'keydown') {
+                setModel(newContent);
+              } else {
+                setModel(newContent);
               }
             },
-            focus: (e) => {
-              // Ensure cursor position is maintained when focusing
-              const selection = editor.current?.selection;
-              if (selection && !selection.isCollapsed) {
-                selection.save();
-              }
-            },
-            blur: (e) => {
-              // Restore cursor position when editor loses focus
-              const selection = editor.current?.selection;
-              if (selection) {
-                selection.restore();
-              }
-            },
-            afterInsertImage: (image) => {
-              // Set default width for newly inserted images
-              image.style.width = '80%';
-
-              // Ensure the image is selectable
-              image.setAttribute('tabindex', '0');
-
-              // Add click handler to make the image the current selection
-              image.addEventListener('click', () => {
-                editor.current?.selection?.select(image);
-              });
-
-              // Add image resize buttons if they don't exist
-              const updatedConfig = { ...config };
-              if (!updatedConfig.extraButtons?.some(
-                button => button.name === 'img_increase' || button.name === 'img_decrease'
-              )) {
-                updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
-                  {
-                    name: "img_increase",
-                    tooltip: "Aumentar",
-                    icon: "angle-up",
-                    exec: () => {
-                      const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                        editor.current?.editor?.querySelector('img:focus');
-                      if (selectedImage) {
-                        const currentWidth = parseInt(selectedImage.style.width) || 80;
-                        if (currentWidth < 100) {
-                          selectedImage.style.width = `${currentWidth + 5}%`;
-                        }
-                      }
-                    },
-                  },
-                  {
-                    name: "img_decrease",
-                    tooltip: "Reducir",
-                    icon: "angle-down",
-                    exec: () => {
-                      const selectedImage = editor.current?.selection?.current()?.querySelector('img') ||
-                        editor.current?.editor?.querySelector('img:focus');
-                      if (selectedImage) {
-                        const currentWidth = parseInt(selectedImage.style.width) || 80;
-                        if (currentWidth > 50) {
-                          selectedImage.style.width = `${currentWidth - 5}%`;
-                        }
-                      }
-                    },
-                  },
-                ]);
-                setConfig(updatedConfig);
-              }
-            },
-            beforeImageInsert: (image) => {
-              try {
-                // Validate image before insertion
-                if (!image.src) {
-                  console.error('Invalid image source');
-                  return false;
-                }
-                return true;
-              } catch (error) {
-                console.error('Error in beforeImageInsert:', error);
-                return false;
-              }
-            },
-            errorHandler: (error) => {
-              console.error('Jodit Editor error:', error);
-
-            }
+            focus: () => {},
+            blur: () => {}
           },
           processSVG: (svg) => {
             return svg;
-
           },
           defaultStyle: {
-            textAlign: 'left'  // Remove this as we'll handle alignment differently
+            // Remove text alignment from default style
           },
           askBeforePasteHTML: false,
           askBeforePasteFromWord: false,
@@ -821,58 +770,54 @@ const Editor = ({
             "Nota de Tabla/Figura",
             "Fórmula centrada",
           ],
-
           childTemplate: (editor, key, value) =>
             `<span class="${key}">${editor.i18n(value)}</span>`,
-
           exec(editor, _, { control }) {
-            let value = control.args && control.args[0]; // h1, h2 ...
-            // change div tag to h2 tag
-            if (value == "Título 1") {
-              const tempElement = document.createElement("h2");
-              tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
-            } else if (value == "Título 2") {
-              const tempElement = document.createElement("h3");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
-            } else if (value == "Título 3") {
-              const tempElement = document.createElement("h4");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
-            } else if (value == "Cuerpo") {
-              const tempElement = document.createElement("div");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
-            } else if (value == "Texto recuadro") {
-              const tempElement = document.createElement("blockquote");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
-            } else if (value == "Título de Tabla/Figura") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText = "text-align: center;";
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
-            } else if (value == "Nota de Tabla/Figura") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText =
-                "font-size: 0.9rem; text-align: justify;";
-              tempElement.classList.add("footnote");
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
-            } else if (value == "Fórmula centrada") {
-              const tempElement = document.createElement("div");
-              tempElement.style.cssText = "text-align: center;";
-              tempElement.innerHTML = editorContent.innerHTML;
-              editorContent.parentNode.replaceChild(tempElement, editorContent);
-              setEditorContent(tempElement);
+            let value = control.args && control.args[0];
+            if (editorContent) {
+              let tempElement;
+              switch(value) {
+                case "Título 1":
+                  tempElement = document.createElement("h2");
+                  tempElement.innerHTML = editorContent.innerHTML.toUpperCase();
+                  break;
+                case "Título 2":
+                  tempElement = document.createElement("h3");
+                  tempElement.innerHTML = editorContent.innerHTML;
+                  break;
+                case "Título 3":
+                  tempElement = document.createElement("h4");
+                  tempElement.innerHTML = editorContent.innerHTML;
+                  break;
+                case "Cuerpo":
+                  tempElement = document.createElement("div");
+                  tempElement.innerHTML = editorContent.innerHTML;
+                  break;
+                case "Texto recuadro":
+                  tempElement = document.createElement("blockquote");
+                  tempElement.innerHTML = editorContent.innerHTML;
+                  break;
+                case "Título de Tabla/Figura":
+                  tempElement = document.createElement("div");
+                  tempElement.style.cssText = "text-align: center;";
+                  tempElement.innerHTML = editorContent.innerHTML;
+                  break;
+                case "Nota de Tabla/Figura":
+                  tempElement = document.createElement("div");
+                  tempElement.style.cssText = "font-size: 0.9rem; text-align: justify;";
+                  tempElement.classList.add("footnote");
+                  tempElement.innerHTML = editorContent.innerHTML;
+                  break;
+                case "Fórmula centrada":
+                  tempElement = document.createElement("div");
+                  tempElement.style.cssText = "text-align: center;";
+                  tempElement.innerHTML = editorContent.innerHTML;
+                  break;
+              }
+              if (tempElement) {
+                editor.value = tempElement.outerHTML;
+                setPendingChanges(true);
+              }
             }
           },
         };
@@ -933,27 +878,76 @@ const Editor = ({
     setModel(improvedText);
   }, [improvedText]);
 
-  const handleModelChange = (value) => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(value, "text/html");
+  // Optimize model change handler with debouncing
+  const handleModelChange = useCallback((newContent) => {
+    const joditInstance = editor.current?.jodit;
+    if (!joditInstance) return;
 
-    // Add inline style to Wiris formula images
-    doc.querySelectorAll("img.Wirisformula").forEach((img) => {
-      img.style.display = "inline";
-      img.style.verticalAlign = "middle";
-      img.style.width = "auto";
-      img.style.height = "auto";
-      img.style.resize = "none";
-      img.style.maxWidth = "100%";
-      img.addEventListener("dblclick", function () {
-        if (window.WirisPlugin && window.WirisPlugin.currentInstance) {
-          window.WirisPlugin.currentInstance.openExistingFormulaEditor(this);
+    // Store current cursor position
+    const selection = joditInstance.selection.save();
+
+    // Only update editor value, not the actual content
+    if (model !== newContent) {
+      setEditorValue(newContent);
+      setModel(newContent);
+      setPendingChanges(true);
+      
+      // Restore cursor position immediately
+      joditInstance.selection.restore(selection);
+    }
+  }, [model]);
+
+  // Update config settings for better performance
+  useEffect(() => {
+    // ... existing config setup code ...
+
+    setConfig({
+      // ... existing config options ...
+      
+      // Add these performance optimizations
+      observer: {
+        timeout: 100  // Reduced from 300
+      },
+      height: 500, // Increased from 1000 to 1200
+      useAceEditor: false, // Disable ACE editor
+      beautifyHTML: false, // Disable HTML beautification
+      defaultActionOnPaste: "insert_only_text",
+      processPasteHTML: false,
+      askBeforePasteHTML: false,
+      askBeforePasteFromWord: false,
+      
+      // Optimize events
+      events: {
+        ...config?.events,
+        change: (newContent, event) => {
+          if (event?.type === 'keydown') {
+            requestAnimationFrame(() => {
+              setModel(newContent);
+            });
+          } else {
+            setModel(newContent);
+          }
+        },
+        beforeCommand: function(command) {
+          // Store selection before command
+          const selection = this.selection.save();
+          setTimeout(() => {
+            this.selection.restore(selection);
+          }, 0);
         }
-      });
+      },
+      
+      // Disable unused features
+      showCharsCounter: false,
+      showWordsCounter: false,
+      showXPathInStatusbar: false,
+      
+      // Optimize toolbar
+      toolbarSticky: false,
+      toolbarAdaptive: false
     });
 
-    setModel(doc.body.innerHTML);
-  };
+  }, [editorContent]);
 
   useEffect(() => {
     if (editor.current) {
@@ -971,16 +965,25 @@ const Editor = ({
           wirisEditorParameters: {
             fontFamily: "Arial",
             fontSize: "16px",
-            color: "#000000",
+            color: "#606c71",
             backgroundColor: "transparent",
           },
           integrationParameters: {
             allowResize: false,
             enableAutoAlign: true,
+            formulaAttributes: {
+              style: "color: #606c71; display: inline; vertical-align: middle;",
+              'data-mathml-style': 'color: #606c71'
+            }
           },
           imageAttributes: {
-            style: "display: inline; vertical-align: middle;",
+            style: "display: inline; vertical-align: middle; color: #606c71;",
+            'data-custom-color': '#606c71'
           },
+          editorParameters: {
+            color: '#606c71',
+            defaultStroke: '#606c71'
+          }
         };
         const genericIntegrationInstance =
           new window.WirisPlugin.GenericIntegration(
@@ -999,6 +1002,19 @@ const Editor = ({
     }
   }, [editor.current]);
 
+  // Initialize editor value when component mounts
+  useEffect(() => {
+    if (editorContent) {
+      const contentId = editorContent.getAttribute('data-content-id') || `content-${Date.now()}`;
+      editorContent.setAttribute('data-content-id', contentId);
+      
+      const initialContent = editorContent.outerHTML;
+      setEditorValue(initialContent);
+      setModel(initialContent);
+      setPendingChanges(false);
+    }
+  }, [editorContent]);
+
   return (
     <div className="w-full px-1">
       <div id="mathtoolbar" className="hidden"></div>
@@ -1006,27 +1022,21 @@ const Editor = ({
         <span className="font-semibold text-[25px]">{section}</span>
       </div>
       <div className="w-full mt-1 h-[70%]">
-        {isBrowser &&
-          (() => {
-            try {
-              return (
-                <JoditEditor
-                  ref={editor}
-                  value={model}
-                  config={config}
-                  onChange={handleModelChange}
-                  tabIndex={1}
-                  className="w-full"
-                />
-              );
-            } catch (error) {
-              return <h1>Error</h1>;
-            }
-          })()}
+        {isBrowser && (
+          <>
+            <JoditEditor
+              ref={editor}
+              value={editorValue}
+              config={config}
+              onChange={handleModelChange}
+              tabIndex={1}
+              className="w-full h-[200%]"
+            />
+          </>
+        )}
       </div>
     </div>
   );
 };
-
 
 export default Editor;

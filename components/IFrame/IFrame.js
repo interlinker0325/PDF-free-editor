@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 
 const IFrame = ({
   url,
@@ -156,9 +155,9 @@ const IFrame = ({
   }, [editView]);
 
   useEffect(() => {
-    console.log(changedContent, "==changedcontent")
-    console.log(editElement, "==editElement")
-    if (!editElement) return
+    // Only update the iframe content if changedContent exists and we have an editElement
+    if (!changedContent || !editElement) return;
+
     const tempContainer = document.createElement('div');
     tempContainer.innerHTML = changedContent;
     editElement.innerHTML = '';
@@ -173,23 +172,25 @@ const IFrame = ({
 
       try {
         tempContainer.removeChild(firstChild);
-      }
-      catch {
+      } catch (error) {
+        console.error('Error removing child:', error);
       }
     }
+
     setIsSaved(false);
+
     // Re-render MathJax content
     if (window.MathJax) {
       window.MathJax.typeset();
     }
-    // automatic tooltip number
+
+    // Update tooltip numbers
     const iframe = document.getElementById("documentWindow");
     const iframeDoc = iframe.contentWindow.document;
     const tooltipElements = iframeDoc.querySelectorAll('sup');
     Array.from(tooltipElements).forEach((element, index) => {
       element.textContent = '[' + (index + 1) + ']';
-    })
-
+    });
   }, [changedContent]);
 
   return (
