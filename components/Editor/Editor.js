@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import ConfirmationDialog from "components/confirmation-dialog";
+import { content } from "tailwind.config";
+// import { element } from "prop-types";
  
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
@@ -17,8 +19,17 @@ const Editor = ({
   setSection,
 }) => {
   // console.log('editorContent:',editorContent)
-  const editorValueRef = useRef(null);
 
+  function parser(content){
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    const element = doc.body.firstChild;
+    return element
+  }
+
+
+  const editorValueRef = useRef(null);
+  let isUpdated = false
   const editor = useRef(null);
   const [isBrowser, setIsBrowser] = useState(false);
   const [isFormatUpdated, setIsFormatUpdated] = useState(false);
@@ -92,13 +103,16 @@ const Editor = ({
   }
 
   useEffect(()=>{
+    setIsFormatUpdated(false)
     console.log('editorValue',editorValue)
   },[editorValue])
   useEffect(()=>{
+    setIsFormatUpdated(false)
     console.log('editorContent',editorContent)
   },[editorContent])
   useEffect(()=>{
-    console.log('editorValueRef.current',editorValueRef.current)
+    setIsFormatUpdated(false)
+    // console.log('editorValueRef.current',editorValueRef.current)
   },[editorValueRef.current])
   
   useEffect(() => {
@@ -495,22 +509,52 @@ const Editor = ({
               tooltip: "Borrar bloque",
               icon: "bin",
               exec: () => {
-                if (!editorContent) {
-                  console.log('confirmDelete')
-                  // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
-                  if (confirmDelete) {
-                    deleteBlock();
-                  }
-                  return;
-                } 
-                const column = editorContent.querySelector('td') ;
-                const row = editorContent.querySelector('tr') ;
-                const table = editorContent.querySelector('table') ;
-                const hasTable = table || row || column;
-
-                console.log('hasTable:',hasTable)
                 
-                const hasImage = editorContent.querySelector('img')
+                console.log('editorContent image check')
+                console.log(editorContent)
+                
+
+                
+
+                if (!editorContent && !editorValue) {
+                  return
+                }
+
+                let hasTable
+                let hasImage
+                 if (typeof editorContent === 'string') {
+                  // Convert the string to an HTML object
+                  const parser = new DOMParser();
+                  const doc = parser.parseFromString(editorContent, 'text/html');
+                  const element = doc.body; // Set editorContent to the parsed HTML body
+
+                  const column = element.querySelector('td') ;
+                  const row = element.querySelector('tr') ;
+                  const table = element.querySelector('table') ;
+                  hasTable = table || row || column;
+                }
+                
+                // Now check for images
+                else {
+                  // hasImage = editorContent.querySelector('img');
+                  const column = editorContent.querySelector('td') ;
+                  const row = editorContent.querySelector('tr') ;
+                  const table = editorContent.querySelector('table') ;
+                  hasTable = table || row || column;
+                }
+                
+                if(typeof editorValue === 'string'){
+                  const parser2 = new DOMParser();
+                  const doc2 = parser2.parseFromString(editorValue, 'text/html');
+                  const element2 = doc2.body; // Set editorContent to the parsed HTML body
+                  // console.log('editorValue image check')
+                  console.log(element2)
+                  hasImage = element2.querySelector('img');
+                }
+                else{
+                  hasImage = editorValue.querySelector('img');
+                }
+                
                 // console.log('doc:',doc) 
                 console.log('editorContent:',editorContent) 
                 console.log('hasImage:',hasImage)
@@ -520,7 +564,7 @@ const Editor = ({
                   setIsDialogOpen(true);
                   
                 } else {
-                  deleteBlock();
+                  // deleteBlock();
                 }
                 
                 
@@ -534,7 +578,15 @@ const Editor = ({
               tooltip: "AI Assistant",
               icon: "ai_assistant",
               exec: (editor) => {
+                console.log('editor.value - ai:',editor.value)
                 if (editor.value) {
+                  console.log('editor.value - ai (2):',editor.value)
+                  const parser = new DOMParser();
+                  const doc = parser.parseFromString(editor.value, 'text/html');
+                  const element = doc.body.firstChild;
+                  console.log('editor.value - ai (3):',element)
+                  console.log('editor.value - ai (4):',element.innerHTML)
+
                   const sectionCheck = async () => {
                     setModel("Processing...");
                     axios
@@ -543,16 +595,19 @@ const Editor = ({
                         null,
                         {
                           params: {
-                            content: String(editor.value),
+                            // content: String(editor.value),
+                            content: String(element.innerHTML),
                             title: section,
                           },
                         }
                       )
                       .then(function (response) {
                         setImprovedText(response["data"].improvedText);
+                        console.log('ai response:',response)
                       })
                       .catch(function (error) {
                         setImprovedText(String(error));
+                        console.error(error)
                       });
                   };
                   sectionCheck();
@@ -584,18 +639,33 @@ const Editor = ({
               icon: "greenCheck",
               exec: (editor) => {
                 try {
-                  console.log('editorValueRef.current.innerHTML',editorValueRef.current.innerHTML)
+                  
+                  const parser = new DOMParser();
+                  const doc = parser.parseFromString(editor.value, 'text/html');
+                  const element = doc.body.firstChild;
+
                   console.log('isFormatUpdated',isFormatUpdated)
 
-                  console.log('editorValueRef.current.innerHTML === editorContent.innerHTML',editorValueRef.current.innerHTML === editorContent.innerHTML)
+                  console.log('isUpdated',isUpdated)
+                  console.log('compare',editorContent.innerHTML == element.innerHTML)
+                  console.log('1',editorContent.innerHTML)
+                  console.log('2',element.innerHTML)
+
+                  
+
+                  if(editorContent.innerHTML == element.innerHTML){
+                    return
+                  }
+
+                  // console.log('editorValueRef.current.innerHTML === editorContent.innerHTML',editorValueRef.current.innerHTML === editorContent.innerHTML)
                   // if(editorValueRef.current.innerHTML === editorValue.innerHTML){
                   //   return
                   // }
                   // let 
                   let content
                   
-                  console.log('editorValueRef.current',editorValueRef.current)
-                  console.log('editor.value',editor.value)
+                  // console.log('editorValueRef.current',editorValueRef.current)
+                  // console.log('editor.value',editor.value)
                   
                   // if(isFormatUpdated && editorValueRef.current.outerHTML){
                   //   console.log('in if')
@@ -838,6 +908,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               } else if (value == "Título 2") {
                 const tempElement = document.createElement("h3");
                 tempElement.innerHTML = editorValueRef.current.innerHTML || ""; // Use editorValueRef.current
@@ -845,6 +916,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               } else if (value == "Título 3") {
                 const tempElement = document.createElement("h4");
                 tempElement.innerHTML = editorValueRef.current.innerHTML || ""; // Use editorValueRef.current
@@ -852,6 +924,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               } else if (value == "Cuerpo") {
                 const tempElement = document.createElement("div");
                 tempElement.innerHTML = editorValueRef.current.innerHTML || ""; // Use editorValueRef.current
@@ -859,6 +932,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               } else if (value == "Texto recuadro") {
                 const tempElement = document.createElement("blockquote");
                 tempElement.innerHTML = editorValueRef.current.innerHTML || ""; // Use editorValueRef.current
@@ -866,6 +940,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               } else if (value == "Título de Tabla/Figura") {
                 const tempElement = document.createElement("div");
                 tempElement.style.cssText = "text-align: center;";
@@ -874,6 +949,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               } else if (value == "Nota de Tabla/Figura") {
                 const tempElement = document.createElement("div");
                 tempElement.style.cssText = "font-size: 0.9rem; text-align: justify;";
@@ -883,6 +959,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               } else if (value == "Fórmula centrada") {
                 const tempElement = document.createElement("div");
                 tempElement.style.cssText = "text-align: center;";
@@ -891,6 +968,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
+                isUpdated=true
               }
               
               
@@ -958,49 +1036,69 @@ const Editor = ({
   }, [editorContent]);
 
   useEffect(() => {
+    console.log('improvedText:',improvedText)
+    const element = parser(improvedText)
+    console.log('element-improvedText:',element)
+
+
     setModel(improvedText);
   }, [improvedText]);
 
-  // Optimize model change handler with debouncing
-  const handleModelChange = useCallback((newContent) => {
-    // setEditorValue(newContent)
-    setIsFormatUpdated(false)
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(newContent, 'text/html');
-    const element = doc.body.firstChild;
-    
-    // You can now access the element and manipulate it
-     
-    // Store the string version of the element to render later
-    // setEditorValue(element);
-    if (element && element.innerHTML!='Nuevo párrafo') {
-      // console.log('element.innerHTML:',element.innerHTML)
-      // if(element.innerHTML!='Nuevo párrafo'){
-        // setEditorValue(element.innerHTML)
-        editorValueRef.current = element;
-        // console.log(editorValueRef.current);
-    }
-    else{
-      setEditorValue('')
-    }
-    const joditInstance = editor.current?.jodit;
-    if (!joditInstance) return;
 
-    // Store current cursor position
-    const selection = joditInstance.selection.save();
+  useEffect(() => { 
+    setEditorValue(model)
+    console.log('element - model:',model)
+    if(model != 'Processing...' || model != ""){
+      const element = parser(model)
+      // setEditorValue(element.innerHTML);
+      // setPendingChanges(true);
 
-    // Only update editor value, not the actual content
-    //  && element.innerHTML!='Nuevo párrafo'
-    if (model !== newContent) {
-      // console.log('in if')
-      setEditorValue(newContent);
-      setModel(newContent);
-      setPendingChanges(true);
-      
-      // Restore cursor position immediately
-      joditInstance.selection.restore(selection);
     }
   }, [model]);
+
+    
+    // Optimize model change handler with debouncing
+    const handleModelChange = useCallback((newContent) => {
+      // setEditorValue(newContent)
+      console.log('MODELL:',model) 
+      setIsFormatUpdated(false)
+      isUpdated=false
+      console.log('newContent:',newContent);
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(newContent, 'text/html');
+      const element = doc.body.firstChild;
+      
+      // You can now access the element and manipulate it
+      
+      // Store the string version of the element to render later
+      // setEditorValue(element);
+      if (element && element.innerHTML!='Nuevo párrafo') {
+        // console.log('element.innerHTML:',element.innerHTML)
+        // if(element.innerHTML!='Nuevo párrafo'){
+          // setEditorValue(element.innerHTML)
+          editorValueRef.current = element;
+      }
+      else{
+        setEditorValue('')
+      }
+      const joditInstance = editor.current?.jodit;
+      if (!joditInstance) return;
+
+      // Store current cursor position
+      const selection = joditInstance.selection.save();
+
+      // Only update editor value, not the actual content
+      //  && element.innerHTML!='Nuevo párrafo'
+      console.log("MODALLL HELLLOO")
+      if (model !== newContent) {
+        setEditorValue(newContent);
+        setModel(newContent);
+        setPendingChanges(true);
+        
+        // Restore cursor position immediately
+        joditInstance.selection.restore(selection);
+      }
+    }, [model]);
 
   // Update config settings for better performance
   useEffect(() => {
@@ -1110,6 +1208,8 @@ const Editor = ({
   // Initialize editor value when component mounts
   useEffect(() => {
     if (editorContent) {
+      setIsFormatUpdated(false)
+      isUpdated=false
       const contentId = editorContent.getAttribute('data-content-id') || `content-${Date.now()}`;
       editorContent.setAttribute('data-content-id', contentId);
       
@@ -1119,7 +1219,7 @@ const Editor = ({
       const doc = parser.parseFromString(initialContent, 'text/html');
       const element = doc.body.firstChild;
 
-      
+
       // console.log('initialContent:',initialContent)
       // console.log('initialContent.innerHTML:',element.innerHTML)
       if (element) {
