@@ -13,9 +13,24 @@ const IFrame = ({
 }) => {
   const [editElement, setEditElement] = useState();
 
+ 
+  
+  const mathIndicators = [
+    'math', 'mrow', 'mstyle', 'mi', 'mo', 'mn', 'mtext', 'ms', 'mglyph',
+    'msub', 'msup', 'msubsup', 'munder', 'mover', 'munderover',
+    'mfenced', 'mfrac', 'msqrt', 'mroot', 'mtable', 'mtr', 'mtd',
+    'maligngroup', 'malignmark', 'annotation', 'annotation-xml',
+    'menclose', 'maction', 'mpadded', 'mphantom', 'merror',
+    'mjx-container', 'mjx-math', 'mjx-mi', 'mjx-mo', 'mjx-mn', 'mjx-mrow', 'mjx-mfrac'
+  ];
+  
+
   const handleClick = (event) => {
     event.preventDefault();
     var clickedElement = event.target;
+    console.log('clickedElement:',clickedElement)
+    console.log('clickedElement.tagName:',clickedElement.tagName)
+
     // if target is tr or td, select table tag for editing
     if (clickedElement.tagName === 'TD' || clickedElement.tagName === 'TH') {
       clickedElement = clickedElement.parentElement.parentElement.parentElement;
@@ -25,26 +40,37 @@ const IFrame = ({
     }
     const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', 'SECTION'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
-    if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id) || clickedElement.tagName.includes('MJX')) {
-      // Do nothing for these elements
-    } else {
-      setEditorContent(clickedElement);
-      setEditElement(clickedElement);
+
+    if(clickedElement.tagName.includes('MathJax') || clickedElement.closest('math-block')){
+      console.log('clickedElement.tagName:',clickedElement.tagName)
+    }
+
+    if (mathIndicators.includes(clickedElement.tagName.toLowerCase())) {
+      console.log('MATH:',clickedElement.tagName)
+    }
+
+    else{
+      if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id) || clickedElement.tagName.includes('MathJax') || clickedElement.closest('math-block')) {
+        // Do nothing for these elements
+      } else {
+        setEditorContent(clickedElement);
+        setEditElement(clickedElement);
 
 
-      const iframe = document.getElementById("documentWindow");
+        const iframe = document.getElementById("documentWindow");
 
-      if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
-        const iframeDoc = iframe.contentWindow.document;
-        const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section, mjx-container, math, mrow, msub, mi, mo, msqrt, mfrac, mn, svg, sup, strong');
+        if (editView && iframe && iframe.contentWindow && iframe.contentWindow.document) {
+          const iframeDoc = iframe.contentWindow.document;
+          const elements = iframeDoc.querySelectorAll('h2, h3, h4, div, table, li, a, blockquote, section, mjx-container, math, mrow, msub, mi, mo, msqrt, mfrac, mn, svg, sup, strong');
 
-        elements.forEach(element => {
-          element.style.background = 'none';
-        });
+          elements.forEach(element => {
+            element.style.background = 'none';
+          });
+        }
+        // Set the background color of the newly clicked element
+        clickedElement.style.background = "#dcfce7";
+
       }
-      // Set the background color of the newly clicked element
-      clickedElement.style.background = "#dcfce7";
-
     }
   };
 
@@ -55,7 +81,7 @@ const IFrame = ({
     }
     const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', "SECTION"];
     const ids = ['preview-content', 'preview', 'container-ruller'];
-    if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id) || hoveredElement.tagName.includes('MJX')) {
+    if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id) || mathIndicators.includes(hoveredElement.tagName.toLowerCase())) {
     } else {
       hoveredElement.style.cursor = "pointer";
       if (!hoveredElement.style) return;
