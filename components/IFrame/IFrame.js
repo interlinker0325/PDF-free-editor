@@ -38,19 +38,27 @@ const IFrame = ({
     if (clickedElement.tagName === "IMG" || clickedElement.tagName === "FIGURE") {
       clickedElement = clickedElement.closest("div")
     }
+
+    if (mathIndicators.includes(clickedElement.tagName.toLowerCase())) {
+      const closestDiv = clickedElement.closest("div");
+      if (closestDiv) {
+        clickedElement = closestDiv;
+      }
+    }
+  
     const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', 'SECTION'];
     const ids = ['preview-content', 'preview', 'container-ruller'];
 
-    if(clickedElement.tagName.includes('MathJax') || clickedElement.closest('math-block')){
-      console.log('clickedElement.tagName:',clickedElement.tagName)
-    }
+    // if(clickedElement.tagName.includes('MathJax') || clickedElement.closest('math-block')){
+    // }
+    console.log('clickedElement.tagName:',clickedElement.tagName)
 
-    if (mathIndicators.includes(clickedElement.tagName.toLowerCase())) {
-      console.log('MATH:',clickedElement.tagName)
-    }
+    // if (mathIndicators.includes(clickedElement.tagName.toLowerCase())) {
+    //   console.log('MATH:',clickedElement.tagName)
+    // }
 
-    else{
-      if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id) || clickedElement.tagName.includes('MathJax') || clickedElement.closest('math-block')) {
+    // else{
+      if (tagNames.includes(clickedElement.tagName) || ids.includes(clickedElement.id)) {
         // Do nothing for these elements
       } else {
         setEditorContent(clickedElement);
@@ -71,7 +79,7 @@ const IFrame = ({
         clickedElement.style.background = "#dcfce7";
 
       }
-    }
+    // }
   };
 
   const handleMouseOver = (event) => {
@@ -81,8 +89,19 @@ const IFrame = ({
     }
     const tagNames = ['HTML', 'P', 'SPAN', 'FIGURE', 'IMG', 'UL', 'SVG', 'SUP', 'BODY', "SECTION"];
     const ids = ['preview-content', 'preview', 'container-ruller'];
-    if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id) || mathIndicators.includes(hoveredElement.tagName.toLowerCase())) {
+    if (tagNames.includes(hoveredElement.tagName) || ids.includes(hoveredElement.id)) {
+      
+    
     } else {
+      if (mathIndicators.includes(hoveredElement.tagName.toLowerCase())) {
+        // If in mathIndicators, find the closest parent div
+        const closestDiv = hoveredElement.closest('div');
+        if (closestDiv) {
+          console.log('closestDiv:',closestDiv)
+          hoveredElement = closestDiv
+        }
+      }
+      console.log('hoveredElement:',hoveredElement)
       hoveredElement.style.cursor = "pointer";
       if (!hoveredElement.style) return;
       if (hoveredElement.style.background !== 'rgb(220, 252, 231)') {
