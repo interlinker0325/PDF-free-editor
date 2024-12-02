@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ConfirmationDialog from "components/confirmation-dialog";
-
+import { matchStyles } from "utils/match-styles";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { parser } from "utils/html-parser";
@@ -18,13 +18,14 @@ const Editor = ({
 }) => {
 
 
+
   function deleteBlock(content) {
-    console.log('deleteContent:', content)
+    console.log('deleteContent:',content)
     try {
       if (content && content.parentNode) {
         // Remove the element from the editor
         content.parentNode.removeChild(content);
-
+        
         // Remove the image from the iframe as well
         const iframe = document.getElementById("documentWindow");
         const iframeDoc = iframe.contentWindow.document;
@@ -32,7 +33,7 @@ const Editor = ({
         if (targetElement) {
           targetElement.parentNode.removeChild(targetElement);
         }
-
+        
         // Reset states
         setEditorContent(null);
         setModel('');
@@ -40,7 +41,7 @@ const Editor = ({
         setPendingChanges(false);
         setFormattedContent('');
         setImprovedText('');
-
+        
         // Clear editor selection if exists
         if (editor.current?.jodit?.selection) {
           editor.current.jodit.selection.clear();
@@ -53,14 +54,16 @@ const Editor = ({
       alert("Error al intentar borrar el bloque."); // Alert on error
     }
   }
-
+  
   const editor = useRef(null);
-  const [aiButton, setAiButton] = useState(false)
+  const [aiButton,setAiButton] = useState(false)
   const [isBrowser, setIsBrowser] = useState(false);
   const [config, setConfig] = useState(null);
   const [model, setModel] = useState("");
   const [isFormatUpdated, setIsFormatUpdated] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
+  
 
   const [improvedText, setImprovedText] = useState("");
 
@@ -70,7 +73,7 @@ const Editor = ({
   const [deleteContent, setDeleteContent] = useState("");
 
   const [pendingChanges, setPendingChanges] = useState(false);
-  let isUpdated = false
+  let isUpdated=false
 
   // Add state for tracking formatted content
   const [formattedContent, setFormattedContent] = useState("");
@@ -495,7 +498,7 @@ const Editor = ({
                   // }
                   return;
                 }
-
+                
                 setDeleteContent(element)
                 let hasTable
                 // let hasImage
@@ -505,29 +508,29 @@ const Editor = ({
                 //   const doc = parser.parseFromString(element, 'text/html');
                 //   const element = doc.body; // Set element to the parsed HTML body
 
-
+                  
                 // }
 
-                const column = element.querySelector('td');
-                const row = element.querySelector('tr');
-                const table = element.querySelector('table');
+                const column = element.querySelector('td') ;
+                const row = element.querySelector('tr') ;
+                const table = element.querySelector('table') ;
                 hasTable = table || row || column;
                 // Check if the block contains an image
                 const hasImage = element.querySelector('img');
-                console.log(hasImage, hasTable)
+                console.log(hasImage,hasTable)
                 if (hasImage || hasTable) {
                   // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
                   // if (confirmDelete) {
-                  // deleteBlock();
-                  setIsDialogOpen(true);
+                    // deleteBlock();
+                    setIsDialogOpen(true);
                   // }
                 } else {
                   deleteBlock(element);
                   console.log('element:', element)
 
                 }
-
-
+                
+                
               },
             },
             "|",
@@ -592,20 +595,27 @@ const Editor = ({
               exec: (editor) => {
                 try {
                   const element = parser(editor.value)
-                  if (editorContent.innerHTML == element.innerHTML) {
-                    return
-                  }
+                  console.log(editorContent.innerHTML)
+                  console.log('element main=>',element)
+                  console.log('editorContent main=>',editorContent)
+                  // console.log('in main isChanged:',isChanged)
+                  // if(editorContent.innerHTML == element.innerHTML){
+                  //   return
+                  // } 
+                  
+                  setIsChanged(false)
+
 
                   let content = editor.value;
-
+                  
                   // Create a temporary div to parse the HTML
                   const tempDiv = document.createElement('div');
                   // tempDiv.innerHTML = content;
-
+                  
                   // Process elements with data-editor-only attribute
                   const formattedElements = tempDiv.querySelectorAll('[data-editor-only]');
                   // console.log('formattedElements:',formattedElements)
-
+                  
                   formattedElements.forEach(el => {
                     // Remove the data-editor-only attribute but keep the formatting
                     el.removeAttribute('data-editor-only');
@@ -621,28 +631,33 @@ const Editor = ({
                       el.className = 'text-box';
                     }
                   });
-
+                  
                   // Get the cleaned content
                   // content = tempDiv.innerHTML;
-
+                  
                   // Update the iframe content
                   const iframe = document.getElementById("documentWindow");
                   if (iframe && iframe.contentWindow) {
+                    // Determine which content to use: editorContent or element
+                    const referenceElement =
+                      editorContent && editorContent.innerHTML === "Nuevo párrafo"
+                        ? editorContent
+                        : element;
+                  
                     const targetElement = iframe.contentWindow.document.querySelector(
-                      `[data-content-id="${editorContent.getAttribute('data-content-id')}"]`
+                      `[data-content-id="${referenceElement.getAttribute('data-content-id')}"]`
                     );
-                    console.log('targetElement=>', targetElement)
-
+                  
                     if (targetElement) {
-                      const parsedContent = parser(content)
+                      const parsedContent = parser(content);
                       targetElement.innerHTML = parsedContent.innerHTML;
-                      console.log('content:', content)
-                      // Apply changes to the main document
                       setChangedContent(content);
                       setEditorContent(targetElement);
                       setPendingChanges(false);
+                      setIsChanged(false);
                     }
                   }
+                  
                 } catch (error) {
                   console.error("Error applying changes:", error);
                 }
@@ -679,8 +694,8 @@ const Editor = ({
                 setModel(newContent);
               }
             },
-            focus: () => { },
-            blur: () => { }
+            focus: () => {},
+            blur: () => {}
           },
           processSVG: (svg) => {
             return svg;
@@ -694,14 +709,16 @@ const Editor = ({
 
         const img = editorContent?.querySelector("img");
         if (img) {
-          const updatedConfig = { ...config };
-          // Check if buttons don't already exist before adding them
+          const updatedConfig = { ...config }; 
           const hasImageButtons = updatedConfig.extraButtons?.some(
             button => button.name === "img_increase" || button.name === "img_decrease"
           );
+  
+          updatedConfig.extraButtons = (updatedConfig.extraButtons || []).filter(
+            button => button.name !== "text_left" && button.name !== "text_right" && button.name !== "img_increase" && button.name !== "img_decrease"
+          );
 
-          if (!hasImageButtons) {
-            updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
+          updatedConfig.extraButtons = (updatedConfig.extraButtons || []).concat([
               {
                 name: "img_increase",
                 tooltip: "Aumentar",
@@ -739,68 +756,117 @@ const Editor = ({
                 },
               },
             ]);
-            setConfig(updatedConfig);
-          }
+            setConfig(updatedConfig); 
         }
 
-        // // If selected block is Footnote, add block size increase and decrease button
-        if (editorContent?.classList) {
-          const calssList = Array.from(editorContent?.classList);
-          if (calssList.includes("footnote")) {
+        // const footnote = document.createElement("div");
+        // footnote.style.cssText =
+        //   "font-size: 0.9rem; text-align: justify; display: block; padding: 0px; margin: 0px !important; background: rgb(220, 252, 231); border: none; cursor: pointer;";
+    
+        // const targetStyle = footnote.style.cssText;
+        // console.log('editorContent start:',editorContent)
+        if (editorContent) {
+          const textStyle = editorContent.style.cssText
+          const isFootnote = matchStyles(textStyle) 
+          
+          if(isFootnote){
             const updatedConfig = { ...config };
-            updatedConfig.extraButtons = (
-              updatedConfig.extraButtons || []
-            ).concat([
+            console.log('updatedConfig:', updatedConfig);
+          
+            // Remove existing "text_left" and "text_right" buttons if they exist
+            updatedConfig.extraButtons = (updatedConfig.extraButtons || []).filter(
+              button => button.name !== "text_left" && button.name !== "text_right" && button.name !== "img_increase" && button.name !== "img_decrease"
+            );
+          
+            // Concatenate new buttons
+            updatedConfig.extraButtons = updatedConfig.extraButtons.concat([
               {
-                name: "block_increase",
-                tooltip: "Aumentar",
-                icon: "angle-up",
+                name: "text_left",
+                tooltip: "izquierda",
+                icon: "angle-left",
                 exec: () => {
-                  const padding = parseInt(
-                    editorContent.style.padding?.split(" ")[1]
-                  );
-                  if (padding && padding > 5) {
-                    editorContent.style.setProperty(
-                      "padding",
-                      `0px ${padding - 5}px`,
-                      "important"
-                    );
-                  } else {
-                    editorContent.style.setProperty(
-                      "padding",
-                      `0px 5px`,
-                      "important"
-                    );
-                  }
+                  const currentMargin = parseInt(editorContent.style.marginLeft || "0", 10);
+                  editorContent.style.marginLeft = `${currentMargin - 10}px`; // Decrement margin
                 },
               },
               {
-                name: "block_decrease",
-                tooltip: "Reducir",
-                icon: "angle-down",
+                name: "text_right",
+                tooltip: "derecha",
+                icon: "angle-right",
                 exec: () => {
-                  const padding = parseInt(
-                    editorContent.style.padding?.split(" ")[1]
-                  );
-                  if (padding && padding < 200) {
-                    editorContent.style.setProperty(
-                      "padding",
-                      `10px ${padding + 5}px`,
-                      "important"
-                    );
-                  } else {
-                    editorContent.style.setProperty(
-                      "padding",
-                      `10px 15px`,
-                      "important"
-                    );
-                  }
+                  const currentMargin = parseInt(editorContent.style.marginLeft || "0", 10);
+                  editorContent.style.marginLeft = `${currentMargin + 10}px`; // Increment margin  
+                  console.log('editorContent right:', editorContent);
                 },
               },
             ]);
-            setConfig(updatedConfig);
+          
+            setConfig(updatedConfig);  
           }
         }
+         
+
+
+
+        // // If selected block is Footnote, add block size increase and decrease button
+        // console.log('editorContent',editorContent)
+        // if (editorContent?.classList) {
+        //   const calssList = Array.from(editorContent?.classList);
+        //   if (calssList.includes("footnote")) {
+        //     const updatedConfig = { ...config };
+        //     updatedConfig.extraButtons = (
+        //       updatedConfig.extraButtons || []
+        //     ).concat([
+        //       {
+        //         name: "block_increase",
+        //         tooltip: "Aumentar",
+        //         icon: "angle-up",
+        //         exec: () => {
+        //           const padding = parseInt(
+        //             editorContent.style.padding?.split(" ")[1]
+        //           );
+        //           if (padding && padding > 5) {
+        //             editorContent.style.setProperty(
+        //               "padding",
+        //               `0px ${padding - 5}px`,
+        //               "important"
+        //             );
+        //           } else {
+        //             editorContent.style.setProperty(
+        //               "padding",
+        //               `0px 5px`,
+        //               "important"
+        //             );
+        //           }
+        //         },
+        //       },
+        //       {
+        //         name: "block_decrease",
+        //         tooltip: "Reducir",
+        //         icon: "angle-down",
+        //         exec: () => {
+        //           const padding = parseInt(
+        //             editorContent.style.padding?.split(" ")[1]
+        //           );
+        //           if (padding && padding < 200) {
+        //             editorContent.style.setProperty(
+        //               "padding",
+        //               `10px ${padding + 5}px`,
+        //               "important"
+        //             );
+        //           } else {
+        //             editorContent.style.setProperty(
+        //               "padding",
+        //               `10px 15px`,
+        //               "important"
+        //             );
+        //           }
+        //         },
+        //       },
+        //     ]);
+        //     setConfig(updatedConfig);
+        //   }
+        // }
 
         // add custom button by Jodit method
         // create custom paragraph type button
@@ -834,7 +900,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               } else if (value == "Título 2") {
                 const tempElement = document.createElement("h3");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
@@ -842,7 +908,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               } else if (value == "Título 3") {
                 const tempElement = document.createElement("h4");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
@@ -850,7 +916,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               } else if (value == "Cuerpo") {
                 const tempElement = document.createElement("div");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
@@ -858,7 +924,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               } else if (value == "Texto recuadro") {
                 const tempElement = document.createElement("blockquote");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
@@ -866,7 +932,7 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               } else if (value == "Título de Tabla/Figura") {
                 const tempElement = document.createElement("div");
                 tempElement.style.cssText = "text-align: center;";
@@ -875,17 +941,17 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               } else if (value == "Nota de Tabla/Figura") {
                 const tempElement = document.createElement("div");
-                tempElement.style.cssText = "font-size: 0.9rem; text-align: justify;";
+                tempElement.style.cssText = "font-size: 0.9rem; text-align: justify; display: block; padding: 0px; margin: 0px !important; background: rgb(220, 252, 231); border: none; cursor: pointer;";
                 // tempElement.classList.add("footnote");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
                 editorContent.parentNode.replaceChild(tempElement, editorContent);
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               } else if (value == "Fórmula centrada") {
                 const tempElement = document.createElement("div");
                 tempElement.style.cssText = "text-align: center;";
@@ -894,10 +960,10 @@ const Editor = ({
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
-                isUpdated = true
+                isUpdated=true
               }
-
-
+              
+              
               if (tempElement) {
                 // console.log('tempElement:',tempElement)
                 editor.value = tempElement.outerHTML;
@@ -985,17 +1051,19 @@ const Editor = ({
 
   useEffect(() => {
     if (editorContent) {
+      console.log('editorContent - main:',editorContent)
+
       let content = editorContent.outerHTML;
       // console.log('editorContent.outerHTML =>', editorContent)
       let contentChange = content.replace(/border:\s*\d+(\.\d+)?px\s*solid\s*red;/g, "")
       // console.log('contentChange:',contentChange)
       // replace("2.5px solid red", "");
-      if (!contentChange.includes("2.5px solid red")) {
+      if(!contentChange.includes("2.5px solid red")){
         setModel(contentChange);
         setChangedContent(editorContent.outerHTML);
       }
     } else {
-      setModel("");
+      setModel("");        
       setChangedContent("");
     }
     try {
@@ -1018,40 +1086,48 @@ const Editor = ({
   }, [editorValue]);
 
 
-  useEffect(() => {
-    console.log('aiButton:', aiButton)
-  }, [aiButton]);
+  // useEffect(() => {
+  //   console.log('aiButton:',aiButton)
+  // }, [aiButton]);
 
   useEffect(() => {
+    console.log('isChanged:',isChanged)
+    // if(isChanged){
+    //   setIsChanged(false)
+    // }
+  }, [isChanged]);
+
+
+  useEffect(() => { 
     // console.log('element - model:',model)
     let contentChangeModel = model.replace(/border:\s*\d+(\.\d+)?px\s*solid\s*red;/g, "");
     // setEditorValue(model)
     const element = parser(model);
-    // console.log('model', model);
-
+    // console.log('model changed', model);
+    setIsChanged(true)
     // console.log('element', element);
     if (model !== '' && element && !contentChangeModel.includes("2.5px solid red")) {
       if (element.innerHTML !== "Nuevo párrafo") {
         if (aiButton) {
           setEditorValue(contentChangeModel);
           if (element.innerHTML && element.innerHTML !== 'Processing...') {
-            console.log('element.innerHTML=>', element.innerHTML);
+            // console.log('element.innerHTML=>', element.innerHTML);
             setAiButton(false);
           }
         }
       }
     }
 
-
+    
   }, [model]);
   const confirmDelete = () => {
-    console.log('deleteContent:', deleteContent)
-    deleteBlock(deleteContent);
-    setIsDialogOpen(false);
+    // console.log('deleteContent:',deleteContent)
+    deleteBlock(deleteContent); 
+    setIsDialogOpen(false); 
   };
 
   const cancelDelete = () => {
-    setIsDialogOpen(false);
+    setIsDialogOpen(false);  
   };
 
 
@@ -1068,11 +1144,11 @@ const Editor = ({
     if (model !== newContent) {
       setModel(newContent);
       setPendingChanges(true);
-
+      
       // Restore cursor position immediately
       joditInstance.selection.restore(selection);
     }
-
+    
   }, [model]);
   // Update config settings for better performance
   useEffect(() => {
@@ -1080,7 +1156,7 @@ const Editor = ({
 
     setConfig({
       // ... existing config options ...
-
+      
       // Add these performance optimizations
       observer: {
         timeout: 100  // Reduced from 300
@@ -1092,7 +1168,7 @@ const Editor = ({
       processPasteHTML: false,
       askBeforePasteHTML: false,
       askBeforePasteFromWord: false,
-
+      
       // Optimize events
       events: {
         ...config?.events,
@@ -1105,7 +1181,7 @@ const Editor = ({
             setModel(newContent);
           }
         },
-        beforeCommand: function (command) {
+        beforeCommand: function(command) {
           // Store selection before command
           const selection = this.selection.save();
           setTimeout(() => {
@@ -1113,12 +1189,12 @@ const Editor = ({
           }, 0);
         }
       },
-
+      
       // Disable unused features
       showCharsCounter: false,
       showWordsCounter: false,
       showXPathInStatusbar: false,
-
+      
       // Optimize toolbar
       toolbarSticky: false,
       toolbarAdaptive: false
@@ -1131,7 +1207,9 @@ const Editor = ({
       const editorfield = Array.from(
         document.getElementsByClassName("jodit-wysiwyg")
       )[0];
+    
       if (typeof window !== "undefined" && window.WirisPlugin && editorfield) {
+        // Define generic integration properties
         const genericIntegrationProperties = {
           target: editorfield,
           toolbar: document.getElementById("mathtoolbar"),
@@ -1142,42 +1220,49 @@ const Editor = ({
           wirisEditorParameters: {
             fontFamily: "Arial",
             lineColor: "#606C71",
-            fontSize: "16px",
+            fontSize: "24px",
             color: "#606C71",
-            backgroundColor: "transparent",
+            backgroundColor: "#606C71",
           },
           integrationParameters: {
             allowResize: false,
             enableAutoAlign: true,
             formulaAttributes: {
               style: "color: #606c71; display: inline; vertical-align: middle;",
-              'data-mathml-style': 'color: #606c71'
-            }
+              "data-mathml-style": "color: #606c71",
+            },
           },
           imageAttributes: {
             style: "display: inline; vertical-align: middle; color: #606c71;",
-            'data-custom-color': '#606c71'
+            "data-custom-color": "#606c71",
           },
           editorParameters: {
-            color: '#606c71',
-            defaultStroke: '#606c71'
-          }
+            color: "#606c71",
+            defaultStroke: "#606c71",
+          },
         };
+    
+        // Create the Wiris integration instance
         const genericIntegrationInstance =
           new window.WirisPlugin.GenericIntegration(
             genericIntegrationProperties
           );
-        editorfield.addEventListener("click", () => {
+          editorfield.addEventListener("click", () => {
           if (!window.WirisPlugin.currentInstance) {
             window.WirisPlugin.currentInstance = genericIntegrationInstance;
           }
         });
+          
         genericIntegrationInstance.init();
+
         genericIntegrationInstance.listeners.fire("onTargetReady", {});
 
+
+
         window.WirisPlugin.currentInstance = genericIntegrationInstance;
-      }
+       }
     }
+    
   }, [editor.current]);
 
   // Initialize editor value when component mounts
@@ -1185,16 +1270,16 @@ const Editor = ({
     if (editorContent) {
       const contentId = editorContent.getAttribute('data-content-id') || `content-${Date.now()}`;
       editorContent.setAttribute('data-content-id', contentId);
-
+      
       const initialContent = editorContent.outerHTML;
       // console.log("editorContent:",editorContent)
-      if (editorContent.innerHTML != 'Nuevo párrafo') {
+      if(editorContent.innerHTML != 'Nuevo párrafo'){
         const changedContent = initialContent.replace(/border:\s*\d+(\.\d+)?px\s*solid\s*red;/g, "");
         setEditorValue(changedContent);
         setModel(changedContent);
         setPendingChanges(false);
       }
-      else {
+      else{
         setEditorValue('');
         setModel('');
         setPendingChanges(false);
@@ -1223,13 +1308,15 @@ const Editor = ({
         )}
       </div>
       <ConfirmationDialog
-        isOpen={isDialogOpen}
-        onClose={cancelDelete}
-        onConfirm={confirmDelete}
-        message="Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar?"
-      />
+         isOpen={isDialogOpen}
+         onClose={cancelDelete}
+         onConfirm={confirmDelete}
+         message="Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar?"
+       />
     </div>
   );
 };
 
 export default Editor;
+
+
