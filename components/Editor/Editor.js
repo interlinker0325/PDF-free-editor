@@ -20,7 +20,7 @@ const Editor = ({
 
 
   function deleteBlock(content) {
-    console.log('deleteContent:',content)
+    // console.log('deleteContent:',content)
     try {
       if (content && content.parentNode) {
         // Remove the element from the editor
@@ -163,11 +163,14 @@ const Editor = ({
               return name.toLowerCase();
             },
             defaultHandlerSuccess: (response) => {
+              console.log('image:',image)
+
               try {
                 if (response.files && response.files.length) {
                   response.files.forEach(file => {
                     const image = editor.current?.createInside.element('img');
                     if (image) {
+                      console.log('image:',image)
                       image.setAttribute('src', file);
                       image.style.width = '80%';
                       image.setAttribute('tabindex', '0');
@@ -177,6 +180,9 @@ const Editor = ({
                 }
               } catch (error) {
                 console.error('Error handling image upload:', error);
+              } finally {
+                console.log('image:',image)
+
               }
             },
             defaultHandlerError: (error) => {
@@ -488,9 +494,9 @@ const Editor = ({
               tooltip: "Borrar bloque",
               icon: "bin",
               exec: (editor) => {
-                console.log('editorContent delete:', editorContent)
+                // console.log('editorContent delete:', editorContent)
                 const element = parser(editor.value)
-                console.log('element:', element)
+                // console.log('element:', element)
                 if (!element) {
                   // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
                   // if (confirmDelete) {
@@ -517,7 +523,7 @@ const Editor = ({
                 hasTable = table || row || column;
                 // Check if the block contains an image
                 const hasImage = element.querySelector('img');
-                console.log(hasImage,hasTable)
+                // console.log(hasImage,hasTable)
                 if (hasImage || hasTable) {
                   // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
                   // if (confirmDelete) {
@@ -526,7 +532,7 @@ const Editor = ({
                   // }
                 } else {
                   deleteBlock(element);
-                  console.log('element:', element)
+                  // console.log('element:', element)
 
                 }
                 
@@ -574,7 +580,7 @@ const Editor = ({
               icon: "math",
               exec: (editor) => {
                 const element = editor.value
-                console.log('math editor:', element)
+                // console.log('math editor:', element)
                 document.getElementById("editorIcon")?.click();
               },
             },
@@ -594,15 +600,9 @@ const Editor = ({
               icon: "greenCheck",
               exec: (editor) => {
                 try {
-                  const element = parser(editor.value)
-                  console.log(editorContent.innerHTML)
-                  console.log('element main=>',element)
-                  console.log('editorContent main=>',editorContent)
-                  // console.log('in main isChanged:',isChanged)
-                  // if(editorContent.innerHTML == element.innerHTML){
-                  //   return
-                  // } 
-                  
+                  const element = parser(editor.value) 
+                  console.log('element main=>',element) 
+
                   setIsChanged(false)
 
 
@@ -651,6 +651,35 @@ const Editor = ({
                     if (targetElement) {
                       const parsedContent = parser(content);
                       targetElement.innerHTML = parsedContent.innerHTML;
+                      
+                      // console.log('content:',content)
+                      console.log('targetElement:',targetElement)
+
+                      const imgTag = targetElement.querySelector('img');
+                      // console.log('imgTag:',imgTag)
+                      
+                      console.log('target exists')
+                      
+                      if (imgTag) {
+                        console.log('image tag exists')
+                        // Center the <img> tag
+                        imgTag.style.display = 'block'; // Make it a block-level element
+                        imgTag.style.margin = '0 auto'; // Center it horizontally within its container
+                    
+                        // Center the content of targetElement
+                        targetElement.style.display = 'flex'; // Enable flexbox
+                        targetElement.style.justifyContent = 'center'; // Horizontally center contents
+                        targetElement.style.alignItems = 'center'; // Vertically center contents
+                        targetElement.style.height = '100%'; // Occupy full height of the parent container
+                        targetElement.style.flexDirection = 'column'; // Stack contents vertically (if needed)
+                    
+                        console.log('Updated imgTag styles:', imgTag.style.cssText);
+                        console.log('Updated targetElement styles:', targetElement.style.cssText);
+                      }
+                    
+                    console.log('targetElement:', targetElement);
+                    
+                  
                       setChangedContent(content);
                       setEditorContent(targetElement);
                       setPendingChanges(false);
@@ -771,7 +800,7 @@ const Editor = ({
           
           if(isFootnote){
             const updatedConfig = { ...config };
-            console.log('updatedConfig:', updatedConfig);
+            // console.log('updatedConfig:', updatedConfig);
           
             // Remove existing "text_left" and "text_right" buttons if they exist
             updatedConfig.extraButtons = (updatedConfig.extraButtons || []).filter(
@@ -796,7 +825,7 @@ const Editor = ({
                 exec: () => {
                   const currentMargin = parseInt(editorContent.style.marginLeft || "0", 10);
                   editorContent.style.marginLeft = `${currentMargin + 10}px`; // Increment margin  
-                  console.log('editorContent right:', editorContent);
+                  // console.log('editorContent right:', editorContent);
                 },
               },
             ]);
@@ -891,7 +920,7 @@ const Editor = ({
             if (editorContent) {
               let tempElement;
               const element = parser(editor.value)
-              console.log('element - format:', element.innerHTML)
+              // console.log('element - format:', element.innerHTML)
               if (value == "Título 1") {
                 const tempElement = document.createElement("h2");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
@@ -938,6 +967,8 @@ const Editor = ({
                 tempElement.style.cssText = "text-align: center;";
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
                 editorContent.parentNode.replaceChild(tempElement, editorContent);
+
+                console.log('tempElement:',tempElement)
                 setEditorContent(tempElement);
 
                 setIsFormatUpdated(true)
@@ -1051,7 +1082,7 @@ const Editor = ({
 
   useEffect(() => {
     if (editorContent) {
-      console.log('editorContent - main:',editorContent)
+      // console.log('editorContent - main:',editorContent)
 
       let content = editorContent.outerHTML;
       // console.log('editorContent.outerHTML =>', editorContent)
@@ -1073,7 +1104,7 @@ const Editor = ({
         setSection(sectionTitleElement.textContent);
       }
     } catch (e) {
-      console.log("Please select the correct section");
+      // console.log("Please select the correct section");
     }
   }, [editorContent]);
 
@@ -1091,7 +1122,7 @@ const Editor = ({
   // }, [aiButton]);
 
   useEffect(() => {
-    console.log('isChanged:',isChanged)
+    // console.log('isChanged:',isChanged)
     // if(isChanged){
     //   setIsChanged(false)
     // }
