@@ -19,8 +19,7 @@ const Editor = ({
 
 
 
-
-function deleteBlock(content) {
+  function deleteBlock(content) {
     // console.log('deleteContent:',content)
     try {
       if (content && content.parentNode) {
@@ -75,17 +74,6 @@ function deleteBlock(content) {
 
   const [pendingChanges, setPendingChanges] = useState(false);
   let isUpdated=false
-
-
-
-
-  useEffect(()=>{
-    console.log('editorValue:',editorValue)
-  },[editorValue])
-  useEffect(()=>{
-    console.log('editorContent:',editorContent)
-  },[editorContent])
-  
 
   // Add state for tracking formatted content
   const [formattedContent, setFormattedContent] = useState("");
@@ -181,7 +169,6 @@ function deleteBlock(content) {
                 if (response.files && response.files.length) {
                   response.files.forEach(file => {
                     const image = editor.current?.createInside.element('img');
-                    console.log("🚀 ~ import ~ image:", image)
                     if (image) {
                       console.log('image:',image)
                       image.setAttribute('src', file);
@@ -377,106 +364,7 @@ function deleteBlock(content) {
                 }
               },
             },
-            // "image",
-            // Replace the "image" string with this custom button configuration
-            {
-              name: 'customImage',
-              tooltip: 'Insert Image',
-              icon: 'image',
-              popup: (editor, current, self, close) => {
-                console.log("🚀 ~ import ~ editor:", parser(editor.value))
-                console.log('editorContent.innerHTML:',editorContent.innerHTML)
-                const doc = parser(editor.value)
-                console.log(doc.innerText);
-                if (doc.innerText !== '') {
-                  alert('You cannot insert an image when the editor contains content.');
-                  return null; // Prevent the popup from being displayed
-                }
-            
-                // Create form for image insertion
-                const form = editor.create.fromHTML(`
-                  <div class="jodit-form" style="padding: 15px; max-width: 300px;">
-                    <div class="jodit-form__group">
-                      <label style="display: block; margin-bottom: 8px; font-weight: bold;">Upload Image</label>
-                      <input type="file" 
-                            accept="image/*" 
-                            class="jodit-form__input" 
-                            style="margin-bottom: 15px; padding: 5px; width: 100%;"/>
-                    </div>
-                    <div class="jodit-form__group">
-                      <label style="display: block; margin-bottom: 8px; font-weight: bold;">Image URL</label>
-                      <input type="url" 
-                            placeholder="Enter image URL" 
-                            class="jodit-form__input url-input" 
-                            style="margin-bottom: 15px; padding: 5px; width: 100%;"/>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 10px 0;">
-                      <button type="button" class="jodit-button cancel" style="padding: 5px 10px;">Cancel</button>
-                      <button type="button" class="jodit-button insert" style="padding: 5px 10px;">Insert</button>
-                    </div>
-                  </div>
-                `);
-                
-                // Handle file and URL insertion
-                const fileInput = form.querySelector('input[type="file"]');
-                const urlInput = form.querySelector('.url-input');
-                const insertBtn = form.querySelector('.insert');
-                const cancelBtn = form.querySelector('.cancel');
-                
-                cancelBtn.addEventListener('click', close);
-                
-                insertBtn.addEventListener('click', () => {
-                  let img;
-                  
-                  // Handle file upload
-                  if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    const blobURL = URL.createObjectURL(file);
-                    
-                    img = editor.createInside.element('img');
-                    img.setAttribute('src', blobURL);
-                  } 
-                  // Handle URL upload
-                  else if (urlInput.value.trim() !== '') {
-                    const url = urlInput.value.trim();
-                    img = editor.createInside.element('img');
-                    img.setAttribute('src', url);
-            
-                    // Optional: Validate URL format (basic check)
-                    try {
-                      new URL(url); // Throws an error if invalid URL
-                    } catch {
-                      alert('Invalid URL');
-                      return;
-                    }
-                  }
-                  
-                  // Insert image if valid
-                  if (img) {
-                    img.style.width = '80%';
-                    img.style.display = 'block';
-                    img.style.margin = '0 auto';
-                    img.setAttribute('tabindex', '0');
-                    
-                    editor.selection.insertNode(img);
-                    
-                    // Update parent container styles for centering
-                    const parent = img.parentElement;
-                    if (parent) {
-                      parent.style.display = 'flex';
-                      parent.style.justifyContent = 'center';
-                      parent.style.alignItems = 'center';
-                      parent.style.flexDirection = 'column';
-                    }
-                    
-                    close();
-                  }
-                });
-                
-                return form;
-              }
-            },
-            
+            "image",
             "table",
             {
               name: "addDividedBlock",
@@ -772,7 +660,7 @@ function deleteBlock(content) {
                       
                       console.log('target exists')
                       
-                      if (imgTag && !imgTag.classList.contains('Wirisformula')) {
+                      if (imgTag) {
                         console.log('image tag exists')
                         // Center the <img> tag
                         imgTag.style.display = 'block'; // Make it a block-level element
@@ -1345,39 +1233,6 @@ function deleteBlock(content) {
 
   }, [editorContent]);
 
-
-  useEffect(() => {
-    const formulaElement = document.querySelector('.Wirisformula');
-    
-    if (formulaElement) {
-      if (formulaElement.parentNode.tagName.toLowerCase() !== 'span') {
-        const span = document.createElement('span');
-        
-        span.innerHTML = formulaElement.outerHTML; 
-        span.style.display = 'inline-flex'; 
-        span.style.alignItems = 'center'; 
-        span.style.gap = '4px'; 
-
-        formulaElement.parentNode.replaceChild(span, formulaElement);
-        
-        const parentDiv = span.closest('div'); // Finds the closest parent div
-        
-        console.log("🚀 ~ useEffect ~ span:", span);
-        console.log("🚀 ~ useEffect ~ formulaElement:", formulaElement);
-        console.log("🚀 ~ useEffect ~ parentDiv:", parentDiv);
-        
-        if (parentDiv) {
-          const parentDivString = parentDiv.outerHTML; // Get the outerHTML of the parentDiv
-          setModel(parentDivString); // Set the model to the string representation
-        }
-      } else {
-        console.log("The Wirisformula element is already wrapped in a span.");
-      }
-    }
-  }, [model]);
-  
-  
-
   useEffect(() => {
     if (editor.current) {
       const editorfield = Array.from(
@@ -1444,7 +1299,6 @@ function deleteBlock(content) {
   // Initialize editor value when component mounts
   useEffect(() => {
     if (editorContent) {
-      // console.log("🚀 ~ useEffect ~ editorContent:", editorContent)
       const contentId = editorContent.getAttribute('data-content-id') || `content-${Date.now()}`;
       editorContent.setAttribute('data-content-id', contentId);
       
