@@ -29,7 +29,8 @@ module.exports = {
         checkbox: "#313131",
         inputbg: "#FAFAFA",
         lightSuccess: "#00C036",
-        lightError: "#FF3D3D"
+        lightError: "#FF3D3D",
+        backgrounPrimary: "#0F089F"
       }
     },
   },

@@ -32,7 +32,7 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
     <>
       <Main>
         {user.isLoggedIn && (
-          <TopBar className="justify-end">
+          <TopBar className="[all:unset] justify-end">
             <h3 className="text-primary text-2xl self-center justify-self-end">
               ¡Bienvenid@ {user.fullname}!
             </h3>
