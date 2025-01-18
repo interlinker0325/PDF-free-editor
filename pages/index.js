@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { request, GET_ALL_ENTRIES, GET_ALL_ADS } from "utils/graphqlRequest";
+import React, {useState} from "react";
+import {GET_ALL_ENTRIES, request} from "utils/graphqlRequest";
 import Main from "components/Main/Main";
 import HeroCards from "components/HeroCards/HeroCards";
 import PostCard from "components/PostCard/PostCard";
 import useUser from "utils/useUser";
-import { query } from "gql";
+import {query} from "gql";
 import TopBar from "components/TopBar/TopBar";
 
 
