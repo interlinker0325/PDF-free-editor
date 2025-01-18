@@ -1,5 +1,4 @@
 import React from 'react'
-import 'tailwindcss/tailwind.css'
 import Head from 'next/head'
 import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
@@ -8,6 +7,9 @@ import {useState} from 'react';
 import {SWRConfig} from 'swr';
 import fetchJson from 'utils/fetchJson';
 import useUser from 'utils/useUser';
+
+import 'tailwindcss/tailwind.css'
+import 'global.css'
 import "./Editor.css"
 import "../components/Compliance/Compliance.module.css"
 
