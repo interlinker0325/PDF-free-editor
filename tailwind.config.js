@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   darkMode: true, // or 'media' or 'class'
   theme: {
     fontSize: {
@@ -36,11 +36,9 @@ module.exports = {
   variants: {
     extend: {},
   },
-  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   plugins: [
     require('tailwindcss-textshadow'),
     require("daisyui"),
-    require('@tailwindcss/line-clamp')
   ],
   // daisyUI config (optional)
   daisyui: {
