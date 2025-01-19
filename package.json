@@ -24,7 +24,7 @@
     "@wiris/mathtype-generic": "^8.10.0",
     "@wiris/mathtype-html-integration-devkit": "^1.17.2",
     "autoprefixer": "^10.4.16",
-    "axios": "^0.21.4",
+    "axios": "1.7.4",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
