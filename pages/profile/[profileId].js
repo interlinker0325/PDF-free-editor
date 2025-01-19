@@ -60,33 +60,46 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   }
 
   const onChange = useCallback(async (e, name) => {
-    let itemValue;
-    if (refs[name]) {
-      triggerLoading(true);
-      const _files = refs[name]?.current?.files;
-      itemValue = await upload(_files, false, profile?.avatar?.id);
-      if (FileReader && _files?.length) {
-        const fr = new FileReader();
-        fr.onload = function () {
-          setAvatarImage(fr.result);
+    try {
+      const isFileInput = refs[name]?.current?.files;
+
+      if (isFileInput) {
+        triggerLoading(true);
+
+        const _files = refs[name].current.files;
+        const itemValue = await upload(_files, true, profile?.avatar?.id);
+        console.log({itemValue})
+        // Preview the image
+        if (_files?.length && FileReader) {
+          const fileReader = new FileReader();
+          fileReader.onload = () => setAvatarImage(fileReader.result);
+          fileReader.readAsDataURL(_files[0]);
         }
-        fr.readAsDataURL(_files[0]);
+
+        triggerLoading(false);
+        updateFormState(name, itemValue);
+        return;
       }
-      triggerLoading(false);
-    } else {
+
+      // Handle non-file inputs
+      let itemValue = e.target.value;
+
       if (name === INPUT_TYPES.PHONE) {
-        if (/^\d*[.]?\d*$/.test(e.target.value)) {
-          itemValue = e.target.value;
-        } else {
-          itemValue = formState[name];
-        }
-      } else {
-        itemValue = e.target.value;
+        itemValue = /^\d*[.]?\d*$/.test(itemValue) ? itemValue : formState[name];
       }
+
+      updateFormState(name, itemValue);
+    } catch (e) {
+      console.error("Algo salio mal", e)
+    } finally {
+      triggerLoading(false);
     }
-    delete formState[name];
-    setFormState({[name]: itemValue, ...formState})
-  }, [formState, refs]);
+
+  }, [formState, refs, profile?.avatar?.id]);
+
+  const updateFormState = (name, value) => {
+    setFormState(prevState => ({...prevState, [name]: value, }));
+  };
 
   const submitUpdateProfile = useCallback(async (e) => {
     e.preventDefault();
@@ -97,13 +110,14 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       fullname,
       email,
       phone,
+      avatar,
       birthdate,
       gender,
       residence,
       level,
       experience,
     } = formState;
-
+    console.log({formState})
     const fieldsStatus = verifyMutipleFields([
       {field: INPUT_TYPES.FULLNAME, value: fullname, required: true},
       {field: INPUT_TYPES.EMAIL, value: email, required: true},
@@ -132,6 +146,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       gender,
       residence,
       level,
+      avatar: avatar?.id,
       experience
     });
 
@@ -151,110 +166,110 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   }, [profile])
 
   const avatarView = avatarImage || formState.avatar?.url ? (
-    <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
+      <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
   ) : (
-    <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
-      <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
-    </div>
+      <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
+        <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
+      </div>
   );
 
   const showStatusBar = errorForm.field || (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
   return (
-    <Main>
-      {showStatusBar &&
-        <TopBar>
-          <h4
-            className={`${errorForm.msg ? 'text-error' : 'text-primary'} text-2xl cursor-pointer`}
-            children={errorForm.msg ?
-              errorForm.msg :
-              'Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento'
-            }/>
-        </TopBar>
-      }
-      <div className={`${showStatusBar ? 'mb-8' : 'my-5'} ${styles.mainContainer}`}>
-        <div className={styles.leftContainer}>
-          <div className={styles.avatarCard}>
-            {activeView === VIEW_STATES.EDIT ? (
-              <label className='h-[300px] w-full cursor-pointer'>
-                <input
-                  className={styles.fileInput}
-                  type='file'
-                  name='avatar'
-                  id='avatar'
-                  ref={refs.avatar}
-                  onChange={(e) => onChange(e, 'avatar')}/>
-                {avatarView}
-              </label>
-            ) : avatarView}
-          </div>
-          {activeView === VIEW_STATES.EDIT &&
-            <div className='flex flex-row justify-start item-center gap-2 my-5'>
-              <button type='button' className={styles.btn} onClick={submitUpdateProfile}>Guardar</button>
-              <button type='button' className={styles.btn} onClick={doCancel}>Cancelar</button>
+      <Main>
+        {showStatusBar &&
+            <TopBar>
+              <h4
+                  className={`${errorForm.msg ? 'text-error' : 'text-primary'} text-2xl cursor-pointer`}
+                  children={errorForm.msg ?
+                      errorForm.msg :
+                      'Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento'
+                  }/>
+            </TopBar>
+        }
+        <div className={`${showStatusBar ? 'mb-8' : 'my-5'} ${styles.mainContainer}`}>
+          <div className={styles.leftContainer}>
+            <div className={styles.avatarCard}>
+              {activeView === VIEW_STATES.EDIT ? (
+                  <label className='h-[300px] w-full cursor-pointer'>
+                    <input
+                        className={styles.fileInput}
+                        type='file'
+                        name='avatar'
+                        id='avatar'
+                        ref={refs.avatar}
+                        onChange={(e) => onChange(e, 'avatar')}/>
+                    {avatarView}
+                  </label>
+              ) : avatarView}
             </div>
-          }
-        </div>
-        <div className={styles.rightContainer}>
-          <div className={styles.tabs}>
-            <div className='flex gap-8'>
-              <a
-                className={showStatusBar ? styles.activeTab : styles.tabItem}
-                onClick={() => setActiveView(VIEW_STATES.USER)}>
-                Perfil
-              </a>
-              <a
-                className={activeView === VIEW_STATES.COURSE ? styles.activeTab : styles.tabItem}
-                onClick={() => setActiveView(VIEW_STATES.COURSE)}>
-                Cursos
-              </a>
-              <a
-                className={activeView === VIEW_STATES.POSTS ? styles.activeTab : styles.tabItem}
-                onClick={() => setActiveView(VIEW_STATES.POSTS)}>
-                Publicaciones
-              </a>
-              {(isProfessor && isCurrentUserProfile) &&
+            {activeView === VIEW_STATES.EDIT &&
+                <div className='flex flex-row justify-start item-center gap-2 my-5'>
+                  <button type='button' className={styles.btn} onClick={submitUpdateProfile}>Guardar</button>
+                  <button type='button' className={styles.btn} onClick={doCancel}>Cancelar</button>
+                </div>
+            }
+          </div>
+          <div className={styles.rightContainer}>
+            <div className={styles.tabs}>
+              <div className='flex gap-8'>
                 <a
-                  className={activeView === VIEW_STATES.ARCHIVE ? styles.activeTab : styles.tabItem}
-                  onClick={() => setActiveView(VIEW_STATES.ARCHIVE)}>
-                  Tutorías
+                    className={showStatusBar ? styles.activeTab : styles.tabItem}
+                    onClick={() => setActiveView(VIEW_STATES.USER)}>
+                  Perfil
                 </a>
+                <a
+                    className={activeView === VIEW_STATES.COURSE ? styles.activeTab : styles.tabItem}
+                    onClick={() => setActiveView(VIEW_STATES.COURSE)}>
+                  Cursos
+                </a>
+                <a
+                    className={activeView === VIEW_STATES.POSTS ? styles.activeTab : styles.tabItem}
+                    onClick={() => setActiveView(VIEW_STATES.POSTS)}>
+                  Publicaciones
+                </a>
+                {(isProfessor && isCurrentUserProfile) &&
+                    <a
+                        className={activeView === VIEW_STATES.ARCHIVE ? styles.activeTab : styles.tabItem}
+                        onClick={() => setActiveView(VIEW_STATES.ARCHIVE)}>
+                      Tutorías
+                    </a>
+                }
+              </div>
+              {(isCurrentUserProfile && activeView !== VIEW_STATES.EDIT) &&
+                  <a
+                      className={`${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.editTab}`}
+                      onClick={() => setActiveView(VIEW_STATES.EDIT)}>
+                    Editar perfil &gt;
+                  </a>
               }
             </div>
-            {(isCurrentUserProfile && activeView !== VIEW_STATES.EDIT) &&
-              <a
-                className={`${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.editTab}`}
-                onClick={() => setActiveView(VIEW_STATES.EDIT)}>
-                Editar perfil &gt;
-              </a>
-            }
-          </div>
-          <div className={styles.tabContent}>
-            {activeView === VIEW_STATES.USER &&
-              <UserInfo
-                isCurrentUserProfile={isCurrentUserProfile}
-                {...formState} />
-            }
-            {activeView === VIEW_STATES.COURSE &&
-              <Courses items={courses}/>
-            }
-            {activeView === VIEW_STATES.POSTS &&
-              <Publications items={posts} label={"Publicaciones"} user={user}/>
-            }
-            {activeView === VIEW_STATES.ARCHIVE &&
-              <Publications items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
-            }
-            {activeView === VIEW_STATES.EDIT &&
-              <EditProfile
-                profile={formState}
-                onChange={onChange}
-                setProfile={setFormState}
-                errorState={errorForm}/>
-            }
+            <div className={styles.tabContent}>
+              {activeView === VIEW_STATES.USER &&
+                  <UserInfo
+                      isCurrentUserProfile={isCurrentUserProfile}
+                      {...formState} />
+              }
+              {activeView === VIEW_STATES.COURSE &&
+                  <Courses items={courses}/>
+              }
+              {activeView === VIEW_STATES.POSTS &&
+                  <Publications items={posts} label={"Publicaciones"} user={user}/>
+              }
+              {activeView === VIEW_STATES.ARCHIVE &&
+                  <Publications items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
+              }
+              {activeView === VIEW_STATES.EDIT &&
+                  <EditProfile
+                      profile={formState}
+                      onChange={onChange}
+                      setProfile={setFormState}
+                      errorState={errorForm}/>
+              }
+            </div>
           </div>
         </div>
-      </div>
-      <Loader show={showLoadingScreen}/>
-    </Main>
+        <Loader show={showLoadingScreen}/>
+      </Main>
   );
 }
 
@@ -285,12 +300,12 @@ export const getServerSideProps = withSession(async function ({req}) {
   const isAdmin = isUserAdmin(currentUser.role?.id);
   const profileId = isCurrentUserProfile ? currentUser.id : userIdParam
   const profileQuery = isCurrentUserProfile ?
-    query.user.GET_PRIVATE_USER_PROFILE : query.user.GET_PUBLIC_USER_PROFILE;
+      query.user.GET_PRIVATE_USER_PROFILE : query.user.GET_PUBLIC_USER_PROFILE;
 
   const {user: profile, allCourses, allPosts: posts} = await request([
     profileQuery(profileId),
     (isProfessor && isCurrentUserProfile) ?
-      query.user.GET_USER_COURSES(profileId) : query.user.GET_STUDENT_COURSES(profileId),
+        query.user.GET_USER_COURSES(profileId) : query.user.GET_STUDENT_COURSES(profileId),
     query.user.GET_USER_POSTS(profileId)
   ]);
 
@@ -300,7 +315,7 @@ export const getServerSideProps = withSession(async function ({req}) {
   } else if (isProfessor && isCurrentUserProfile) {
     const profesorCourses = allCourses.filter(course => course?.professor?.id === profileId).map(course => course.id);
     archivePosts = await request(
-      query.posts.GET_PROFESOR_COURSES_POSTS(profesorCourses)
+        query.posts.GET_PROFESOR_COURSES_POSTS(profesorCourses)
     );
   }
   return {

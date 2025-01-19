@@ -12,8 +12,8 @@ export default async (req, res) => {
             if (section.id) block.id = section.id;
             block.title = section.title || '';
             block.description = section.description || '';
-            block.image = section.image ? { uploadId: section.image } : null;
-            block.monograph = section.monograph ? { uploadId: section.monograph } : null;
+            block.image = section.image ? { upload_id: section.image } : null;
+            block.monograph = section.monograph ? { upload_id: section.monograph } : null;
             block.index = section.index || index;
 
             return buildBlock(block);
