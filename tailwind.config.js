@@ -69,6 +69,7 @@ module.exports = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         backgrounPrimary: "#0F089F",
+        bgButtonSecundary: '#5F79AE',
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'

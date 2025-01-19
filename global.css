@@ -62,3 +62,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.menu-profile {
+  background-color: transparent !important;
+}

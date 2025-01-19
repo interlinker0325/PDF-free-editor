@@ -31,13 +31,13 @@ function MyApp({Component, pageProps}) {
 
   const sessionAction = user.isLoggedIn ? doLogout : () => setDisplayModal(true);
   const navItems = user.isLoggedIn ? [
-    {name: 'Inicio', action: '/'},
+    {name: 'Inicio', action: '/', isAction: true},
     {name: 'Mi perfil', action: '/profile/me'},
-    {name: 'Crear publicación', action: '/posts/new'},
+    {name: 'Crear publicación', action: '/posts/new', isAction: true},
     {name: sessionText, onClick: sessionAction}
   ] : [
-    {name: 'Inicio', action: '/'},
-    {name: sessionText, onClick: sessionAction}
+    {name: 'Inicio', action: '/', isAction: true},
+    {name: sessionText, onClick: sessionAction, isAction: true}
   ];
 
   const title = typeof Component?.pageTitle === 'string' ? `${Component.pageTitle} | ADLYCEUM` : 'ADLYCEUM';
@@ -59,7 +59,7 @@ function MyApp({Component, pageProps}) {
         </Head>
         <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>
           {!Component.hideNav ?
-              <Header items={navItems} isSaved={isSaved} setIsSaved={setIsSaved}/> : null}
+              <Header user={user} items={navItems} isSaved={isSaved} setIsSaved={setIsSaved}/> : null}
           <Component {...pageProps} isSaved={isSaved} setIsSaved={setIsSaved}/>
           {!Component.hideFooter ?
               <Footer/> : null}
