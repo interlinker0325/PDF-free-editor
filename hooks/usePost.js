@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {isAdmin, isUserTeacherOfCourse, isValidFileType, isValidImageType, POST_REVIEW_STATUS} from "../utils";
 import {createEntry, getMonograph, updateEntry, upload} from "../handlers/bll";
-import {enqueueSnackbar} from "notistack";
 import {checkCompliance, fileToHTML} from "../utils/server/windows";
 import useAlert from "@/hooks/useAlert";
 
@@ -25,7 +24,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
   const [open, setOpen] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);// this is converted HTML content. once upload is completed, set iframe content by previewIframe from loaded monograph
   const [previewIframe, setPreviewIframe] = useState(null);
-  const {showError, showSuccess} = useAlert()
+  const {showError, showSuccess, showWarning} = useAlert()
   // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
   // compliance pannel display
@@ -162,40 +161,13 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       success:
           "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
     });
-    enqueueSnackbar(
-        'Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto',
-        {
-          variant: 'success',
-          preventDuplicate: true,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center'
-          }
-        });
+    showSuccess('Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto');
     // } else if (checkResult.data?.reasons?.length) {
     //   checkResult.data.reasons.map(reason => (
-    //     enqueueSnackbar(
-    //       reason,
-    //       {
-    //         variant: 'warning',
-    //         preventDuplicate: true,
-    //         anchorOrigin: {
-    //          vertical: 'top',
-    //           horizontal: 'center'
-    //         }
-    //       })
+    //     showError(reason)
     //   ))
     // } else {
-    //   enqueueSnackbar(
-    //     'Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde.',
-    //     {
-    //       variant: 'error',
-    //       preventDuplicate: true,
-    //       anchorOrigin: {
-    //        vertical: 'top',
-    //         horizontal: 'center'
-    //       }
-    //     });
+    //   showError('Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde');
     // }
     triggerLoading(false);
 
@@ -212,7 +184,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
 
     let itemValue = value;
 
-      // No files selected, user canceled the upload
+    // No files selected, user canceled the upload
     if (_files && !e.target?.files?.length) return;
 
     if (_files && inputName === "monograph") {
@@ -240,7 +212,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     const imageType = _files[_files.length - 1].name.split(".").pop();
 
     if (!isValidImageType(imageType)) {
-      enqueueSnackbar("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo Image.");
+      showError("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo Image.");
       event.target.value = null;
       return;
     }
@@ -262,7 +234,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     const [fileName] = file.name.split('.');
 
     if (!isValidFileType(fileType)) {
-      enqueueSnackbar("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
+      showError("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
       event.target.value = null;
       return;
     }
@@ -305,25 +277,9 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     if (isContent && isTitle && haveType) {
       await saveDocument();
     } else if (!haveType) {
-      enqueueSnackbar('Para guardar, seleccionar el tipo de publicación.',
-          {
-            variant: 'warning',
-            preventDuplicate: true,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center'
-            }
-          });
+      showWarning('Para guardar, seleccionar el tipo de publicación.');
     } else {
-      enqueueSnackbar('Para guardar un borrador debes tener lo siguiente: 1. Título de la publicación en la sección de formulario. \n 2.	Contenido, importado o creado por ti mismo en el editor. \n 3.Tipo de publicación.',
-          {
-            variant: 'warning',
-            preventDuplicate: true,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center'
-            }
-          });
+      showWarning('Para guardar un borrador debes tener lo siguiente: 1. Título de la publicación en la sección de formulario. \n 2.	Contenido, importado o creado por ti mismo en el editor. \n 3.Tipo de publicación.');
     }
   };
 

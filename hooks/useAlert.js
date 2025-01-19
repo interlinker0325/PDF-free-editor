@@ -28,5 +28,14 @@ export default function useAlert() {
         });
   }
 
-  return {showSuccess, showError};
+  function showWarning(message, options = null) {
+    return enqueueSnackbar(message,
+        {
+          variant: 'warning',
+          ...defaultOptions,
+          ...options
+        });
+  }
+
+  return {showSuccess, showError, showWarning};
 }
