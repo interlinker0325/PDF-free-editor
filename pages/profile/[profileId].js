@@ -98,7 +98,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   }, [formState, refs, profile?.avatar?.id]);
 
   const updateFormState = (name, value) => {
-    setFormState(prevState => ({...prevState, [name]: value, }));
+    setFormState(prevState => ({...prevState, [name]: value,}));
   };
 
   const submitUpdateProfile = useCallback(async (e) => {
@@ -146,8 +146,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       gender,
       residence,
       level,
-      avatar: avatar?.id,
-      experience
+      experience,
+      ...(avatar?.id ? {avatar: avatar?.id} : null),
     });
 
     if (entry.error) {
