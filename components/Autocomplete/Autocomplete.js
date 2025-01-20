@@ -1,10 +1,6 @@
 import React, { Component, Fragment } from 'react';
 
 class Autocomplete extends Component {
-    static defaultProps = {
-        suggestions: []
-    };
-
     constructor(props) {
         super(props);
 
@@ -22,11 +18,11 @@ class Autocomplete extends Component {
     }
 
     onChange = e => {
-        const { suggestions, coAuthors = [] } = this.props;
+        const { suggestions = [], coAuthors = [] } = this.props;
         const userInput = e.currentTarget.value;
 
         let filteredSuggestions = coAuthors?.length ?
-            suggestions.filter(suggestion =>
+            (suggestions || []).filter(suggestion =>
                 !coAuthors.some(coauthor => suggestion.fullname.toLowerCase() === coauthor.fullname.toLowerCase())
             ) : suggestions;
         filteredSuggestions = filteredSuggestions.filter(

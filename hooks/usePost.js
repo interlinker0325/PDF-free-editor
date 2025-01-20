@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {isAdmin, isUserTeacherOfCourse, isValidFileType, isValidImageType, POST_REVIEW_STATUS} from "../utils";
-import {createEntry, getMonograph, updateEntry, upload} from "../handlers/bll";
-import {checkCompliance, fileToHTML} from "../utils/server/windows";
+import {isAdmin, isValidFileType, isValidImageType, POST_REVIEW_STATUS} from "@/utils";
+import {createEntry, getMonograph, updateEntry, upload} from "@/handlers/bll";
+import {checkCompliance, fileToHTML} from "@/utils/server/windows";
 import useAlert from "@/hooks/useAlert";
 
 const formBaseState = {
