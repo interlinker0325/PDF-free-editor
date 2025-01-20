@@ -62,7 +62,7 @@ function MyApp({Component, pageProps}) {
               <Header user={user} items={navItems} isSaved={isSaved} setIsSaved={setIsSaved}/> : null}
           <Component {...pageProps} isSaved={isSaved} setIsSaved={setIsSaved}/>
           {!Component.hideFooter ?
-              <Footer/> : null}
+              null : null}
         </div>
         {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
       </SWRConfig>

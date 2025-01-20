@@ -66,3 +66,17 @@
 .menu-profile {
   background-color: transparent !important;
 }
+
+.slick-next {
+  right: 5px !important;
+}
+
+.slick-prev {
+   left: 5px !important;
+   z-index: 99 !important;
+}
+
+.slick-next::before,
+.slick-prev::before {
+  color: #222 !important;
+}

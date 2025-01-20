@@ -150,6 +150,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     setActiveView(VIEW_STATES.USER);
   }, [profile])
 
+  console.log(profile,"formState")
   const avatarView = avatarImage || formState.avatar?.url ? (
     <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
   ) : (

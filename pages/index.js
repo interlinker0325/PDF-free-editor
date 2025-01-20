@@ -31,18 +31,18 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
   return (
     <>
       <Main>
-        {user.isLoggedIn && (
+        {/* {user.isLoggedIn && (
           <TopBar className="[all:unset] justify-end">
             <h3 className="text-primary text-2xl self-center justify-self-end">
               ¡Bienvenid@ {user.fullname}!
             </h3>
           </TopBar>
-        )}
+        )} */}
         <HeroCards bannerGroups={banners} />
-        <div className="flex flex-row items-center justify-between pt-20 pb-2 border-[1px] border-transparent rounded-none border-b-black">
-          <h2 className="col-span-4 text-3xl">Publicaciones recientes</h2>
+        <div className="flex  p-[21px] flex-row items-center justify-between pt-10 pb-2">
+          <h2 className="col-span-4 font-semibold text-3xl">Publicaciones recientes</h2>
         </div>
-        <div className="my-8 grid grid-cols-5 gap-6">
+        <div className="flex flex-wrap justify-evenly p-[15px]">
           {state.posts &&
             state.posts.map((post) => (
               <PostCard key={`Post-Home-${post.id}`} {...post} />

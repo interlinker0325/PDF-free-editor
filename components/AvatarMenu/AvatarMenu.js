@@ -69,7 +69,7 @@ const NavMenuLogin = ({ user , items, handleClick }) => {
             <MenubarMenu className="menu-profile">
                 <MenubarTrigger className={`menu-profile ${styles.contProfile}`}>
                     <Avatar className="cursor-pointer">
-                        <AvatarImage src={user?.avatar} />
+                        <AvatarImage src={user?.avatar?.url} />
                         <AvatarFallback>{user?.fullname?.slice(0,1)?.toUpperCase()}</AvatarFallback>
                     </Avatar>
                 </MenubarTrigger>
