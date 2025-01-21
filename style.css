@@ -25,26 +25,3 @@ textarea.fr-code {
 :root {
     --theme-primary: #0F089F;
 }
-
-/*
- * Scrollbar General
-*/
-::-webkit-scrollbar {
-    display: initial;
-    width: auto;
-}
-
-::-webkit-scrollbar-track {
-    background-color: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #d6dee1;
-    border-radius: 20px;
-    border: 6px solid transparent;
-    background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: #a8bbbf;
-}

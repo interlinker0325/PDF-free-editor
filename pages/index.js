@@ -41,23 +41,23 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
           </TopBar>
         )} */}
         <HeroCards bannerGroups={banners} />
-        <div className="flex  p-[21px] flex-row items-center justify-between pt-10 pb-2">
-          <h2 className="col-span-4 font-semibold text-3xl">Publicaciones recientes</h2>
+        <div className="flex  overflow-hidden p-[21px] flex-row items-center justify-between pt-10 pb-2">
+          <h2 className="col-span-4 leading-tight font-semibold max-[500px]:text-[25px] text-3xl">Publicaciones recientes</h2>
+          {state.showMore && (
+            <Button
+              onClick={getNextPage}
+              className="max-[500px]:max-w-[130px] h-[40px] max-[500px]:text-[10px] max-w-[200px] max-md:ml-[13px] lg:ml-[32px] ml-[35px]"
+            >
+              Cargar más publicaciones
+            </Button>
+          )}
         </div>
-        <div className="flex flex-wrap justify-evenly p-[15px]">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(229px,1fr))] gap-[20px] p-[15px] card-items-separator">
           {state.posts &&
             state.posts.map((post) => (
               <PostCard key={`Post-Home-${post.id}`} {...post} />
             ))}
         </div>
-        {state.showMore && (
-          <Button
-            onClick={getNextPage}
-            className="max-w-[200px] max-md:ml-[13px] lg:ml-[32px] ml-[35px]"
-          >
-            Cargar más publicaciones &gt;
-          </Button>
-        )}
       </Main>
     </>
   );
