@@ -68,8 +68,9 @@ module.exports = {
         lightError: '#FF3D3D',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-        backgrounPrimary: "#0F089F",
+        backgrounPrimary: "#0C1E48",
         bgButtonSecundary: '#5F79AE',
+        bgFooter: '#222130',
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'

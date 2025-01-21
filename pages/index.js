@@ -7,6 +7,8 @@ import useUser from "utils/useUser";
 import {query} from "gql";
 import TopBar from "components/TopBar/TopBar";
 
+// Shadocn IU
+import { Button } from "@/components/ui/button"
 
 const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
   const { user = {} } = useUser();
@@ -49,12 +51,12 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
             ))}
         </div>
         {state.showMore && (
-          <a
+          <Button
             onClick={getNextPage}
-            className="text-other cursor-pointer hover:text-primary underline underline-offset-1 mt-4 mb-20"
+            className="max-w-[200px] max-md:ml-[13px] lg:ml-[32px] ml-[35px]"
           >
             Cargar más publicaciones &gt;
-          </a>
+          </Button>
         )}
       </Main>
     </>
