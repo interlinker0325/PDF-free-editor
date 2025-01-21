@@ -91,7 +91,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
         return;
       }
 
-      console.log(e,"eeee")
       // Handle non-file inputs
       let itemValue = e.target.value;
 
@@ -184,27 +183,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       </div>
   );
 
-  const sampleItems = [
-    {
-      id: 1,
-      title: 'Introducción a React',
-      author: { id: 101, name: 'Juan Pérez' },
-      review: 'DRAFT'
-    },
-    {
-      id: 2,
-      title: 'Guía de Django',
-      author: { id: 102, name: 'Ana Gómez' },
-      review: 'APPROVED'
-    },
-    {
-      id: 3,
-      title: 'Conceptos de PostgreSQL',
-      author: { id: 101, name: 'Juan Pérez' },
-      review: 'REJECTED'
-    }
-  ];
-
   const actionsTabs = [
     {
       name: 'Perfil',
@@ -216,22 +194,18 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     {
       name: 'Cursos',
       value: 'courses',
-      component: <Courses items={[
-        { name: 'Curso de React', enabled: true },
-        { name: 'Introducción a Django', enabled: false },
-        { name: 'Bases de Datos con PostgreSQL', enabled: true }
-    ]}/>
+      component: <Courses items={courses}/>
     },
     {
       name: 'Publicaciones',
       value: 'publications',
       action: 'animationend',
-      component: <Publications items={sampleItems} label={"Publicaciones"} user={user}/>
+      component: <Publications items={posts} label={"Publicaciones"} user={user}/>
     },
     {
       name: 'Tutorías',
       value: 'tutorials',
-      component: <Publications items={sampleItems} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
+      component: <Publications items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
     },
     {
       name: 'Editar perfil',
@@ -240,6 +214,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       profile={formState}
       onChange={onChange}
       setProfile={setFormState}
+      submitUpdateProfile={submitUpdateProfile}
+      doCancel={doCancel}
       errorState={errorForm}/>
     },
   ]
@@ -274,12 +250,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
                   </label>
               ) : avatarView}
             </div>
-            {activeView === VIEW_STATES.EDIT &&
-                <div className='flex flex-row justify-start item-center gap-2 my-5'>
-                  <button type='button' className={styles.btn} onClick={submitUpdateProfile}>Guardar</button>
-                  <button type='button' className={styles.btn} onClick={doCancel}>Cancelar</button>
-                </div>
-            }
           </div>
           <div className={styles.rightContainer}>
             <div className={styles.tabs}>

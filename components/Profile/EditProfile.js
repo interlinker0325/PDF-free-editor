@@ -3,6 +3,7 @@ import { INPUT_TYPES } from 'utils/form';
 // Shadcn IU
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
 import {
     Select,
     SelectContent,
@@ -134,6 +135,10 @@ const EditProfile = ({ errorState, ...props }) => (
                 placeholder='Agregar descripción de: Experiencia laboral'
                 value={props.profile.experience || ''}
                 onChange={(e) => props.onChange(e, INPUT_TYPES.EXPERIENCE)} />
+        </div>
+        <div className="flex justify-center gap-[20px]">
+            <Button type='button'  onClick={props.submitUpdateProfile}>Guardar</Button>
+            <Button type='button' className="bg-white text-[#222]border-black" onClick={props.doCancel}>Cancelar</Button>
         </div>
     </form>
 );
