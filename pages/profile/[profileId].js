@@ -1,3 +1,6 @@
+// React
+import React from 'react'
+
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {updateProfile} from 'handlers/profile';
 import {upload} from 'handlers/bll';
@@ -18,6 +21,10 @@ import {INPUT_TYPES, verifyMutipleFields} from 'utils/form';
 
 import {isProfessor as isUserProfessor, isAdmin as isUserAdmin} from 'utils';
 import useUser from "../../utils/useUser";
+
+// Shadcn IU
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const DEFAULT_USER_ID = 'me'
 
@@ -44,7 +51,33 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const [activeView, setActiveView] = useState(VIEW_STATES.USER);
   const {query: {profileId}} = useRouter();
   const isCurrentUserProfile = profileId === DEFAULT_USER_ID;
-
+  const actionsTabs = [
+    {
+      name: 'Perfil',
+      value: 'profile',
+      action: ''
+    },
+    {
+      name: 'Cursos',
+      value: 'courses',
+      action: ''
+    },
+    {
+      name: 'Publicaciones',
+      value: 'publications',
+      action: 'animationend'
+    },
+    {
+      name: 'Tutorías',
+      value: 'tutorials',
+      action: ''
+    },
+    {
+      name: 'Editar perfil',
+      value: 'edit',
+      action: ''
+    },
+  ]
   const refs = {
     avatar: useRef()
   };
@@ -178,16 +211,17 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   return (
       <Main>
         {showStatusBar &&
-            <TopBar>
-              <h4
-                  className={`${errorForm.msg ? 'text-error' : 'text-primary'} text-2xl cursor-pointer`}
-                  children={errorForm.msg ?
+            <TopBar className="[all:unset]">
+              <AlertMenssage {...{
+                type: !errorForm.msg,
+                text: `${errorForm.msg ?
                       errorForm.msg :
                       'Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento'
-                  }/>
+                }`
+              }} />
             </TopBar>
         }
-        <div className={`${showStatusBar ? 'mb-8' : 'my-5'} ${styles.mainContainer}`}>
+        <div className={styles.contProfile}>
           <div className={styles.leftContainer}>
             <div className={styles.avatarCard}>
               {activeView === VIEW_STATES.EDIT ? (
@@ -212,7 +246,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
           </div>
           <div className={styles.rightContainer}>
             <div className={styles.tabs}>
-              <div className='flex gap-8'>
+              <ContentTabs data={actionsTabs} />
+              {/* <div className='flex gap-8'>
                 <a
                     className={showStatusBar ? styles.activeTab : styles.tabItem}
                     onClick={() => setActiveView(VIEW_STATES.USER)}>
@@ -235,16 +270,16 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
                       Tutorías
                     </a>
                 }
-              </div>
-              {(isCurrentUserProfile && activeView !== VIEW_STATES.EDIT) &&
+              </div> */}
+              {/* {(isCurrentUserProfile && activeView !== VIEW_STATES.EDIT) &&
                   <a
                       className={`${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.editTab}`}
                       onClick={() => setActiveView(VIEW_STATES.EDIT)}>
                     Editar perfil &gt;
                   </a>
-              }
+              } */}
             </div>
-            <div className={styles.tabContent}>
+            {/* <div className={styles.tabContent}>
               {activeView === VIEW_STATES.USER &&
                   <UserInfo
                       isCurrentUserProfile={isCurrentUserProfile}
@@ -266,7 +301,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
                       setProfile={setFormState}
                       errorState={errorForm}/>
               }
-            </div>
+            </div> */}
           </div>
         </div>
         <Loader show={showLoadingScreen}/>
@@ -274,10 +309,56 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   );
 }
 
+const AlertMenssage = ({ type, text}) => {
+  const [isVisible, setVisibled] = React.useState(true)
+
+  setTimeout(() => {
+    setVisibled(false)
+  }, 10000);
+
+  return (
+    <React.Fragment>
+    {
+      isVisible && 
+      <Alert variant={type? "" : "destructive"} className="max-md:max-w-[90%] md:max-w-[400px] p-[15px] mb-[30px]">
+        <AlertDescription>
+          {text}
+        </AlertDescription>
+      </Alert>
+    }
+    </React.Fragment>
+  )
+}
+
+const ContentTabs = ({ data }) => {
+   if (data?.length <= 0) return 0
+   return (
+    <Tabs defaultValue="account" className="w-[400px]">
+       <TabsList>
+          {
+            data?.map((tab) => (
+              <TabsTrigger value={tab?.value}>{tab?.name}</TabsTrigger>
+            ))
+          }
+       </TabsList>
+       {
+            data?.map((tab) => (
+              <TabsContent value={tab?.value}>{tab?.name}</TabsContent>
+            ))
+      }
+      {/* <TabsList>
+        <TabsTrigger value="account">Account</TabsTrigger>
+        <TabsTrigger value="password">Password</TabsTrigger>
+      </TabsList>
+      <TabsContent value="account">Make changes to your account here.</TabsContent>
+      <TabsContent value="password">Change your password here.</TabsContent> */}
+    </Tabs>
+   )
+}
 const styles = {
   mainContainer: 'mb-8 flex flex-row gap-8',
-  leftContainer: 'flex flex-col w-[300px] justify-between item-center',
-  rightContainer: 'flex flex-col gap-6 w-full',
+  leftContainer: 'flex lg:w-[30%]',
+  rightContainer: 'flex flex-col lg:w-[70%]',
   avatarCard: 'card text-gray-400 bg-secondary rounded-none h-[300px] w-[300px] flex flex-col justify-center items-center',
   tabs: 'tabs border-transparent border-b-black border-b-[1px] w-full justify-between',
   tabItem: 'tab font-normal text-black text-2xl px-0 hover:text-primary',
@@ -287,6 +368,7 @@ const styles = {
   btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
   fileInput: 'input hidden input-ghost w-full',
   fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',
+  contProfile: 'flex flex-wrap overflow-hidden'
 };
 
 export const getServerSideProps = withSession(async function ({req}) {
