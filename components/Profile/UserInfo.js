@@ -1,17 +1,20 @@
 let options = { year: 'numeric', month: 'long', day: 'numeric' };
 
+// Styles
+import styles from './styles'
+
 const UserInfo = ({
-                      fullname,
-                      email,
-                      phone,
-                      birthdate,
-                      residence,
-                      updatedAt,
-                      gender,
-                      level,
-                      experience,
-                      isCurrentUserProfile
-                  }) => {
+    fullname,
+    email,
+    phone,
+    birthdate,
+    residence,
+    updatedAt,
+    gender,
+    level,
+    experience,
+    isCurrentUserProfile
+}) => {
 
     let formattedDate = new Date(updatedAt).toLocaleDateString('es-ES', options);
     return (
@@ -40,10 +43,5 @@ const UserInfo = ({
         </div>
     );
 };
-
-const styles = {
-    label: 'font-roboto text-primary text-2xl',
-    span: 'font-caslon text-black text-lg'
-}
 
 export default UserInfo;

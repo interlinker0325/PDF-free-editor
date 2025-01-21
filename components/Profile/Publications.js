@@ -1,11 +1,24 @@
 import {isOdd, POST_REVIEW_STATUS} from 'utils';
 
+// Styles
+import styles from './styles'
+
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
 const Publications = ({items, label, user, isAdmin}) => {
   const isCurrentUserAuthor = item => user?.id === item?.author?.id
   return (
     <div className='overflow-x-auto'>
-      <table className='w-full'>
-        <tbody>
+      <Table className='w-full'>
+        <TableBody>
         {!items.length && (
           <tr>
             <td>
@@ -18,7 +31,7 @@ const Publications = ({items, label, user, isAdmin}) => {
             const amI = isCurrentUserAuthor(item);
             return <tr
               key={`Publication_${item.id}_${itemIndex}`}
-              className={`${styles.tableRow} ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
+              className={`${styles.tableRow} line-clamp-3 ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
               <td className={styles.title}>
                 <a
                   href={`/posts/${item.id}`}
@@ -33,19 +46,10 @@ const Publications = ({items, label, user, isAdmin}) => {
             </tr>
           }
         )}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   )
 };
-
-const styles = {
-  tableRow: 'flex flex-row justify-between w-full py-2 px-4 text-2xl font-normal',
-  title: 'rounded-l-none rounded-r-none w-full hover:text-primary hover:underline hover:underline-offset-1',
-  status: 'rounded-l-none rounded-r-none font-thin text-right',
-  Aprobado: 'text-success',
-  Denegado: 'text-error',
-  Pendiente: 'text-black'
-}
 
 export default Publications;

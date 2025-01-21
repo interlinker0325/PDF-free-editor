@@ -25,6 +25,10 @@ import useUser from "../../utils/useUser";
 // Shadcn IU
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card"
 
 const DEFAULT_USER_ID = 'me'
 
@@ -51,33 +55,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const [activeView, setActiveView] = useState(VIEW_STATES.USER);
   const {query: {profileId}} = useRouter();
   const isCurrentUserProfile = profileId === DEFAULT_USER_ID;
-  const actionsTabs = [
-    {
-      name: 'Perfil',
-      value: 'profile',
-      action: ''
-    },
-    {
-      name: 'Cursos',
-      value: 'courses',
-      action: ''
-    },
-    {
-      name: 'Publicaciones',
-      value: 'publications',
-      action: 'animationend'
-    },
-    {
-      name: 'Tutorías',
-      value: 'tutorials',
-      action: ''
-    },
-    {
-      name: 'Editar perfil',
-      value: 'edit',
-      action: ''
-    },
-  ]
   const refs = {
     avatar: useRef()
   };
@@ -114,6 +91,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
         return;
       }
 
+      console.log(e,"eeee")
       // Handle non-file inputs
       let itemValue = e.target.value;
 
@@ -198,14 +176,73 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     setActiveView(VIEW_STATES.USER);
   }, [profile])
 
-  console.log(profile,"formState")
   const avatarView = avatarImage || formState.avatar?.url ? (
-      <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
+    <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
   ) : (
       <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
         <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
       </div>
   );
+
+  const sampleItems = [
+    {
+      id: 1,
+      title: 'Introducción a React',
+      author: { id: 101, name: 'Juan Pérez' },
+      review: 'DRAFT'
+    },
+    {
+      id: 2,
+      title: 'Guía de Django',
+      author: { id: 102, name: 'Ana Gómez' },
+      review: 'APPROVED'
+    },
+    {
+      id: 3,
+      title: 'Conceptos de PostgreSQL',
+      author: { id: 101, name: 'Juan Pérez' },
+      review: 'REJECTED'
+    }
+  ];
+
+  const actionsTabs = [
+    {
+      name: 'Perfil',
+      value: 'profile',
+      component: <UserInfo
+      isCurrentUserProfile={isCurrentUserProfile}
+      {...formState} />
+    },
+    {
+      name: 'Cursos',
+      value: 'courses',
+      component: <Courses items={[
+        { name: 'Curso de React', enabled: true },
+        { name: 'Introducción a Django', enabled: false },
+        { name: 'Bases de Datos con PostgreSQL', enabled: true }
+    ]}/>
+    },
+    {
+      name: 'Publicaciones',
+      value: 'publications',
+      action: 'animationend',
+      component: <Publications items={sampleItems} label={"Publicaciones"} user={user}/>
+    },
+    {
+      name: 'Tutorías',
+      value: 'tutorials',
+      component: <Publications items={sampleItems} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
+    },
+    {
+      name: 'Editar perfil',
+      value: 'edit',
+      component: <EditProfile
+      profile={formState}
+      onChange={onChange}
+      setProfile={setFormState}
+      errorState={errorForm}/>
+    },
+  ]
 
   const showStatusBar = errorForm.field || (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
   return (
@@ -333,25 +370,25 @@ const AlertMenssage = ({ type, text}) => {
 const ContentTabs = ({ data }) => {
    if (data?.length <= 0) return 0
    return (
-    <Tabs defaultValue="account" className="w-[400px]">
-       <TabsList>
+    <Tabs defaultValue="profile" className={styles.contTabs}>
+       <TabsList className={styles.contTabList}>
           {
-            data?.map((tab) => (
-              <TabsTrigger value={tab?.value}>{tab?.name}</TabsTrigger>
+            data?.map((tab,index) => (
+              <TabsTrigger className={styles.btnTitle} key={index} value={tab?.value}>{tab?.name}</TabsTrigger>
             ))
           }
        </TabsList>
        {
-            data?.map((tab) => (
-              <TabsContent value={tab?.value}>{tab?.name}</TabsContent>
+            data?.map((tab, index) => (
+              <TabsContent key={index} value={tab?.value}>
+                 <Card>
+                    <CardContent className="p-[20px] overflow-hidden">
+                        {tab?.component}
+                    </CardContent>
+                 </Card>
+              </TabsContent>
             ))
       }
-      {/* <TabsList>
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
-      </TabsList>
-      <TabsContent value="account">Make changes to your account here.</TabsContent>
-      <TabsContent value="password">Change your password here.</TabsContent> */}
     </Tabs>
    )
 }
@@ -360,7 +397,7 @@ const styles = {
   leftContainer: 'flex lg:w-[30%]',
   rightContainer: 'flex flex-col lg:w-[70%]',
   avatarCard: 'card text-gray-400 bg-secondary rounded-none h-[300px] w-[300px] flex flex-col justify-center items-center',
-  tabs: 'tabs border-transparent border-b-black border-b-[1px] w-full justify-between',
+  tabs: 'tabs w-full justify-center',
   tabItem: 'tab font-normal text-black text-2xl px-0 hover:text-primary',
   activeTab: 'tab font-normal text-2xl tab-active text-other px-0',
   editTab: 'text-other font-normal pr-0 tab text-2xl px-0 hover:text-primary',
@@ -368,7 +405,10 @@ const styles = {
   btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
   fileInput: 'input hidden input-ghost w-full',
   fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',
-  contProfile: 'flex flex-wrap overflow-hidden'
+  contProfile: 'flex flex-wrap justify-center overflow-hidden',
+  contTabs: 'w-full',
+  contTabList: 'bg-backgrounPrimary p-[10px]',
+  btnTitle: 'max-md:text-[11px] md:text-[15px]'
 };
 
 export const getServerSideProps = withSession(async function ({req}) {

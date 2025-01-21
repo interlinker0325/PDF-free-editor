@@ -1,22 +1,34 @@
 import { isOdd } from 'utils';
 
+// shadcn IU
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from "@/components/ui/table"
+
+  
 const Courses = ({ items }) => {
     return (
         <div className='overflow-x-auto'>
-            <table className='w-full'>
-                <tbody>
+            <Table>
+                <TableBody>
                     {items && items.map((item, itemIndex) =>
-                        <tr
+                        <TableRow
                             key={`User_courses_${itemIndex}`}
-                            className={`flex flex-row justify-between w-full py-2 px-4 text-2xl font-normal ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
-                            <td className='rounded-l-none rounded-r-none w-full'>{item.name}</td>
-                            <td className={`rounded-l-none rounded-r-none font-thin ${item.enabled ? 'text-success' : 'text-secondary'}`}>
+                            className={`${item.enabled ? 'opacity-100' : 'opacity-5'} flex flex-row justify-between w-full py-2 px-4 text-2xl font-normal ${!isOdd(itemIndex) ? 'bg-secondary' : 'bg-[#eef2f7]'}`}>
+                            <td className='rounded-l-none rounded-r-none w-full line-clamp-3'>{item.name}</td>
+                            <td className={`rounded-l-none rounded-r-none font-thin`}>
                                 {item.enabled ? 'Activo' : 'Inactivo'}
                             </td>
-                        </tr>
+                        </TableRow>
                     )}
-                </tbody>
-            </table>
+                </TableBody>
+            </Table>
         </div>
     )
 }
