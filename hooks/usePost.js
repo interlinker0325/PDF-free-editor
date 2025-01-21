@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { isAdmin, isUserTeacherOfCourse, isValidFileType, isValidImageType, POST_REVIEW_STATUS } from "../utils";
-import { createEntry, getMonograph, updateEntry, upload } from "../handlers/bll";
-import { enqueueSnackbar } from "notistack";
-import { checkCompliance, fileToHTML } from "../utils/server/windows";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {isAdmin, isValidFileType, isValidImageType, POST_REVIEW_STATUS} from "@/utils";
+import {createEntry, getMonograph, updateEntry, upload} from "@/handlers/bll";
+import {checkCompliance, fileToHTML} from "@/utils/server/windows";
+import useAlert from "@/hooks/useAlert";
 
 const formBaseState = {
   title: "",
@@ -19,12 +19,12 @@ const formBaseState = {
   post_type: "",
 };
 
-export default function usePost({ user, post, setIsSaved, } = {}) {
+export default function usePost({user, post, setIsSaved,} = {}) {
   const [formState, setFormState] = useState(post || formBaseState);
   const [open, setOpen] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);// this is converted HTML content. once upload is completed, set iframe content by previewIframe from loaded monograph
   const [previewIframe, setPreviewIframe] = useState(null);
-
+  const {showError, showSuccess, showWarning} = useAlert()
   // display WYSIWYG Editor
   const [editView, setEditView] = useState(false);
   // compliance pannel display
@@ -51,30 +51,30 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
   };
 
   const setAgreedTerms = useCallback(
-    async (e) => {
-      e.preventDefault();
-      const { agreedterms, ...restFormState } = formState;
-      restFormState.agreedterms = !agreedterms;
-      setFormState(restFormState);
-    },
-    [formState]
+      async (e) => {
+        e.preventDefault();
+        const {agreedterms, ...restFormState} = formState;
+        restFormState.agreedterms = !agreedterms;
+        setFormState(restFormState);
+      },
+      [formState]
   );
 
   const setCoAuthors = useCallback(
-    async (e, selectedCoAuthor) => {
-      e.preventDefault();
-      const { coauthors, ...restFormState } = formState;
-      let selectedCoauthors = coauthors || [];
-      selectedCoauthors.push(selectedCoAuthor);
-      restFormState.coauthors = selectedCoauthors;
-      setFormState(restFormState);
-    },
-    [formState]
+      async (e, selectedCoAuthor) => {
+        e.preventDefault();
+        const {coauthors, ...restFormState} = formState;
+        let selectedCoauthors = coauthors || [];
+        selectedCoauthors.push(selectedCoAuthor);
+        restFormState.coauthors = selectedCoauthors;
+        setFormState(restFormState);
+      },
+      [formState]
   );
 
   const removeCoAuthor = useCallback(async (e, coAuthorId) => {
     e.preventDefault();
-    const { coauthors, ...restFormState } = formState;
+    const {coauthors, ...restFormState} = formState;
     const removeCoAuthorIndex = coauthors.findIndex(coAuthor => coAuthor.id === coAuthorId);
     coauthors.splice(removeCoAuthorIndex, 1);
     restFormState.coauthors = coauthors;
@@ -88,13 +88,13 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
   const triggerLoading = (show) => {
     if (show) {
       document
-        .getElementsByTagName("body")[0]
-        .classList.add("htmlBackgroundBackdrop");
+          .getElementsByTagName("body")[0]
+          .classList.add("htmlBackgroundBackdrop");
       setShowLoadingScreen(true);
     } else {
       document
-        .getElementsByTagName("body")[0]
-        .classList.remove("htmlBackgroundBackdrop");
+          .getElementsByTagName("body")[0]
+          .classList.remove("htmlBackgroundBackdrop");
       setShowLoadingScreen(false);
     }
   };
@@ -102,7 +102,7 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
   function getFrameContent() {
     const iframe = document.getElementById("documentWindow");
     return iframe.contentWindow.document.head.innerHTML +
-      iframe.contentWindow.document.body.innerHTML;
+        iframe.contentWindow.document.body.innerHTML;
   }
 
   // console.log("FORM STATE RENDER:", formState);
@@ -118,51 +118,27 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
       const file = await upload([htmlFile], true, oldFileId);
       const loadedMonograph = await getMonograph(file);
       setPreviewIframe(loadedMonograph);
-      const { id, error, monographView, ...postData } = formState;
+      const {id, error, monographView, ...postData} = formState;
       console.log("FORM STATE:", formState);
       const action = formState?.id ? updateEntry : createEntry;
       const entry = await action({
         ...postData,
-        ...(formState?.id ? { id: formState?.id } : {}),
+        ...(formState?.id ? {id: formState?.id} : {}),
         author: formState?.author?.id || user?.id,
         review: isAdmin(user?.role?.id) ? postData.review : approval ? POST_REVIEW_STATUS.PENDING : POST_REVIEW_STATUS.DRAFT,
         monograph: file
       });
-      console.log({ entry })
+      console.log({entry})
       setIsSaved(true);
-      setFormState({ ...formState, ["monograph"]: file, });
+      setFormState({...formState, ["monograph"]: file,});
       if (entry.error) {
-        enqueueSnackbar('No se pudo realizar la publicación',
-          {
-            variant: 'error',
-            preventDuplicate: true,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center'
-            }
-          });
+        showError('No se pudo realizar la publicación');
       } else {
-        enqueueSnackbar('Tu documento se ha guardado satisfactoriamente',
-          {
-            variant: 'success',
-            preventDuplicate: true,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center'
-            }
-          });
+        showSuccess('Tu documento se ha guardado satisfactoriamente');
       }
     } catch (error) {
       console.error(error);
-      enqueueSnackbar('Algo salio mal guardando la publicación',
-        {
-          variant: 'error',
-          preventDuplicate: true,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center'
-          }
-        });
+      showError('Algo salio mal guardando la publicación');
     } finally {
       triggerLoading(false);
     }
@@ -183,42 +159,15 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
     setStatusBarState({
       error: null,
       success:
-        "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
+          "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
     });
-    enqueueSnackbar(
-      'Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto',
-      {
-        variant: 'success',
-        preventDuplicate: true,
-        anchorOrigin: {
-          vertical: 'top',
-          horizontal: 'center'
-        }
-      });
+    showSuccess('Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto');
     // } else if (checkResult.data?.reasons?.length) {
     //   checkResult.data.reasons.map(reason => (
-    //     enqueueSnackbar(
-    //       reason,
-    //       {
-    //         variant: 'warning',
-    //         preventDuplicate: true,
-    //         anchorOrigin: {
-    //          vertical: 'top',
-    //           horizontal: 'center'
-    //         }
-    //       })
+    //     showError(reason)
     //   ))
     // } else {
-    //   enqueueSnackbar(
-    //     'Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde.',
-    //     {
-    //       variant: 'error',
-    //       preventDuplicate: true,
-    //       anchorOrigin: {
-    //        vertical: 'top',
-    //         horizontal: 'center'
-    //       }
-    //     });
+    //   showError('Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde');
     // }
     triggerLoading(false);
 
@@ -230,22 +179,20 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
   };
 
   const onChange = useCallback(async (e, name) => {
-    const { name: inputName, value } = e.target;
+    const {name: inputName, value} = e.target;
     const _files = refs[name]?.current?.files;
-    const file_length = _files?.length;
 
     let itemValue = value;
 
+    // No files selected, user canceled the upload
+    if (_files && !e.target?.files?.length) return;
+
     if (_files && inputName === "monograph") {
-      if (!e.target.files || e.target.files.length === 0) {
-        // No files selected, user canceled the upload
-        return;
-      }
-      itemValue = await handleMonographFile(e, _files[file_length - 1]);
+      itemValue = await handleMonographFile(e, _files[_files?.length - 1]);
       e.target.value = '';
     } else if (_files && inputName === "coverimage") {   //image validate
       itemValue = await handleImageFile(e, _files);
-    } else if (_files) {
+    } else if (_files) { // attachments
       triggerLoading(true);                 //loading is added
       itemValue = await upload(_files, true);
       triggerLoading(false);                //loading is
@@ -265,7 +212,7 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
     const imageType = _files[_files.length - 1].name.split(".").pop();
 
     if (!isValidImageType(imageType)) {
-      enqueueSnackbar("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo Image.");
+      showError("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo Image.");
       event.target.value = null;
       return;
     }
@@ -284,10 +231,10 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
   // Handler function for monograph files
   const handleMonographFile = async (event, file) => {
     const fileType = file.name.split(".").pop();
-    const fileName = file.name.split('.')[0];
+    const [fileName] = file.name.split('.');
 
     if (!isValidFileType(fileType)) {
-      enqueueSnackbar("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
+      showError("No logramos reconocer el formato del documento adjunto. Revisa que sea el archivo correcto, o inténtalo con otras versiones de archivo HTML, Word o PDF");
       event.target.value = null;
       return;
     }
@@ -326,35 +273,19 @@ export default function usePost({ user, post, setIsSaved, } = {}) {
     const isContent = Boolean(iframe.contentWindow.document.body.innerText.trim());
     const isTitle = Boolean(formState.title.trim())
     const haveType = !!formState.post_type;
-    console.log({ formState })
+    console.log({formState})
     if (isContent && isTitle && haveType) {
       await saveDocument();
     } else if (!haveType) {
-      enqueueSnackbar('Para guardar, seleccionar el tipo de publicación.',
-        {
-          variant: 'warning',
-          preventDuplicate: true,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center'
-          }
-        });
+      showWarning('Para guardar, seleccionar el tipo de publicación.');
     } else {
-      enqueueSnackbar('Para guardar un borrador debes tener lo siguiente: 1. Título de la publicación en la sección de formulario. \n 2.	Contenido, importado o creado por ti mismo en el editor. \n 3.Tipo de publicación.',
-        {
-          variant: 'warning',
-          preventDuplicate: true,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'center'
-          }
-        });
+      showWarning('Para guardar un borrador debes tener lo siguiente: 1. Título de la publicación en la sección de formulario. \n 2.	Contenido, importado o creado por ti mismo en el editor. \n 3.Tipo de publicación.');
     }
   };
 
   useEffect(() => {
     if (!post) return
-    console.log({ post })
+    console.log({post})
     setFormState(post);
     setPreviewIframe(post?.monographView);
   }, [post]);

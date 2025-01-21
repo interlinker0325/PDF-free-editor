@@ -11,13 +11,13 @@ export default async (req, res) => {
       itemType: process.env.ENTRY_MODEL_ID,
     };
 
-    entry.coverimage = coverimage ? {uploadId: coverimage.id} : null;
-    entry.monograph = monograph ? {uploadId: monograph.id} : null;
+    entry.coverimage = coverimage ? {upload_id: coverimage.id} : null;
+    entry.monograph = monograph ? {upload_id: monograph.id} : null;
     entry.coauthors = coauthors ? coauthors.map(coauthor => coauthor.id) : null;
 
     if (attachments) {
       if (!Array.isArray(attachments)) attachments = [attachments];
-      entry.attachments = attachments.map(file => ({uploadId: file.id}))
+      entry.attachments = attachments.map(file => ({upload_id: file.id}))
     }
 
     const record = await createRecord(entry);
@@ -32,15 +32,15 @@ export default async (req, res) => {
     let {id, author = null, course, coverimage, coauthors, monograph, attachments, ...rest} = req.body;
 
 // Conditionally add props if there are values
-    if (coverimage) rest.coverimage = { uploadId: coverimage.id };
-    if (monograph) rest.monograph = { uploadId: monograph.id };
+    if (coverimage) rest.coverimage = { upload_id: coverimage.id };
+    if (monograph) rest.monograph = { upload_id: monograph.id };
     if (author) rest.author = author.id || author;
     if (course) rest.course = course.id || course;
     if (Array.isArray(coauthors)) rest.coauthors = coauthors.map(coauthor => coauthor?.id);
 
     if (attachments) {
       if (!Array.isArray(attachments)) attachments = [attachments];
-      rest.attachments = attachments.map(file => ({ uploadId: file.id }));
+      rest.attachments = attachments.map(file => ({ upload_id: file.id }));
     }
 
     const record = await updateRecord(id, rest);
