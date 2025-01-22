@@ -33,13 +33,6 @@ const Home = ({ posts, showMore, currentPage, banners, ...props }) => {
   return (
     <>
       <Main>
-        {/* {user.isLoggedIn && (
-          <TopBar className="[all:unset] justify-end">
-            <h3 className="text-primary text-2xl self-center justify-self-end">
-              ¡Bienvenid@ {user.fullname}!
-            </h3>
-          </TopBar>
-        )} */}
         <HeroCards bannerGroups={banners} />
         <div className="flex  overflow-hidden p-[21px] flex-row items-center justify-between pt-10 pb-2">
           <h2 className="col-span-4 leading-tight font-semibold max-[500px]:text-[25px] text-3xl">Publicaciones recientes</h2>

@@ -11,24 +11,23 @@ import Main from 'components/Main/Main';
 import {useRouter} from 'next/router';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCircleUser} from '@fortawesome/free-solid-svg-icons'
+import {INPUT_TYPES, verifyMutipleFields} from 'utils/form';
+
+import {isProfessor as isUserProfessor, isAdmin as isUserAdmin} from 'utils';
+import useUser from "../../utils/useUser";
+
+// Components Local
 import UserInfo from 'components/Profile/UserInfo';
 import Courses from 'components/Profile/Courses';
 import Publications from 'components/Profile/Publications';
 import EditProfile from 'components/Profile/EditProfile';
 import TopBar from 'components/TopBar/TopBar';
 import Loader from 'components/Loader/Loader';
-import {INPUT_TYPES, verifyMutipleFields} from 'utils/form';
+import AlertMenssage from 'components/Profile/AlertMenssage'
+import ContentTabs from 'components/Profile/Tabs'
 
-import {isProfessor as isUserProfessor, isAdmin as isUserAdmin} from 'utils';
-import useUser from "../../utils/useUser";
-
-// Shadcn IU
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
+// Styles
+import styles from 'components/Profile/styles'
 
 const DEFAULT_USER_ID = 'me'
 
@@ -189,6 +188,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       value: 'profile',
       component: <UserInfo
       isCurrentUserProfile={isCurrentUserProfile}
+      avatarView={avatarView}
       {...formState} />
     },
     {
@@ -216,6 +216,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       setProfile={setFormState}
       submitUpdateProfile={submitUpdateProfile}
       doCancel={doCancel}
+      avatarView={avatarView}
       errorState={errorForm}/>
     },
   ]
@@ -235,151 +236,16 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
             </TopBar>
         }
         <div className={styles.contProfile}>
-          <div className={styles.leftContainer}>
-            <div className={styles.avatarCard}>
-              {activeView === VIEW_STATES.EDIT ? (
-                  <label className='h-[300px] w-full cursor-pointer'>
-                    <input
-                        className={styles.fileInput}
-                        type='file'
-                        name='avatar'
-                        id='avatar'
-                        ref={refs.avatar}
-                        onChange={(e) => onChange(e, 'avatar')}/>
-                    {avatarView}
-                  </label>
-              ) : avatarView}
-            </div>
-          </div>
           <div className={styles.rightContainer}>
             <div className={styles.tabs}>
-              <ContentTabs data={actionsTabs} />
-              {/* <div className='flex gap-8'>
-                <a
-                    className={showStatusBar ? styles.activeTab : styles.tabItem}
-                    onClick={() => setActiveView(VIEW_STATES.USER)}>
-                  Perfil
-                </a>
-                <a
-                    className={activeView === VIEW_STATES.COURSE ? styles.activeTab : styles.tabItem}
-                    onClick={() => setActiveView(VIEW_STATES.COURSE)}>
-                  Cursos
-                </a>
-                <a
-                    className={activeView === VIEW_STATES.POSTS ? styles.activeTab : styles.tabItem}
-                    onClick={() => setActiveView(VIEW_STATES.POSTS)}>
-                  Publicaciones
-                </a>
-                {(isProfessor && isCurrentUserProfile) &&
-                    <a
-                        className={activeView === VIEW_STATES.ARCHIVE ? styles.activeTab : styles.tabItem}
-                        onClick={() => setActiveView(VIEW_STATES.ARCHIVE)}>
-                      Tutorías
-                    </a>
-                }
-              </div> */}
-              {/* {(isCurrentUserProfile && activeView !== VIEW_STATES.EDIT) &&
-                  <a
-                      className={`${activeView === VIEW_STATES.EDIT ? styles.activeTab : styles.editTab}`}
-                      onClick={() => setActiveView(VIEW_STATES.EDIT)}>
-                    Editar perfil &gt;
-                  </a>
-              } */}
+              <ContentTabs data={actionsTabs} />             
             </div>
-            {/* <div className={styles.tabContent}>
-              {activeView === VIEW_STATES.USER &&
-                  <UserInfo
-                      isCurrentUserProfile={isCurrentUserProfile}
-                      {...formState} />
-              }
-              {activeView === VIEW_STATES.COURSE &&
-                  <Courses items={courses}/>
-              }
-              {activeView === VIEW_STATES.POSTS &&
-                  <Publications items={posts} label={"Publicaciones"} user={user}/>
-              }
-              {activeView === VIEW_STATES.ARCHIVE &&
-                  <Publications items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
-              }
-              {activeView === VIEW_STATES.EDIT &&
-                  <EditProfile
-                      profile={formState}
-                      onChange={onChange}
-                      setProfile={setFormState}
-                      errorState={errorForm}/>
-              }
-            </div> */}
           </div>
         </div>
         <Loader show={showLoadingScreen}/>
       </Main>
   );
 }
-
-const AlertMenssage = ({ type, text}) => {
-  const [isVisible, setVisibled] = React.useState(true)
-
-  setTimeout(() => {
-    setVisibled(false)
-  }, 10000);
-
-  return (
-    <React.Fragment>
-    {
-      isVisible && 
-      <Alert variant={type? "" : "destructive"} className="max-md:max-w-[90%] md:max-w-[400px] p-[15px] mb-[30px]">
-        <AlertDescription>
-          {text}
-        </AlertDescription>
-      </Alert>
-    }
-    </React.Fragment>
-  )
-}
-
-const ContentTabs = ({ data }) => {
-   if (data?.length <= 0) return 0
-   return (
-    <Tabs defaultValue="profile" className={styles.contTabs}>
-       <TabsList className={styles.contTabList}>
-          {
-            data?.map((tab,index) => (
-              <TabsTrigger className={styles.btnTitle} key={index} value={tab?.value}>{tab?.name}</TabsTrigger>
-            ))
-          }
-       </TabsList>
-       {
-            data?.map((tab, index) => (
-              <TabsContent key={index} value={tab?.value}>
-                 <Card>
-                    <CardContent className="p-[20px] overflow-hidden">
-                        {tab?.component}
-                    </CardContent>
-                 </Card>
-              </TabsContent>
-            ))
-      }
-    </Tabs>
-   )
-}
-const styles = {
-  mainContainer: 'mb-8 flex flex-row gap-8',
-  leftContainer: 'flex lg:w-[30%]',
-  rightContainer: 'flex flex-col lg:w-[70%]',
-  avatarCard: 'card text-gray-400 bg-secondary rounded-none h-[300px] w-[300px] flex flex-col justify-center items-center',
-  tabs: 'tabs w-full justify-center',
-  tabItem: 'tab font-normal text-black text-2xl px-0 hover:text-primary',
-  activeTab: 'tab font-normal text-2xl tab-active text-other px-0',
-  editTab: 'text-other font-normal pr-0 tab text-2xl px-0 hover:text-primary',
-  tabContent: 'border-none pb-4',
-  btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
-  fileInput: 'input hidden input-ghost w-full',
-  fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',
-  contProfile: 'flex flex-wrap justify-center overflow-hidden',
-  contTabs: 'w-full',
-  contTabList: 'bg-backgrounPrimary p-[10px]',
-  btnTitle: 'max-md:text-[11px] md:text-[15px]'
-};
 
 export const getServerSideProps = withSession(async function ({req}) {
   const currentUser = req.session.get('user');

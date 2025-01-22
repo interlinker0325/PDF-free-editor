@@ -14,7 +14,18 @@ import {
 
 const EditProfile = ({ errorState, ...props }) => (
     <form className='flex flex-col gap-4' onSubmit={e => e.preventDefault()}>
-        <section className='flex flex-wrap border-b-black border-b-2 pb-8 mb-5 gap-[20px]'>
+        <div className={`${styles.avatarCard} flex justify-center mb-[30px]`}>
+            <label className='cursor-pointer'>
+                {props?.avatarView}
+                <input
+                    className={styles.fileInput}
+                    type='file'
+                    name='avatar'
+                    id='avatar'
+                    onChange={(e) => props.onChange(e, 'avatar')}/>
+                </label>
+        </div>
+        <section className='grid grid-cols-[repeat(auto-fit,minmax(229px,1fr))] border-b-black border-b-2 pb-8 mb-5 gap-[20px]'>
             <div className='form-control max-md:w-full'>
                 <Input
                     className={styles.titleInput(

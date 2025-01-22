@@ -20,8 +20,3 @@ svg path {
 textarea.fr-code {
     height: 100%;
 }
-
-/* VarCss */
-:root {
-    --theme-primary: #0F089F;
-}
