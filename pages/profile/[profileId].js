@@ -200,12 +200,12 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       name: 'Publicaciones',
       value: 'publications',
       action: 'animationend',
-      component: <Publications items={posts} label={"Publicaciones"} user={user}/>
+      component: <Publications itemsPerPage={10} items={posts} label={"Publicaciones"} user={user}/>
     },
     {
       name: 'Tutorías',
       value: 'tutorials',
-      component: <Publications items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
+      component: <Publications itemsPerPage={10} items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
     },
     {
       name: 'Editar perfil',

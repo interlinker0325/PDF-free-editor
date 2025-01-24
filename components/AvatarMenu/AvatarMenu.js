@@ -27,7 +27,6 @@ export default (props) => {
     return (
         <React.Fragment>
             <div className={styles.contAvatar}>
-                <ButtonsList  {...props} />
                 <NavMenuLogin {...props} />
             </div>
         </React.Fragment>
@@ -64,7 +63,6 @@ const ButtonsList = ({ items , handleClick }) => {
  */
 const NavMenuLogin = ({ user , items, handleClick }) => {
     if (user?.isLoggedIn === false) return null
-    console.log(user)
     return (
         <Menubar className="[all:unset] bg-transparent">
             <MenubarMenu className="menu-profile">

@@ -106,10 +106,10 @@ const DrawerMobile = ({ items, handleClick }) => {
 
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger className={styles.contSheet}  onClick={toggleDrawer}>
+            <SheetTrigger className={styles.contSheet} onClick={toggleDrawer}>
                 <img src="/icons/hamburger.svg" alt="hamburger"/>
             </SheetTrigger>
-            <SheetContent side={'left'}>
+            <SheetContent className="z-[999]" side={'left'}>
                 <SheetHeader>
                 <SheetTitle>Herramientas</SheetTitle>
                 <SheetDescription className={styles.contSheetDescription}>

@@ -114,7 +114,10 @@ module.exports = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
-      }
+      },
+      backgroundImage: {
+        bgHeader: 'linear-gradient(to right, #0C067A, #0F089F, #1A14FF)',
+      },
     }
   },
   variants: {

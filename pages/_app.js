@@ -33,6 +33,7 @@ function MyApp({Component, pageProps}) {
   const navItems = user.isLoggedIn ? [
     // {name: 'Inicio', action: '/', isAction: true},
     {name: 'Mi perfil', action: '/profile/me'},
+    {name: 'Crear publicación', action: '/posts/new'},
     {name: 'Crear publicación', action: '/posts/new', isAction: true},
     {name: sessionText, onClick: sessionAction}
   ] : [

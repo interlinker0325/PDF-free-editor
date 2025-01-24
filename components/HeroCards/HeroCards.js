@@ -20,7 +20,7 @@ const HeroCards = ({ bannerGroups }) => {
     React.useEffect(() => {
         setViewAllBanner(bannerGroups.flat());
     },[bannerGroups])
-
+    console.log(viewAllBanner)
     return (
       <div className="relative">
         <Slider className={styles.contBanner} {...Const.settings} id="slider-primary">
