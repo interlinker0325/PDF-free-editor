@@ -130,7 +130,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       });
       console.log({entry})
       setIsSaved(true);
-      setFormState({...formState, ["monograph"]: file,});
+      setFormState({...formState, ["monograph"]: file, id: entry.id, createdAt: entry.createdAt});
       if (entry.error) {
         showError('No se pudo realizar la publicación');
       } else {
@@ -218,7 +218,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     }
     triggerLoading(true);
     try {
-      itemValue = await upload(_files, true, post?.coverimage?.id);
+      itemValue = await upload(_files, true, formState?.coverimage?.id);
     } catch (error) {
       console.error("Error uploading file:", error);
     } finally {
@@ -254,7 +254,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       const htmlFile = new File([htmlData.data], `${fileName}.html`, {
         type: "text/html",
       });
-      const uploadedFiles = await upload([htmlFile], true, post?.monograph?.id);
+      const uploadedFiles = await upload([htmlFile], true, formState?.monograph?.id);
       console.log(uploadedFiles, "-----upload file----");
       const loadedMonograph = await getMonograph(uploadedFiles);
       setPreviewIframe(loadedMonograph);
