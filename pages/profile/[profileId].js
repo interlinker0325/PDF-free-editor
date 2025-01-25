@@ -70,9 +70,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
 
   const onChange = useCallback(async (e, name) => {
     try {
-      console.log(e,"e e e e e e e e")
       const isFileInput = refs[name]?.current?.files;
-
+      console.log(e,"e e e e e e e e",name,isFileInput)
       if (isFileInput) {
         triggerLoading(true);
 
@@ -195,6 +194,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       onChange={onChange}
       setProfile={setFormState}
       errorState={errorForm}
+      refAvatar={refs}
       {...formState} />
     },
     {

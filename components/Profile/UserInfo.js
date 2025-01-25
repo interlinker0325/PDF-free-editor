@@ -31,7 +31,8 @@ const UserInfo = ({
     experience,
     isCurrentUserProfile,
     avatarView,
-    errorState, 
+    errorState,
+    refAvatar,
     ...props
 }) => {
     const [activeView, setActiveView] = React.useState(true)
@@ -62,6 +63,7 @@ const UserInfo = ({
                                 type='file'
                                 name='avatar'
                                 id='avatar'
+                                ref={refAvatar.avatar}
                                 onChange={(e) => props.onChange(e, 'avatar')}/>
                         }
                     </div>
