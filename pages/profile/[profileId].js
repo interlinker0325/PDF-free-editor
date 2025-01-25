@@ -70,6 +70,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
 
   const onChange = useCallback(async (e, name) => {
     try {
+      console.log(e,"e e e e e e e e")
       const isFileInput = refs[name]?.current?.files;
 
       if (isFileInput) {
@@ -188,7 +189,12 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       value: 'profile',
       component: <UserInfo
       isCurrentUserProfile={isCurrentUserProfile}
-      avatarView={avatarView}
+      avatarView={avatarImage || formState.avatar.url}
+      submitUpdateProfile={submitUpdateProfile}
+      doCancel={doCancel}
+      onChange={onChange}
+      setProfile={setFormState}
+      errorState={errorForm}
       {...formState} />
     },
     {
@@ -207,24 +213,12 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       value: 'tutorials',
       component: <Publications itemsPerPage={10} items={archivePosts} label={"Tutorías"} user={user} isAdmin={isAdmin}/>
     },
-    {
-      name: 'Editar perfil',
-      value: 'edit',
-      component: <EditProfile
-      profile={formState}
-      onChange={onChange}
-      setProfile={setFormState}
-      submitUpdateProfile={submitUpdateProfile}
-      doCancel={doCancel}
-      avatarView={avatarView}
-      errorState={errorForm}/>
-    },
   ]
 
   const showStatusBar = errorForm.field || (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
   return (
-      <Main>
-        {showStatusBar &&
+      <Main className="pt-[unset] p-[unset] bg-slate-50">
+        {/* {showStatusBar &&
             <TopBar className="[all:unset]">
               <AlertMenssage {...{
                 type: !errorForm.msg,
@@ -234,7 +228,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
                 }`
               }} />
             </TopBar>
-        }
+        } */}
         <div className={styles.contProfile}>
           <div className={styles.rightContainer}>
             <div className={styles.tabs}>

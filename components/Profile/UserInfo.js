@@ -1,7 +1,20 @@
+// React
+import React from 'react'
+
 let options = { year: 'numeric', month: 'long', day: 'numeric' };
 
+// Utils
+import { INPUT_TYPES } from 'utils/form';
+
 // Shadcn IU
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { CalendarIcon, GraduationCap, Mail, MapPin, Phone, User2 } from "lucide-react"
 
 // Styles
 import styles from './styles'
@@ -17,63 +30,182 @@ const UserInfo = ({
     level,
     experience,
     isCurrentUserProfile,
-    avatarView
+    avatarView,
+    errorState, 
+    ...props
 }) => {
-    const activeView = false
+    const [activeView, setActiveView] = React.useState(true)
+
     let formattedDate = new Date(updatedAt).toLocaleDateString('es-ES', options);
+    
+    const handlerEdit = () => setActiveView(!activeView)
+    const handlerOnClose = () => {
+        handlerEdit()
+        props.doCancel()
+    }
+    console.log('avatarView',props,avatarView,props?.avatarView)
     return (
-        <div className='flex flex-col gap-6'>
-            <div className={styles.leftContainer}>
-                <div className={styles.avatarCard}>
-                {avatarView}
+        <main className="container mx-auto px-4 py-8">
+            <div className="grid gap-8 md:grid-cols-[300px_1fr]">
+            {/* Profile Card */}
+            <Card>
+                <CardContent className="p-6">
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="relative">
+                        <Avatar className="h-32 w-32">
+                            <AvatarImage src={avatarView} alt="Profile picture" />
+                            <AvatarFallback>Loading</AvatarFallback>
+                        </Avatar>
+                        {
+                                !activeView && <input
+                                className="h-32 w-32 absolute top-0 left-0 m-[auto] opacity-[0]"
+                                type='file'
+                                name='avatar'
+                                id='avatar'
+                                onChange={(e) => props.onChange(e, 'avatar')}/>
+                        }
+                    </div>
+                    <div className="text-center">
+                    {
+                        activeView ? 
+                        <h2 className="text-2xl font-semibold">{fullname}</h2>
+                        :
+                        <div className="space-y-2 mb-[20px]">
+                            <Input 
+                                disabled={activeView} 
+                                id="email" 
+                                value={fullname ?? ''}
+                                name={INPUT_TYPES.FULLNAME}
+                                onChange={(e) => props.onChange(e, INPUT_TYPES.FULLNAME)}
+                            />
+                        </div>
+                    }
+                    <p className="text-sm text-muted-foreground">{props?.role?.name}</p>
+                    </div>
+                    <Button onClick={handlerEdit} className="w-full">Editar Perfil</Button>
                 </div>
-                <div>
-                    <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
-                        {fullname}
-                    </h2>
+                </CardContent>
+            </Card>
+
+            {/* Profile Information */}
+            <Card>
+                <CardHeader>
+                <h3 className="text-xl font-semibold">Información Personal</h3>
+                </CardHeader>
+                <CardContent className="grid gap-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                    <Label htmlFor="email">
+                        <Mail className="mr-2 inline-block h-4 w-4" />
+                        Correo
+                    </Label>
+                    <Input 
+                        disabled={activeView} 
+                        id="email" 
+                        value={email ?? ''}
+                        name={INPUT_TYPES.EMAIL}
+                        onChange={(e) => props.onChange(e, INPUT_TYPES.EMAIL)}
+                    />
+                    </div>
+                    <div className="space-y-2">
+                    <Label htmlFor="phone">
+                        <Phone className="mr-2 inline-block h-4 w-4" />
+                        Número Telefónico
+                    </Label>
+                    <Input  
+                        disabled={activeView} 
+                        value={phone ?? ''}
+                        id="phone"
+                        type='tel'
+                        name={INPUT_TYPES.PHONE}
+                        maxLength='8'
+                        onChange={(e) => props.onChange(e, INPUT_TYPES.PHONE)}
+                        placeholder="Número Telefónico" />
+                    </div>
+                    <div className="space-y-2">
+                    <Label htmlFor="birthdate">
+                        <CalendarIcon className="mr-2 inline-block h-4 w-4" />
+                        Fecha De Nacimiento
+                    </Label>
+                    <Input 
+                        disabled={activeView} 
+                        id="birthdate" 
+                        value={birthdate}
+                        name={INPUT_TYPES.BIRTHDATE}
+                        onChange={(e) => props.onChange(e, INPUT_TYPES.BIRTHDATE)} 
+                        type="date" />
+                    </div>
+                    <div className="space-y-2">
+                    <Label htmlFor="gender">
+                        <User2 className="mr-2 inline-block h-4 w-4" />
+                        Género
+                    </Label>
+                    <Select 
+                        disabled={activeView} 
+                        defaultValue={gender ?? ''}
+                        onValueChange={(e) => props.onChange({ target: { value: e}}, INPUT_TYPES.GENDER)}>
+                        <SelectTrigger>
+                        <SelectValue placeholder="Seleccione género" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value="masculino">Masculino</SelectItem>
+                        <SelectItem value="femenino">Femenino</SelectItem>
+                        <SelectItem value="otro">Otro</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    </div>
+                    <div className="space-y-2">
+                    <Label htmlFor="residence">
+                        <MapPin className="mr-2 inline-block h-4 w-4" />
+                        Residencia
+                    </Label>
+                    <Input 
+                        disabled={activeView} 
+                        value={residence ?? ''} 
+                        id="residence" 
+                        placeholder="Ingrese su residencia"
+                        name={INPUT_TYPES.RESIDENCE}
+                        onChange={(e) => props.onChange(e, INPUT_TYPES.RESIDENCE)} />
+                    </div>
                 </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="education">
+                        <GraduationCap className="mr-2 inline-block h-4 w-4" />
+                        Carrera/Universidad/Nivel
+                    </Label>
+                    <textarea
+                        disabled={true}
+                        id="experience"
+                        className="h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Describa su experiencia laboral"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="experience">Experiencia Laboral</Label>
+                    <textarea
+                        disabled={activeView}
+                        maxLength='200'
+                        name={INPUT_TYPES.EXPERIENCE}
+                        onChange={(e) => props.onChange(e, INPUT_TYPES.EXPERIENCE)}
+                        id="experience"
+                        className="h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Describa su experiencia laboral"
+                    />
+                </div>
+
+                {
+                    !activeView &&
+                    <div className="flex justify-end space-x-4">
+                        <Button onClick={handlerOnClose} variant="outline">Cancelar</Button>
+                        <Button onClick={props.submitUpdateProfile}>Guardar Cambios</Button>
+                    </div>
+                }
+                </CardContent>
+            </Card>
             </div>
-            <div className='flex pt-[20px] flex-col border-b-black border-b-2 pb-12 gap-2'>
-
-                <div className="flex gap-[20px] max-md:justify-between items-end">
-                    <h4 className={styles.label}> Correo: </h4>
-                    <Input className="w-[30%] max-md:min-w-[160px]" type="email" placeholder="Correo" disabled="true" value={email} />
-                </div>
-
-                <div className="flex gap-[20px] max-md:justify-between items-end">
-                    <h4 className={styles.label}>Número Telefónico:</h4>
-                    <Input className="w-[30%] max-md:min-w-[160px]" type="tel" placeholder="Número Telefónico" disabled={true} value={phone} />
-                </div>
-
-                <div className="flex gap-[20px] max-md:justify-between items-end">
-                    <h4 className={styles.label}>Fecha De Nacimiento:</h4>
-                    <Input className="w-[30%] max-md:min-w-[160px]" type="text" placeholder="Fecha De Nacimiento" disabled={true} value={birthdate} />
-                </div>
-
-                <div className="flex gap-[20px] max-md:justify-between items-end">
-                    <h4 className={styles.label}>Género:</h4>
-                    <Input className="w-[30%] max-md:min-w-[160px]" type="text" placeholder="Género" disabled={true} value={gender} />
-                </div>
-
-                <div className="flex gap-[20px] max-md:justify-between items-end">
-                    <h4 className={styles.label}>Residencia:</h4>
-                    <Input className="w-[30%] max-md:min-w-[160px]" type="text" placeholder="Residencia" disabled={true} value={residence} />
-                </div>
-
-                <div className="flex gap-[20px] max-md:justify-between items-end">
-                    <h4 className={styles.label}>Última Actualización:</h4>
-                    <Input className="w-[30%] max-md:w-[160px]" type="text" placeholder="Última Actualización" disabled={true} value={formattedDate} />
-                </div>
-            </div>
-            <div className='flex flex-col gap-1 mb-2'>
-                <h4 className={styles.label}>Carrera/Universidad/Nivel:</h4>
-                <p className={styles.span}>{level}</p>
-            </div>
-            <div className='flex flex-col gap-1 mt-2'>
-                <h4 className={styles.label}>Experiencia laboral:</h4>
-                <p className={styles.span}>{experience}</p>
-            </div>
-        </div>
+        </main>
     );
 };
 

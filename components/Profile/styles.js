@@ -9,9 +9,9 @@ export default {
     Pendiente: 'text-black',
     mainContainer: 'mb-8 flex flex-row gap-8',
     leftContainer: 'flex flex-col justify-center items-center gap-[20px]',
-    rightContainer: 'flex flex-col max-[500px]:w-[100%] max-lg:w-[85%] lg:w-[70%]',
+    rightContainer: '',
     avatarCard: 'card text-gray-400 bg-secondary rounded-none h-[300px] w-[300px] flex flex-col justify-center items-center',
-    tabs: 'tabs w-full justify-center',
+    tabs: '',
     tabItem: 'tab font-normal text-black text-2xl px-0 hover:text-primary',
     activeTab: 'tab font-normal text-2xl tab-active text-other px-0',
     editTab: 'text-other font-normal pr-0 tab text-2xl px-0 hover:text-primary',
@@ -19,8 +19,8 @@ export default {
     btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
     fileInput: 'input hidden input-ghost w-full',
     fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',
-    contProfile: 'flex flex-wrap justify-center overflow-hidden',
-    contTabs: 'w-full',
-    contTabList: 'bg-backgrounPrimary p-[10px]',
-    btnTitle: 'max-md:text-[11px] md:text-[15px] text-white'
+    contProfile: 'bg-slate-50 overflow-hidden',
+    contTabs: 'w-full ',
+    contTabList: 'h-16',
+    btnTitle: 'max-md:text-[11px] md:text-[15px] text-[#737373]'
 }
