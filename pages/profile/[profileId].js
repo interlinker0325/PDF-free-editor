@@ -71,7 +71,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const onChange = useCallback(async (e, name) => {
     try {
       const isFileInput = refs[name]?.current?.files;
-      console.log(e,"e e e e e e e e",name,isFileInput)
       if (isFileInput) {
         triggerLoading(true);
 
@@ -217,7 +216,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
 
   const showStatusBar = errorForm.field || (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
   return (
-      <Main className="pt-[unset] p-[unset] bg-slate-50">
+      <Main className="pt-[unset] p-[unset]">
         {/* {showStatusBar &&
             <TopBar className="[all:unset]">
               <AlertMenssage {...{
