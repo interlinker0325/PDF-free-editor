@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {isAdmin, isValidFileType, isValidImageType, POST_REVIEW_STATUS} from "@/utils";
 import {createEntry, getMonograph, updateEntry, upload} from "@/handlers/bll";
-import {checkCompliance, fileToHTML} from "@/utils/server/windows";
+import {checkCompliance, convertFileToHTML} from "@/utils/server/windows";
 import useAlert from "@/hooks/useAlert";
+import _ from "lodash";
 
 const formBaseState = {
   title: "",
@@ -15,6 +16,7 @@ const formBaseState = {
   tags: "",
   coauthors: null,
   agreedterms: false,
+  sharing: false,
   review: POST_REVIEW_STATUS.PENDING,
   post_type: "",
 };
@@ -105,20 +107,26 @@ export default function usePost({user, post, setIsSaved,} = {}) {
         iframe.contentWindow.document.body.innerHTML;
   }
 
-  // console.log("FORM STATE RENDER:", formState);
+  function saveFrameContent(iframeContent) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-"); // Format timestamp
+    const fileName = `monograph-${timestamp}.html`;
+
+    const htmlFile = new File([iframeContent], fileName, {
+      type: "text/html",
+    });
+    const oldFileId = formState?.monograph?.id || null;
+    console.log({formState, oldFileId});
+    return upload([htmlFile], true, oldFileId)
+  }
 
   const saveDocument = async (approval) => {
     try {
       triggerLoading(true);
       const iframeContent = getFrameContent();
-      const htmlFile = new File([iframeContent], "monograph.html", {
-        type: "text/html",
-      });
-      const oldFileId = formState?.monograph?.id || null;
-      const file = await upload([htmlFile], true, oldFileId);
+      const file = await saveFrameContent(iframeContent);
       const loadedMonograph = await getMonograph(file);
       setPreviewIframe(loadedMonograph);
-      const {id, error, monographView, ...postData} = formState;
+      const postData = _.omit(formState, ['id', 'monographView', 'error']);
       console.log("FORM STATE:", formState);
       const action = formState?.id ? updateEntry : createEntry;
       const entry = await action({
@@ -241,7 +249,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
 
     try {
       triggerLoading(true);
-      const htmlData = await fileToHTML(file);
+      const htmlData = await convertFileToHTML(file);
       const type = typeof (htmlData.data)
       console.log(type, "---datatype")
       console.log(htmlData.data, "----------->htmldata")
@@ -254,12 +262,12 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       const htmlFile = new File([htmlData.data], `${fileName}.html`, {
         type: "text/html",
       });
-      const uploadedFiles = await upload([htmlFile], true, formState?.monograph?.id);
-      console.log(uploadedFiles, "-----upload file----");
-      const loadedMonograph = await getMonograph(uploadedFiles);
+      const uploadedHTML = await upload([htmlFile], true, formState?.monograph?.id);
+      console.log(uploadedHTML, "-----upload file----");
+      const loadedMonograph = await getMonograph(uploadedHTML);
       setPreviewIframe(loadedMonograph);
       triggerLoading(false);
-      return uploadedFiles;
+      return uploadedHTML;
     } catch (error) {
       console.log("Error uploading file:", error);
     }

@@ -21,7 +21,8 @@ const DETAILS = `experience
     gender
     level
     phone
-    residence`;
+    residence
+    sharing`;
 
 const BIRTHDAY = `birthdate`;
 

@@ -32,15 +32,15 @@ export default async (req, res) => {
     let {id, author = null, course, coverimage, coauthors, monograph, attachments, ...rest} = req.body;
 
 // Conditionally add props if there are values
-    if (coverimage) rest.coverimage = { upload_id: coverimage.id };
-    if (monograph) rest.monograph = { upload_id: monograph.id };
+    if (coverimage) rest.coverimage = {upload_id: coverimage.id};
+    if (monograph) rest.monograph = {upload_id: monograph.id};
     if (author) rest.author = author.id || author;
     if (course) rest.course = course.id || course;
     if (Array.isArray(coauthors)) rest.coauthors = coauthors.map(coauthor => coauthor?.id);
 
     if (attachments) {
       if (!Array.isArray(attachments)) attachments = [attachments];
-      rest.attachments = attachments.map(file => ({ upload_id: file.id }));
+      rest.attachments = attachments.map(file => ({upload_id: file.id}));
     }
 
     const record = await updateRecord(id, rest);
@@ -69,5 +69,11 @@ export default async (req, res) => {
     }
   }
 
-  res.json(result);
+  if (result.error) {
+    res.status(500).json(result);
+  } else {
+    res.json(result);
+
+  }
+
 };
