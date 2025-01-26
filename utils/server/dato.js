@@ -3,7 +3,7 @@ import client from "./dato-singleton"
 
 export const createUpload = async (filePath) => {
   try {
-    return await client.uploads.createFromLocalFile({localPath: filePath, skipCreationIfAlreadyExists: true});
+    return await client.uploads.createFromLocalFile({localPath: filePath, skipCreationIfAlreadyExists: false});
   } catch (error) {
     console.error(error);
     return {error};

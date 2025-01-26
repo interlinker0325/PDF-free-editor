@@ -1,5 +1,4 @@
 import {publish, updateRecord,} from 'utils/server/dato';
-import {log} from "@/utils/logs";
 
 export default async (req, res) => {
   let result = {success: false, data: {}};
@@ -8,7 +7,7 @@ export default async (req, res) => {
     if (avatar) {
       profileData.avatar = {upload_id: avatar};
     }
-    console.log({profileData})
+    console.log("profile mfucka", {profileData})
     const record = await updateRecord(id, profileData);
 
     if (!record.error) {

@@ -44,9 +44,6 @@ const DEFAULT_ERRORFORM = {field: null, msg: null};
 function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) {
   const {user} = useUser({redirectTo: '/'})
   const router = useRouter();
-  useEffect(() => {
-    if (!profile) router.push('/');
-  }, [profile]);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [formState, setFormState] = useState(profile || {});
   const [errorForm, setErrorForm] = useState(DEFAULT_ERRORFORM);
@@ -57,6 +54,10 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const refs = {
     avatar: useRef()
   };
+  console.log({formState})
+  useEffect(() => {
+    if (!profile) router.push('/');
+  }, [profile]);
 
   const triggerLoading = (show) => {
     if (show) {
@@ -71,7 +72,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const onChange = useCallback(async (e, name) => {
     try {
       const isFileInput = refs[name]?.current?.files;
-      console.log(e,"e e e e e e e e",name,isFileInput)
+      console.log(e, "e e e e e e e e", name, isFileInput)
       if (isFileInput) {
         triggerLoading(true);
 
@@ -91,12 +92,13 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       }
 
       // Handle non-file inputs
-      let itemValue = e.target.value;
+      let itemValue =
+          typeof e === "boolean" ? e : e.target.value;
 
       if (name === INPUT_TYPES.PHONE) {
         itemValue = /^\d*[.]?\d*$/.test(itemValue) ? itemValue : formState[name];
       }
-
+      console.log({name, itemValue})
       updateFormState(name, itemValue);
     } catch (e) {
       console.error("Algo salio mal", e)
@@ -124,6 +126,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       gender,
       residence,
       level,
+      sharing,
       experience,
     } = formState;
     console.log({formState})
@@ -156,6 +159,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       residence,
       level,
       experience,
+      sharing,
       ...(avatar?.id ? {avatar: avatar?.id} : null),
     });
 
@@ -175,7 +179,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   }, [profile])
 
   const avatarView = avatarImage || formState.avatar?.url ? (
-    <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
+      <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
   ) : (
       <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
         <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
@@ -187,15 +191,15 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       name: 'Perfil',
       value: 'profile',
       component: <UserInfo
-      isCurrentUserProfile={isCurrentUserProfile}
-      avatarView={avatarImage || formState.avatar.url}
-      submitUpdateProfile={submitUpdateProfile}
-      doCancel={doCancel}
-      onChange={onChange}
-      setProfile={setFormState}
-      errorState={errorForm}
-      refAvatar={refs}
-      {...formState} />
+          isCurrentUserProfile={isCurrentUserProfile}
+          avatarView={avatarImage || formState.avatar.url}
+          submitUpdateProfile={submitUpdateProfile}
+          doCancel={doCancel}
+          onChange={onChange}
+          setProfile={setFormState}
+          errorState={errorForm}
+          refAvatar={refs}
+          {...formState} />
     },
     {
       name: 'Cursos',
@@ -232,7 +236,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
         <div className={styles.contProfile}>
           <div className={styles.rightContainer}>
             <div className={styles.tabs}>
-              <ContentTabs data={actionsTabs} />             
+              <ContentTabs data={actionsTabs}/>
             </div>
           </div>
         </div>
@@ -261,7 +265,6 @@ export const getServerSideProps = withSession(async function ({req}) {
         query.user.GET_USER_COURSES(profileId) : query.user.GET_STUDENT_COURSES(profileId),
     query.user.GET_USER_POSTS(profileId)
   ]);
-
   let archivePosts = {allPosts: []};
   if (isAdmin && isCurrentUserProfile) {
     archivePosts = await request(query.posts.GET_ADMIN_COURSES_POSTS());

@@ -15,6 +15,7 @@ const formBaseState = {
   tags: "",
   coauthors: null,
   agreedterms: false,
+  sharing: false,
   review: POST_REVIEW_STATUS.PENDING,
   post_type: "",
 };
@@ -111,10 +112,14 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     try {
       triggerLoading(true);
       const iframeContent = getFrameContent();
-      const htmlFile = new File([iframeContent], "monograph.html", {
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-"); // Format timestamp
+      const fileName = `monograph-${timestamp}.html`;
+
+      const htmlFile = new File([iframeContent], fileName, {
         type: "text/html",
       });
       const oldFileId = formState?.monograph?.id || null;
+      console.log({formState});
       const file = await upload([htmlFile], true, oldFileId);
       const loadedMonograph = await getMonograph(file);
       setPreviewIframe(loadedMonograph);

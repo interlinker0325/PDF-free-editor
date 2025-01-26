@@ -7,7 +7,8 @@ export const INPUT_TYPES = {
     GENDER: 'gender',
     RESIDENCE: 'residence',
     LEVEL: 'level',
-    EXPERIENCE: 'experience'
+    EXPERIENCE: 'experience',
+    SHARE_INFO: 'sharing',
 }
 
 const ERROR_MSGS = {
