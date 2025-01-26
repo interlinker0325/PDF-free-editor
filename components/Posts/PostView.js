@@ -115,7 +115,7 @@ const PostView = ({
   useEffect(() => {
     // section compliance check
     const iframe = document.getElementById("documentWindow");
-    console.log(iframe, "=======>iframe")
+    // console.log(iframe, "=======>iframe")
     console.log(typeof iframe, "=====>typeof ifrmae")
     const standardTitles = sections[post.post_type];
     setCoherenceCheckBadge(check);

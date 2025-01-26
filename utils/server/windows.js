@@ -2,7 +2,7 @@ import axios from "axios";
 
 const WINDOWS_URL = process.env.NEXT_PUBLIC_WINDOWS_SERVER_URL
 
-export function fileToHTML(file) {
+export function convertFileToHTML(file) {
   const formData = new FormData();
   formData.append("file", file);
   return axios.post(
