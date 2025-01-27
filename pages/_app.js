@@ -31,10 +31,9 @@ function MyApp({Component, pageProps}) {
 
   const sessionAction = user.isLoggedIn ? doLogout : () => setDisplayModal(true);
   const navItems = user.isLoggedIn ? [
-    // {name: 'Inicio', action: '/', isAction: true},
     {name: 'Mi perfil', action: '/profile/me'},
     {name: 'Crear publicación', action: '/posts/new'},
-    {name: 'Crear publicación', action: '/posts/new', isAction: true},
+    {name: 'Crear publicación', action: '/posts/new', isAction: true, isMobile: true},
     {name: sessionText, onClick: sessionAction}
   ] : [
     // {name: 'Inicio', action: '/', isAction: true},

@@ -54,7 +54,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const refs = {
     avatar: useRef()
   };
-  console.log({formState})
+
   useEffect(() => {
     if (!profile) router.push('/');
   }, [profile]);
@@ -72,7 +72,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const onChange = useCallback(async (e, name) => {
     try {
       const isFileInput = refs[name]?.current?.files;
-      console.log(e,"e e e e e e e e",name,isFileInput)
       if (isFileInput) {
         triggerLoading(true);
 
@@ -105,7 +104,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     } finally {
       triggerLoading(false);
     }
-
   }, [formState, refs, profile?.avatar?.id]);
 
   const updateFormState = (name, value) => {
@@ -129,7 +127,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       sharing,
       experience,
     } = formState;
-    console.log({formState})
+    
     const fieldsStatus = verifyMutipleFields([
       {field: INPUT_TYPES.FULLNAME, value: fullname, required: true},
       {field: INPUT_TYPES.EMAIL, value: email, required: true},
@@ -166,6 +164,10 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     if (entry.error) {
       alert('No se pudo actualizar la entrada');
     } else {
+
+      if (avatar?.id) 
+          entry.avatar = avatar
+
       setFormState({...entry});
     }
     triggerLoading(false);
@@ -199,6 +201,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
           setProfile={setFormState}
           errorState={errorForm}
           refAvatar={refs}
+          items={posts}
+          user={user}
           {...formState} />
     },
     {
@@ -206,12 +210,12 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       value: 'courses',
       component: <Courses items={courses}/>
     },
-    {
-      name: 'Publicaciones',
-      value: 'publications',
-      action: 'animationend',
-      component: <Publications itemsPerPage={10} items={posts} label={"Publicaciones"} user={user}/>
-    },
+    // {
+    //   name: 'Publicaciones',
+    //   value: 'publications',
+    //   action: 'animationend',
+    //   component: <Publications itemsPerPage={10} items={posts} label={"Publicaciones"} user={user}/>
+    // },
     {
       name: 'Tutorías',
       value: 'tutorials',
@@ -274,6 +278,7 @@ export const getServerSideProps = withSession(async function ({req}) {
         query.posts.GET_PROFESOR_COURSES_POSTS(profesorCourses)
     );
   }
+
   return {
     props: {
       profile,
