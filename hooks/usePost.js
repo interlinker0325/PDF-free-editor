@@ -5,6 +5,38 @@ import {checkCompliance, convertFileToHTML} from "@/utils/server/windows";
 import useAlert from "@/hooks/useAlert";
 import _ from "lodash";
 
+/**
+ * @typedef {Object} Author
+ * @property {string} fullname - The full name of the author.
+ * @property {string} id - The ID of the author.
+ */
+
+/**
+ * @typedef {Object} FileDetails
+ * @property {string} id - The ID of the file.
+ * @property {string} filename - The name of the file.
+ * @property {string|null} title - The title of the file, if any.
+ * @property {string} url - The URL of the file.
+ */
+
+/**
+ * @typedef {Object} FormData
+ * @property {Author} author - The primary author of the post.
+ * @property {Array<Author>} coauthors - A list of co-authors for the post.
+ * @property {FileDetails} coverimage - Details about the cover image.
+ * @property {string} createdAt - The creation date of the post (ISO 8601 format).
+ * @property {string} description - A description of the post.
+ * @property {Array<FileDetails>} attachments - A list of attachment files.
+ * @property {string} id - The unique identifier of the post.
+ * @property {FileDetails} monograph - Details about the monograph file.
+ * @property {string} title - The title of the post.
+ * @property {string} tags - Tags associated with the post.
+ * @property {string} updatedAt - The last update date of the post (ISO 8601 format).
+ * @property {string} review - The review status of the post (e.g., "Borrador").
+ * @property {boolean} agreedterms - Whether the terms have been agreed to.
+ * @property {string} post_type - The type of the post (e.g., "Ensayo").
+ * @property {string} monographView - The HTML content of the monograph.
+ */
 const formBaseState = {
   title: "",
   description: "",
@@ -21,6 +53,15 @@ const formBaseState = {
   post_type: "",
 };
 
+/**
+ * A hook to manage post form functionality, including saving, updating, and validation.
+ *
+ * @param {Object} [params] - Parameters for the hook.
+ * @param {Object} [params.user] - The current user.
+ * @param {Object} [params.post] - The post data.
+ * @param {Function} [params.setIsSaved] - Callback to set the saved state.
+ * @returns {Object} An object with post-related states and functions.
+ */
 export default function usePost({user, post, setIsSaved,} = {}) {
   const [formState, setFormState] = useState(post || formBaseState);
   const [open, setOpen] = useState(false);
