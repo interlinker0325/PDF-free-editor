@@ -303,6 +303,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       const htmlFile = new File([htmlData.data], `${fileName}.html`, {
         type: "text/html",
       });
+      console.log("FUCK", {formState})
       const uploadedHTML = await upload([htmlFile], true, formState?.monograph?.id);
       console.log(uploadedHTML, "-----upload file----");
       const loadedMonograph = await getMonograph(uploadedHTML);
