@@ -42,7 +42,6 @@ const UserInfo = ({
                     user,
                     ...props
                   }) => {
-  console.log({sharing})
   const [activeView, setActiveView] = React.useState(true)
   const [isClient, setIsClient] = React.useState(false);
 
@@ -53,11 +52,11 @@ const UserInfo = ({
     handlerEdit()
     props.doCancel()
   }
-  
+
   React.useEffect(() => {
     setIsClient(true);
   }, []);
-  console.log('avatarView', props, avatarView, props?.avatarView)
+
   return (
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-8 md:grid-cols-[300px_1fr]">
@@ -98,7 +97,7 @@ const UserInfo = ({
                   <p className="text-sm text-muted-foreground">{props?.role?.name}</p>
                 </div>
                 {
-                 activeView && <Button onClick={handlerEdit} className="w-full">Editar Perfil</Button>
+                    activeView && <Button onClick={handlerEdit} className="w-full">Editar Perfil</Button>
                 } <i>Última actualización: {formattedDate}</i>
               </div>
             </CardContent>
@@ -198,36 +197,36 @@ const UserInfo = ({
                   />
                 </div>
               </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="education">
+                    <GraduationCap className="mr-2 inline-block h-4 w-4"/>
+                    Carrera/Universidad/Nivel
+                  </Label>
+                  <textarea
+                      disabled={activeView}
+                      value={level || ''}
+                      id="experience"
+                      className="h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Describa su experiencia laboral"
+                      onChange={(e) => props.onChange(e, INPUT_TYPES.LEVEL)}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="education">
-                  <GraduationCap className="mr-2 inline-block h-4 w-4"/>
-                  Carrera/Universidad/Nivel
-                </Label>
-                <textarea
-                    disabled={activeView}
-                    value={level || ''}
-                    id="experience"
-                    className="h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Describa su experiencia laboral"
-                    onChange={(e) => props.onChange(e, INPUT_TYPES.LEVEL)}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="experience">Experiencia Laboral</Label>
+                  <textarea
+                      disabled={activeView}
+                      maxLength='200'
+                      value={experience || ''}
+                      name={INPUT_TYPES.EXPERIENCE}
+                      onChange={(e) => props.onChange(e, INPUT_TYPES.EXPERIENCE)}
+                      id="experience"
+                      className="h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      placeholder="Describa su experiencia laboral"
+                  />
+                </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="experience">Experiencia Laboral</Label>
-                <textarea
-                    disabled={activeView}
-                    maxLength='200'
-                    value={experience || ''}
-                    name={INPUT_TYPES.EXPERIENCE}
-                    onChange={(e) => props.onChange(e, INPUT_TYPES.EXPERIENCE)}
-                    id="experience"
-                    className="h-32 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Describa su experiencia laboral"
-                />
-              </div>
-
               {
                   !activeView &&
                   <div className="flex justify-end space-x-4">
@@ -237,11 +236,11 @@ const UserInfo = ({
               }
 
               {
-                activeView && isClient &&
-                <div className="space-y-2">
-                   <h3 className="text-xl font-semibold">Publicaciones</h3>
-                  <Publications itemsPerPage={10} items={items} label={"Publicaciones"} user={user}/>
-                </div>
+                  activeView && isClient &&
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-semibold">Publicaciones</h3>
+                    <Publications itemsPerPage={10} items={items} label={"Publicaciones"} user={user}/>
+                  </div>
               }
             </CardContent>
           </Card>

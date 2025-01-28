@@ -1,7 +1,7 @@
 export default {
     label: 'capitalize font-semibold flex items-end text-primary text-2xl max-md:w-min w-[200px]',
     span: 'font-caslon text-black font-normal text-lg',
-    tableRow: 'flex flex-row justify-between w-full py-2 px-4 text-2xl font-normal',
+    tableRow: 'flex flex-row justify-between w-full py-1 px-4 text-2xl font-normal',
     title: 'rounded-l-none rounded-r-none w-full hover:text-primary hover:underline hover:underline-offset-1',
     status: 'rounded-l-none rounded-r-none font-thin text-right',
     Aprobado: 'text-success',

@@ -13,7 +13,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCircleUser} from '@fortawesome/free-solid-svg-icons'
 import {INPUT_TYPES, verifyMutipleFields} from 'utils/form';
 
-import {isProfessor as isUserProfessor, isAdmin as isUserAdmin} from 'utils';
+import {isProfessor as isUserProfessor, isAdmin as isUserAdmin, POST_REVIEW_STATUS} from 'utils';
 import useUser from "../../utils/useUser";
 
 // Components Local
@@ -127,7 +127,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       sharing,
       experience,
     } = formState;
-    
+
     const fieldsStatus = verifyMutipleFields([
       {field: INPUT_TYPES.FULLNAME, value: fullname, required: true},
       {field: INPUT_TYPES.EMAIL, value: email, required: true},
@@ -165,8 +165,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       alert('No se pudo actualizar la entrada');
     } else {
 
-      if (avatar?.id) 
-          entry.avatar = avatar
+      if (avatar?.id)
+        entry.avatar = avatar
 
       setFormState({...entry});
     }
@@ -201,7 +201,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
           setProfile={setFormState}
           errorState={errorForm}
           refAvatar={refs}
-          items={posts}
+          items={posts.filter(item => item.review !== POST_REVIEW_STATUS.DRAFT)}
           user={user}
           {...formState} />
     },
@@ -210,12 +210,13 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       value: 'courses',
       component: <Courses items={courses}/>
     },
-    // {
-    //   name: 'Publicaciones',
-    //   value: 'publications',
-    //   action: 'animationend',
-    //   component: <Publications itemsPerPage={10} items={posts} label={"Publicaciones"} user={user}/>
-    // },
+    {
+      name: 'Borradores',
+      value: 'drafts',
+      action: 'animationend',
+      component: <Publications itemsPerPage={10} items={posts.filter(item => item.review === POST_REVIEW_STATUS.DRAFT)}
+                               label={"Borradores"} user={user}/>
+    },
     {
       name: 'Tutorías',
       value: 'tutorials',
