@@ -9,6 +9,13 @@ import ErrorBoundary from "components/Editor/ErrorBoundary";
 
 let options = { year: "numeric", month: "long", day: "numeric" };
 
+// Shadcn IU
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { ChevronRight } from "lucide-react"
+
+const cn = (...classes) => classes.filter(Boolean).join(" ")
+
 const PostView = ({
   user,
   post,
@@ -813,103 +820,113 @@ const PostView = ({
   }, [post, titleLengthCheckBadge, sectionCheckBadge, numerationCheckBadge, noteCheckBadge])
 
   return (
-    <article
-      className={(showPreview || editView || complianceView) ? "flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
-      <div
-        className="flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black">
-        <h2 id="title" className="col-span-4 text-4xl cursor-pointer">{post.title}</h2>
-      </div>
-      <div className="grid grid-cols-10 gap-5 h-[60vh]">
-        <aside className={`${showPreview ? "col-span-7" : "col-span-6"} h-[74vh] pr-5 border-[1px] border-transparent border-r-black`}>
-          <IFrame
-            className=""
-            srcDoc={previewIframe || post.monographView}
-            editView={editView}
-            setEditorContent={setEditorContent}
-            setIsSaved={setIsSaved}
-            changedContent={changedContent}
-            setSection={setSection}
-            setMonograColor={setMonograColor}
-          />
-        </aside>
-        {editView && (
-          <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none">
-            <ErrorBoundary>
-              <Editor
-                setChangedContent={setChangedContent}
-                editorContent={editorContent}
-                setEditorContent={setEditorContent}
-                section={section}
-                setSection={setSection}
-              />
-            </ErrorBoundary>
-          </aside>
-        )}
-        {showPreview && (
-          <aside className="col-span-2 flex flex-col gap-4 pl-5">
-            {course && (
-              <h3 className="text-lg font-caslon">
-                <span className="text-primary font-roboto text-xl pr-2">
-                  Curso:
-                </span>
-                {course.name}
-              </h3>
-            )}
-            <h4 className="text-lg font-caslon">
-              <span className="text-primary font-roboto text-xl pr-2">
-                Autor(es):
-              </span>
-              {author?.fullname || user?.fullname}
-            </h4>
-            {Array.isArray(post?.coauthors) && post?.coauthors.length > 0 && (
-              <h4 className="text-lg font-caslon">
-                {post?.coauthors
-                  .map((coauthor) => coauthor.fullname)
-                  .join(", ")}
-              </h4>
-            )}
-            <h4 className="text-lg font-caslon">
-              <span className="text-primary font-roboto text-xl pr-2">
-                Tutor(a):
-              </span>
-              {course?.professor?.fullname}
-            </h4>
-            <h4 className="text-lg font-caslon">
-              <span className="text-primary font-roboto text-xl pr-2">
-                Fecha publicación:
-              </span>
-              {formattedDate}
-            </h4>
-            <a
-              onClick={toggleShowFiles}
-              className="text-other hover:text-primary underline underline-offset-2"
-            >
-              Contenido Adjunto &gt;
-            </a>
-            <div className="w-full pl-4 flex flex-col gap-0">
-              {showFiles && files}
-            </div>
-          </aside>
-        )}
-        {complianceView && (
-          <aside className="col-span-4 flex flex-col pl-5">
-            <Compliance
-              form={post}
-              sectionTitles={sectionTitles}
-              sections={sections}
-              sectionCheckBadge={sectionCheckBadge}
-              numerationCheckBadge={numerationCheckBadge}
-              noteCheckBadge={noteCheckBadge}
-              check={check}
-              coherenceCheckBadge={coherenceCheckBadge}
-              titleLengthCheckBadge={titleLengthCheckBadge}
-              wordCheckBadge={wordCheckBadge}
-              allPass={allPass}
+    <Card className="overflow-hidden">
+      <CardHeader>
+          <CardTitle>Vista Previa</CardTitle>
+        </CardHeader>
+    <CardContent className="space-y-6">
+      <article
+        className={(showPreview || editView || complianceView) ? "h-auto flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
+        <div
+          className="flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black">
+          <h2 id="title" className="col-span-4 text-4xl cursor-pointer">{post.title}</h2>
+        </div>
+        <div className="grid grid-cols-10 gap-5 h-[60vh]">
+          <aside className={`${showPreview ? "col-span-7" : "col-span-6"} h-auto pr-5 border-[1px] border-transparent border-r-black`}>
+            <IFrame
+              className=""
+              srcDoc={previewIframe || post.monographView}
+              editView={editView}
+              setEditorContent={setEditorContent}
+              setIsSaved={setIsSaved}
+              changedContent={changedContent}
+              setSection={setSection}
+              setMonograColor={setMonograColor}
             />
           </aside>
-        )}
-      </div>
-    </article>
+          {editView && (
+            <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none">
+              <ErrorBoundary>
+                <Editor
+                  setChangedContent={setChangedContent}
+                  editorContent={editorContent}
+                  setEditorContent={setEditorContent}
+                  section={section}
+                  setSection={setSection}
+                />
+              </ErrorBoundary>
+            </aside>
+          )}
+          {showPreview && (
+            <div className="col-span-2 flex flex-col gap-4 pl-5 p-6 space-y-4">
+            {course && (
+              <div className="space-y-1.5">
+                <dt className="text-sm font-medium text-primary">Curso</dt>
+                <dd className="text-base font-serif">{course.name}</dd>
+              </div>
+            )}
+    
+            <div className="space-y-1.5">
+              <dt className="text-sm font-medium text-primary">Autor(es)</dt>
+              <dd className="text-base font-serif">
+                {author?.fullname || user?.fullname}
+                {Array.isArray(post?.coauthors) && post.coauthors.length > 0 && (
+                  <span className="block mt-1 text-muted-foreground">
+                    {post.coauthors.map((coauthor) => coauthor.fullname).join(", ")}
+                  </span>
+                )}
+              </dd>
+            </div>
+    
+            {course?.professor?.fullname && (
+              <div className="space-y-1.5">
+                <dt className="text-sm font-medium text-primary">Tutor(a)</dt>
+                <dd className="text-base font-serif">{course.professor.fullname}</dd>
+              </div>
+            )}
+    
+            {formattedDate && (
+              <div className="space-y-1.5">
+                <dt className="text-sm font-medium text-primary">Fecha publicación</dt>
+                <dd className="text-base font-serif">{formattedDate}</dd>
+              </div>
+            )}
+    
+            <div className="pt-2">
+              <Button
+                variant="link"
+                className="h-auto p-0 text-muted-foreground hover:text-primary"
+                onClick={() => setShowFiles(!showFiles)}
+              >
+                <span>Contenido Adjunto</span>
+                <ChevronRight className={cn("ml-1 h-4 w-4 transition-transform", showFiles && "rotate-90")} />
+              </Button>
+    
+              {showFiles && <div className="mt-2 pl-4 space-y-2">{files}</div>}
+            </div>
+          </div>
+          )}
+          {complianceView && (
+            <aside className="col-span-4 flex flex-col pl-5">
+              <Compliance
+                form={post}
+                sectionTitles={sectionTitles}
+                sections={sections}
+                sectionCheckBadge={sectionCheckBadge}
+                numerationCheckBadge={numerationCheckBadge}
+                noteCheckBadge={noteCheckBadge}
+                check={check}
+                coherenceCheckBadge={coherenceCheckBadge}
+                titleLengthCheckBadge={titleLengthCheckBadge}
+                wordCheckBadge={wordCheckBadge}
+                allPass={allPass}
+              />
+            </aside>
+          )}
+        </div>
+      </article>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -19,6 +19,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.1.19",
+    "@hookform/resolvers": "^3.10.0",
     "@mui/material": "^5.15.18",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.4",
@@ -28,6 +29,7 @@
     "@radix-ui/react-select": "^2.1.4",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.7",
     "@wiris/mathtype-generic": "^8.10.0",
     "@wiris/mathtype-html-integration-devkit": "^1.17.2",
     "autoprefixer": "^10.4.16",
@@ -55,7 +57,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-download-link": "^2.3.0",
-    "react-hook-form": "^7.51.0",
+    "react-hook-form": "^7.54.2",
     "react-responsive-carousel": "^3.2.23",
     "react-slick": "^0.30.3",
     "remark": "^13.0.0",
@@ -65,7 +67,8 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
-    "web-vitals": "^0.2.4"
+    "web-vitals": "^0.2.4",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "postcss": "^8.4.31",

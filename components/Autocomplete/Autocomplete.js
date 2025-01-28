@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from 'react';
 
+// Shadcn IU
+import { Input } from "@/components/ui/input"
+
 class Autocomplete extends Component {
     constructor(props) {
         super(props);
@@ -111,13 +114,13 @@ class Autocomplete extends Component {
         }
 
         return (
-            <div className='h-[36px] bg-transparent w-2/4 justify-center cursor-pointer font-normal gap-3.5 p-0'>
-                <input
+            <div className='h-[36px] bg-transparent  justify-center cursor-pointer font-normal gap-3.5 p-0'>
+                <Input
                     type='text'
-                    className={
-                        `${this.props.coAuthors?.length > 0 ?
-                            'placeholder:text-other text-other border-b-other' : 'placeholder:text-titleInput text-titleInput border-b-black'} 
-                            bg-transparent input placeholder:font-normal placeholder:text-lg h-[36px] drop-shadow-lg w-full border-2 font-normal text-lg input-ghost border-transparent rounded-none px-0`}
+                    // className={
+                    //     `${this.props.coAuthors?.length > 0 ?
+                    //         'placeholder:text-other text-other border-b-other' : 'placeholder:text-titleInput text-titleInput border-b-black'} 
+                    //         bg-transparent input placeholder:font-normal placeholder:text-lg h-[36px] drop-shadow-lg w-full border-2 font-normal text-lg input-ghost border-transparent rounded-none px-0`}
                     placeholder={this.props.placeholder}
                     onChange={this.onChange}
                     onKeyDown={this.onKeyDown}

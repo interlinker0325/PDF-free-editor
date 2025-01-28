@@ -49,7 +49,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
   } = usePost({ isSaved, setIsSaved, user, courses });
 
   return (
-    <Main>
+    <Main className="pt-[unset] md:px-[30px] min-h-screen">
       <SnackbarProvider maxSnack={3}>
         <PostTopBar
           {...{
@@ -79,6 +79,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
           formView={formView}
           courses={courses}
           monograColor={monograColor}
+          showPreview={!formView}
         />
         <PostView
           post={formState}

@@ -187,6 +187,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
   };
 
   const onChange = useCallback(async (e, name) => {
+    console.log(e,"eee788899")
     const {name: inputName, value} = e.target;
     const _files = refs[name]?.current?.files;
 
