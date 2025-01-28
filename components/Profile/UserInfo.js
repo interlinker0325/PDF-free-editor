@@ -1,5 +1,8 @@
+"use client"
+
 // React
 import React from 'react'
+
 // Utils
 import {INPUT_TYPES} from 'utils/form';
 
@@ -11,6 +14,9 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
 import {CalendarIcon, GraduationCap, Mail, MapPin, Phone, User2, LockIcon} from "lucide-react"
+
+// Components Local
+import Publications from 'components/Profile/Publications';
 
 // Styles
 import {Switch} from "@mui/material";
@@ -32,10 +38,13 @@ const UserInfo = ({
                     avatarView,
                     errorState,
                     refAvatar,
+                    items,
+                    user,
                     ...props
                   }) => {
   console.log({sharing})
   const [activeView, setActiveView] = React.useState(true)
+  const [isClient, setIsClient] = React.useState(false);
 
   let formattedDate = new Date(updatedAt).toLocaleDateString('es-ES', options);
 
@@ -44,6 +53,10 @@ const UserInfo = ({
     handlerEdit()
     props.doCancel()
   }
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
   console.log('avatarView', props, avatarView, props?.avatarView)
   return (
       <main className="container mx-auto px-4 py-8">
@@ -84,8 +97,9 @@ const UserInfo = ({
                   }
                   <p className="text-sm text-muted-foreground">{props?.role?.name}</p>
                 </div>
-                <Button onClick={handlerEdit} className="w-full">Editar Perfil</Button>
-                <i>Última actualización: {formattedDate}</i>
+                {
+                 activeView && <Button onClick={handlerEdit} className="w-full">Editar Perfil</Button>
+                } <i>Última actualización: {formattedDate}</i>
               </div>
             </CardContent>
           </Card>
@@ -220,6 +234,14 @@ const UserInfo = ({
                     <Button onClick={handlerOnClose} variant="outline">Cancelar</Button>
                     <Button onClick={props.submitUpdateProfile}>Guardar Cambios</Button>
                   </div>
+              }
+
+              {
+                activeView && isClient &&
+                <div className="space-y-2">
+                   <h3 className="text-xl font-semibold">Publicaciones</h3>
+                  <Publications itemsPerPage={10} items={items} label={"Publicaciones"} user={user}/>
+                </div>
               }
             </CardContent>
           </Card>

@@ -1,4 +1,4 @@
-'use-client'
+"use client"
 
 // React
 import React from 'react'
@@ -24,9 +24,11 @@ import styles from './styles'
 
 export default (props) => {
     const router = useRouter();
+    console.log(props,"props")
     return (
         <React.Fragment>
             <div className={styles.contAvatar}>
+                <ButtonsList {...props}/>
                 <NavMenuLogin {...props} />
             </div>
         </React.Fragment>
@@ -43,7 +45,7 @@ const ButtonsList = ({ items , handleClick }) => {
         <section className={styles.contBtnOptions}>
             {
                 items.map((item, index) => {
-                    if (item?.isAction) {
+                    if (item?.isAction && !item?.isMobile) {
                        return ( 
                         <Button key={index} onClick={() => handleClick(item)} className={styles.contBtn} variant="outline">
                             {item.name}
@@ -62,6 +64,8 @@ const ButtonsList = ({ items , handleClick }) => {
  * Menu Nav
  */
 const NavMenuLogin = ({ user , items, handleClick }) => {
+    const pathCurrent = typeof window !== "undefined" ? window.location.pathname : null;
+    console.log(pathCurrent,"pathCurrent")
     if (user?.isLoggedIn === false) return null
     return (
         <Menubar className="[all:unset] bg-transparent">
@@ -75,7 +79,8 @@ const NavMenuLogin = ({ user , items, handleClick }) => {
                 <MenubarContent>
                     {
                         items.map((item, index) => {
-                            if (item?.isAction) return null
+                            console.log(item,"item")
+                            if (item?.isAction || item?.action === pathCurrent) return null
                             return (
                                 <React.Fragment key={index}>
                                     { 

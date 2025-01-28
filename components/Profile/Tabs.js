@@ -14,7 +14,7 @@ import styles from './styles'
 const ContentTabs = ({ data }) => {
     if (data?.length <= 0) return null
     return (
-      <nav className="border-b bg-white">
+      <nav className="bg-white">
         <div className="container mx-auto px-4">
           <Tabs defaultValue="profile" className={styles.contTabs}>
               <TabsList className={styles.contTabList}>
