@@ -28,6 +28,7 @@
     "@radix-ui/react-select": "^2.1.4",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.7",
     "@wiris/mathtype-generic": "^8.10.0",
     "@wiris/mathtype-html-integration-devkit": "^1.17.2",
     "autoprefixer": "^10.4.16",
