@@ -1,3 +1,5 @@
+import React from 'react'
+
 import useUser from "utils/useUser";
 import withSession from "utils/withSession";
 import { GET_ALL_COURSES, GET_ALL_STUDENTS, request, } from "utils/graphqlRequest";
@@ -13,8 +15,9 @@ import RequestApprovalDialog from "../../components/Posts/RequestApprovalDialog"
 import { isAdmin as isUserAdmin } from "../../utils";
 import { GET_ALL_COURSES_ADMIN } from "../../gql/queries/User";
 
-
 const NewPost = ({ isSaved, setIsSaved, courses }) => {
+  const [titleTab, setTitleTab] = React.useState('')
+
   const { user } = useUser({ redirectTo: "/" });
   const {
     refs,
@@ -49,7 +52,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
   } = usePost({ isSaved, setIsSaved, user, courses });
 
   return (
-    <Main className="pt-[unset] md:px-[30px] min-h-screen">
+    <Main className="min-[1536px]:w-full min-[1536px]:m-auto min-[1536px]:max-w-[1536px] pt-[unset] md:px-[30px] min-h-screen">
       <SnackbarProvider maxSnack={3}>
         <PostTopBar
           {...{
@@ -65,6 +68,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
             setEditView,
             statusBarState,
             setComplianceView,
+            setTitleTab
           }}
         />
         <PostForm
@@ -95,6 +99,8 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
           allPass={allPass}
           setAllPass={setAllPass}
           setMonograColor={setMonograColor}
+          titleTab={titleTab}
+          showFormView={formView}
         />
         <Loader show={showLoadingScreen} />
         <RequestApprovalDialog {...{ open, setOpen, requestApproval }} />

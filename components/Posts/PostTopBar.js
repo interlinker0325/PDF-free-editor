@@ -22,6 +22,7 @@ export default function PostTopBar({
   setEditView,
   statusBarState,
   setComplianceView,
+  setTitleTab
 }) {
   const isAdmin = isUserAdmin(user?.role?.id);
   const [time, setTime] = useState(true);
@@ -102,85 +103,6 @@ export default function PostTopBar({
     }
   }, [allPass]);
   return (
-    // <TopBar>
-    //   <div className="flex flex-row justify-between w-full">
-    //     <div>
-    //       {(statusBarState.error || statusBarState.success) && (
-
-    //         <h5
-    //           className={
-    //             statusBarState.error
-    //               ? "text-error text-2xl"
-    //               : "text-primary text-2xl"
-    //           }
-    //         >
-    //           {statusBarState.error || statusBarState.success}
-    //         </h5>
-    //       )}
-    //     </div>
-    //     <div className="flex items-center">
-    //       <a
-    //         className={`${formView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-    //         onClick={() => {
-    //           setFormView(true);
-    //           setShowPreview(false);
-    //           setEditView(false);
-    //           setComplianceView(false);
-    //         }}
-
-    //         children="Formulario"
-    //       />
-    //       <a
-    //         className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
-    //         onClick={() => {
-    //           setShowPreview(true);
-    //           setFormView(false);
-    //           setEditView(false);
-    //           setComplianceView(false);
-    //         }}
-
-    //         children="Vista previa"
-    //       />
-    //       <a
-    //         className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-    //         onClick={() => {
-    //           setEditView(true);
-    //           setShowPreview(false);
-    //           setFormView(false);
-    //           setComplianceView(false);
-    //         }}
-
-    //         children="Editor"
-    //       />
-    //       <a
-    //         className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-    //         onClick={() => {
-    //           setComplianceView(true);
-    //           setEditView(false);
-    //           setShowPreview(false);
-    //           setFormView(false);
-    //         }}
-
-    //         children="Cumplimiento"
-    //       />
-          
-    //     </div >
-    //   </div >
-    //   <a
-    //     className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
-    //     onClick={handleSave}
-    //     children="Guardar"
-    //   />
-    //   {
-    //     !isAdmin && allPass && (
-    //       <a
-    //         className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
-    //         onClick={handlePublication}
-    //         children="Publicar"
-    //       />
-    //     )
-    //   }
-    // </TopBar >
     <div className="container max-md:mx-auto py-6">
       <div className="flex items-center justify-between">
         <div className="flex flex-wrap gap-2">
@@ -195,6 +117,7 @@ export default function PostTopBar({
               variant="outline">Formulario</Button>
           <Button
               onClick={() => {
+                setTitleTab('Vista previa')
                 setShowPreview(true);
                 setFormView(false);
                 setEditView(false);
@@ -204,6 +127,7 @@ export default function PostTopBar({
               variant="outline">Vista previa</Button>
           <Button 
               onClick={() => {
+                setTitleTab('Cumplimiento')
                 setComplianceView(true);
                 setEditView(false);
                 setShowPreview(false);
@@ -213,6 +137,7 @@ export default function PostTopBar({
               variant="outline">Cumplimiento</Button>
           <Button
             onClick={() => {
+              setTitleTab('Editor')
               setEditView(true);
               setShowPreview(false);
               setFormView(false);

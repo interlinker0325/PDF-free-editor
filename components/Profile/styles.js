@@ -19,7 +19,7 @@ export default {
     btn: 'btn bg-other text-white hover:bg-primary btn-md rounded-full',
     fileInput: 'input hidden input-ghost w-full',
     fileLabel: 'label-text text-lg border-2 border-transparent py-2 rounded-none border-b-black',
-    contProfile: 'bg-slate-50 overflow-hidden',
+    contProfile: 'overflow-hidden',
     contTabs: 'w-full ',
     contTabList: 'h-16',
     btnTitle: 'max-md:text-[11px] md:text-[15px] text-[#737373]'

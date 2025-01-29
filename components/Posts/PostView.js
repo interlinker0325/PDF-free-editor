@@ -28,7 +28,9 @@ const PostView = ({
   logicCheck,
   allPass,
   setAllPass,
-  setMonograColor
+  setMonograColor,
+  titleTab,
+  showFormView
 }) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
   const [editorContent, setEditorContent] = useState("Select the tag");
@@ -820,21 +822,21 @@ const PostView = ({
   }, [post, titleLengthCheckBadge, sectionCheckBadge, numerationCheckBadge, noteCheckBadge])
 
   return (
-    <Card className="overflow-hidden">
+    <Card className={`overflow-hidden ${showFormView && 'hidden'}`}>
       <CardHeader>
-          <CardTitle>Vista Previa</CardTitle>
+          <CardTitle>{titleTab}</CardTitle>
         </CardHeader>
-    <CardContent className="space-y-6">
+      <CardContent className="space-y-6">
       <article
         className={(showPreview || editView || complianceView) ? "h-auto flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
         <div
           className="flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black">
-          <h2 id="title" className="col-span-4 text-4xl cursor-pointer">{post.title}</h2>
+          <h2 id="title" className="line-clamp-1 overflow-hidden col-span-4 text-4xl cursor-pointer pb-[unset]">{post.title}</h2>
         </div>
-        <div className="grid grid-cols-10 gap-5 h-[60vh]">
-          <aside className={`${showPreview ? "col-span-7" : "col-span-6"} h-auto pr-5 border-[1px] border-transparent border-r-black`}>
+        <div className="flex flex-wrap gap-[20px]">
+          <aside className={`${showPreview ? "col-span-7" : "col-span-6"} min-h-[800px] h-auto border-[1px] border-transparent max-md:w-[100%] max-[768px]:w-full min-[769px]:w-[68%] `}>
             <IFrame
-              className=""
+              className="p-[unset]"
               srcDoc={previewIframe || post.monographView}
               editView={editView}
               setEditorContent={setEditorContent}
@@ -845,7 +847,7 @@ const PostView = ({
             />
           </aside>
           {editView && (
-            <aside className="col-span-4 flex flex-col gap-4 pl-5 rounded-none">
+            <Card className="max-md:w-[100%] max-[769px]:m-auto min-[769px]:w-[29%] max-[1024px]:w-full col-span-4 flex flex-col gap-4 p-[20px] rounded-none">
               <ErrorBoundary>
                 <Editor
                   setChangedContent={setChangedContent}
@@ -855,10 +857,10 @@ const PostView = ({
                   setSection={setSection}
                 />
               </ErrorBoundary>
-            </aside>
+            </Card>
           )}
           {showPreview && (
-            <div className="col-span-2 flex flex-col gap-4 pl-5 p-6 space-y-4">
+            <Card className="max-md:w-[100%] md:w-[28%] border col-span-2 flex flex-col gap-4 p-[20px]">
             {course && (
               <div className="space-y-1.5">
                 <dt className="text-sm font-medium text-primary">Curso</dt>
@@ -904,10 +906,10 @@ const PostView = ({
     
               {showFiles && <div className="mt-2 pl-4 space-y-2">{files}</div>}
             </div>
-          </div>
+          </Card>
           )}
           {complianceView && (
-            <aside className="col-span-4 flex flex-col pl-5">
+            <Card className="max-md:w-[100%] max-[769px]:m-auto min-[769px]:w-[29%] overflow-hidden col-span-4 flex flex-col p-[20px]">
               <Compliance
                 form={post}
                 sectionTitles={sectionTitles}
@@ -921,7 +923,7 @@ const PostView = ({
                 wordCheckBadge={wordCheckBadge}
                 allPass={allPass}
               />
-            </aside>
+            </Card>
           )}
         </div>
       </article>
