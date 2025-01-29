@@ -4,6 +4,8 @@ import { matchStyles } from "utils/match-styles";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { parser } from "utils/html-parser";
+import { Toaster, toast } from 'sonner'
+import { FiAlertTriangle } from 'react-icons/fi';
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 // import 'jodit/build/jodit.min.css';
@@ -20,16 +22,32 @@ const Editor = ({
 
 
 
+function showCustomToast(text) {
+  toast.custom((t) => (
+    <div
+      className={`flex items-center gap-3 p-4 border-l-4 rounded shadow-lg`}
+      style={{
+        backgroundColor: '#FF9800', // Light orange background
+        borderColor: '#f59e0b', // Orange border
+        color: '#fff', // Dark orange text
+        width: '500px',
+      }}
+    >
+      <FiAlertTriangle  size={48} style={{ color: '#fff' }} />
+      <div>{text}</div>
+    </div>
+  ));
+}
+
 function deleteBlock(content) {
     console.log("🚀 ~ deleteBlock ~ content:", content)
-    // console.log('deleteContent:',content)
+    
     try {
       if (content && content.parentNode) {
         console.log("🚀 ~ deleteBlock ~ content:", content)
-        // Remove the element from the editor
+        
         content.parentNode.removeChild(content);
         
-        // Remove the image from the iframe as well
         const iframe = document.getElementById("documentWindow");
         const iframeDoc = iframe.contentWindow.document;
         const targetElement = iframeDoc.querySelector(`[data-content-id="${content.getAttribute('data-content-id')}"]`);
@@ -39,18 +57,17 @@ function deleteBlock(content) {
         }
         else{
           editorContent.parentNode.removeChild(editorContent);
-
           console.log("🚀 ~ deleteBlock ~ editorContent:", editorContent)
         }
         
         // Reset states
         setEditorContent(null);
+        setEditorValue('')
         setModel('');
         setEditorValue('');
         setPendingChanges(false);
         setFormattedContent('');
-        setImprovedText('');
-        
+        setImprovedText(''); 
         // Clear editor selection if exists
         if (editor.current?.jodit?.selection) {
           editor.current.jodit.selection.clear();
@@ -70,7 +87,9 @@ function deleteBlock(content) {
   const [config, setConfig] = useState(null);
   const [model, setModel] = useState("");
   const [isFormatUpdated, setIsFormatUpdated] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+  const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
+
   const [isChanged, setIsChanged] = useState(false);
   
 
@@ -84,7 +103,13 @@ function deleteBlock(content) {
   const [pendingChanges, setPendingChanges] = useState(false);
   let isUpdated=false
 
+  useEffect(()=>{
+    console.log('editorValue:',editorValue)
+  },[editorValue])
 
+  useEffect(()=>{
+    console.log('model:',model)
+  },[model])
 
 
   // useEffect(()=>{
@@ -118,10 +143,13 @@ function deleteBlock(content) {
   function AddBlock(){
     const newDiv = document.createElement("div");
     newDiv.innerText = "Nuevo párrafo";
-    console.log("🚀 ~ import ~ editorContent:", editorContent) 
+    // console.log("🚀 ~ import ~ editorContent:", editorContent) 
+    if(!editorContent){
+      return
+    }
     const nexteditorContent = editorContent.nextSibling;
     if (nexteditorContent) {
-      console.log("🚀 ~ import ~ nexteditorContent:", nexteditorContent)
+      // console.log("🚀 ~ import ~ nexteditorContent:", nexteditorContent)
       editorContent.parentNode.insertBefore(newDiv, nexteditorContent);
       
       // editorContent.parentNode.insertAdjacentElement('afterend',newDiv);
@@ -143,30 +171,7 @@ function deleteBlock(content) {
   const [clicked, setClicked] = useState()
   const iframe = document.getElementById("documentWindow");
   const iframeDoc = iframe.contentWindow.document;
-  iframeDoc.addEventListener("click", (event) => {
-    const clickedElement = event.target; // The clicked element inside the iframe
-
-    if (clickedElement && clickedElement !== clicked) {
-      if (clickedElement.tagName === 'IMG' || clickedElement.tagName === 'FIGURE') {
-        const parentDiv = clickedElement.closest('div'); // Find the closest parent div
-        if (parentDiv) {
-          // console.log("Parent div of the clicked image/figure:", parentDiv);
-          clickedDiv = parentDiv 
-          setClicked(parentDiv);
-        }
-      } else {
-        // console.log("Clicked element:", clickedElement);
-        clickedDiv = clickedElement  
-        setClicked(clickedElement);
-      }
-    }
-    
-    // Optionally, log details about the clicked element
-    // console.log("Tag name:", clickedElement.tagName);
-    // console.log("ID:", clickedElement.id);
-    // console.log("Classes:", clickedElement.className);
-  });
-
+ 
   useEffect(() => {
     const safeAtob = (str) => {
       try {
@@ -203,7 +208,7 @@ function deleteBlock(content) {
         safeIconSet("tooltip", "https://cdn0.iconfinder.com/data/icons/leading-international-corporate-website-app-collec/16/Info-512.png");
         safeIconSet("math", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVDiNxY+xSgNBFEXPG7KEBW38Ab8gzU61naQSQbAR/Atb7QRRSeMfWKYxFkoKG60UtnDzEG1stbOxNCQL+6wWliU7BiycaoZ77+EM/PeRtsB73wPGwHpLZQocuwD8MDAGiIGDhQZpmsbz+fwTWA0AAIYd7/0OsA+MJ5PJOcBsNtsUkWpcAH0zmzbG36r61gEugDVgI0mSJ1V9EJHdqiUi93meP7YpOOCjVj5K0zQGtmudUegPzszOau9+URSnwEqlH0XRdQgggPPePwO9Zmhmt6q6FTQASjM7acmD+hUAVR0BL42s6Ha7N0sBFlmY2V2WZV/LAlDVK+C1ll3+Ngbo1O5lWZZ7zrmBiLwDw2UAfz4/dNtaTXH2UcAAAAAASUVORK5CYII=");
         safeIconSet("chemistry", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGPSURBVDiN1ZKxa1NRFMZ/5yY1COYPKFiEiNpBHe55SQiZdFBEHAQHQZwchapLodClCEKhi4Pg6KaSzamCQnDJEMiTDqIoGXTRRcHFR+K7x8G8cHkNdfabDt8558flu0c4QM1mc8XMboUQPo5Go6dAKM/IosVOp3N4MpmsAZvAkZn9NoRwJ03TNwcCkiS5ZmY7wLEFbDOz55VK5d5wOPwKUC06rVbrZJ7nj83sXGnpM7AMLAEiItdDCKeBMwCumMrz/AUQL/80s/Usy04AZ0VkN+qtFLvVyDwV1U+ccxvFM4H3wCVVvQxcdc49YxboPANVtaJuNBrVXq+XL8hgn9y/R/5LwHg8vquqS2VfVY+r6lqSJPPAY8C3qN4B9rz3FwG63W7de78NvAMemtkrZh8wB4QQbgBfIsiqiOyq6sssyz6IyDpwaNar7AOkafoaWAXuA78i0AX+XmKhPTO7QvkOYrXb7aPT6fSBiNyM7B/AVr1ef9Tv938X5kJAIe/9eefc7RDCp1qttj0YDL6XZ/4A/MWDnkkEniQAAAAASUVORK5CYII=");
-        safeIconSet("rightarrow", "https://img.icons8.com/?size=100&id=fwTjos9jT8tR&format=png&color=1A1A1A");
+        safeIconSet("rightarrow", "https://cdn-icons-png.flaticon.com/256/724/724954.png");
         safeIconSet("arrowup", "https://cdn-icons-png.flaticon.com/512/608/608336.png");
         safeIconSet("arrowdown", "https://cdn-icons-png.flaticon.com/512/3313/3313001.png", {
           'font-weight': 'extra-bold',
@@ -235,15 +240,15 @@ function deleteBlock(content) {
               return name.toLowerCase();
             },
             defaultHandlerSuccess: (response) => {
-              // console.log('image:',image)
+              
 
               try {
                 if (response.files && response.files.length) {
                   response.files.forEach(file => {
                     const image = editor.current?.createInside.element('img');
-                    // console.log("🚀 ~ import ~ image:", image)
+                    
                     if (image) {
-                      // console.log('image:',image)
+                      
                       image.setAttribute('src', file);
                       image.style.width = '80%';
                       image.setAttribute('tabindex', '0');
@@ -281,10 +286,10 @@ function deleteBlock(content) {
           disablePlugins: ["paste", "imageProperties"],
           // custom buttons
           extraButtons: [
-            // add new div blank block bellow selected one
+            
             {
               name: "addNewBlock",
-              tooltip: "Add New Block",
+              tooltip: "Nuevo bloque",
               icon: "plus",
               exec: () => {
                 const iframe = document.getElementById("documentWindow");
@@ -292,18 +297,52 @@ function deleteBlock(content) {
                 const body = iframeDoc.getElementsByTagName("body");
                 const newDiv = document.createElement("div");
                 newDiv.innerText = "Nuevo párrafo"; 
-                if(clickedDiv){
-                  // console.log("🚀 ~ CLICKED:", clickedDiv)
+                // console.log('editorContent:',editorContent)
+                // if(editorValue){
+                //   console.log('editorValue:',parser(editorValue))
+                // }
+                // if(model){
+                //   console.log('model:',parser(model))
+                // }
+
+                // AddBlock()
+
+                // if(clickedDiv){ 
+                //   clickedDiv.insertAdjacentElement('afterend', newDiv);  
+                // }
+                // else
+                // console.log("🚀 ~ import ~ clicked:", clicked)
+                // console.log("🚀 ~ import ~ clickedDiv:", clickedDiv)
+                
+                
+                // if(clicked){
+                //   const img = clicked.querySelector("img");
+                //   console.log("🚀 ~ import ~ img:", img)
+                //   if(img){
+                //     console.log("🚀 ~ import ~ clicked:", clicked)
+                //     console.log("🚀 ~ import ~ clickedDiv:", clickedDiv)
+                //     clicked.insertAdjacentElement('afterend', newDiv);  
+                //   } 
+                //   else{
+                //     AddBlock()
+                //   }
+
                   
-                  clickedDiv.insertAdjacentElement('afterend', newDiv); 
-                  // console.log("🚀 ~ Added:", newDiv, clickedDiv) 
-                }
-                else if(clicked){
-                  // console.log("🚀 ~ CLICKED:", clickedDiv)
-                  
-                  clicked.insertAdjacentElement('afterend', newDiv); 
-                  // console.log("🚀 ~ Added:", newDiv, clicked) 
-                }
+                  // if (clicked.tagName === 'IMG' || clicked.tagName === 'FIGURE') {
+                  //     console.log("🚀 ~ handleElementClick ~ element.tagName:", clicked.tagName)
+                  //     const parentDiv = clicked.closest('div');
+                  //     if (parentDiv) {
+                  //       console.log("🚀 ~ handleElementClick ~ parentDiv:", parentDiv)
+                  //       parentDiv.insertAdjacentElement('afterend', newDiv);  
+                         
+                  //     }
+                  //   }
+                  //   else{
+                    // }
+                // }
+                // else if(!clickedDiv && !clicked){
+                  AddBlock()
+                // }
 
                 if (!body[0].textContent) {
                   const style = document.createElement("style");
@@ -445,7 +484,9 @@ function deleteBlock(content) {
                 const doc = parser(editor.value)
                 console.log(doc.innerText);
                 if (doc.innerText !== '') {
-                  alert('You cannot insert an image when the editor contains content.');
+                  // alert('No puedes incluir una imagen o tabla en un bloque con texto. Inténtalo en un bloque nuevo');
+                  // toast('My first toast')
+                  showCustomToast('No puedes incluir una imagen o tabla en un bloque con texto. Inténtalo en un bloque nuevo')
                   return null; // Prevent the popup from being displayed
                 }
             
@@ -534,11 +575,163 @@ function deleteBlock(content) {
               }
             },
             
-            "table",
+            // "table",
+            {
+              name: 'customTable',
+              tooltip: 'insertar tabla',
+              icon: 'table',
+              popup: (editor, current, self, close) => {
+                const doc = parser(editor.value);
+                if (doc.innerText !== '') {
+                  // alert('No se pueden insertar mesa en bloques con texto, inserta un nuevo bloque para pégarla ahí');
+                  showCustomToast('No se pueden insertar mesa en bloques con texto, inserta un nuevo bloque para pégarla ahí')
+
+                  return null;
+                }
+            
+                // Create popup container with table grid
+                const form = editor.create.fromHTML(`
+                  <div class="jodit-form" style="padding: 15px;">
+                    <div class="jodit-form__group">
+                      <div class="jodit-grid-selector" style="width: 280px;">
+                        <div class="grid-container" style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; margin-bottom: 10px;">
+                          ${Array(100).fill().map((_, i) => `
+                            <div class="grid-cell" 
+                                 data-row="${Math.floor(i / 10) + 1}" 
+                                 data-col="${(i % 10) + 1}"
+                                 style="width: 25px; height: 25px; border: 1px solid #ccc; background: white; cursor: pointer;">
+                            </div>
+                          `).join('')}
+                        </div>
+                        <div class="size-display" style="margin: 10px 0; text-align: center;">
+                          Table size: 0 x 0
+                        </div>
+                      </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 10px 0;">
+                      <button type="button" class="jodit-button cancel">Cancel</button>
+                      <button type="button" class="jodit-button insert" disabled>Insert</button>
+                    </div>
+                  </div>
+                `);
+            
+                const gridContainer = form.querySelector('.grid-container');
+                const sizeDisplay = form.querySelector('.size-display');
+                const insertBtn = form.querySelector('.insert');
+                const cancelBtn = form.querySelector('.cancel');
+                let selectedRows = 0;
+                let selectedCols = 0;
+            
+                function updateGridSelection(row, col) {
+                  const cells = gridContainer.querySelectorAll('.grid-cell');
+                  cells.forEach(c => {
+                    const cRow = parseInt(c.dataset.row);
+                    const cCol = parseInt(c.dataset.col);
+                    
+                    if (cRow <= row && cCol <= col) {
+                      c.style.background = '#159957';
+                    } else {
+                      c.style.background = 'white';
+                    }
+                  });
+            
+                  selectedRows = row;
+                  selectedCols = col;
+                  sizeDisplay.textContent = `Table size: ${row} x ${col}`;
+                  insertBtn.disabled = false;
+                }
+            
+                function insertTable() {
+                  if (selectedRows && selectedCols) {
+                    const table = editor.createInside.element('table');
+                    table.style.width = '100%';
+                    table.style.borderCollapse = 'collapse';
+            
+                    // Create header row
+                    const thead = editor.createInside.element('thead');
+                    const headerRow = editor.createInside.element('tr');
+                    
+                    for (let j = 0; j < selectedCols; j++) {
+                      const th = editor.createInside.element('th');
+                      th.style.padding = '0.5rem 1rem';
+                      th.style.backgroundColor = '#159957';
+                      th.style.color = 'white';
+                      th.style.borderBottom = '1px solid #e9ebec';
+                      th.style.textAlign = 'left';
+                      th.innerHTML = `Header ${j + 1}`;
+                      headerRow.appendChild(th);
+                    }
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+            
+                    // Create table body
+                    const tbody = editor.createInside.element('tbody');
+                    for (let i = 1; i < selectedRows; i++) {
+                      const row = editor.createInside.element('tr');
+                      if (i % 2 !== 0) {
+                        row.style.backgroundColor = '#f2f2f2';
+                      }
+                      
+                      for (let j = 0; j < selectedCols; j++) {
+                        const td = editor.createInside.element('td');
+                        td.style.padding = '0.5rem 1rem';
+                        td.style.borderBottom = '1px solid #e9ebec';
+                        td.style.textAlign = 'left';
+                        td.innerHTML = `Cell ${i},${j + 1}`;
+                        row.appendChild(td);
+                      }
+                      tbody.appendChild(row);
+                    }
+                    table.appendChild(tbody);
+            
+                    editor.selection.insertNode(table);
+                    close();
+                  }
+                }
+            
+                // Handle hover effect
+                gridContainer.addEventListener('mouseover', (e) => {
+                  const cell = e.target;
+                  if (cell.classList.contains('grid-cell')) {
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    updateGridSelection(row, col);
+                  }
+                });
+            
+                // Handle click on cells
+                gridContainer.addEventListener('click', (e) => {
+                  const cell = e.target;
+                  if (cell.classList.contains('grid-cell')) {
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    updateGridSelection(row, col);
+                    insertTable();
+                  }
+                });
+            
+                // Reset on mouse leave if no selection made
+                gridContainer.addEventListener('mouseleave', () => {
+                  if (!selectedRows && !selectedCols) {
+                    const cells = gridContainer.querySelectorAll('.grid-cell');
+                    cells.forEach(c => c.style.background = 'white');
+                    sizeDisplay.textContent = 'Table size: 0 x 0';
+                    insertBtn.disabled = true;
+                  }
+                });
+            
+                // Handle insert button click
+                insertBtn.addEventListener('click', insertTable);
+                cancelBtn.addEventListener('click', close);
+            
+                return form;
+              }
+            },
             {
               name: "addDividedBlock",
               tooltip: "Divide en columnas",
-              icon: "rightarrow",
+              icon: `<svg viewBox="0 0 512 512"><path d="M0 96C0 60.7 28.7 32 64 32l384 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zm64 64l0 256 160 0 0-256L64 160zm384 0l-160 0 0 256 160 0 0-256z"/></svg>`,
+
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
                   // Create a container div with flex display
@@ -663,50 +856,35 @@ function deleteBlock(content) {
               tooltip: "Borrar bloque",
               icon: "bin",
               exec: (editor) => {
-                // console.log('editorContent delete:', editorContent)
                 const element = parser(editor.value)
                 console.log("🚀 ~ import ~ element:", element) 
                 if (!element) {
                   console.log("🚀 ~ import ~ !element:", !element)
-                  // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
-                  // if (confirmDelete) {
-                  //   // deleteBlock();
-                  // }
+                  
                   return;
                 }
                 
                 setDeleteContent(element)
+
                 let hasTable
-                // let hasImage
-                // if (typeof element === 'string') {
-                //   // Convert the string to an HTML object
-                //   const parser = new DOMParser();
-                //   const doc = parser.parseFromString(element, 'text/html');
-                //   const element = doc.body; // Set element to the parsed HTML body
-
-                  
-                // }
-
+                
                 const column = element.querySelector('td') ;
                 const row = element.querySelector('tr') ;
                 const table = element.querySelector('table') ;
                 hasTable = table || row || column;
-                // Check if the block contains an image
+                
                 const hasImage = element.querySelector('img');
-                // console.log(hasImage,hasTable)
-                if (hasImage || hasTable) {
-                  // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
-                  // if (confirmDelete) {
-                    // deleteBlock();
-                    setIsDialogOpen(true);
-                  // }
-                } else {
-                  deleteBlock(element);
-                  // console.log('element:', element)
-
+                
+                if (hasImage) { 
+                  setIsImageDialogOpen(true);
+                } 
+                else if (hasTable) { 
+                  setIsTableDialogOpen(true);
                 }
-                
-                
+                else {
+                  deleteBlock(element); 
+                  editor.value = "";
+                } 
               },
             },
             "|",
@@ -1076,9 +1254,25 @@ function deleteBlock(content) {
           exec(editor, _, { control }) {
             let value = control.args && control.args[0];
             if (editorContent) {
+              
               let tempElement;
               const element = parser(editor.value)
-              // console.log('element - format:', element.innerHTML)
+              console.log('element - format:', element)
+              const thead = element.querySelector("thead");
+              const tbody = element.querySelector("tbody");  
+              if(tbody || thead){
+                return
+              }
+
+              console.log("🚀 ~ exec ~ element.querySelector('mjx-container') :", element.querySelector('mjx-container') )
+              if (element.querySelector('mjx-container') && value!="Fórmula centrada") {
+                // console.log('The element contains the "math-block" class.');
+                return
+              } 
+              // else {
+              //   console.log('The element does not contain the "math-block" class.');
+              // }
+              
               if (value == "Título 1") {
                 const tempElement = document.createElement("h2");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
@@ -1240,7 +1434,7 @@ function deleteBlock(content) {
 
   useEffect(() => {
     if (editorContent) {
-      console.log('editorContent - main:',editorContent)
+      // console.log('editorContent - main:',editorContent)
 
       let content = editorContent.outerHTML;
       // console.log('editorContent.outerHTML =>', editorContent)
@@ -1269,7 +1463,7 @@ function deleteBlock(content) {
   useEffect(() => {
     setModel(improvedText);
   }, [improvedText]);
-
+ 
 
   function processImageTag(element) {
     // Early return if no element provided
@@ -1387,7 +1581,7 @@ function deleteBlock(content) {
 
 
   useEffect(() => { 
-    console.log('element - model:',model)
+    // console.log('element - model:',model)
     let contentChangeModel = model.replace(/border:\s*\d+(\.\d+)?px\s*solid\s*red;/g, "");
     // setEditorValue(model)
     const element = parser(model);
@@ -1404,18 +1598,21 @@ function deleteBlock(content) {
           }
         }
       }
-    }
-
-    
+    } 
   }, [model]);
+
   const confirmDelete = () => {
     // console.log('deleteContent:',deleteContent)
     deleteBlock(deleteContent); 
-    setIsDialogOpen(false); 
+    setIsImageDialogOpen(false); 
+    setIsTableDialogOpen(false); 
+
   };
 
   const cancelDelete = () => {
-    setIsDialogOpen(false);  
+    setIsImageDialogOpen(false);
+    setIsTableDialogOpen(false);  
+
   };
 
 
@@ -1591,7 +1788,7 @@ function deleteBlock(content) {
   // Initialize editor value when component mounts
   useEffect(() => {
     if (editorContent) {
-      console.log("🚀 ~ useEffect ~ editorContent:", editorContent)
+      // console.log("🚀 ~ useEffect ~ editorContent:", editorContent)
       const contentId = editorContent.getAttribute('data-content-id') || `content-${Date.now()}`;
       editorContent.setAttribute('data-content-id', contentId);
       
@@ -1599,17 +1796,19 @@ function deleteBlock(content) {
       // console.log("editorContent:",editorContent)
       if(editorContent.innerHTML != 'Nuevo párrafo'){
         const changedContent = initialContent.replace(/border:\s*\d+(\.\d+)?px\s*solid\s*red;/g, "");
-        console.log("🚀 ~ useEffect ~ changedContent:", changedContent)
+        // console.log("🚀 ~ useEffect ~ changedContent:", changedContent)
         const img = editorContent.querySelector("img");
         if(img){
           console.log('IMAGE')
+          // setClicked(editorContent)
+          // clickedDiv=editorContent
           const parent = img.parentElement;
           if (parent) {
             parent.style.display = 'flex';
             parent.style.justifyContent = 'center';
             parent.style.alignItems = 'center';
             parent.style.flexDirection = 'column';
-            console.log("🚀 ~ useEffect ~ parent:", parent)
+            // console.log("🚀 ~ useEffect ~ parent:", parent)
             // setEditorValue(parent);
             // setModel(parent);
             // setPendingChanges(false);
@@ -1631,6 +1830,8 @@ function deleteBlock(content) {
 
   return (
     <div className="w-full px-1">
+      <Toaster position="top-center" />
+
       <div id="mathtoolbar" className="hidden"></div>
       <div className="flex justify-between">
         <span className="font-semibold text-[25px]">{section}</span>
@@ -1650,10 +1851,16 @@ function deleteBlock(content) {
         )}
       </div>
       <ConfirmationDialog
-         isOpen={isDialogOpen}
+         isOpen={isImageDialogOpen}
          onClose={cancelDelete}
          onConfirm={confirmDelete}
          message="Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar?"
+       />
+       <ConfirmationDialog
+         isOpen={isTableDialogOpen}
+         onClose={cancelDelete}
+         onConfirm={confirmDelete}
+         message="Si borras este bloque no podras deshacer la acción ni recuperar la tabla, a no ser que la reconstruyas manualmente. ¿Deseas continuar?"
        />
     </div>
   );
