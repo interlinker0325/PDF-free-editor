@@ -1,21 +1,52 @@
-export default function Card({
+// Router
+import { useRouter } from 'next/router';
+
+// Styles 
+import styles from './styles'
+
+// Shadcn IU
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
+
+export default ({
     id,
     title,
     description,
     course,
     coverimage
-}) {
+}) => {
+    const router = useRouter();
+
     return (
-        <a href={`/posts/${id}`} className='group card cursor-pointer bg-base-100 shadow-lg hover:shadow-xl border-[1px] border-transparent rounded-none border-b-black hover:border-b-transparent'>
-            {coverimage &&
-                <figure><img className='h-[150px] w-full' src={coverimage.url} alt={coverimage.title} /></figure>
-            }
-            <div className='card-body p-4 hover group-hover:bg-other pb-6 gap-4'>
-                <h2 className='card-title line-clamp-3 font-roboto font-normal text-2xl leading-5 group-hover:text-white'>
-                    {title}
-                </h2>
-                <p className='text-base font-normal font-caslon max-w-prose text-ellipsis overflow-hidden line-clamp-2 group-hover:text-white'>{description}</p>
-            </div>
-        </a>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Card className={styles.contCard} onClick={() => router.push(`/posts/${id}`)}>
+                  <CardHeader className={styles.contHead}>
+                    {coverimage && (
+                      <figure><img className='rounded-t-[12px] h-[200px] w-full' src={coverimage.url} alt={coverimage.title} /></figure>
+                    )}
+                  </CardHeader>
+                  <CardContent className="p-[10px] h-[70px]">
+                    <p className={styles.contTitle}>{title}</p>
+                  </CardContent>
+                  <CardFooter className="p-[10px]">
+                    <p className={styles.contDescription}>{description}</p>
+                  </CardFooter>
+                </Card>
+              </TooltipTrigger>
+              <TooltipContent className="bg-black text-white p-2 rounded-md max-w-[250px]">
+                <p className="font-bold">{title}</p>
+                <p className="text-sm">{description}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
     );
 }

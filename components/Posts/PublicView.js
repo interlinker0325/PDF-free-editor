@@ -1,10 +1,19 @@
 import {useState} from 'react';
 import PublicIFrame from 'components/IFrame/PublicIFrame';
 import {isAdmin as isUserAdmin, isPostDraftOrDeclined} from 'utils';
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {deleteEntry} from "../../handlers/bll";
 import {useRouter} from "next/router";
 import {enqueueSnackbar} from "notistack";
+
+// Shacn IU
+import { Button } from "@/components/ui/button"
+import { Edit2, Trash2 } from "lucide-react"
+import { Badge } from "@/components/ui/custom-badge"
+import { ChevronRight } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+const cn = (...classes) => classes.filter(Boolean).join(" ")
 
 const _ = require('lodash');
 
@@ -21,7 +30,9 @@ const PublicView = ({
   const [showFiles, setshowFiles] = useState(false);
   const [deletePrompt, setDeletePrompt] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const toggleShowFiles = () => setshowFiles(!showFiles);
+  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
   const author = post?.author;
   const isCurrentUserAuthor = author?.id === user?.id;
   console.log({user})
@@ -42,7 +53,7 @@ const PublicView = ({
 
   const postDraft = isPostDraftOrDeclined(post);
   let formattedDate = new Date(post.createdAt).toLocaleDateString('es-ES', options);
-  console.log({isAdmin})
+
   return (
     <>
       <Dialog open={deletePrompt} onClose={() => setDeletePrompt(false)}>
@@ -77,53 +88,83 @@ const PublicView = ({
           }} color='error'>{loading ? "Borrando..." : "Si"}</Button>
         </DialogActions>
       </Dialog>
-      <article className='flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap'>
-        <div
-          className='flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black'>
-          <h2 className="col-span-4 text-4xl">{post.title}</h2>
-          {(isAdmin || (isCurrentUserAuthor && !editMode && postDraft)) && (
-            <div className="flex space-x-2">
-              <a
-                href={`/posts/${post.id}/edit`}
-                className="text-2xl text-white bg-blue-500 hover:bg-blue-700 py-1 px-2 rounded"
-              >
-                {"Editar"}
-              </a>
-              {!isAdmin && (<button
-                onClick={() => setDeletePrompt(true)}
-                className="text-2xl text-white bg-red-500 hover:bg-red-700 py-1 px-2 rounded"
-              >
-                {"Eliminar"}
-              </button>)}
+      <Card className='flex p-[15px] flex-col gap-4 items-stretch justify-start content-start flex-nowrap'>
+         <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="line-clamp-1 text-2xl font-bold">{post.title}</CardTitle>
+            <div className="flex gap-2">
+              <Button onClick={() => router.push(`/posts/${post.id}/edit`)} variant="default" size="sm">
+                <Edit2 className="mr-2 h-4 w-4" />
+                Editar
+              </Button>
+              {!isAdmin &&  
+                <Button onClick={() => setDeletePrompt(true)} variant="destructive" size="sm">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Eliminar
+                </Button>
+              }
+            </div>
+          </CardHeader>
+          <CardContent>
+          <div className="ml-[10px] rounded-lg border bg-card text-card-foreground shadow-sm">
+          <Button
+            variant="ghost"
+            onClick={toggleCollapse}
+            className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+          >
+            <span>Información del Post</span>
+            <ChevronRight
+              className={cn("h-4 w-4 shrink-0 transition-transform duration-200", !isCollapsed && "rotate-90")}
+            />
+          </Button>
+
+          {!isCollapsed && (
+            <div className="space-y-3 border-t px-4 py-3">
+              {course && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-muted-foreground">Curso:</span>
+                  <Badge variant="secondary" className="font-normal">
+                    {course.name}
+                  </Badge>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-muted-foreground">Autor(es):</span>
+                <Badge variant="secondary" className="font-normal">
+                  {author?.fullname || user?.fullname}
+                </Badge>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-muted-foreground">Tutor(a):</span>
+                <span className="text-sm">{post?.coauthors.map((coauthor) => coauthor.fullname).join(", ")}</span>
+              </div>
+
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-muted-foreground">Fecha publicación:</span>
+                <span>{formattedDate}</span>
+              </div>
+
+              <div className="space-y-2">
+                <Button
+                  variant="ghost"
+                  onClick={toggleShowFiles}
+                  className="flex h-auto items-center gap-2 p-0 text-sm font-medium text-muted-foreground hover:text-foreground"
+                >
+                  <span>Contenido Adjunto</span>
+                  <ChevronRight
+                    className={cn("h-4 w-4 shrink-0 transition-transform duration-200", showFiles && "rotate-90")}
+                  />
+                </Button>
+
+                {showFiles && <div className="pl-4">{files}</div>}
+              </div>
             </div>
           )}
         </div>
-        <div className='grid grid-cols-7 gap-5'>
-          <PublicIFrame className='min-h-[70vh] col-span-5 pr-5' srcDoc={previewIframe || post.monographView}/>
-          <aside
-            className='col-span-2 flex flex-col gap-4 pl-5 border-[1px] border-transparent rounded-none border-l-black'>
-            {course &&
-              <h3 className='text-lg font-caslon'><span
-                className='text-primary font-roboto text-xl pr-2'>Curso:</span>{course.name}</h3>
-            }
-            <h4 className='text-lg font-caslon'><span
-              className='text-primary font-roboto text-xl pr-2'>Autor(es):</span>{author?.fullname || user?.fullname}
-            </h4>
-            {Array.isArray(post?.coauthors) && post?.coauthors.length > 0 &&
-              <h4 className='text-lg font-caslon'>{post?.coauthors.map(coauthor => coauthor.fullname).join(', ')}</h4>
-            }
-            <h4 className='text-lg font-caslon'><span
-              className='text-primary font-roboto text-xl pr-2'>Tutor(a):</span>{course?.professor?.fullname}</h4>
-            <h4 className='text-lg font-caslon'><span className='text-primary font-roboto text-xl pr-2'>Fecha publicación:</span>{formattedDate}
-            </h4>
-            <a onClick={toggleShowFiles} className='text-other hover:text-primary underline underline-offset-2'>Contenido
-              Adjunto &gt;</a>
-            <div className='w-full pl-4 flex flex-col gap-0'>
-              {showFiles && files}
-            </div>
-          </aside>
-        </div>
-      </article>
+          <PublicIFrame className='min-h-[75vh]' srcDoc={previewIframe || post.monographView}/>
+          </CardContent>
+      </Card>
     </>
   );
 };

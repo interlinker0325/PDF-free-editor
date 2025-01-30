@@ -1,10 +1,33 @@
 import { INPUT_TYPES } from 'utils/form';
 
+// Shadcn IU
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+
 const EditProfile = ({ errorState, ...props }) => (
     <form className='flex flex-col gap-4' onSubmit={e => e.preventDefault()}>
-        <section className='flex flex-col border-b-black border-b-2 pb-8 mb-5 gap-1'>
-            <div className='form-control'>
+        <div className={`${styles.avatarCard} flex justify-center mb-[30px]`}>
+            <label className='cursor-pointer'>
+                {props?.avatarView}
                 <input
+                    className={styles.fileInput}
+                    type='file'
+                    name='avatar'
+                    id='avatar'
+                    onChange={(e) => props.onChange(e, 'avatar')}/>
+                </label>
+        </div>
+        <section className='grid grid-cols-[repeat(auto-fit,minmax(229px,1fr))] border-b-black border-b-2 pb-8 mb-5 gap-[20px]'>
+            <div className='form-control max-md:w-full'>
+                <Input
                     className={styles.titleInput(
                         props.profile.fullname,
                         errorState.field === INPUT_TYPES.FULLNAME
@@ -15,8 +38,8 @@ const EditProfile = ({ errorState, ...props }) => (
                     value={props.profile.fullname || ''}
                     onChange={(e) => props.onChange(e, INPUT_TYPES.FULLNAME)}/>
             </div>
-            <div className='form-control'>
-                <input
+            <div className='form-control max-md:w-full'>
+                <Input
                     className={styles.titleInput(
                         props.profile.email,
                         errorState.field === INPUT_TYPES.EMAIL
@@ -28,8 +51,8 @@ const EditProfile = ({ errorState, ...props }) => (
                     onChange={(e) => props.onChange(e, INPUT_TYPES.EMAIL)}/>
 
             </div>
-            <div className='form-control'>
-                <input
+            <div className='form-control max-md:w-full'>
+                <Input
                     className={styles.titleInput(
                         props.profile.phone,
                         errorState.field === INPUT_TYPES.PHONE
@@ -41,8 +64,8 @@ const EditProfile = ({ errorState, ...props }) => (
                     value={props.profile.phone || ''}
                     onChange={(e) => props.onChange(e, INPUT_TYPES.PHONE)}/>
             </div>
-            <div className='form-control'>
-                <input
+            <div className='form-control max-md:w-full'>
+                <Input
                     className={styles.titleInput(
                         props.profile.birthdate,
                         errorState.field === INPUT_TYPES.BIRTHDATE
@@ -53,22 +76,27 @@ const EditProfile = ({ errorState, ...props }) => (
                     value={props.profile.birthdate || ''}
                     onChange={(e) => props.onChange(e, INPUT_TYPES.BIRTHDATE)}/>
             </div>
-            <div className='form-control'>
-                <select
+            <div className='form-control max-md:w-full'>
+                <Select
                     className={styles.select(
                         props.profile.gender,
                         errorState.field === INPUT_TYPES.GENDER
                     )}
                     value={props.profile.gender || 'default'}
-                    onChange={(e) => props.onChange(e, INPUT_TYPES.GENDER)}>
-                    <option className={styles.option} value='default' selected='selected' disabled='disabled'>Género</option>
-                    <option className={styles.option} value='masculino'>Masculino</option>
-                    <option className={styles.option} value='femenino'>Femenino</option>
-                    <option className={styles.option} value='otro'>Otro</option>
-                </select>
+                    onValueChange={(e) => props.onChange({ target: { value: e}}, INPUT_TYPES.GENDER)}>
+                     <SelectTrigger >
+                        <SelectValue placeholder="Género" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem className={styles.option} value='default' selected='selected' disabled='disabled'>Género</SelectItem>
+                        <SelectItem className={styles.option} value='masculino'>Masculino</SelectItem>
+                        <SelectItem className={styles.option} value='femenino'>Femenino</SelectItem>
+                        <SelectItem className={styles.option} value='otro'>Otro</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
-            <div className='form-control'>
-                <input
+            <div className='form-control max-md:w-full'>
+                <Input
                     className={styles.titleInput(
                         props.profile.residence,
                         errorState.field === INPUT_TYPES.RESIDENCE
@@ -82,7 +110,7 @@ const EditProfile = ({ errorState, ...props }) => (
         </section>
         <div className='flex flex-col gap-2 mb-2'>
             <h4 className='text-2xl text-primary'>Carrera/Universidad/Nivel:</h4>
-            <textarea
+            <Textarea
                 maxLength='200'
                 name={INPUT_TYPES.LEVEL}
                 className={styles.textarea(
@@ -108,7 +136,7 @@ const EditProfile = ({ errorState, ...props }) => (
         {/*</div>*/}
         <div className='flex flex-col gap-2 mt-2'>
             <h4 className='text-2xl text-primary'>Experiencia laboral:</h4>
-            <textarea
+            <Textarea
                 maxLength='200'
                 name={INPUT_TYPES.EXPERIENCE}
                 className={styles.textarea(
@@ -119,18 +147,22 @@ const EditProfile = ({ errorState, ...props }) => (
                 value={props.profile.experience || ''}
                 onChange={(e) => props.onChange(e, INPUT_TYPES.EXPERIENCE)} />
         </div>
+        <div className="flex justify-center gap-[20px]">
+            <Button type='button'  onClick={props.submitUpdateProfile}>Guardar</Button>
+            <Button type='button' className="bg-white text-[#222]border-black" onClick={props.doCancel}>Cancelar</Button>
+        </div>
     </form>
 );
 
-const STYLE_ACTIVE = 'text-primary border-b-other';
+const STYLE_ACTIVE = 'border-b-black';
 const STYLE_INACTIVE =  'text-titleInput border-b-black';
 const STYLE_ERROR =  'placeholder:text-error text-error border-b-error';
 
 const styles = {
-    titleInput: (val, err) => `${err ? STYLE_ERROR : val ? STYLE_ACTIVE : STYLE_INACTIVE} w-1/2 font-normal text-xl font-caslon input input-sm input-ghost border-transparent rounded-none`,
+    titleInput: (val, err) => `${err ? STYLE_ERROR : val ? STYLE_ACTIVE : STYLE_INACTIVE} font-normal text-xl font-caslon max-md:w-full`,
     label: 'cursor-pointer label justify-start gap-4',
     icon: 'label-text w-8 h-8 text-sm',
-    select: (val, err) => `${err ? STYLE_ERROR : val ? STYLE_ACTIVE : STYLE_INACTIVE} w-1/2 font-normal text-xl font-caslon select input-ghost h-8 min-h-8 pl-3 border-[1px] border-transparent rounded-none`,
+    select: (val, err) => `${err ? STYLE_ERROR : val ? STYLE_ACTIVE : STYLE_INACTIVE} w-1/2 font-normal text-xl font-caslon select input-ghost h-8 min-h-8 pl-3 border-[1px] max-md:w-full`,
     option: 'font-normal text-xl font-caslon',
     textarea: (val, err) => `${err ? 'text-error border-error' : val ? 'text-black border-primary' : 'border-transparent text-titleInput'} w-full font-normal mb-4 h-[143px] text-xl font-caslon textarea rounded-none resize-none bg-secondary h-1/2`
 };

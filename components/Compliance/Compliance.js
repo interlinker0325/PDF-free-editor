@@ -16,13 +16,13 @@ const Compliance = ({
 
     return (
         <div className='styles.complianceContainer'>
-            <div className='text-red-500 text-left mt-2 ml-[7px] text-md'>- Revisa los cuadros rojos en el texto.</div>
-            <div className="text-red-500 text-left mt-2 ml-[7px] text-md">
+            <div className='text-red-500 text-left mt-2 text-md'>- Revisa los cuadros rojos en el texto.</div>
+            <div className="text-red-500 text-left mt-2 text-md">
                 - La coherencia se revisará nuevamente antes de publicar
             </div>
             {/* <Animation /> */}
-            <div id='compliance' className="flex justify-around mt-3 leading-6 text-[14px] 2xl:text-xl 2xl:leading-8">
-                <div className="w-7/12">
+            <div id='compliance' className="flex flex-wrap justify-around mt-3 leading-6 text-[14px] 2xl:text-xl 2xl:leading-8">
+                <div className="w-full">
                     <div className="my-2 border border-blue-500 py-2 relative">
                         <div className="flex justify-between px-5">
                             <div className="absolute text-xl -top-3 -left-1 bg-white px-2">
@@ -90,7 +90,7 @@ const Compliance = ({
                         </div>
                     </div>
                 </div>
-                <div className="w-4/12">
+                <div className="w-full">
                     <div className="my-2 border border-blue-500 p-3 relative">
                         <div className="flex">
                             <div className="absolute text-xl -top-3 -left-1 bg-white px-2">
