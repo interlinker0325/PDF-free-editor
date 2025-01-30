@@ -10,12 +10,12 @@ export default function SpeedButton({ handleSave }) {
             <Button
               variant="ghost"
               size="lg"
-              className="bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center shadow-lg transition-transform hover:scale-105"
+              className="bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center shadow-lg transition-transform hover:bg-primary/80"
             >
               <PlusIcon className="h-8 w-8" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Add new contact</TooltipContent>
+          <TooltipContent className="z-[999]">Guardar Publicacion</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>

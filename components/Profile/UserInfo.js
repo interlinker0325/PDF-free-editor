@@ -40,13 +40,13 @@ const UserInfo = ({
                     refAvatar,
                     items,
                     user,
+                    activeView,
+                    setActiveView,
                     ...props
                   }) => {
-  const [activeView, setActiveView] = React.useState(true)
   const [isClient, setIsClient] = React.useState(false);
-
   let formattedDate = new Date(updatedAt).toLocaleDateString('es-ES', options);
-
+  console.log(updatedAt,"updatedAt updatedAt")
   const handlerEdit = () => setActiveView(!activeView)
   const handlerOnClose = () => {
     handlerEdit()

@@ -241,6 +241,13 @@
   }
 }
 
+.focus\:bg-accent:focus {
+  background-color: transparent !important;
+}
+
+[data-state="open"].menu-profile {
+  background-color: #0c067c !important;
+}
 
 /* body {
   background: black;

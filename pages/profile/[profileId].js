@@ -49,6 +49,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   const [errorForm, setErrorForm] = useState(DEFAULT_ERRORFORM);
   const [avatarImage, setAvatarImage] = useState(null);
   const [activeView, setActiveView] = useState(VIEW_STATES.USER);
+  const [activeModeEdit, setActiveModeEdit] = useState(true)
   const {query: {profileId}} = useRouter();
   const isCurrentUserProfile = profileId === DEFAULT_USER_ID;
   const refs = {
@@ -126,6 +127,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       level,
       sharing,
       experience,
+      updatedAt
     } = formState;
 
     const fieldsStatus = verifyMutipleFields([
@@ -165,8 +167,11 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       alert('No se pudo actualizar la entrada');
     } else {
 
-      if (avatar?.id)
-        entry.avatar = avatar
+      if (avatar?.id) {
+         entry.avatar = avatar
+         entry.updatedAt = updatedAt
+         setActiveModeEdit(true)
+      }
 
       setFormState({...entry});
     }
@@ -203,6 +208,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
           refAvatar={refs}
           items={posts.filter(item => item.review !== POST_REVIEW_STATUS.DRAFT)}
           user={user}
+          activeView={activeModeEdit} 
+          setActiveView={setActiveModeEdit}
           {...formState} />
     },
     {
