@@ -1,6 +1,6 @@
 export default {
     settings: {
-        // autoplay: true,
+        autoplay: true,
         infinite: false,
         slidesToShow: 3,
         slidesToScroll: 3,

@@ -47,7 +47,7 @@ const ButtonsList = ({ items , handleClick }) => {
                 items.map((item, index) => {
                     if (item?.isAction && !item?.isMobile) {
                        return ( 
-                        <Button key={index} onClick={() => handleClick(item)} className={styles.contBtn} variant="outline">
+                        <Button key={index} onClick={() => handleClick(item)} className={styles.contBtn} variant="link">
                             {item.name}
                         </Button>
                        )

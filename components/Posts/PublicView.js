@@ -30,7 +30,9 @@ const PublicView = ({
   const [showFiles, setshowFiles] = useState(false);
   const [deletePrompt, setDeletePrompt] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const toggleShowFiles = () => setshowFiles(!showFiles);
+  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
   const author = post?.author;
   const isCurrentUserAuthor = author?.id === user?.id;
   console.log({user})
@@ -103,38 +105,63 @@ const PublicView = ({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="mb-6 grid gap-2">
+          <div className="ml-[10px] rounded-lg border bg-card text-card-foreground shadow-sm">
+          <Button
+            variant="ghost"
+            onClick={toggleCollapse}
+            className="flex w-full items-center justify-between px-4 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+          >
+            <span>Información del Post</span>
+            <ChevronRight
+              className={cn("h-4 w-4 shrink-0 transition-transform duration-200", !isCollapsed && "rotate-90")}
+            />
+          </Button>
+
+          {!isCollapsed && (
+            <div className="space-y-3 border-t px-4 py-3">
               {course && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">Curso:</span>
-                      <Badge variant="secondary">{course.name}</Badge>
-                    </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-muted-foreground">Curso:</span>
+                  <Badge variant="secondary" className="font-normal">
+                    {course.name}
+                  </Badge>
+                </div>
               )}
-              <div className="flex items-center gap-2">
-                <span className="font-semibold">Autor(es):</span>
-                <Badge variant="secondary">{author?.fullname || user?.fullname}</Badge>
+
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-muted-foreground">Autor(es):</span>
+                <Badge variant="secondary" className="font-normal">
+                  {author?.fullname || user?.fullname}
+                </Badge>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold">Tutor(a):</span>
-                <span> {post?.coauthors.map((coauthor) => coauthor.fullname).join(', ')}</span>
+
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-muted-foreground">Tutor(a):</span>
+                <span className="text-sm">{post?.coauthors.map((coauthor) => coauthor.fullname).join(", ")}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold">Fecha publicación:</span>
+
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-medium text-muted-foreground">Fecha publicación:</span>
                 <span>{formattedDate}</span>
               </div>
-              <div className="flex items-center gap-2">
-              <Button
-                variant="link"
-                className="size-min h-auto p-0 text-muted-foreground hover:text-primary"
-                onClick={toggleShowFiles}
-              >
-                <span>Contenido Adjunto</span>
-                <ChevronRight className={cn("ml-1 h-4 w-4 transition-transform", showFiles && "rotate-90")} />
-              </Button>
-                {showFiles && <div className="mt-2 pl-4">{files}</div>}
+
+              <div className="space-y-2">
+                <Button
+                  variant="ghost"
+                  onClick={toggleShowFiles}
+                  className="flex h-auto items-center gap-2 p-0 text-sm font-medium text-muted-foreground hover:text-foreground"
+                >
+                  <span>Contenido Adjunto</span>
+                  <ChevronRight
+                    className={cn("h-4 w-4 shrink-0 transition-transform duration-200", showFiles && "rotate-90")}
+                  />
+                </Button>
+
+                {showFiles && <div className="pl-4">{files}</div>}
               </div>
             </div>
-            
+          )}
+        </div>
           <PublicIFrame className='min-h-[75vh]' srcDoc={previewIframe || post.monographView}/>
           </CardContent>
       </Card>
