@@ -1,9 +1,10 @@
 export default {
     settings: {
         autoplay: true,
-        infinite: false,
+        infinite: true,
         slidesToShow: 3,
         slidesToScroll: 3,
+        speed: 500,
         appendArrows: '$(#slider-primary)',
         dots: true,
         arrows: true,

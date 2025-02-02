@@ -834,7 +834,7 @@ const PostView = ({
           <h2 id="title" className="line-clamp-1 overflow-hidden col-span-4 text-4xl cursor-pointer pb-[unset]">{post.title}</h2>
         </div>
         <div className="flex flex-wrap gap-[20px]">
-          <aside className={`${showPreview ? "col-span-7" : "col-span-6"} min-h-[800px] h-auto border-[1px] border-transparent max-md:w-[100%] max-[768px]:w-full min-[769px]:w-[68%] `}>
+          <aside className={`${showPreview ? "col-span-7" : "col-span-6"} min-h-[800px] h-auto border-[1px] border-transparent max-md:w-[100%] max-[768px]:w-full ${!editView && `min-[769px]:w-[68%]`} ${editView && `lg:w-[59%]`}`}>
             <IFrame
               className="p-[unset]"
               srcDoc={previewIframe || post.monographView}
@@ -847,7 +847,7 @@ const PostView = ({
             />
           </aside>
           {editView && (
-            <Card className="max-md:w-[100%] max-[769px]:m-auto min-[769px]:w-[29%] max-[1024px]:w-full col-span-4 flex flex-col gap-4 p-[20px] rounded-none">
+            <Card className="max-md:w-[100%] max-[769px]:m-auto lg:w-[38%] max-[1023px]:w-full col-span-4 flex flex-col gap-4 p-[20px] rounded-none">
               <ErrorBoundary>
                 <Editor
                   setChangedContent={setChangedContent}

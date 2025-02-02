@@ -74,7 +74,7 @@ export async function getServerSideProps() {
       currentPage: CURRENT_PAGE,
       posts: allPosts,
       banners: banners,
-      showMore: !(allPosts.length < 10),
+      showMore: !(allPosts.length < 24),
     },
   };
 }

@@ -1,23 +1,36 @@
+import React from 'react'
+
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 
 export default function SpeedButton({ handleSave }) {
+  const [initShow, setShow] = React.useState(true)
+
+  setTimeout(() => {
+    setShow(false)
+  }, 3000);
+
   return (
     <div className="fixed z-[9999] bottom-6 right-6" onClick={handleSave}>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center shadow-lg transition-transform hover:bg-primary/80"
-            >
-              <PlusIcon className="h-8 w-8" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent className="z-[999]">Guardar Publicacion</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="lg"
+            className="bg-primary text-primary-foreground rounded-full h-16 w-16 flex items-center justify-center shadow-lg transition-transform hover:bg-primary/80"
+          >
+            <PlusIcon className="h-8 w-8" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent className="z-[999]">Guardar Publicacion</TooltipContent>
+      </Tooltip>
+      {initShow && (
+        <div className="absolute bottom-20 right-0  w-[200px] bg-primary text-primary-foreground px-3 py-1.5 text-xs rounded-md shadow-md">
+          Haz clic para guardar la publicación. Si cumples con los requisitos, podrás publicarla.
+        </div>
+      )}
+    </TooltipProvider>
     </div>
   )
 }
