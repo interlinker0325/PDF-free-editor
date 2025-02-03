@@ -46,7 +46,7 @@ const UserInfo = ({
                   }) => {
   const [isClient, setIsClient] = React.useState(false);
   let formattedDate = new Date(updatedAt).toLocaleDateString('es-ES', options);
-  console.log(updatedAt,"updatedAt updatedAt")
+  console.log(updatedAt, "updatedAt updatedAt")
   const handlerEdit = () => setActiveView(!activeView)
   const handlerOnClose = () => {
     handlerEdit()
@@ -98,7 +98,7 @@ const UserInfo = ({
                 </div>
                 {
                     activeView && <Button onClick={handlerEdit} className="w-full">Editar Perfil</Button>
-                } <i>Última actualización: {formattedDate}</i>
+                } <i className={"text-base"}>Última actualización: <br/> {formattedDate}</i>
               </div>
             </CardContent>
           </Card>

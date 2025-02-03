@@ -7,38 +7,14 @@ module.exports = {
   ],
   theme: {
     fontSize: {
-      sm: [
-        '12px',
-        '14px'
-      ],
-      base: [
-        '14px',
-        '17px'
-      ],
-      lg: [
-        '16px',
-        '19px'
-      ],
-      xl: [
-        '18px',
-        '21px'
-      ],
-      '2xl': [
-        '20px',
-        '24px'
-      ],
-      '3xl': [
-        '26px',
-        '30px'
-      ],
-      '4xl': [
-        '30px',
-        '35px'
-      ],
-      logo: [
-        '45px',
-        '55px'
-      ]
+      sm: ['13px', '16px'],
+      base: ['16px', '20px'],
+      lg: ['18px', '22px'],
+      xl: ['20px', '24px'],
+      '2xl': ['22px', '28px'],
+      '3xl': ['28px', '34px'],
+      '4xl': ['34px', '40px'],
+      logo: ['50px', '60px'],
     },
     extend: {
       fontFamily: {
