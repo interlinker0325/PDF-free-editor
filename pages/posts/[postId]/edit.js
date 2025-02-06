@@ -18,6 +18,7 @@ import {isAdmin as isUserAdmin, isAdmin} from "../../../utils";
 import {GET_ALL_COURSES_ADMIN} from "../../../gql/queries/User";
 
 const EditPost = ({post, courses, setIsSaved}) => {
+  const [titleTab, setTitleTab] = useState('')
   const router = useRouter();
   const {user} = useUser({redirectTo: '/'});
   useEffect(() => {
@@ -69,7 +70,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
   // console.log({post})
 
   return (
-    <Main>
+    <Main className="min-[1536px]:w-full min-[1536px]:m-auto min-[1536px]:max-w-[1536px]">
       <SnackbarProvider maxSnack={3}>
         {showEditView &&
           <TopBar>
@@ -94,6 +95,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
             setEditView,
             statusBarState,
             setComplianceView,
+            setTitleTab
           }}
         />
         <PostForm
@@ -106,6 +108,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
           setCoAuthors={setCoAuthors}
           removeCoAuthor={removeCoAuthor}
           formView={formView}
+          showPreview={!formView}
           courses={courses}
         />
         <PostView
@@ -120,6 +123,8 @@ const EditPost = ({post, courses, setIsSaved}) => {
           setIsSaved={setIsSaved}
           logicCheck={logicCheck}
           setAllPass={setAllPass}
+          titleTab={titleTab}
+          showFormView={formView}
         />
         <Loader show={showLoadingScreen}/>
         <RequestApprovalDialog {...{open, setOpen, requestApproval}}/>

@@ -1,9 +1,9 @@
 import nextConnect from 'next-connect';
 import multer from 'multer';
 import fs from 'fs';
-import { createUpload, deleteUpload } from 'utils/server/dato';
+import {createUpload, deleteRecord, deleteUpload} from 'utils/server/dato';
 
-const DIR = './uploads'
+const DIR = './uploads';
 
 if (!fs.existsSync(DIR)) fs.mkdirSync(DIR);
 
@@ -17,32 +17,59 @@ const upload = multer({
 const apiRoute = nextConnect({});
 const uploadMiddleware = upload.array('files');
 
-apiRoute.use(uploadMiddleware);
-
-apiRoute.post(async (req, res) => {
-  let result = { success: false, data: {} };
+// POST route for uploading files
+apiRoute.post(uploadMiddleware, async (req, res) => {
+  let result = {success: false, data: {}};
 
   if (req.method === 'POST') {
-    const { files, fileId } = req;
-    console.log(fileId, "fileid")
+    const {files} = req;
+    console.log("===FILES DATA===", {files});
 
     let uploads = await Promise.all(files.map(file => createUpload(file.path)));
-    console.log(fileId, "file-id")
-    if (fileId) {
-      console.log("Deleting old file version...")
-      await deleteUpload(fileId)
-    }
-    uploads = uploads.map(({ id, url, filename }) => ({
+
+    uploads = uploads.map(({id, url, filename}) => ({
       id,
       url,
-      filename
+      filename,
     }));
 
     result.success = true;
-    result.data = { uploads };
+    result.data = {uploads};
   }
+  if (result?.error) res.status(500).send(result);
+  else res.json(result);
+});
 
-  res.json(result);
+// DELETE route for deleting files
+apiRoute.delete(async (req, res) => {
+  let result = {success: false, data: {}};
+
+  try {
+    // Parse the raw request body
+    const buffers = [];
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+    const body = JSON.parse(Buffer.concat(buffers).toString());
+    const {file2delete} = body;
+
+    console.log("===DELETING FILES===", file2delete);
+
+    const record = await deleteUpload(file2delete);
+    console.log("===deleteUpload===", record);
+
+    if (!record?.error) {
+      result.success = true;
+      result.data = record;
+      res.status(200).json(result);
+    } else {
+      result.error = record.error;
+      res.status(500).send(result);
+    }
+  } catch (error) {
+    console.error("Error in DELETE route:", error);
+    res.status(500).send({success: false, error: "Failed to parse request body or delete file."});
+  }
 });
 
 export default apiRoute;

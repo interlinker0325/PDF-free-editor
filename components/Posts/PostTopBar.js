@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import confetti from 'canvas-confetti';
 import { isAdmin as isUserAdmin } from "../../utils";
 
+// Shadcn IU
+import { Button } from "@/components/ui/button"
+import SpeedButton from './SpeedButton'
+
 export default function PostTopBar({
   user,
   allPass,
@@ -18,6 +22,7 @@ export default function PostTopBar({
   setEditView,
   statusBarState,
   setComplianceView,
+  setTitleTab
 }) {
   const isAdmin = isUserAdmin(user?.role?.id);
   const [time, setTime] = useState(true);
@@ -98,114 +103,56 @@ export default function PostTopBar({
     }
   }, [allPass]);
   return (
-    <TopBar>
-      <div className="flex flex-row justify-between w-full">
-        <div>
-          {(statusBarState.error || statusBarState.success) && (
-
-            <h5
-              className={
-                statusBarState.error
-                  ? "text-error text-2xl"
-                  : "text-primary text-2xl"
-              }
-            >
-              {statusBarState.error || statusBarState.success}
-            </h5>
-          )}
-        </div>
-        <div className="flex items-center">
-          <a
-            className={`${formView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
+    <div className="container max-md:mx-auto py-6">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-wrap gap-2">
+            <Button 
+              onClick={() => {
+                  setFormView(true);
+                  setShowPreview(false);
+                  setEditView(false);
+                  setComplianceView(false);
+              }}
+              disabled={formView}
+              variant="outline">Formulario</Button>
+          <Button
+              onClick={() => {
+                setTitleTab('Vista previa')
+                setShowPreview(true);
+                setFormView(false);
+                setEditView(false);
+                setComplianceView(false);
+              }}
+              disabled={showPreview}
+              variant="outline">Vista previa</Button>
+          <Button 
+              onClick={() => {
+                setTitleTab('Cumplimiento')
+                setComplianceView(true);
+                setEditView(false);
+                setShowPreview(false);
+                setFormView(false);
+              }}
+              disabled={complianceView}
+              variant="outline">Cumplimiento</Button>
+          <Button
             onClick={() => {
-              setFormView(true);
-              setShowPreview(false);
-              setEditView(false);
-              setComplianceView(false);
-            }}
-
-            children="Formulario"
-          />
-          <a
-            className={`${showPreview ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-16 text-2xl`}
-            onClick={() => {
-              setShowPreview(true);
-              setFormView(false);
-              setEditView(false);
-              setComplianceView(false);
-            }}
-
-            children="Vista previa"
-          />
-          <a
-            className={`${editView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-            onClick={() => {
+              setTitleTab('Editor')
               setEditView(true);
               setShowPreview(false);
               setFormView(false);
               setComplianceView(false);
             }}
-
-            children="Editor"
-          />
-          <a
-            className={`${complianceView ? 'text-zinc-400' : 'text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1'} ml-8 text-2xl`}
-            onClick={() => {
-              setComplianceView(true);
-              setEditView(false);
-              setShowPreview(false);
-              setFormView(false);
-            }}
-
-            children="Cumplimiento"
-          />
-          <div className="cursor-pointer ml-3 relative">
-            <Tooltip
-              title={allPass ? 'Tu documento ahora cumple...' : 'Consulte el panel...'}>
-              {allPass ? (
-                <div className="relative">
-                  <img
-                    width="30"
-                    height="auto"
-                    className="thumb-up"
-                    style={{
-                      position: 'relative',
-                      zIndex: 2,
-                      cursor: 'pointer'
-                    }}
-                    src="https://img.icons8.com/ios-filled/50/40C057/good-quality--v1.png"
-                    alt="good-quality--v1"
-                  />
-                  <div className="sprinkles">
-
-                    {/* Creating multiple sprinkles */}
-                    {Array.from({ length: 15 }).map((_, index) => (
-                      <div key={index} className={`sprinkle sprinkle-${index + 1}`} />
-                    ))}
-                  </div>
-                </div >
-              ) : (
-                <img src='/warning.png' className="w-8" />
-              )
-              }
-            </Tooltip >
-          </div >
-        </div >
-      </div >
-      <a
-        className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
-        onClick={handleSave}
-        children="Guardar"
-      />
-      {
-        !isAdmin && allPass && (
-          <a
-            className={`text-other cursor-pointer hover:text-primary hover:underline hover:underline-offset-1 ml-3 text-2xl`}
-            onClick={handlePublication}
-            children="Publicar"
-          />
-        )
-      }
-    </TopBar >
+            disabled={editView}
+            variant="outline">Editor</Button>
+          {
+            !isAdmin && allPass && (
+              <Button onClick={handlePublication}>Publicar</Button>
+            )
+          }
+          <SpeedButton {...{handleSave}}/>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -93,7 +93,6 @@ function deleteBlock(content) {
     
     try {
       if (content && content.parentNode) {
-        
 
         // Remove the content block
         content.parentNode.removeChild(content);
@@ -103,7 +102,6 @@ function deleteBlock(content) {
         const iframe = document.getElementById("documentWindow");
         const iframeDoc = iframe.contentWindow.document;
         const targetElement = iframeDoc.querySelector(`[data-content-id="${content.getAttribute('data-content-id')}"]`);
-        console.log("🚀 ~ deleteBlock ~ targetElement:", targetElement)
         if (targetElement) {
           targetElement.parentNode.removeChild(targetElement);
         }
@@ -163,12 +161,12 @@ function deleteBlock(content) {
   // },[model])
 
 
-  // useEffect(()=>{
-  //   console.log('editorValue:',editorValue)
-  // },[editorValue])
-  // useEffect(()=>{
-  //   console.log('editorContent:',editorContent)
-  // },[editorContent])
+  useEffect(()=>{
+    console.log('editorValue:',editorValue)
+  },[editorValue])
+  useEffect(()=>{
+    console.log('editorContent:',editorContent)
+  },[editorContent])
   
 
   // Add state for tracking formatted content
@@ -291,15 +289,11 @@ function deleteBlock(content) {
               return name.toLowerCase();
             },
             defaultHandlerSuccess: (response) => {
-              
-
               try {
                 if (response.files && response.files.length) {
                   response.files.forEach(file => {
                     const image = editor.current?.createInside.element('img');
-                    
                     if (image) {
-                      
                       image.setAttribute('src', file);
                       image.style.width = '80%';
                       image.setAttribute('tabindex', '0');
@@ -309,7 +303,9 @@ function deleteBlock(content) {
                 }
               } catch (error) {
                 console.error('Error handling image upload:', error);
-              } finally { 
+              } finally {
+                console.log('image:',image)
+
               }
             },
             defaultHandlerError: (error) => {
@@ -394,7 +390,6 @@ function deleteBlock(content) {
                 // else if(!clickedDiv && !clicked){
                   AddBlock()
                 // }
-
                 if (!body[0].textContent) {
                   const style = document.createElement("style");
                   const cssRules = `
@@ -580,7 +575,6 @@ function deleteBlock(content) {
                   if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     const blobURL = URL.createObjectURL(file);
-                    console.log("🚀 ~ insertBtn.addEventListener ~ blobURL:", blobURL)
                     
                     img = editor.createInside.element('img');
                     img.setAttribute('src', blobURL);
@@ -782,7 +776,6 @@ function deleteBlock(content) {
               name: "addDividedBlock",
               tooltip: "Divide en columnas",
               icon: `<svg viewBox="0 0 512 512"><path d="M0 96C0 60.7 28.7 32 64 32l384 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zm64 64l0 256 160 0 0-256L64 160zm384 0l-160 0 0 256 160 0 0-256z"/></svg>`,
-
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
                   // Create a container div with flex display
@@ -840,7 +833,7 @@ function deleteBlock(content) {
             // move selected block up
             {
               name: "blockUp",
-              tooltip: "Mueve bloque arriba",
+              tooltip: "Move Block Up",
               icon: "arrowup",
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
@@ -873,7 +866,7 @@ function deleteBlock(content) {
             // move selected block down
             {
               name: "blockDown",
-              tooltip: "Mueve bloque abajo",
+              tooltip: "Move Block Down",
               icon: "arrowdown",
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
@@ -976,7 +969,7 @@ function deleteBlock(content) {
             // AI assistant
             {
               name: "aiAssistant",
-              tooltip: "Asistente AI",
+              tooltip: "AI Assistant",
               icon: "ai_assistant",
               exec: (editor) => {
                 if (editor.value) {
@@ -1008,7 +1001,7 @@ function deleteBlock(content) {
             "|",
             {
               name: "math equation",
-              tooltip: "Ecuaciones Matemáticas",
+              tooltip: "Math Equation",
               icon: "math",
               exec: (editor) => {
                 const element = editor.value
@@ -1018,7 +1011,7 @@ function deleteBlock(content) {
             },
             {
               name: "chemistry equation",
-              tooltip: "Ecuaciones Químicas",
+              tooltip: "Chemistry Equation",
               icon: "chemistry",
               exec: (editor) => {
                 document.getElementById("chemistryIcon")?.click();
@@ -1028,7 +1021,7 @@ function deleteBlock(content) {
             // insert check button
             {
               name: "insertCheck",
-              tooltip: "Aplicar Cambios",
+              tooltip: "Apply Changes",
               icon: "greenCheck",
               exec: (editor) => {
                 try {
@@ -1041,10 +1034,18 @@ function deleteBlock(content) {
                   let content = editor.value;
                   
                   // Create a temporary div to parse the HTML
-                  const tempDiv = document.createElement('div'); 
-                  const formattedElements = tempDiv.querySelectorAll('[data-editor-only]'); 
-                  formattedElements.forEach(el => { 
-                    el.removeAttribute('data-editor-only'); 
+                  const tempDiv = document.createElement('div');
+                  // tempDiv.innerHTML = content;
+                  
+                  // Process elements with data-editor-only attribute
+                  const formattedElements = tempDiv.querySelectorAll('[data-editor-only]');
+                  // console.log('formattedElements:',formattedElements)
+                  
+                  formattedElements.forEach(el => {
+                    // Remove the data-editor-only attribute but keep the formatting
+                    el.removeAttribute('data-editor-only');
+                    // console.log('el:',el)
+                    // Apply the correct final formatting based on element type
                     if (el.tagName === 'H2') {
                       el.className = 'title-1';
                     } else if (el.tagName === 'H3') {
@@ -1054,31 +1055,35 @@ function deleteBlock(content) {
                     } else if (el.tagName === 'BLOCKQUOTE') {
                       el.className = 'text-box';
                     }
-                  }); 
+                  });
+                  
+                  // Get the cleaned content
+                  // content = tempDiv.innerHTML;
+                  
+                  // Update the iframe content
                   const iframe = document.getElementById("documentWindow");
                   if (iframe && iframe.contentWindow) {
                     // Determine which content to use: editorContent or element
-                    const referenceElement = editorContent && editorContent.innerHTML === "Nuevo párrafo" ? editorContent : element;
-                    // const referenceElement = element;
+                    const referenceElement =
+                      editorContent && editorContent.innerHTML === "Nuevo párrafo"
+                        ? editorContent
+                        : element;
                   
                     const targetElement = iframe.contentWindow.document.querySelector(
                       `[data-content-id="${referenceElement.getAttribute('data-content-id')}"]`
                     );
-                    console.log('targetElement - apply:',targetElement)
-                    console.log('editorContent - apply:',editorContent)
-
-                    const newElement = targetElement ?? editorContent
-                    if (newElement) {
+                  
+                    if (targetElement) {
                       const parsedContent = parser(content);
-                      newElement.innerHTML = parsedContent.innerHTML;
+                      targetElement.innerHTML = parsedContent.innerHTML;
                       
                       // console.log('content:',content)
-                      console.log('newElement:',newElement)
+                      console.log('targetElement:',targetElement)
 
-                      const imgTag = newElement.querySelector('img');
+                      const imgTag = targetElement.querySelector('img');
                       // console.log('imgTag:',imgTag)
                       
-                      // console.log('target exists')
+                      console.log('target exists')
                       
                       if (imgTag && !imgTag.classList.contains('Wirisformula')) {
                         console.log('image tag exists')
@@ -1086,22 +1091,22 @@ function deleteBlock(content) {
                         imgTag.style.display = 'block'; // Make it a block-level element
                         imgTag.style.margin = '0 auto'; // Center it horizontally within its container
                     
-                        // Center the content of newElement
-                        newElement.style.display = 'flex'; // Enable flexbox
-                        newElement.style.justifyContent = 'center'; // Horizontally center contents
-                        newElement.style.alignItems = 'center'; // Vertically center contents
-                        newElement.style.height = '100%'; // Occupy full height of the parent container
-                        newElement.style.flexDirection = 'column'; // Stack contents vertically (if needed)
+                        // Center the content of targetElement
+                        targetElement.style.display = 'flex'; // Enable flexbox
+                        targetElement.style.justifyContent = 'center'; // Horizontally center contents
+                        targetElement.style.alignItems = 'center'; // Vertically center contents
+                        targetElement.style.height = '100%'; // Occupy full height of the parent container
+                        targetElement.style.flexDirection = 'column'; // Stack contents vertically (if needed)
                     
-                        // console.log('Updated imgTag styles:', imgTag.style.cssText);
-                        // console.log('Updated newElement styles:', newElement.style.cssText);
+                        console.log('Updated imgTag styles:', imgTag.style.cssText);
+                        console.log('Updated targetElement styles:', targetElement.style.cssText);
                       }
                     
-                    // console.log('newElement:', newElement);
+                    console.log('targetElement:', targetElement);
                     
                   
                       setChangedContent(content);
-                      setEditorContent(newElement);
+                      setEditorContent(targetElement);
                       setPendingChanges(false);
                       setIsChanged(false);
                     }
@@ -1321,7 +1326,7 @@ function deleteBlock(content) {
         // create custom paragraph type button
 
         module.Jodit.defaultOptions.controls.customParagraph = {
-          tooltip: "Selecciona el formato del texto",
+          tooltip: "Select the type of the block",
           icon: "paragraph",
           list: [
             "Título 1",
@@ -1547,121 +1552,16 @@ function deleteBlock(content) {
   useEffect(() => {
     setModel(improvedText);
   }, [improvedText]);
- 
-
-  function processImageTag(element) {
-    // Early return if no element provided
-    if (!element) {
-      console.warn("No element provided to processImageTag");
-      return null;
-    }
-  
-    // Get image element - handle both direct img elements and containers with img children
-    const img = element.tagName.toLowerCase() === 'img' ? element : element.querySelector("img");
-    
-    if (!img) {
-      console.warn("No image element found");
-      return null;
-    }
-  
-    const src = img.src;
-    
-    // Early return if no src
-    if (!src) {
-      console.warn("Image has no src attribute");
-      return null;
-    }
-  
-    // Check if src is already a blob URL
-    if (src.startsWith('blob:')) {
-      console.log("Image is already using a blob URL");
-      return src;
-    }
-  
-    // Check if src is base64
-    if (!src.startsWith('data:image/')) {
-      console.warn("Image src is not a base64 string");
-      return null;
-    }
-
-    if (src.startsWith('data:image/')) {
-      console.warn("Image src is not a base64 string");
-      return src;
-    }
-  
-    // try {
-    //   // Split the base64 string to get mime type and data
-    //   const [mimeTypeSection, base64Data] = src.split(',');
-    //   const mimeType = mimeTypeSection.split(':')[1].split(';')[0];
-  
-    //   // Convert base64 to blob more efficiently
-    //   const byteString = atob(base64Data);
-    //   const uint8Array = new Uint8Array(byteString.length);
-      
-    //   for (let i = 0; i < byteString.length; i++) {
-    //     uint8Array[i] = byteString.charCodeAt(i);
-    //   }
-  
-    //   const blob = new Blob([uint8Array], { type: mimeType });
-    //   const blobURL = URL.createObjectURL(blob);
-  
-    //   // Update the image src to use the blob URL
-    //   img.src = blobURL;
-  
-    //   // Set up cleanup when image is no longer needed
-    //   img.onload = () => {
-    //     // Only revoke the old blob URL if it exists
-    //     if (src.startsWith('blob:')) {
-    //       URL.revokeObjectURL(src);
-    //     }
-    //   };
-  
-    //   return blobURL;
-    // } catch (error) {
-    //   console.error("Error processing image:", error);
-    //   return null;
-    // }
-  }
-
-  // useEffect(() => {
-  //   if(model && editorContent && model.length > 0 && model!=editorContent.outerHTML){
-  //     console.log('model:',model)
-  //     console.log('parser(model):',parser(model))
-  //     const modelElement = parser(model)
-  //     const img = modelElement.tagName.toLowerCase() === 'img' ? modelElement : modelElement.querySelector("img");
-  //     if(!img){
-  //       return
-  //     }
-  //     // console.log('processImageTag(parser(model)):',processImageTag(modelElement))
-  //     const blob = processImageTag(modelElement)
-  //     if(blob){
-  //       const imgElement = document.createElement("img");
-  //       // Set the Blob URL as the src of the <img> element
-  //       imgElement.src = blob;
-  //       console.log("🚀 ~ useEffect ~ imgElement:", imgElement.outerHTML)
-  //       // setEditorContent(imgElement)
-  //       // setModel('imgElement.outerHTML')
-  //     }
-  //   }
-  // }, [model]);
-
-
-  // useEffect(() => {
-  //   console.log('model:',model)
-  //   console.log('editorValue:',editorValue)
-  //   console.log('editorContent:',editorContent)
-  // }, [model,editorContent,editorValue]);
-
   // useEffect(() => {
   //   console.log('aiButton:',aiButton)
   // }, [aiButton]);
 
-  // useEffect(() => {
+  useEffect(() => {
     // console.log('isChanged:',isChanged)
     // if(isChanged){
     //   setIsChanged(false)
     // }
-  // }, [isChanged]);
+  }, [isChanged]);
 
 
   useEffect(() => { 
@@ -1710,17 +1610,16 @@ function deleteBlock(content) {
     const selection = joditInstance.selection.save();
 
     // Only update editor value, not the actual content
-    console.log("🚀 ~ handleModelChange ~ newContent:", newContent)
     setEditorValue(newContent);
-    if (model !== newContent) { 
+    if (model !== newContent) {
       setModel(newContent);
       setPendingChanges(true);
       
       // Restore cursor position immediately
       joditInstance.selection.restore(selection);
     }
-  }, [model]);
     
+  }, [model]);
   // Update config settings for better performance
   useEffect(() => {
     // ... existing config setup code ...
@@ -1790,13 +1689,12 @@ function deleteBlock(content) {
         
         const parentDiv = span.closest('div'); // Finds the closest parent div
         
-        // console.log("🚀 ~ useEffect ~ span:", span);
-        // console.log("🚀 ~ useEffect ~ formulaElement:", formulaElement);
-        // console.log("🚀 ~ useEffect ~ parentDiv:", parentDiv);
+        console.log("🚀 ~ useEffect ~ span:", span);
+        console.log("🚀 ~ useEffect ~ formulaElement:", formulaElement);
+        console.log("🚀 ~ useEffect ~ parentDiv:", parentDiv);
         
         if (parentDiv) {
           const parentDivString = parentDiv.outerHTML; // Get the outerHTML of the parentDiv
-          console.log("🚀 ~ useEffect ~ parentDivString:", parentDivString)
           setModel(parentDivString); // Set the model to the string representation
         }
       } else {
