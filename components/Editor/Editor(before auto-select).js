@@ -39,66 +39,14 @@ function showCustomToast(text) {
   ));
 }
 
-function moveToUpperBlock(currentElement, element){
-  const iframe = document.getElementById("documentWindow");
-  const iframeDoc = iframe.contentWindow.document;
-  // console.log("🚀 ~ moveToUpperBlock ~ currentElement:", currentElement)
-  if (currentElement) {
-    // Find the selected element within the iframe
-    const selectedElement = iframeDoc.querySelector(`[data-content-id="${currentElement.getAttribute('data-content-id')}"]`);
-    console.log("Selected element:", selectedElement);
-
-    if (selectedElement) {
-      // Find the previous sibling of the selected element
-      let previousSibling = selectedElement.previousElementSibling;
-
-      if (previousSibling) {
-        console.log("Element above (previous sibling):", previousSibling);
-      
-        // Dispatch a click event on the previous sibling
-        const clickEvent = new MouseEvent("click", {
-          bubbles: true, // Ensures the event bubbles up through the DOM
-          cancelable: true, // Allows the event to be canceled
-          view: window // Specifies the view in which the event was generated
-        }); 
-        deleteBlock(element)
-        previousSibling.dispatchEvent(clickEvent);
-        console.log("Click event dispatched on the element above.");
-      }
-      else {
-        let nextSibling = selectedElement.nextElementSibling;
-
-        if (nextSibling) {
-          console.log("Element above (previous sibling):", nextSibling);
-        
-          // Dispatch a click event on the previous sibling
-          const clickEvent = new MouseEvent("click", {
-            bubbles: true, // Ensures the event bubbles up through the DOM
-            cancelable: true, // Allows the event to be canceled
-            view: window // Specifies the view in which the event was generated
-          }); 
-          deleteBlock(element)
-          nextSibling.dispatchEvent(clickEvent);
-          console.log("Click event dispatched on the element above.");
-        }
-      }
-    } else {
-      console.log("Selected element not found in iframe document.");
-    }
-  }
-}
-
 function deleteBlock(content) {
     console.log("🚀 ~ deleteBlock ~ content:", content)
     
     try {
       if (content && content.parentNode) {
+        console.log("🚀 ~ deleteBlock ~ content:", content)
         
-
-        // Remove the content block
         content.parentNode.removeChild(content);
-
-        // Select the previous sibling if it exists
         
         const iframe = document.getElementById("documentWindow");
         const iframeDoc = iframe.contentWindow.document;
@@ -113,16 +61,17 @@ function deleteBlock(content) {
         }
         
         // Reset states
-        // setEditorContent(null);
-        // setEditorValue('')
-        // setModel(''); 
+        setEditorContent(null);
+        setEditorValue('')
+        setModel('');
+        setEditorValue('');
         setPendingChanges(false);
         setFormattedContent('');
         setImprovedText(''); 
-        // // Clear editor selection if exists
-        // if (editor.current?.jodit?.selection) {
-        //   editor.current.jodit.selection.clear();
-        // }
+        // Clear editor selection if exists
+        if (editor.current?.jodit?.selection) {
+          editor.current.jodit.selection.clear();
+        }
       } else {
         alert("Error: El bloque no se pudo borrar."); // Alert if block deletion fails
       }
@@ -130,7 +79,7 @@ function deleteBlock(content) {
       console.error('Error deleting block:', error);
       alert("Error al intentar borrar el bloque."); // Alert on error
     }
-}
+  }
   
   const editor = useRef(null);
   const [aiButton,setAiButton] = useState(false)
@@ -154,13 +103,13 @@ function deleteBlock(content) {
   const [pendingChanges, setPendingChanges] = useState(false);
   let isUpdated=false
 
-  // useEffect(()=>{
-  //   console.log('editorValue:',editorValue)
-  // },[editorValue])
+  useEffect(()=>{
+    console.log('editorValue:',editorValue)
+  },[editorValue])
 
-  // useEffect(()=>{
-  //   console.log('model:',model)
-  // },[model])
+  useEffect(()=>{
+    console.log('model:',model)
+  },[model])
 
 
   // useEffect(()=>{
@@ -907,11 +856,11 @@ function deleteBlock(content) {
               tooltip: "Borrar bloque",
               icon: "bin",
               exec: (editor) => {
-                const element = parser(editor.value) 
-
-                console.log("🚀 ~ import ~ editorContent:", editorContent) 
+                const element = parser(editor.value)
+                console.log("🚀 ~ import ~ element:", element) 
                 if (!element) {
                   console.log("🚀 ~ import ~ !element:", !element)
+                  
                   return;
                 }
                 
@@ -933,42 +882,9 @@ function deleteBlock(content) {
                   setIsTableDialogOpen(true);
                 }
                 else {
-                   
-                  const currentElement = editor.editor.querySelector('[data-content-id]');
-                  
-                  console.log("Current element:", currentElement);
-                  if(currentElement){
-                    moveToUpperBlock(currentElement,element)
-                  }
-                  else{
-                    console.log("🚀 ~ import ~ editor.editor:", editor.editor)
-                    console.log("🚀 ~ import ~ editorContent:", editorContent)
-                    console.log("🚀 ~ import ~ element:", element)
-                    const currentElement = editorContent.querySelector('[data-content-id]');
-                    console.log("🚀 ~ import ~ currentElement:", currentElement)
-
-                    let previousSibling = editorContent.previousElementSibling;
-
-                    if (previousSibling) {
-                      console.log("Element above (previous sibling):", previousSibling);
-                    
-                      // Dispatch a click event on the previous sibling
-                      const clickEvent = new MouseEvent("click", {
-                        bubbles: true, // Ensures the event bubbles up through the DOM
-                        cancelable: true, // Allows the event to be canceled
-                        view: window // Specifies the view in which the event was generated
-                      }); 
-                      deleteBlock(element)
-                      previousSibling.dispatchEvent(clickEvent);
-                      console.log("Click event dispatched on the element above.");
-                    }
-                    // moveToUpperBlock(element,element)
-                    // deleteBlock(element)
-                    // editor.value = "";
-                  }
-
-            
-                }  
+                  deleteBlock(element); 
+                  editor.value = "";
+                } 
               },
             },
             "|",
@@ -1686,18 +1602,17 @@ function deleteBlock(content) {
   }, [model]);
 
   const confirmDelete = () => {
-    console.log('deleteContent:',deleteContent)
-    moveToUpperBlock(deleteContent,deleteContent)
-    // deleteBlock(deleteContent); 
+    // console.log('deleteContent:',deleteContent)
+    deleteBlock(deleteContent); 
     setIsImageDialogOpen(false); 
     setIsTableDialogOpen(false); 
 
   };
 
   const cancelDelete = () => {
-    console.log('deleteContent:',deleteContent)
     setIsImageDialogOpen(false);
     setIsTableDialogOpen(false);  
+
   };
 
 
