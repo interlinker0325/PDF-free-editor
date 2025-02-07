@@ -4,8 +4,6 @@ import { matchStyles } from "utils/match-styles";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { parser } from "utils/html-parser";
-import { Toaster, toast } from 'sonner'
-import { FiAlertTriangle } from 'react-icons/fi';
 // Using dynamic import of Jodit component as it can't render server-side
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 // import 'jodit/build/jodit.min.css';
@@ -21,53 +19,29 @@ const Editor = ({
 
 
 
-
-function showCustomToast(text) {
-  toast.custom((t) => (
-    <div
-      className={`flex items-center gap-3 p-4 border-l-4 rounded shadow-lg`}
-      style={{
-        backgroundColor: '#FF9800', // Light orange background
-        borderColor: '#f59e0b', // Orange border
-        color: '#fff', // Dark orange text
-        width: '500px',
-      }}
-    >
-      <FiAlertTriangle  size={48} style={{ color: '#fff' }} />
-      <div>{text}</div>
-    </div>
-  ));
-}
-
-function deleteBlock(content) {
-    console.log("🚀 ~ deleteBlock ~ content:", content)
-    
+  function deleteBlock(content) {
+    // console.log('deleteContent:',content)
     try {
       if (content && content.parentNode) {
-        console.log("🚀 ~ deleteBlock ~ content:", content)
-        
+        // Remove the element from the editor
         content.parentNode.removeChild(content);
         
+        // Remove the image from the iframe as well
         const iframe = document.getElementById("documentWindow");
         const iframeDoc = iframe.contentWindow.document;
         const targetElement = iframeDoc.querySelector(`[data-content-id="${content.getAttribute('data-content-id')}"]`);
-        console.log("🚀 ~ deleteBlock ~ targetElement:", targetElement)
         if (targetElement) {
           targetElement.parentNode.removeChild(targetElement);
-        }
-        else{
-          editorContent.parentNode.removeChild(editorContent);
-          console.log("🚀 ~ deleteBlock ~ editorContent:", editorContent)
         }
         
         // Reset states
         setEditorContent(null);
-        setEditorValue('')
         setModel('');
         setEditorValue('');
         setPendingChanges(false);
         setFormattedContent('');
-        setImprovedText(''); 
+        setImprovedText('');
+        
         // Clear editor selection if exists
         if (editor.current?.jodit?.selection) {
           editor.current.jodit.selection.clear();
@@ -87,9 +61,7 @@ function deleteBlock(content) {
   const [config, setConfig] = useState(null);
   const [model, setModel] = useState("");
   const [isFormatUpdated, setIsFormatUpdated] = useState(false);
-  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
-  const [isTableDialogOpen, setIsTableDialogOpen] = useState(false);
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
   
 
@@ -102,23 +74,6 @@ function deleteBlock(content) {
 
   const [pendingChanges, setPendingChanges] = useState(false);
   let isUpdated=false
-
-  useEffect(()=>{
-    console.log('editorValue:',editorValue)
-  },[editorValue])
-
-  useEffect(()=>{
-    console.log('model:',model)
-  },[model])
-
-
-  // useEffect(()=>{
-  //   console.log('editorValue:',editorValue)
-  // },[editorValue])
-  // useEffect(()=>{
-  //   console.log('editorContent:',editorContent)
-  // },[editorContent])
-  
 
   // Add state for tracking formatted content
   const [formattedContent, setFormattedContent] = useState("");
@@ -140,38 +95,6 @@ function deleteBlock(content) {
     "insertTooltip",
   ];
 
-  function AddBlock(){
-    const newDiv = document.createElement("div");
-    newDiv.innerText = "Nuevo párrafo";
-    // console.log("🚀 ~ import ~ editorContent:", editorContent) 
-    if(!editorContent){
-      return
-    }
-    const nexteditorContent = editorContent.nextSibling;
-    if (nexteditorContent) {
-      // console.log("🚀 ~ import ~ nexteditorContent:", nexteditorContent)
-      editorContent.parentNode.insertBefore(newDiv, nexteditorContent);
-      
-      // editorContent.parentNode.insertAdjacentElement('afterend',newDiv);
-
-    } else {
-      console.log("🚀 ~ import ~ nexteditorContent - 2:", nexteditorContent)
-      editorContent.parentNode.appendChild(newDiv);
-    }
-    // make click event automatically to convert new Element
-    const clickEvent = new MouseEvent("click", {
-      view: window,
-      bubbles: true,
-      cancelable: false,
-    });
-    newDiv.dispatchEvent(clickEvent);
-  }
-
-  let clickedDiv
-  const [clicked, setClicked] = useState()
-  const iframe = document.getElementById("documentWindow");
-  const iframeDoc = iframe.contentWindow.document;
- 
   useEffect(() => {
     const safeAtob = (str) => {
       try {
@@ -240,15 +163,14 @@ function deleteBlock(content) {
               return name.toLowerCase();
             },
             defaultHandlerSuccess: (response) => {
-              
+              console.log('image:',image)
 
               try {
                 if (response.files && response.files.length) {
                   response.files.forEach(file => {
                     const image = editor.current?.createInside.element('img');
-                    
                     if (image) {
-                      
+                      console.log('image:',image)
                       image.setAttribute('src', file);
                       image.style.width = '80%';
                       image.setAttribute('tabindex', '0');
@@ -258,7 +180,9 @@ function deleteBlock(content) {
                 }
               } catch (error) {
                 console.error('Error handling image upload:', error);
-              } finally { 
+              } finally {
+                console.log('image:',image)
+
               }
             },
             defaultHandlerError: (error) => {
@@ -286,64 +210,32 @@ function deleteBlock(content) {
           disablePlugins: ["paste", "imageProperties"],
           // custom buttons
           extraButtons: [
-            
+            // add new div blank block bellow selected one
             {
               name: "addNewBlock",
-              tooltip: "Nuevo bloque",
+              tooltip: "Add New Block",
               icon: "plus",
               exec: () => {
                 const iframe = document.getElementById("documentWindow");
                 const iframeDoc = iframe.contentWindow.document;
                 const body = iframeDoc.getElementsByTagName("body");
                 const newDiv = document.createElement("div");
-                newDiv.innerText = "Nuevo párrafo"; 
-                // console.log('editorContent:',editorContent)
-                // if(editorValue){
-                //   console.log('editorValue:',parser(editorValue))
-                // }
-                // if(model){
-                //   console.log('model:',parser(model))
-                // }
-
-                // AddBlock()
-
-                // if(clickedDiv){ 
-                //   clickedDiv.insertAdjacentElement('afterend', newDiv);  
-                // }
-                // else
-                // console.log("🚀 ~ import ~ clicked:", clicked)
-                // console.log("🚀 ~ import ~ clickedDiv:", clickedDiv)
-                
-                
-                // if(clicked){
-                //   const img = clicked.querySelector("img");
-                //   console.log("🚀 ~ import ~ img:", img)
-                //   if(img){
-                //     console.log("🚀 ~ import ~ clicked:", clicked)
-                //     console.log("🚀 ~ import ~ clickedDiv:", clickedDiv)
-                //     clicked.insertAdjacentElement('afterend', newDiv);  
-                //   } 
-                //   else{
-                //     AddBlock()
-                //   }
-
-                  
-                  // if (clicked.tagName === 'IMG' || clicked.tagName === 'FIGURE') {
-                  //     console.log("🚀 ~ handleElementClick ~ element.tagName:", clicked.tagName)
-                  //     const parentDiv = clicked.closest('div');
-                  //     if (parentDiv) {
-                  //       console.log("🚀 ~ handleElementClick ~ parentDiv:", parentDiv)
-                  //       parentDiv.insertAdjacentElement('afterend', newDiv);  
-                         
-                  //     }
-                  //   }
-                  //   else{
-                    // }
-                // }
-                // else if(!clickedDiv && !clicked){
-                  AddBlock()
-                // }
-
+                newDiv.innerText = "Nuevo párrafo";
+                if (editorContent && editorContent.parentNode) {
+                  const nextElement = editorContent.nextSibling;
+                  if (nextElement) {
+                    editorContent.parentNode.insertBefore(newDiv, nextElement);
+                  } else {
+                    editorContent.parentNode.appendChild(newDiv);
+                  }
+                  // make click event automatically to convert new Element
+                  const clickEvent = new MouseEvent("click", {
+                    view: window,
+                    bubbles: true,
+                    cancelable: false,
+                  });
+                  newDiv.dispatchEvent(clickEvent);
+                }
                 if (!body[0].textContent) {
                   const style = document.createElement("style");
                   const cssRules = `
@@ -472,266 +364,12 @@ function deleteBlock(content) {
                 }
               },
             },
-            // "image",
-            // Replace the "image" string with this custom button configuration
-            {
-              name: 'customImage',
-              tooltip: 'Insert Image',
-              icon: 'image',
-              popup: (editor, current, self, close) => {
-                console.log("🚀 ~ import ~ editor:", parser(editor.value))
-                console.log('editorContent.innerHTML:',editorContent.innerHTML)
-                const doc = parser(editor.value)
-                console.log(doc.innerText);
-                if (doc.innerText !== '') {
-                  // alert('No puedes incluir una imagen o tabla en un bloque con texto. Inténtalo en un bloque nuevo');
-                  // toast('My first toast')
-                  showCustomToast('No puedes incluir una imagen o tabla en un bloque con texto. Inténtalo en un bloque nuevo')
-                  return null; // Prevent the popup from being displayed
-                }
-            
-                // Create form for image insertion
-                const form = editor.create.fromHTML(`
-                  <div class="jodit-form" style="padding: 15px; max-width: 300px;">
-                    <div class="jodit-form__group">
-                      <label style="display: block; margin-bottom: 8px; font-weight: bold;">Upload Image</label>
-                      <input type="file" 
-                            accept="image/*" 
-                            class="jodit-form__input" 
-                            style="margin-bottom: 15px; padding: 5px; width: 100%;"/>
-                    </div>
-                    <div class="jodit-form__group">
-                      <label style="display: block; margin-bottom: 8px; font-weight: bold;">Image URL</label>
-                      <input type="url" 
-                            placeholder="Enter image URL" 
-                            class="jodit-form__input url-input" 
-                            style="margin-bottom: 15px; padding: 5px; width: 100%;"/>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 10px 0;">
-                      <button type="button" class="jodit-button cancel" style="padding: 5px 10px;">Cancel</button>
-                      <button type="button" class="jodit-button insert" style="padding: 5px 10px;">Insert</button>
-                    </div>
-                  </div>
-                `);
-                
-                // Handle file and URL insertion
-                const fileInput = form.querySelector('input[type="file"]');
-                const urlInput = form.querySelector('.url-input');
-                const insertBtn = form.querySelector('.insert');
-                const cancelBtn = form.querySelector('.cancel');
-                
-                cancelBtn.addEventListener('click', close);
-                
-                insertBtn.addEventListener('click', () => {
-                  let img;
-                  
-                  // Handle file upload
-                  if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    const blobURL = URL.createObjectURL(file);
-                    console.log("🚀 ~ insertBtn.addEventListener ~ blobURL:", blobURL)
-                    
-                    img = editor.createInside.element('img');
-                    img.setAttribute('src', blobURL);
-                  } 
-                  // Handle URL upload
-                  else if (urlInput.value.trim() !== '') {
-                    const url = urlInput.value.trim();
-                    img = editor.createInside.element('img');
-                    img.setAttribute('src', url);
-            
-                    // Optional: Validate URL format (basic check)
-                    try {
-                      new URL(url); // Throws an error if invalid URL
-                    } catch {
-                      alert('Invalid URL');
-                      return;
-                    }
-                  }
-                  
-                  // Insert image if valid
-                  if (img) {
-                    img.style.width = '80%';
-                    img.style.display = 'block';
-                    img.style.margin = '0 auto';
-                    img.setAttribute('tabindex', '0');
-                    
-                    editor.selection.insertNode(img);
-                    
-                    // Update parent container styles for centering
-                    const parent = img.parentElement;
-                    if (parent) {
-                      parent.style.display = 'flex';
-                      parent.style.justifyContent = 'center';
-                      parent.style.alignItems = 'center';
-                      parent.style.flexDirection = 'column';
-                    }
-                    
-                    close();
-                  }
-                });
-                
-                return form;
-              }
-            },
-            
-            // "table",
-            {
-              name: 'customTable',
-              tooltip: 'insertar tabla',
-              icon: 'table',
-              popup: (editor, current, self, close) => {
-                const doc = parser(editor.value);
-                if (doc.innerText !== '') {
-                  // alert('No se pueden insertar mesa en bloques con texto, inserta un nuevo bloque para pégarla ahí');
-                  showCustomToast('No se pueden insertar mesa en bloques con texto, inserta un nuevo bloque para pégarla ahí')
-
-                  return null;
-                }
-            
-                // Create popup container with table grid
-                const form = editor.create.fromHTML(`
-                  <div class="jodit-form" style="padding: 15px;">
-                    <div class="jodit-form__group">
-                      <div class="jodit-grid-selector" style="width: 280px;">
-                        <div class="grid-container" style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; margin-bottom: 10px;">
-                          ${Array(100).fill().map((_, i) => `
-                            <div class="grid-cell" 
-                                 data-row="${Math.floor(i / 10) + 1}" 
-                                 data-col="${(i % 10) + 1}"
-                                 style="width: 25px; height: 25px; border: 1px solid #ccc; background: white; cursor: pointer;">
-                            </div>
-                          `).join('')}
-                        </div>
-                        <div class="size-display" style="margin: 10px 0; text-align: center;">
-                          Table size: 0 x 0
-                        </div>
-                      </div>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 10px 0;">
-                      <button type="button" class="jodit-button cancel">Cancel</button>
-                      <button type="button" class="jodit-button insert" disabled>Insert</button>
-                    </div>
-                  </div>
-                `);
-            
-                const gridContainer = form.querySelector('.grid-container');
-                const sizeDisplay = form.querySelector('.size-display');
-                const insertBtn = form.querySelector('.insert');
-                const cancelBtn = form.querySelector('.cancel');
-                let selectedRows = 0;
-                let selectedCols = 0;
-            
-                function updateGridSelection(row, col) {
-                  const cells = gridContainer.querySelectorAll('.grid-cell');
-                  cells.forEach(c => {
-                    const cRow = parseInt(c.dataset.row);
-                    const cCol = parseInt(c.dataset.col);
-                    
-                    if (cRow <= row && cCol <= col) {
-                      c.style.background = '#159957';
-                    } else {
-                      c.style.background = 'white';
-                    }
-                  });
-            
-                  selectedRows = row;
-                  selectedCols = col;
-                  sizeDisplay.textContent = `Table size: ${row} x ${col}`;
-                  insertBtn.disabled = false;
-                }
-            
-                function insertTable() {
-                  if (selectedRows && selectedCols) {
-                    const table = editor.createInside.element('table');
-                    table.style.width = '100%';
-                    table.style.borderCollapse = 'collapse';
-            
-                    // Create header row
-                    const thead = editor.createInside.element('thead');
-                    const headerRow = editor.createInside.element('tr');
-                    
-                    for (let j = 0; j < selectedCols; j++) {
-                      const th = editor.createInside.element('th');
-                      th.style.padding = '0.5rem 1rem';
-                      th.style.backgroundColor = '#159957';
-                      th.style.color = 'white';
-                      th.style.borderBottom = '1px solid #e9ebec';
-                      th.style.textAlign = 'left';
-                      th.innerHTML = `Header ${j + 1}`;
-                      headerRow.appendChild(th);
-                    }
-                    thead.appendChild(headerRow);
-                    table.appendChild(thead);
-            
-                    // Create table body
-                    const tbody = editor.createInside.element('tbody');
-                    for (let i = 1; i < selectedRows; i++) {
-                      const row = editor.createInside.element('tr');
-                      if (i % 2 !== 0) {
-                        row.style.backgroundColor = '#f2f2f2';
-                      }
-                      
-                      for (let j = 0; j < selectedCols; j++) {
-                        const td = editor.createInside.element('td');
-                        td.style.padding = '0.5rem 1rem';
-                        td.style.borderBottom = '1px solid #e9ebec';
-                        td.style.textAlign = 'left';
-                        td.innerHTML = `Cell ${i},${j + 1}`;
-                        row.appendChild(td);
-                      }
-                      tbody.appendChild(row);
-                    }
-                    table.appendChild(tbody);
-            
-                    editor.selection.insertNode(table);
-                    close();
-                  }
-                }
-            
-                // Handle hover effect
-                gridContainer.addEventListener('mouseover', (e) => {
-                  const cell = e.target;
-                  if (cell.classList.contains('grid-cell')) {
-                    const row = parseInt(cell.dataset.row);
-                    const col = parseInt(cell.dataset.col);
-                    updateGridSelection(row, col);
-                  }
-                });
-            
-                // Handle click on cells
-                gridContainer.addEventListener('click', (e) => {
-                  const cell = e.target;
-                  if (cell.classList.contains('grid-cell')) {
-                    const row = parseInt(cell.dataset.row);
-                    const col = parseInt(cell.dataset.col);
-                    updateGridSelection(row, col);
-                    insertTable();
-                  }
-                });
-            
-                // Reset on mouse leave if no selection made
-                gridContainer.addEventListener('mouseleave', () => {
-                  if (!selectedRows && !selectedCols) {
-                    const cells = gridContainer.querySelectorAll('.grid-cell');
-                    cells.forEach(c => c.style.background = 'white');
-                    sizeDisplay.textContent = 'Table size: 0 x 0';
-                    insertBtn.disabled = true;
-                  }
-                });
-            
-                // Handle insert button click
-                insertBtn.addEventListener('click', insertTable);
-                cancelBtn.addEventListener('click', close);
-            
-                return form;
-              }
-            },
+            "image",
+            "table",
             {
               name: "addDividedBlock",
-              tooltip: "Divide en columnas",
-              icon: `<svg viewBox="0 0 512 512"><path d="M0 96C0 60.7 28.7 32 64 32l384 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zm64 64l0 256 160 0 0-256L64 160zm384 0l-160 0 0 256 160 0 0-256z"/></svg>`,
-
+              tooltip: "Add Divided Block",
+              icon: "rightarrow",
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
                   // Create a container div with flex display
@@ -789,7 +427,7 @@ function deleteBlock(content) {
             // move selected block up
             {
               name: "blockUp",
-              tooltip: "Mueve bloque arriba",
+              tooltip: "Move Block Up",
               icon: "arrowup",
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
@@ -822,7 +460,7 @@ function deleteBlock(content) {
             // move selected block down
             {
               name: "blockDown",
-              tooltip: "Mueve bloque abajo",
+              tooltip: "Move Block Down",
               icon: "arrowdown",
               exec: () => {
                 if (editorContent && editorContent.parentNode) {
@@ -856,35 +494,49 @@ function deleteBlock(content) {
               tooltip: "Borrar bloque",
               icon: "bin",
               exec: (editor) => {
+                // console.log('editorContent delete:', editorContent)
                 const element = parser(editor.value)
-                console.log("🚀 ~ import ~ element:", element) 
+                // console.log('element:', element)
                 if (!element) {
-                  console.log("🚀 ~ import ~ !element:", !element)
-                  
+                  // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
+                  // if (confirmDelete) {
+                  //   // deleteBlock();
+                  // }
                   return;
                 }
                 
                 setDeleteContent(element)
-
                 let hasTable
-                
+                // let hasImage
+                // if (typeof element === 'string') {
+                //   // Convert the string to an HTML object
+                //   const parser = new DOMParser();
+                //   const doc = parser.parseFromString(element, 'text/html');
+                //   const element = doc.body; // Set element to the parsed HTML body
+
+                  
+                // }
+
                 const column = element.querySelector('td') ;
                 const row = element.querySelector('tr') ;
                 const table = element.querySelector('table') ;
                 hasTable = table || row || column;
-                
+                // Check if the block contains an image
                 const hasImage = element.querySelector('img');
-                
-                if (hasImage) { 
-                  setIsImageDialogOpen(true);
-                } 
-                else if (hasTable) { 
-                  setIsTableDialogOpen(true);
+                // console.log(hasImage,hasTable)
+                if (hasImage || hasTable) {
+                  // const confirmDelete = window.confirm('Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar? Si/No');
+                  // if (confirmDelete) {
+                    // deleteBlock();
+                    setIsDialogOpen(true);
+                  // }
+                } else {
+                  deleteBlock(element);
+                  // console.log('element:', element)
+
                 }
-                else {
-                  deleteBlock(element); 
-                  editor.value = "";
-                } 
+                
+                
               },
             },
             "|",
@@ -892,7 +544,7 @@ function deleteBlock(content) {
             // AI assistant
             {
               name: "aiAssistant",
-              tooltip: "Asistente AI",
+              tooltip: "AI Assistant",
               icon: "ai_assistant",
               exec: (editor) => {
                 if (editor.value) {
@@ -924,7 +576,7 @@ function deleteBlock(content) {
             "|",
             {
               name: "math equation",
-              tooltip: "Ecuaciones Matemáticas",
+              tooltip: "Math Equation",
               icon: "math",
               exec: (editor) => {
                 const element = editor.value
@@ -934,7 +586,7 @@ function deleteBlock(content) {
             },
             {
               name: "chemistry equation",
-              tooltip: "Ecuaciones Químicas",
+              tooltip: "Chemistry Equation",
               icon: "chemistry",
               exec: (editor) => {
                 document.getElementById("chemistryIcon")?.click();
@@ -944,7 +596,7 @@ function deleteBlock(content) {
             // insert check button
             {
               name: "insertCheck",
-              tooltip: "Aplicar Cambios",
+              tooltip: "Apply Changes",
               icon: "greenCheck",
               exec: (editor) => {
                 try {
@@ -957,10 +609,18 @@ function deleteBlock(content) {
                   let content = editor.value;
                   
                   // Create a temporary div to parse the HTML
-                  const tempDiv = document.createElement('div'); 
-                  const formattedElements = tempDiv.querySelectorAll('[data-editor-only]'); 
-                  formattedElements.forEach(el => { 
-                    el.removeAttribute('data-editor-only'); 
+                  const tempDiv = document.createElement('div');
+                  // tempDiv.innerHTML = content;
+                  
+                  // Process elements with data-editor-only attribute
+                  const formattedElements = tempDiv.querySelectorAll('[data-editor-only]');
+                  // console.log('formattedElements:',formattedElements)
+                  
+                  formattedElements.forEach(el => {
+                    // Remove the data-editor-only attribute but keep the formatting
+                    el.removeAttribute('data-editor-only');
+                    // console.log('el:',el)
+                    // Apply the correct final formatting based on element type
                     if (el.tagName === 'H2') {
                       el.className = 'title-1';
                     } else if (el.tagName === 'H3') {
@@ -970,54 +630,58 @@ function deleteBlock(content) {
                     } else if (el.tagName === 'BLOCKQUOTE') {
                       el.className = 'text-box';
                     }
-                  }); 
+                  });
+                  
+                  // Get the cleaned content
+                  // content = tempDiv.innerHTML;
+                  
+                  // Update the iframe content
                   const iframe = document.getElementById("documentWindow");
                   if (iframe && iframe.contentWindow) {
                     // Determine which content to use: editorContent or element
-                    const referenceElement = editorContent && editorContent.innerHTML === "Nuevo párrafo" ? editorContent : element;
-                    // const referenceElement = element;
+                    const referenceElement =
+                      editorContent && editorContent.innerHTML === "Nuevo párrafo"
+                        ? editorContent
+                        : element;
                   
                     const targetElement = iframe.contentWindow.document.querySelector(
                       `[data-content-id="${referenceElement.getAttribute('data-content-id')}"]`
                     );
-                    console.log('targetElement - apply:',targetElement)
-                    console.log('editorContent - apply:',editorContent)
-
-                    const newElement = targetElement ?? editorContent
-                    if (newElement) {
+                  
+                    if (targetElement) {
                       const parsedContent = parser(content);
-                      newElement.innerHTML = parsedContent.innerHTML;
+                      targetElement.innerHTML = parsedContent.innerHTML;
                       
                       // console.log('content:',content)
-                      console.log('newElement:',newElement)
+                      console.log('targetElement:',targetElement)
 
-                      const imgTag = newElement.querySelector('img');
+                      const imgTag = targetElement.querySelector('img');
                       // console.log('imgTag:',imgTag)
                       
-                      // console.log('target exists')
+                      console.log('target exists')
                       
-                      if (imgTag && !imgTag.classList.contains('Wirisformula')) {
+                      if (imgTag) {
                         console.log('image tag exists')
                         // Center the <img> tag
                         imgTag.style.display = 'block'; // Make it a block-level element
                         imgTag.style.margin = '0 auto'; // Center it horizontally within its container
                     
-                        // Center the content of newElement
-                        newElement.style.display = 'flex'; // Enable flexbox
-                        newElement.style.justifyContent = 'center'; // Horizontally center contents
-                        newElement.style.alignItems = 'center'; // Vertically center contents
-                        newElement.style.height = '100%'; // Occupy full height of the parent container
-                        newElement.style.flexDirection = 'column'; // Stack contents vertically (if needed)
+                        // Center the content of targetElement
+                        targetElement.style.display = 'flex'; // Enable flexbox
+                        targetElement.style.justifyContent = 'center'; // Horizontally center contents
+                        targetElement.style.alignItems = 'center'; // Vertically center contents
+                        targetElement.style.height = '100%'; // Occupy full height of the parent container
+                        targetElement.style.flexDirection = 'column'; // Stack contents vertically (if needed)
                     
-                        // console.log('Updated imgTag styles:', imgTag.style.cssText);
-                        // console.log('Updated newElement styles:', newElement.style.cssText);
+                        console.log('Updated imgTag styles:', imgTag.style.cssText);
+                        console.log('Updated targetElement styles:', targetElement.style.cssText);
                       }
                     
-                    // console.log('newElement:', newElement);
+                    console.log('targetElement:', targetElement);
                     
                   
                       setChangedContent(content);
-                      setEditorContent(newElement);
+                      setEditorContent(targetElement);
                       setPendingChanges(false);
                       setIsChanged(false);
                     }
@@ -1237,7 +901,7 @@ function deleteBlock(content) {
         // create custom paragraph type button
 
         module.Jodit.defaultOptions.controls.customParagraph = {
-          tooltip: "Selecciona el formato del texto",
+          tooltip: "Select the type of the block",
           icon: "paragraph",
           list: [
             "Título 1",
@@ -1254,25 +918,9 @@ function deleteBlock(content) {
           exec(editor, _, { control }) {
             let value = control.args && control.args[0];
             if (editorContent) {
-              
               let tempElement;
               const element = parser(editor.value)
-              console.log('element - format:', element)
-              const thead = element.querySelector("thead");
-              const tbody = element.querySelector("tbody");  
-              if(tbody || thead){
-                return
-              }
-
-              console.log("🚀 ~ exec ~ element.querySelector('mjx-container') :", element.querySelector('mjx-container') )
-              if (element.querySelector('mjx-container') && value!="Fórmula centrada") {
-                // console.log('The element contains the "math-block" class.');
-                return
-              } 
-              // else {
-              //   console.log('The element does not contain the "math-block" class.');
-              // }
-              
+              // console.log('element - format:', element.innerHTML)
               if (value == "Título 1") {
                 const tempElement = document.createElement("h2");
                 tempElement.innerHTML = element.innerHTML || ""; // Use editorContent
@@ -1463,121 +1111,22 @@ function deleteBlock(content) {
   useEffect(() => {
     setModel(improvedText);
   }, [improvedText]);
- 
 
-  function processImageTag(element) {
-    // Early return if no element provided
-    if (!element) {
-      console.warn("No element provided to processImageTag");
-      return null;
-    }
-  
-    // Get image element - handle both direct img elements and containers with img children
-    const img = element.tagName.toLowerCase() === 'img' ? element : element.querySelector("img");
-    
-    if (!img) {
-      console.warn("No image element found");
-      return null;
-    }
-  
-    const src = img.src;
-    
-    // Early return if no src
-    if (!src) {
-      console.warn("Image has no src attribute");
-      return null;
-    }
-  
-    // Check if src is already a blob URL
-    if (src.startsWith('blob:')) {
-      console.log("Image is already using a blob URL");
-      return src;
-    }
-  
-    // Check if src is base64
-    if (!src.startsWith('data:image/')) {
-      console.warn("Image src is not a base64 string");
-      return null;
-    }
+  useEffect(() => {
+    // console.log('editorValue:',editorValue)
+  }, [editorValue]);
 
-    if (src.startsWith('data:image/')) {
-      console.warn("Image src is not a base64 string");
-      return src;
-    }
-  
-    // try {
-    //   // Split the base64 string to get mime type and data
-    //   const [mimeTypeSection, base64Data] = src.split(',');
-    //   const mimeType = mimeTypeSection.split(':')[1].split(';')[0];
-  
-    //   // Convert base64 to blob more efficiently
-    //   const byteString = atob(base64Data);
-    //   const uint8Array = new Uint8Array(byteString.length);
-      
-    //   for (let i = 0; i < byteString.length; i++) {
-    //     uint8Array[i] = byteString.charCodeAt(i);
-    //   }
-  
-    //   const blob = new Blob([uint8Array], { type: mimeType });
-    //   const blobURL = URL.createObjectURL(blob);
-  
-    //   // Update the image src to use the blob URL
-    //   img.src = blobURL;
-  
-    //   // Set up cleanup when image is no longer needed
-    //   img.onload = () => {
-    //     // Only revoke the old blob URL if it exists
-    //     if (src.startsWith('blob:')) {
-    //       URL.revokeObjectURL(src);
-    //     }
-    //   };
-  
-    //   return blobURL;
-    // } catch (error) {
-    //   console.error("Error processing image:", error);
-    //   return null;
-    // }
-  }
-
-  // useEffect(() => {
-  //   if(model && editorContent && model.length > 0 && model!=editorContent.outerHTML){
-  //     console.log('model:',model)
-  //     console.log('parser(model):',parser(model))
-  //     const modelElement = parser(model)
-  //     const img = modelElement.tagName.toLowerCase() === 'img' ? modelElement : modelElement.querySelector("img");
-  //     if(!img){
-  //       return
-  //     }
-  //     // console.log('processImageTag(parser(model)):',processImageTag(modelElement))
-  //     const blob = processImageTag(modelElement)
-  //     if(blob){
-  //       const imgElement = document.createElement("img");
-  //       // Set the Blob URL as the src of the <img> element
-  //       imgElement.src = blob;
-  //       console.log("🚀 ~ useEffect ~ imgElement:", imgElement.outerHTML)
-  //       // setEditorContent(imgElement)
-  //       // setModel('imgElement.outerHTML')
-  //     }
-  //   }
-  // }, [model]);
-
-
-  // useEffect(() => {
-  //   console.log('model:',model)
-  //   console.log('editorValue:',editorValue)
-  //   console.log('editorContent:',editorContent)
-  // }, [model,editorContent,editorValue]);
 
   // useEffect(() => {
   //   console.log('aiButton:',aiButton)
   // }, [aiButton]);
 
-  // useEffect(() => {
+  useEffect(() => {
     // console.log('isChanged:',isChanged)
     // if(isChanged){
     //   setIsChanged(false)
     // }
-  // }, [isChanged]);
+  }, [isChanged]);
 
 
   useEffect(() => { 
@@ -1598,21 +1147,18 @@ function deleteBlock(content) {
           }
         }
       }
-    } 
-  }, [model]);
+    }
 
+    
+  }, [model]);
   const confirmDelete = () => {
     // console.log('deleteContent:',deleteContent)
     deleteBlock(deleteContent); 
-    setIsImageDialogOpen(false); 
-    setIsTableDialogOpen(false); 
-
+    setIsDialogOpen(false); 
   };
 
   const cancelDelete = () => {
-    setIsImageDialogOpen(false);
-    setIsTableDialogOpen(false);  
-
+    setIsDialogOpen(false);  
   };
 
 
@@ -1625,17 +1171,16 @@ function deleteBlock(content) {
     const selection = joditInstance.selection.save();
 
     // Only update editor value, not the actual content
-    console.log("🚀 ~ handleModelChange ~ newContent:", newContent)
     setEditorValue(newContent);
-    if (model !== newContent) { 
+    if (model !== newContent) {
       setModel(newContent);
       setPendingChanges(true);
       
       // Restore cursor position immediately
       joditInstance.selection.restore(selection);
     }
-  }, [model]);
     
+  }, [model]);
   // Update config settings for better performance
   useEffect(() => {
     // ... existing config setup code ...
@@ -1687,40 +1232,6 @@ function deleteBlock(content) {
     });
 
   }, [editorContent]);
-
-
-  useEffect(() => {
-    const formulaElement = document.querySelector('.Wirisformula');
-    
-    if (formulaElement) {
-      if (formulaElement.parentNode.tagName.toLowerCase() !== 'span') {
-        const span = document.createElement('span');
-        
-        span.innerHTML = formulaElement.outerHTML; 
-        span.style.display = 'inline-flex'; 
-        span.style.alignItems = 'center'; 
-        span.style.gap = '4px'; 
-
-        formulaElement.parentNode.replaceChild(span, formulaElement);
-        
-        const parentDiv = span.closest('div'); // Finds the closest parent div
-        
-        // console.log("🚀 ~ useEffect ~ span:", span);
-        // console.log("🚀 ~ useEffect ~ formulaElement:", formulaElement);
-        // console.log("🚀 ~ useEffect ~ parentDiv:", parentDiv);
-        
-        if (parentDiv) {
-          const parentDivString = parentDiv.outerHTML; // Get the outerHTML of the parentDiv
-          console.log("🚀 ~ useEffect ~ parentDivString:", parentDivString)
-          setModel(parentDivString); // Set the model to the string representation
-        }
-      } else {
-        console.log("The Wirisformula element is already wrapped in a span.");
-      }
-    }
-  }, [model]);
-  
-  
 
   useEffect(() => {
     if (editor.current) {
@@ -1788,7 +1299,6 @@ function deleteBlock(content) {
   // Initialize editor value when component mounts
   useEffect(() => {
     if (editorContent) {
-      // console.log("🚀 ~ useEffect ~ editorContent:", editorContent)
       const contentId = editorContent.getAttribute('data-content-id') || `content-${Date.now()}`;
       editorContent.setAttribute('data-content-id', contentId);
       
@@ -1796,29 +1306,9 @@ function deleteBlock(content) {
       // console.log("editorContent:",editorContent)
       if(editorContent.innerHTML != 'Nuevo párrafo'){
         const changedContent = initialContent.replace(/border:\s*\d+(\.\d+)?px\s*solid\s*red;/g, "");
-        // console.log("🚀 ~ useEffect ~ changedContent:", changedContent)
-        const img = editorContent.querySelector("img");
-        if(img){
-          console.log('IMAGE')
-          // setClicked(editorContent)
-          // clickedDiv=editorContent
-          const parent = img.parentElement;
-          if (parent) {
-            parent.style.display = 'flex';
-            parent.style.justifyContent = 'center';
-            parent.style.alignItems = 'center';
-            parent.style.flexDirection = 'column';
-            // console.log("🚀 ~ useEffect ~ parent:", parent)
-            // setEditorValue(parent);
-            // setModel(parent);
-            // setPendingChanges(false);
-          }
-        }
-        // else{
-          setEditorValue(changedContent);
-          setModel(changedContent);
-          setPendingChanges(false);
-        // }
+        setEditorValue(changedContent);
+        setModel(changedContent);
+        setPendingChanges(false);
       }
       else{
         setEditorValue('');
@@ -1830,8 +1320,6 @@ function deleteBlock(content) {
 
   return (
     <div className="w-full px-1">
-      <Toaster position="top-center" />
-
       <div id="mathtoolbar" className="hidden"></div>
       <div className="flex justify-between">
         <span className="font-semibold text-[25px]">{section}</span>
@@ -1851,16 +1339,10 @@ function deleteBlock(content) {
         )}
       </div>
       <ConfirmationDialog
-         isOpen={isImageDialogOpen}
+         isOpen={isDialogOpen}
          onClose={cancelDelete}
          onConfirm={confirmDelete}
          message="Si borras este bloque no podrás deshacer la acción ni recuperar la imagen, a no ser que la importes manualmente. ¿Deseas continuar?"
-       />
-       <ConfirmationDialog
-         isOpen={isTableDialogOpen}
-         onClose={cancelDelete}
-         onConfirm={confirmDelete}
-         message="Si borras este bloque no podras deshacer la acción ni recuperar la tabla, a no ser que la reconstruyas manualmente. ¿Deseas continuar?"
        />
     </div>
   );
