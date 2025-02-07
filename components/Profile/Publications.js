@@ -66,7 +66,7 @@ const Publications = ({items, label, user, itemsPerPage,isAdmin}) => {
             const amI = isCurrentUserAuthor(item);
             return <tr
               key={`Publication_${item.id}_${itemIndex}`}
-              className={`${styles.tableRow} line-clamp-3 ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
+              className={`text-base ${styles.tableRow} line-clamp-3 ${!isOdd(itemIndex) ? 'bg-secondary' : ''}`}>
               <td className={styles.title}>
                 <a
                   href={`/posts/${item.id}`}

@@ -36,7 +36,6 @@ function MyApp({Component, pageProps}) {
     {name: 'Crear publicación', action: '/posts/new', isAction: true, isMobile: true},
     {name: sessionText, onClick: sessionAction}
   ] : [
-    // {name: 'Inicio', action: '/', isAction: true},
     {name: sessionText, onClick: sessionAction, isAction: true}
   ];
 
@@ -57,12 +56,12 @@ function MyApp({Component, pageProps}) {
           <link rel='preconnect' href='https://fonts.googleapis.com'/>
           <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true'/>
         </Head>
-        <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto'>
+        <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto relative'>
           {!Component.hideNav ?
               <Header user={user} items={navItems} isSaved={isSaved} setIsSaved={setIsSaved}/> : null}
           <Component {...pageProps} isSaved={isSaved} setIsSaved={setIsSaved}/>
           {!Component.hideFooter ?
-              <Footer /> : null}
+              <Footer/> : null}
         </div>
         {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
       </SWRConfig>

@@ -8,7 +8,7 @@ export default function SpeedButton({ handleSave }) {
 
   setTimeout(() => {
     setShow(false)
-  }, 3000);
+  }, 6000);
 
   return (
     <div className="fixed z-[9999] bottom-6 right-6" onClick={handleSave}>
