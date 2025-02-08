@@ -79,7 +79,6 @@ const NavMenuLogin = ({ user , items, handleClick }) => {
                 <MenubarContent>
                     {
                         items.map((item, index) => {
-                            console.log(item,"item")
                             if (item?.isAction || item?.action === pathCurrent) return null
                             return (
                                 <React.Fragment key={index}>
