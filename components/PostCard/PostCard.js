@@ -35,12 +35,9 @@ export default ({
                     </figure>
                 )}
               </CardHeader>
-              <CardContent className="p-[10px] h-[70px]">
+              <CardContent className="p-[10px]">
                 <p className={styles.contTitle}>{title}</p>
               </CardContent>
-              <CardFooter className="p-[10px]">
-                <p className={styles.contDescription}>{description}</p>
-              </CardFooter>
             </Card>
           </TooltipTrigger>
           <TooltipContent
