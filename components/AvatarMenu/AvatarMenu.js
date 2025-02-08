@@ -78,10 +78,7 @@ const NavMenuLogin = ({user, items, handleClick}) => {
                 if (item?.isAction || item?.action === pathCurrent) return null
                 return (
                     <React.Fragment key={index}>
-                      {
-                          (index === items?.length - 1) &&
-                          <MenubarSeparator/>
-                      }
+                      {(index === items?.length - 1) && <MenubarSeparator/>}
                       <MenubarItem onClick={() => handleClick(item)}>
                         {item.name}
                       </MenubarItem>

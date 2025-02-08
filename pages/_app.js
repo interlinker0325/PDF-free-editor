@@ -57,11 +57,9 @@ function MyApp({Component, pageProps}) {
           <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true'/>
         </Head>
         <div className='flex flex-col items-stretch justify-items-stretch overflow-y-auto relative'>
-          {!Component.hideNav ?
-              <Header user={user} items={navItems} isSaved={isSaved} setIsSaved={setIsSaved}/> : null}
+          {!Component.hideNav && <Header user={user} items={navItems} isSaved={isSaved} setIsSaved={setIsSaved}/>}
           <Component {...pageProps} isSaved={isSaved} setIsSaved={setIsSaved}/>
-          {!Component.hideFooter ?
-              <Footer/> : null}
+          {!Component.hideFooter && <Footer/>}
         </div>
         {displayModal && <LoginModal onClose={closeModal} display={displayModal}/>}
       </SWRConfig>

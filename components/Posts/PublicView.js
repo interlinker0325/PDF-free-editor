@@ -88,8 +88,8 @@ const PublicView = ({
             }} color='error'>{loading ? "Borrando..." : "Si"}</Button>
           </DialogActions>
         </Dialog>
-        <Card className='flex p-3 flex-col gap-4 items-stretch justify-start content-start flex-nowrap'>
-          <CardHeader className="flex flex-col space-y-">
+        <Card className='flex p-3 flex-col gap-4 items-stretch justify-start content-start flex-nowrap py-0'>
+          <CardHeader className="flex flex-col py-0">
             <div className="flex  max-[500px]:gap-[30px] flex-row flex-wrap items-center justify-between">
               <CardTitle
                   className="max-[500px]:line-clamp-2 max-[500px]:leading-none max-[500px]: line-clamp-1 max-[500px]:text-[20px] text-4xl font-semibold pl-2">{post.title}</CardTitle>
