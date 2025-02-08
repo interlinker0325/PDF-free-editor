@@ -15,7 +15,7 @@ import RequestApprovalDialog from "../../../components/Posts/RequestApprovalDial
 import {SnackbarProvider} from "notistack";
 import TopBar from "../../../components/TopBar/TopBar";
 import {isAdmin as isUserAdmin, isAdmin} from "../../../utils";
-import {GET_ALL_COURSES_ADMIN} from "../../../gql/queries/User";
+import {GET_ALL_COURSES_ADMIN} from "@/gql/queries/User";
 
 const EditPost = ({post, courses, setIsSaved}) => {
   const [titleTab, setTitleTab] = useState('')
