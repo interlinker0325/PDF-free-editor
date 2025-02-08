@@ -52,7 +52,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
   } = usePost({ isSaved, setIsSaved, user, courses });
 
   return (
-    <Main className="min-[1536px]:w-full min-[1536px]:m-auto min-[1536px]:max-w-[1536px] pt-[unset] md:px-[30px] min-h-screen">
+    <Main className="min-[1536px]:w-full min-[1536px]:max-w-[1536px] md:px-[30px] min-h-screen">
       <SnackbarProvider maxSnack={3}>
         <PostTopBar
           {...{

@@ -70,7 +70,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
   // console.log({post})
 
   return (
-    <Main className="min-[1536px]:w-full min-[1536px]:m-auto min-[1536px]:max-w-[1536px]">
+    <Main className="min-[1536px]:w-full min-[1536px]:max-w-[1536px]">
       <SnackbarProvider maxSnack={3}>
         {showEditView &&
           <TopBar>

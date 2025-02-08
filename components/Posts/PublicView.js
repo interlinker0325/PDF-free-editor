@@ -37,7 +37,7 @@ const PublicView = ({
   const isCurrentUserAuthor = author?.id === user?.id;
   console.log({user})
   const isAdmin = isUserAdmin(user?.role?.id);
-  console.log(isAdmin,"user",user)
+
   const files = Array.isArray(post?.attachments) ? post?.attachments?.map(file =>
       <a
           href={`/api/download?uri=${file.url.replace('https://www.datocms-assets.com', '')}&mimeType=${file.mimeType}&filename=${file.filename}`}
@@ -91,9 +91,10 @@ const PublicView = ({
         <Card className='flex p-3 flex-col gap-4 items-stretch justify-start content-start flex-nowrap'>
           <CardHeader className="flex flex-col space-y-">
             <div className="flex  max-[500px]:gap-[30px] flex-row flex-wrap items-center justify-between">
-              <CardTitle className="max-[500px]:line-clamp-2 max-[500px]:leading-none max-[500px]: line-clamp-1 max-[500px]:text-[20px] text-4xl font-semibold pl-2">{post.title}</CardTitle>
-              {
-                user?.isLoggedIn && (
+              <CardTitle
+                  className="max-[500px]:line-clamp-2 max-[500px]:leading-none max-[500px]: line-clamp-1 max-[500px]:text-[20px] text-4xl font-semibold pl-2">{post.title}</CardTitle>
+
+              {(isAdmin || (isCurrentUserAuthor && !editMode && postDraft)) && (
                   <div className="flex gap-2">
                     <Button onClick={() => router.push(`/posts/${post.id}/edit`)} variant="default" size="sm">
                       <Edit2 className="mr-2 h-4 w-4"/>
@@ -105,9 +106,8 @@ const PublicView = ({
                           Eliminar
                         </Button>
                     )}
-                </div>
-                )
-              }
+                  </div>
+              )}
             </div>
             <CardDescription className="text-sm text-muted-foreground pl-3">
               <div className="flex items-center gap-2 text-sm">
