@@ -20,7 +20,7 @@ const Post = ({ post, updatePost }) => {
 
   if (!post) return null;
   return (
-    <Main className="min-[1536px]:w-full min-[1536px]:m-auto min-[1536px]:max-w-[1536px]">
+    <Main className="min-[1536px]:w-full min-[1536px]:max-w-[1536px]">
       <SnackbarProvider>
         <PostStatusBar user={user} post={post} updatePost={updatePost} />
         <PublicView {...{ post, user, showPreview }} />

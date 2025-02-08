@@ -66,7 +66,7 @@ export default function Header({items, isSaved, setIsSaved, user}) {
   return (
       <>
         <nav className={styles.contHeader}>
-          {items?.length > 0 && <DrawerMobile {...{items, handleClick, user}} />}
+          {!!items?.length && <DrawerMobile {...{items, handleClick, user}} />}
           <div className={styles.contLogo} onClick={() => {
             if (!isSaved) {
               setOpen(true);
@@ -76,7 +76,7 @@ export default function Header({items, isSaved, setIsSaved, user}) {
           }}>
             <Logo/>
           </div>
-          {items?.length > 0 && <AvartarMenu {...{items, handleClick, user}} />}
+          {!!items?.length && <AvartarMenu {...{items, handleClick, user}} />}
         </nav>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Warning</DialogTitle>

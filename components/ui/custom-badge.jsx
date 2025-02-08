@@ -1,6 +1,6 @@
 import React from "react"
 
-export function Badge({ children, variant = "default" }) {
+export function Badge({ children, className = '',variant = "default" }) {
   const baseStyles =
     "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
 
@@ -11,5 +11,5 @@ export function Badge({ children, variant = "default" }) {
     outline: "text-foreground border border-input hover:bg-accent hover:text-accent-foreground",
   }
 
-  return <div className={`${baseStyles} ${variants[variant]}`}>{children}</div>
+  return <div className={`${className} ${baseStyles} ${variants[variant]}`}>{children}</div>
 }

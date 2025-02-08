@@ -48,7 +48,6 @@ export default ({
               side="bottom" // Ensures the tooltip always appears below
               align="center" // Aligns the tooltip to the center of the trigger
           >
-            <p className="font-bold">{title}</p>
             <p className="text-sm">{description}</p>
           </TooltipContent>
         </Tooltip>

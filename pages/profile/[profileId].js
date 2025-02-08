@@ -186,7 +186,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
   }, [profile])
 
   const avatarView = avatarImage || formState.avatar?.url ? (
-      <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState.avatar.url} alt={"Avatar"}/>
+      <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState?.avatar?.url} alt={"Avatar"}/>
   ) : (
       <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
         <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
@@ -199,7 +199,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       value: 'profile',
       component: <UserInfo
           isCurrentUserProfile={isCurrentUserProfile}
-          avatarView={avatarImage || formState.avatar.url}
+          avatarView={avatarImage || formState?.avatar?.url}
           submitUpdateProfile={submitUpdateProfile}
           doCancel={doCancel}
           onChange={onChange}

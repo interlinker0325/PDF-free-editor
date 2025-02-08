@@ -22,7 +22,7 @@ const HeroCards = ({ bannerGroups }) => {
     },[bannerGroups])
 
     return (
-      <div className="relative">
+      <div className="relative 2xl:mt-20">
         <Slider className={styles.contBanner} {...Const.settings} id="slider-primary">
             {viewAllBanner.map(banner =>
                 <article key={`HeroBanner_${banner.id}`} className={styles.contIMG}>
