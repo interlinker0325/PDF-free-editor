@@ -199,7 +199,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
       value: 'profile',
       component: <UserInfo
           isCurrentUserProfile={isCurrentUserProfile}
-          avatarView={avatarImage || formState.avatar.url}
+          avatarView={avatarImage || formState?.avatar?.url}
           submitUpdateProfile={submitUpdateProfile}
           doCancel={doCancel}
           onChange={onChange}
