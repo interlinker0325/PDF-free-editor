@@ -37,7 +37,7 @@ const Home = ({posts, showMore, currentPage, banners}) => {
 
   return (
       <>
-        <Main className="min-[1500px]:m-auto min-[1500px]:max-w-[1500px]">
+        <Main className="min-[1500px]:m-auto min-[1500px]:max-w-[1500px] min-[1500px]:p-20">
           <HeroCards bannerGroups={banners}/>
           <div className="flex  overflow-hidden p-[21px] flex-row items-center justify-between pt-10 pb-2">
             <h2 className="col-span-4 leading-tight font-semibold max-[500px]:text-[25px] text-3xl">Publicaciones
