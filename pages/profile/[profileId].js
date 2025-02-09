@@ -1,7 +1,4 @@
-// React
-import React from 'react'
-
-import {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {updateProfile} from 'handlers/profile';
 import {upload} from 'handlers/bll';
 import withSession from 'utils/withSession';
@@ -9,24 +6,17 @@ import {request} from 'utils/graphqlRequest';
 import {query} from 'gql';
 import Main from 'components/Main/Main';
 import {useRouter} from 'next/router';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCircleUser} from '@fortawesome/free-solid-svg-icons'
 import {INPUT_TYPES, verifyMutipleFields} from 'utils/form';
 
-import {isProfessor as isUserProfessor, isAdmin as isUserAdmin, POST_REVIEW_STATUS} from 'utils';
+import {isAdmin as isUserAdmin, isProfessor as isUserProfessor, POST_REVIEW_STATUS} from 'utils';
 import useUser from "../../utils/useUser";
 
-// Components Local
 import UserInfo from 'components/Profile/UserInfo';
 import Courses from 'components/Profile/Courses';
 import Publications from 'components/Profile/Publications';
-import EditProfile from 'components/Profile/EditProfile';
-import TopBar from 'components/TopBar/TopBar';
 import Loader from 'components/Loader/Loader';
-import AlertMenssage from 'components/Profile/AlertMenssage'
 import ContentTabs from 'components/Profile/Tabs'
 
-// Styles
 import styles from 'components/Profile/styles'
 
 const DEFAULT_USER_ID = 'me'
@@ -41,7 +31,7 @@ const VIEW_STATES = {
 
 const DEFAULT_ERRORFORM = {field: null, msg: null};
 
-function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) {
+function Profile({profile = {}, courses = [], posts = [], archivePosts = [], isAdmin = false}) {
   const {user} = useUser({redirectTo: '/'})
   const router = useRouter();
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
@@ -168,9 +158,9 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     } else {
 
       if (avatar?.id) {
-         entry.avatar = avatar
-         entry.updatedAt = updatedAt
-         setActiveModeEdit(true)
+        entry.avatar = avatar
+        entry.updatedAt = updatedAt
+        setActiveModeEdit(true)
       }
 
       setFormState({...entry});
@@ -184,14 +174,6 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     setAvatarImage(null);
     setActiveView(VIEW_STATES.USER);
   }, [profile])
-
-  const avatarView = avatarImage || formState.avatar?.url ? (
-      <img htmlFor='avatar' className='h-[300px] w-[300px]' src={avatarImage || formState?.avatar?.url} alt={"Avatar"}/>
-  ) : (
-      <div htmlFor='avatar' className='h-[300px] w-[300px] flex flex-col justify-center items-center px-8 py-10'>
-        <FontAwesomeIcon htmlFor='avatar' className='text-2xl' icon={faCircleUser}/>
-      </div>
-  );
 
   const actionsTabs = [
     {
@@ -208,7 +190,7 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
           refAvatar={refs}
           items={posts.filter(item => item.review !== POST_REVIEW_STATUS.DRAFT)}
           user={user}
-          activeView={activeModeEdit} 
+          activeView={activeModeEdit}
           setActiveView={setActiveModeEdit}
           {...formState} />
     },
@@ -231,20 +213,8 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
     },
   ]
 
-  const showStatusBar = errorForm.field || (activeView === VIEW_STATES.USER || activeView === VIEW_STATES.EDIT);
   return (
       <Main className="pt-[unset] p-[unset]">
-        {/* {showStatusBar &&
-            <TopBar className="[all:unset]">
-              <AlertMenssage {...{
-                type: !errorForm.msg,
-                text: `${errorForm.msg ?
-                      errorForm.msg :
-                      'Ningun otro(a) usuario(a) puede ver tu fecha de nacimiento'
-                }`
-              }} />
-            </TopBar>
-        } */}
         <div className={styles.contProfile}>
           <div className={styles.rightContainer}>
             <div className={styles.tabs}>
@@ -260,7 +230,12 @@ function Profile({profile, courses, posts, archivePosts, isProfessor, isAdmin}) 
 export const getServerSideProps = withSession(async function ({req}) {
   const currentUser = req.session.get('user');
   if (!currentUser) {
-    return {props: {}};
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
   }
   const urlSplit = req.url.split('/');
   const userIdParam = urlSplit[urlSplit.length - 1];
