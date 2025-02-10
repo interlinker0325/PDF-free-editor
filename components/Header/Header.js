@@ -1,19 +1,12 @@
 'use client'
 
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import Logo from "../Logo/Logo";
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 
 // Shadcn IU
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet"
 import {Button} from "@/components/ui/button"
 
 // Components Local
@@ -66,7 +59,7 @@ export default function Header({items, isSaved, setIsSaved, user}) {
   return (
       <>
         <nav className={styles.contHeader}>
-          {items?.length > 0 && <DrawerMobile {...{items, handleClick, user}} />}
+          {!!items?.length && <DrawerMobile {...{items, handleClick, user}} />}
           <div className={styles.contLogo} onClick={() => {
             if (!isSaved) {
               setOpen(true);
@@ -76,7 +69,7 @@ export default function Header({items, isSaved, setIsSaved, user}) {
           }}>
             <Logo/>
           </div>
-          {items?.length > 0 && <AvartarMenu {...{items, handleClick, user}} />}
+          {!!items?.length && <AvartarMenu {...{items, handleClick, user}} />}
         </nav>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Warning</DialogTitle>

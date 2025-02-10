@@ -15,7 +15,7 @@ import RequestApprovalDialog from "../../../components/Posts/RequestApprovalDial
 import {SnackbarProvider} from "notistack";
 import TopBar from "../../../components/TopBar/TopBar";
 import {isAdmin as isUserAdmin, isAdmin} from "../../../utils";
-import {GET_ALL_COURSES_ADMIN} from "../../../gql/queries/User";
+import {GET_ALL_COURSES_ADMIN} from "@/gql/queries/User";
 
 const EditPost = ({post, courses, setIsSaved}) => {
   const [titleTab, setTitleTab] = useState('')
@@ -70,7 +70,7 @@ const EditPost = ({post, courses, setIsSaved}) => {
   // console.log({post})
 
   return (
-    <Main className="min-[1536px]:w-full min-[1536px]:m-auto min-[1536px]:max-w-[1536px]">
+    <Main className="min-[1536px]:w-full min-[1536px]:max-w-[1536px]">
       <SnackbarProvider maxSnack={3}>
         {showEditView &&
           <TopBar>

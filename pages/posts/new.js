@@ -2,18 +2,16 @@ import React from 'react'
 
 import useUser from "utils/useUser";
 import withSession from "utils/withSession";
-import { GET_ALL_COURSES, GET_ALL_STUDENTS, request, } from "utils/graphqlRequest";
+import {GET_ALL_COURSES, GET_ALL_STUDENTS, request,} from "utils/graphqlRequest";
 
 import Main from "components/Main/Main";
 import PostForm from "components/Posts/PostForm";
 import PostView from "components/Posts/PostView";
 import Loader from "components/Loader/Loader";
-import { SnackbarProvider } from 'notistack';
+import {SnackbarProvider} from 'notistack';
 import usePost from "../../hooks/usePost";
 import PostTopBar from "../../components/Posts/PostTopBar";
 import RequestApprovalDialog from "../../components/Posts/RequestApprovalDialog";
-import { isAdmin as isUserAdmin } from "../../utils";
-import { GET_ALL_COURSES_ADMIN } from "../../gql/queries/User";
 
 const NewPost = ({ isSaved, setIsSaved, courses }) => {
   const [titleTab, setTitleTab] = React.useState('')
@@ -52,7 +50,7 @@ const NewPost = ({ isSaved, setIsSaved, courses }) => {
   } = usePost({ isSaved, setIsSaved, user, courses });
 
   return (
-    <Main className="min-[1536px]:w-full min-[1536px]:m-auto min-[1536px]:max-w-[1536px] pt-[unset] md:px-[30px] min-h-screen">
+    <Main className="min-[1536px]:w-full min-[1536px]:max-w-[1536px] md:px-[30px] min-h-screen">
       <SnackbarProvider maxSnack={3}>
         <PostTopBar
           {...{

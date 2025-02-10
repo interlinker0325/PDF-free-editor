@@ -115,6 +115,26 @@ export default function PostTopBar({
               }}
               disabled={formView}
               variant="outline">Formulario</Button>
+            <Button
+                onClick={() => {
+                  setTitleTab('Editor')
+                  setEditView(true);
+                  setShowPreview(false);
+                  setFormView(false);
+                  setComplianceView(false);
+                }}
+            disabled={editView}
+            variant="outline">Editor</Button>
+            <Button 
+                onClick={() => {
+                  setTitleTab('Cumplimiento')
+                  setComplianceView(true);
+                  setEditView(false);
+                  setShowPreview(false);
+                  setFormView(false);
+                }}
+              disabled={complianceView}
+              variant="outline">Cumplimiento</Button>
           <Button
               onClick={() => {
                 setTitleTab('Vista previa')
@@ -125,26 +145,6 @@ export default function PostTopBar({
               }}
               disabled={showPreview}
               variant="outline">Vista previa</Button>
-          <Button 
-              onClick={() => {
-                setTitleTab('Cumplimiento')
-                setComplianceView(true);
-                setEditView(false);
-                setShowPreview(false);
-                setFormView(false);
-              }}
-              disabled={complianceView}
-              variant="outline">Cumplimiento</Button>
-          <Button
-            onClick={() => {
-              setTitleTab('Editor')
-              setEditView(true);
-              setShowPreview(false);
-              setFormView(false);
-              setComplianceView(false);
-            }}
-            disabled={editView}
-            variant="outline">Editor</Button>
           {
             !isAdmin && allPass && (
               <Button onClick={handlePublication}>Publicar</Button>

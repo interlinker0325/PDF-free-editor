@@ -107,7 +107,7 @@ const PostForm = ({
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Titular de publicación *</FormLabel>
+                      <FormLabel>Título de la publicación *</FormLabel>
                       <FormControl>
                         <Input name='title' value={form.title} onChange={(e) => onChange(e, 'title')} placeholder="Ingrese el título"/>
                       </FormControl>
@@ -282,7 +282,7 @@ const PostForm = ({
             <Card>
               <CardHeader>
                 <CardTitle>Terminos y Condiciones</CardTitle>
-                <CardDescription className="mx-[5px]">Los términos y condiciones deben ser aceptados para publicar una publicación*</CardDescription>
+                <CardDescription className="mx-[5px]">Los términos y condiciones deben ser aceptados para proceder con la publicación. Confirma al final del texto.*</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className='form-control'>

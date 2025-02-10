@@ -88,27 +88,31 @@ const PublicView = ({
             }} color='error'>{loading ? "Borrando..." : "Si"}</Button>
           </DialogActions>
         </Dialog>
-        <Card className='flex p-3 flex-col gap-4 items-stretch justify-start content-start flex-nowrap'>
-          <CardHeader className="flex flex-col space-y-">
-            <div className="flex flex-row items-center justify-between">
-              <CardTitle className="line-clamp-1 text-4xl font-semibold pl-2">{post.title}</CardTitle>
-              <div className="flex gap-2">
-                <Button onClick={() => router.push(`/posts/${post.id}/edit`)} variant="default" size="sm">
-                  <Edit2 className="mr-2 h-4 w-4"/>
-                  Editar
-                </Button>
-                {!isAdmin && (
-                    <Button onClick={() => setDeletePrompt(true)} variant="destructive" size="sm">
-                      <Trash2 className="mr-2 h-4 w-4"/>
-                      Eliminar
+        <Card className='flex p-3 flex-col gap-4 items-stretch justify-start content-start flex-nowrap py-0'>
+          <CardHeader className="flex flex-col py-0">
+            <div className="flex  max-[500px]:gap-[30px] flex-row flex-wrap items-center justify-between">
+              <CardTitle
+                  className="max-[500px]:line-clamp-2 max-[500px]:leading-none max-[500px]: line-clamp-1 max-[500px]:text-[20px] text-4xl font-semibold pl-2">{post.title}</CardTitle>
+
+              {(isAdmin || (isCurrentUserAuthor && !editMode && postDraft)) && (
+                  <div className="flex gap-2">
+                    <Button onClick={() => router.push(`/posts/${post.id}/edit`)} variant="default" size="sm">
+                      <Edit2 className="mr-2 h-4 w-4"/>
+                      Editar
                     </Button>
-                )}
-              </div>
+                    {!isAdmin && (
+                        <Button onClick={() => setDeletePrompt(true)} variant="destructive" size="sm">
+                          <Trash2 className="mr-2 h-4 w-4"/>
+                          Eliminar
+                        </Button>
+                    )}
+                  </div>
+              )}
             </div>
             <CardDescription className="text-sm text-muted-foreground pl-3">
               <div className="flex items-center gap-2 text-sm">
                 <span className="font-medium text-muted-foreground">Autor(es):</span>
-                <Badge variant="secondary" className="font-normal">
+                <Badge variant="secondary" className="font-normal bg-transparent ">
                   {author?.fullname || user?.fullname}{post?.coauthors?.length ? ", " : ""}{post?.coauthors.map((coauthor) => coauthor.fullname).join(", ")}
                 </Badge>
               </div>
