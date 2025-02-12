@@ -228,7 +228,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
   };
 
   const onChange = useCallback(async (e, name) => {
-    console.log(e,"eee788899")
+    console.log(e, "eee788899")
     const {name: inputName, value} = e.target;
     const _files = refs[name]?.current?.files;
 
@@ -309,10 +309,12 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       console.log(uploadedHTML, "-----upload file----");
       const loadedMonograph = await getMonograph(uploadedHTML);
       setPreviewIframe(loadedMonograph);
-      triggerLoading(false);
       return uploadedHTML;
     } catch (error) {
       console.log("Error uploading file:", error);
+      showError("Algo salió mal convirtiendo el archivo a HTML");
+    } finally {
+      triggerLoading(false);
     }
   };
 
