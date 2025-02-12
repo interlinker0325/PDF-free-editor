@@ -70,6 +70,12 @@ const PostForm = ({
         setOpen(false);
     };
 
+    const limitSipnosis = (e) => {
+        const text = e.target.value;
+        if (text.length <= 200)
+             onChange(e, 'description');
+    }
+
     return (
         <>
             <Dialog
@@ -181,6 +187,23 @@ const PostForm = ({
                                     onClick={setCoAuthors}
                                     suggestions={courseStudents} />
                             </FormControl>
+                            <div className="flex flex-wrap gap-x-2 gap-y-1">
+                                {form.coauthors?.map(coauthor => (
+                                    <span 
+                                        key={`coAuthor_${coauthor.id}`} 
+                                        className="font-caslon text-base font-normal text-other flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-md"
+                                    >
+                                        {coauthor.fullname}
+                                        <a
+                                            className="underline cursor-pointer text-red-500 hover:text-red-700"
+                                            id={coauthor.id}
+                                            onClick={async (e) => removeCoAuthor(e, coauthor.id)}
+                                        >
+                                            (-)
+                                        </a>
+                                    </span>
+                                ))}
+                            </div>
                             <FormMessage />
                             </FormItem>
                         )}
@@ -213,7 +236,7 @@ const PostForm = ({
                         <FormControl>
                           <Textarea 
                                 value={form.description}
-                                onChange={(e) => onChange(e, 'description')} 
+                                onChange={limitSipnosis} 
                                 placeholder="Agregue sinopsis de la publicación" 
                                 className="h-32" />
                         </FormControl>

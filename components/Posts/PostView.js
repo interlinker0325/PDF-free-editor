@@ -137,7 +137,7 @@ const PostView = ({
       title.style.border = 'none';
       title.title = '';
     } else {
-      title.style.padding = '10px 20px'
+      title.style.padding = '5px 20px'
       title.style.border = "solid red 2.5px";
       title.title = "El título debe tener entre 25 y 160 caracteres";
       setTitleLengthCheckBadge('Revisar');
@@ -831,7 +831,7 @@ const PostView = ({
         className={(showPreview || editView || complianceView) ? "h-auto flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
         <div
           className="flex flex-row items-center justify-between border-[1px] border-transparent rounded-none border-b-black">
-          <h2 id="title" className="line-clamp-1 overflow-hidden col-span-4 text-4xl cursor-pointer pb-[unset]">{post.title}</h2>
+          <h2 style={{padding: 'unset'}} id="title" className="line-clamp-1  overflow-hidden col-span-4 text-4xl cursor-pointer pb-[unset] px-[10px] py-[unset]">{post.title}</h2>
         </div>
         <div className="flex flex-wrap gap-[20px]">
           <aside className={`${showPreview ? "col-span-7" : "col-span-6"} min-h-[800px] h-auto border-[1px] border-transparent max-md:w-[100%] max-[768px]:w-full ${!editView && `min-[769px]:w-[68%]`} ${editView && `lg:w-[59%]`}`}>
