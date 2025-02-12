@@ -18,7 +18,6 @@ import {isAdmin as isUserAdmin, isAdmin} from "../../../utils";
 import {GET_ALL_COURSES_ADMIN} from "@/gql/queries/User";
 
 const EditPost = ({post, courses, setIsSaved}) => {
-  const [titleTab, setTitleTab] = useState('')
   const router = useRouter();
   const {user} = useUser({redirectTo: '/'});
   useEffect(() => {
@@ -95,7 +94,6 @@ const EditPost = ({post, courses, setIsSaved}) => {
             setEditView,
             statusBarState,
             setComplianceView,
-            setTitleTab
           }}
         />
         <PostForm
@@ -123,7 +121,6 @@ const EditPost = ({post, courses, setIsSaved}) => {
           setIsSaved={setIsSaved}
           logicCheck={logicCheck}
           setAllPass={setAllPass}
-          titleTab={titleTab}
           showFormView={formView}
         />
         <Loader show={showLoadingScreen}/>

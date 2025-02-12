@@ -1,11 +1,9 @@
-import { Tooltip } from "@mui/material";
-import TopBar from "../TopBar/TopBar";
-import { useEffect, useState } from "react";
+import {useEffect} from "react";
 import confetti from 'canvas-confetti';
-import { isAdmin as isUserAdmin } from "../../utils";
+import {isAdmin as isUserAdmin} from "../../utils";
 
 // Shadcn IU
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import SpeedButton from './SpeedButton'
 
 export default function PostTopBar({
@@ -20,21 +18,9 @@ export default function PostTopBar({
   setFormView,
   setShowPreview,
   setEditView,
-  statusBarState,
   setComplianceView,
-  setTitleTab
 }) {
   const isAdmin = isUserAdmin(user?.role?.id);
-  const [time, setTime] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTime(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
   const startAnimation = () => {
 
@@ -106,7 +92,7 @@ export default function PostTopBar({
     <div className="container max-md:mx-auto py-6">
       <div className="flex items-center justify-between">
         <div className="flex flex-wrap gap-2">
-            <Button 
+            <Button
               onClick={() => {
                   setFormView(true);
                   setShowPreview(false);
@@ -117,7 +103,6 @@ export default function PostTopBar({
               variant="outline">Formulario</Button>
             <Button
                 onClick={() => {
-                  setTitleTab('Editor')
                   setEditView(true);
                   setShowPreview(false);
                   setFormView(false);
@@ -125,9 +110,8 @@ export default function PostTopBar({
                 }}
             disabled={editView}
             variant="outline">Editor</Button>
-            <Button 
+            <Button
                 onClick={() => {
-                  setTitleTab('Cumplimiento')
                   setComplianceView(true);
                   setEditView(false);
                   setShowPreview(false);
@@ -137,7 +121,6 @@ export default function PostTopBar({
               variant="outline">Cumplimiento</Button>
           <Button
               onClick={() => {
-                setTitleTab('Vista previa')
                 setShowPreview(true);
                 setFormView(false);
                 setEditView(false);
