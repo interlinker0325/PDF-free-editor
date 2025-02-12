@@ -22,7 +22,6 @@ export default function PostTopBar({
   setEditView,
   statusBarState,
   setComplianceView,
-  setTitleTab
 }) {
   const isAdmin = isUserAdmin(user?.role?.id);
   const [time, setTime] = useState(true);
@@ -117,7 +116,6 @@ export default function PostTopBar({
               variant="outline">Formulario</Button>
             <Button
                 onClick={() => {
-                  setTitleTab('Editor')
                   setEditView(true);
                   setShowPreview(false);
                   setFormView(false);
@@ -127,7 +125,6 @@ export default function PostTopBar({
             variant="outline">Editor</Button>
             <Button 
                 onClick={() => {
-                  setTitleTab('Cumplimiento')
                   setComplianceView(true);
                   setEditView(false);
                   setShowPreview(false);
@@ -137,7 +134,6 @@ export default function PostTopBar({
               variant="outline">Cumplimiento</Button>
           <Button
               onClick={() => {
-                setTitleTab('Vista previa')
                 setShowPreview(true);
                 setFormView(false);
                 setEditView(false);

@@ -21,14 +21,6 @@ import styles from 'components/Profile/styles'
 
 const DEFAULT_USER_ID = 'me'
 
-const VIEW_STATES = {
-  USER: 'userInfo',
-  COURSE: 'courses',
-  POSTS: 'posts',
-  EDIT: 'editProfile',
-  ARCHIVE: 'ARCHIVE'
-}
-
 const DEFAULT_ERRORFORM = {field: null, msg: null};
 
 function Profile({profile = {}, courses = [], posts = [], archivePosts = [], isAdmin = false}) {
@@ -38,7 +30,6 @@ function Profile({profile = {}, courses = [], posts = [], archivePosts = [], isA
   const [formState, setFormState] = useState(profile || {});
   const [errorForm, setErrorForm] = useState(DEFAULT_ERRORFORM);
   const [avatarImage, setAvatarImage] = useState(null);
-  const [activeView, setActiveView] = useState(VIEW_STATES.USER);
   const [activeModeEdit, setActiveModeEdit] = useState(true)
   const {query: {profileId}} = useRouter();
   const isCurrentUserProfile = profileId === DEFAULT_USER_ID;
@@ -166,13 +157,11 @@ function Profile({profile = {}, courses = [], posts = [], archivePosts = [], isA
       setFormState({...entry});
     }
     triggerLoading(false);
-    setActiveView(VIEW_STATES.USER);
   }, [formState]);
 
   const doCancel = useCallback(async (e) => {
     setFormState(profile);
     setAvatarImage(null);
-    setActiveView(VIEW_STATES.USER);
   }, [profile])
 
   const actionsTabs = [

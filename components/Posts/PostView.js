@@ -29,7 +29,6 @@ const PostView = ({
   allPass,
   setAllPass,
   setMonograColor,
-  titleTab,
   showFormView
 }) => {
   // when the element of the Iframe Preview, editorContent is set as clicked Element
@@ -823,9 +822,6 @@ const PostView = ({
 
   return (
     <Card className={`overflow-hidden ${showFormView && 'hidden'}`}>
-      <CardHeader>
-          <CardTitle>{titleTab}</CardTitle>
-        </CardHeader>
       <CardContent className="space-y-6">
       <article
         className={(showPreview || editView || complianceView) ? "h-auto flex flex-col gap-4 p-2 items-stretch justify-start content-start flex-nowrap" : 'hidden'}>
