@@ -73,7 +73,5 @@ export default async (req, res) => {
     res.status(500).json(result);
   } else {
     res.json(result);
-
   }
-
 };

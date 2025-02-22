@@ -1,22 +1,20 @@
 "use client"
 
-import React, { useState } from 'react';
-import { useForm } from "react-hook-form"
-import { FileText, Upload, ImageIcon, Users, Tag } from "lucide-react"
+import React, {useState} from 'react';
+import {useForm} from "react-hook-form"
+import {FileText, ImageIcon} from "lucide-react"
 
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookAtlas, faFileArrowDown, faFileCode, faImages, faPeopleGroup, faTags } from '@fortawesome/free-solid-svg-icons';
-import { TERMS_AND_CONDITIONS_TEXT } from 'utils/copy';
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
+import {TERMS_AND_CONDITIONS_TEXT} from 'utils/copy';
 import Autocomplete from 'components/Autocomplete/Autocomplete';
 
 // Shadcn IU
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import {Button} from "@/components/ui/button"
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form"
+import {Input} from "@/components/ui/input"
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
+import {Textarea} from "@/components/ui/textarea"
 
 const PostForm = ({
     form,
@@ -27,8 +25,6 @@ const PostForm = ({
     setCoAuthors,
     removeCoAuthor,
     refs,
-    formView,
-    monograColor,
     showPreview,
 }) => {
     const selectedCourse = (courses || []).find(c => c?.id === form?.course);
@@ -48,20 +44,14 @@ const PostForm = ({
 
     const handleClick = (event) => {
         setMonographChange(!monographChange);
-        if (!monographChange) {
-            return;
-        }
+        if (!monographChange) return;
 
         event.preventDefault();
         setOpen(true);
-        // if (form.monograph) {
-        //     setMonographChange(true);
-        // }
     };
 
     const handleYes = () => {
         setOpen(false);
-        // form.monograph = null;
         setMonographChange(false);
         refs.monograph.current.click();
     };
@@ -72,9 +62,10 @@ const PostForm = ({
 
     const limitSipnosis = (e) => {
         const text = e.target.value;
-        if (text.length <= 200)
-             onChange(e, 'description');
+        if (text.length <= 200) onChange(e, 'description');
     }
+
+  console.log({form})
 
     return (
         <>
