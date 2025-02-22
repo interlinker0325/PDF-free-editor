@@ -34,7 +34,7 @@ async function importDogBreeds() {
     const categoryNameToRecord = {};
     for (let categoryName of uniqueCategories) {
         categoryNameToRecord[name] = await client.items.create({
-            itemType: '<CATEGORY-MODEL-ID>',
+            item_type: '<CATEGORY-MODEL-ID>',
             name
         });
     }
@@ -51,7 +51,7 @@ async function importDogBreeds() {
             }
         );
         categoryNameToRecord[name] = await client.items.create({
-            itemType: '<DOG-BREED-MODEL-ID>',
+            item_type: '<DOG-BREED-MODEL-ID>',
             name: externalData.breed,
             category: categoryNameToRecord[dogBreed.category].id,
             breed_for: externalData.breed_for,

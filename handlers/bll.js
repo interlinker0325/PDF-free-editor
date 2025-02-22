@@ -30,7 +30,7 @@ export const createEntry = async (
     agreedterms,
     tags
   };
-
+  console.log("REQUEST DATA", requestData)
   const response = await post('/api/entry', requestData);
   if (response?.success) {
     return response.data;

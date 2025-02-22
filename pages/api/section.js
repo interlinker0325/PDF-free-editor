@@ -7,7 +7,7 @@ export default async (req, res) => {
         const { id, sections } = req.body;
 
         let content = sections.map((section, index) => {
-            let block = { itemType: process.env.SECTION_MODEL_ID };
+            let block = { item_type: process.env.SECTION_MODEL_ID };
 
             if (section.id) block.id = section.id;
             block.title = section.title || '';
