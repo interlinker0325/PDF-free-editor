@@ -14,13 +14,13 @@ const request = async (method, URL, data, headers) => await axios({
   headers: headers,
   timeout: 0
 });
-
 const post = async (URL, data, asFormData) => {
   try {
-    let headers = false;
-
+    let headers = {
+      'Content-Type': 'application/json',
+    };
     if (asFormData) {
-      headers = {'Content-Type': 'multipart/form-data'}
+      headers['Content-Type'] = 'multipart/form-data';
     }
 
     const response = await request(METHODS.POST, URL, data, headers);
@@ -36,7 +36,6 @@ const post = async (URL, data, asFormData) => {
     };
   }
 };
-
 const put = async (URL, data) => {
   try {
     const response = await request(METHODS.PUT, URL, data);

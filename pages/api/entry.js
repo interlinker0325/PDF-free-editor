@@ -8,7 +8,7 @@ export default async (req, res) => {
 
     let entry = {
       ...rest,
-      itemType: process.env.ENTRY_MODEL_ID,
+      item_type: { type: "item_type", id: process.env.ENTRY_MODEL_ID },
     };
 
     entry.coverimage = coverimage ? {upload_id: coverimage.id} : null;
@@ -73,7 +73,5 @@ export default async (req, res) => {
     res.status(500).json(result);
   } else {
     res.json(result);
-
   }
-
 };

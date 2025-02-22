@@ -4,6 +4,7 @@ import {createEntry, getMonograph, updateEntry, upload} from "@/handlers/bll";
 import {checkCompliance, convertFileToHTML} from "@/utils/server/windows";
 import useAlert from "@/hooks/useAlert";
 import _ from "lodash";
+import {enqueueSnackbar} from "notistack";
 
 /**
  * @typedef {Object} Author
@@ -105,12 +106,9 @@ export default function usePost({user, post, setIsSaved,} = {}) {
 
   const setCoAuthors = useCallback(
       async (e, selectedCoAuthor) => {
+        console.log({selectedCoAuthor})
         e.preventDefault();
-        const {coauthors, ...restFormState} = formState;
-        let selectedCoauthors = coauthors || [];
-        selectedCoauthors.push(selectedCoAuthor);
-        restFormState.coauthors = selectedCoauthors;
-        setFormState(restFormState);
+        setFormState(prev => ({...prev, coauthors: prev.coauthors.concat(selectedCoAuthor)}));
       },
       [formState]
   );
@@ -181,13 +179,13 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       setIsSaved(true);
       setFormState({...formState, ["monograph"]: file, id: entry.id, createdAt: entry.createdAt});
       if (entry.error) {
-        showError('No se pudo realizar la publicación');
+        showError(`No se pudo ${approval ? "realizar" : "guardar"} la publicación`);
       } else {
         showSuccess('Tu documento se ha guardado satisfactoriamente');
       }
     } catch (error) {
       console.error(error);
-      showError('Algo salio mal guardando la publicación');
+      showError('Algo salió mal guardando la publicación');
     } finally {
       triggerLoading(false);
     }
@@ -196,13 +194,8 @@ export default function usePost({user, post, setIsSaved,} = {}) {
   const requestApproval = useCallback(async () => {
     setOpen(false);
     triggerLoading(true);
-    // TODO: Validate with Hao
-    // const iframeContent = getFrameContent();
-    // const checkResult = await checkCompliance(iframeContent);
-    // console.log({checkResult})8
-    // setLogicCheck(checkResult.data);
+    if (!formState.coverimage) return showWarning('Para publicar, necesitas la imagen de encabezado.');
 
-    // if (checkResult.data?.isTrue === "true") {
     await saveDocument(true);
 
     setStatusBarState({
@@ -211,15 +204,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
           "Tu publicación ha sido enviada a aprobación, ve a tu perfil para verla",
     });
     showSuccess('Tu publicación ha sido enviada para aprobación, en un par de semanas recibirás una notificación al respecto');
-    // } else if (checkResult.data?.reasons?.length) {
-    //   checkResult.data.reasons.map(reason => (
-    //     showError(reason)
-    //   ))
-    // } else {
-    //   showError('Se produjo un error con nuestra IA. Por favor, inténtalo de nuevo más tarde');
-    // }
     triggerLoading(false);
-
   }, []);
 
 
@@ -332,7 +317,7 @@ export default function usePost({user, post, setIsSaved,} = {}) {
     } else if (!haveType) {
       showWarning('Para guardar, seleccionar el tipo de publicación.');
     } else {
-      showWarning('Para guardar un borrador debes tener lo siguiente: 1. Título de la publicación en la sección de formulario. \n 2.	Contenido, importado o creado por ti mismo en el editor. \n 3.Tipo de publicación.');
+      showWarning('Para guardar un borrador debes tener lo siguiente: \n 1. Título de la publicación en la sección de formulario. \n 2.	Contenido, importado o creado por ti mismo en el editor. \n 3.Tipo de publicación.');
     }
   };
 

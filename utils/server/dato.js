@@ -21,6 +21,7 @@ export const deleteUpload = async (fileId) => {
 
 export const createRecord = async (recordData) => {
   try {
+    console.log("CREATING...", recordData)
     return await client.items.create(recordData);
   } catch (error) {
     console.error(error);
@@ -30,7 +31,7 @@ export const createRecord = async (recordData) => {
 
 export const updateRecord = async (recordId, recordData) => {
   try {
-    console.log({recordData})
+    console.log("UPDATING...", recordData)
     Reflect.deleteProperty(recordData, "createdAt")
     Reflect.deleteProperty(recordData, "updatedAt")
     return await client.items.update(`${recordId}`, recordData);
@@ -42,6 +43,7 @@ export const updateRecord = async (recordId, recordData) => {
 
 export const deleteRecord = async (recordId) => {
   try {
+    console.log("DELETING...", recordId)
     return await client.items.destroy(`${recordId}`);
   } catch (error) {
     console.error(error);
