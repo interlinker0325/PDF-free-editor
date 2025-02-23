@@ -108,9 +108,9 @@ export default function usePost({user, post, setIsSaved,} = {}) {
       async (e, selectedCoAuthor) => {
         console.log({selectedCoAuthor})
         e.preventDefault();
-        setFormState(prev => ({...prev, coauthors: prev.coauthors.concat(selectedCoAuthor)}));
+        setFormState(prev => ({...prev, coauthors: (prev.coauthors || []).concat(selectedCoAuthor)}));
       },
-      [formState]
+      []
   );
 
   const removeCoAuthor = useCallback(async (e, coAuthorId) => {
