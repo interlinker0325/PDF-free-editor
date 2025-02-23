@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import TopBar from 'components/TopBar/TopBar';
-import { updateEntry } from 'handlers/bll';
-import { isPostApproved, POST_REVIEW_STATUS } from 'utils';
-
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
+import {updateEntry} from 'handlers/bll';
+import {isPostApproved, POST_REVIEW_STATUS} from 'utils';
+import {useRouter} from "next/router";
+import {useSnackbar} from "notistack";
+import {Button} from "@/components/ui/button";
+import {Loader2} from 'lucide-react';
 
 const errorConfig = {
   variant: 'error',
@@ -14,15 +15,15 @@ const errorConfig = {
   }
 }
 
-const PostStatusBar = ({ post, user }) => {
+const PostStatusBar = ({post, user}) => {
   const [loading, setLoading] = useState(false);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
 
   if (!post?.course || !user) return null;
-  if (isPostApproved(post) || post.course?.professor?.id !== user?.id) {
-    return null;
-  }
+
+  const isTheProfessor = post.course?.professor?.id === user?.id;
+  if (isPostApproved(post) || !isTheProfessor) return null;
 
   const submitReview = async (review) => {
     try {
@@ -38,7 +39,7 @@ const PostStatusBar = ({ post, user }) => {
         enqueueSnackbar('No se pudo actualizar la publicación', errorConfig);
       } else {
         const approved = review === POST_REVIEW_STATUS.APPROVED;
-        enqueueSnackbar('EL documento ha sido ' + (approved ? "aprobado" : "denegado"), {
+        enqueueSnackbar('El documento ha sido ' + (approved ? "aprobado" : "denegado"), {
           variant: approved ? 'success' : 'error',
           anchorOrigin: {
             vertical: 'top',
@@ -56,39 +57,35 @@ const PostStatusBar = ({ post, user }) => {
   };
 
   return (
-    <TopBar>
-      <a className={styles.link} href='/profile/me'>{'< Volver a archivo'}</a>
-      <div>
-        <button
-          type='button'
-          onClick={async (e) => {
-            e.preventDefault();
-            await submitReview(POST_REVIEW_STATUS.APPROVED);
-          }}
-          className={`${styles.btn} ${styles.btnApproved}`}
-          disabled={loading}
-          children='Aprobar'
-        />
-        <button
-          type='button'
-          onClick={async (e) => {
-            e.preventDefault();
-            await submitReview(POST_REVIEW_STATUS.DENIED);
-          }}
-          className={`${styles.btn} ${styles.btnDenied}`}
-          disabled={loading}
-          children='Denegar'
-        />
-      </div>
-    </TopBar>
+      <TopBar marginTop={"mt-1"}>
+        <a className="text-other cursor-pointer hover:text-primary underline underline-offset-1"
+           href='/profile/me'>{'< Volver a archivo'}</a>
+        <div className="flex gap-2">
+          <Button
+              onClick={async (e) => {
+                e.preventDefault();
+                await submitReview(POST_REVIEW_STATUS.APPROVED);
+              }}
+              disabled={loading}
+              className="bg-green-600 hover:bg-green-700"
+          >
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : null}
+            Aprobar
+          </Button>
+          <Button
+              onClick={async (e) => {
+                e.preventDefault();
+                await submitReview(POST_REVIEW_STATUS.DENIED);
+              }}
+              disabled={loading}
+              className="bg-red-600 hover:bg-red-700"
+          >
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : null}
+            Denegar
+          </Button>
+        </div>
+      </TopBar>
   );
-};
-
-const styles = {
-  btn: 'btn text-white rounded-full btn-sm text-xl capitalize px-5 py-[2px]',
-  btnApproved: 'btn-success mr-1 hover:bg-lightSuccess',
-  btnDenied: 'btn-error ml-1 hover:bg-lightError',
-  link: 'text-other cursor-pointer hover:text-primary underline underline-offset-1'
 };
 
 export default PostStatusBar;
