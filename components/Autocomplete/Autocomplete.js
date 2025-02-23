@@ -21,11 +21,11 @@ class Autocomplete extends Component {
 
   onChange = (e) => {
     const {suggestions = [], coAuthors = []} = this.props;
-    const userInput = e.currentTarget.value;
+    const userInput = e?.currentTarget?.value;
 
-    const filteredSuggestions = suggestions.filter(suggestion =>
-        !coAuthors.some(coauthor => suggestion.fullname.toLowerCase() === coauthor.fullname.toLowerCase()) &&
-        suggestion.fullname.toLowerCase().includes(userInput.toLowerCase())
+    const filteredSuggestions = (suggestions || []).filter(suggestion =>
+        !(coAuthors || []).some(coauthor => suggestion?.fullname?.toLowerCase() === coauthor?.fullname?.toLowerCase()) &&
+        suggestion?.fullname?.toLowerCase().includes(userInput.toLowerCase())
     );
 
     this.setState({
