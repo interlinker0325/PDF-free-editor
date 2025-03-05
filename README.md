@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # Adlyceum
 
@@ -25,3 +26,7 @@ Start the server
   npm run dev
 ```
 
+=======
+# PDF-free-editor
+AI powered document analysis project
+>>>>>>> 96238a7797aad0633b5a58fac1dbe48c9f80cf99
