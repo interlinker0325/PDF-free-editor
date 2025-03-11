@@ -7,13 +7,13 @@ This mistake hightlighted with the red border to the dashboard to edit effiicien
 ## Upload format
 - pdf, microsoft word, google docs, text file
 
-  https://jmp.sh/s/SnyASzDnOS8LptFVF5Ol
+  https://github.com/user-attachments/assets/a44d1288-f515-4509-bfc1-e794a01dae2b
 
 ## detect the mistake like this.
   - using openAI
 
 ## You can edit using Ai automatically
-  https://github.com/interlinker0325/Video/blob/master/total.mp4
+  https://github.com/user-attachments/assets/55bf04e9-dcbe-4b6a-9abb-ea931407c44f
 
 ## edit the mistake using the jodit editor
   - integrate jodit editor
