@@ -7,16 +7,17 @@ This mistake hightlighted with the red border to the dashboard to edit effiicien
 ## Upload format
 - pdf, microsoft word, google docs, text file
 
-  https://github.com/user-attachments/assets/a44d1288-f515-4509-bfc1-e794a01dae2b
+  https://github.com/user-attachments/assets/65ea27d6-4454-4c7f-8206-e3db84afef98
 
 ## detect the mistake like this.
   - using openAI
 
 ## You can edit using Ai automatically
-  https://github.com/user-attachments/assets/55bf04e9-dcbe-4b6a-9abb-ea931407c44f
+  https://github.com/user-attachments/assets/3c959f76-914c-47cf-9ecc-3d3a6a0a6154
 
 ## edit the mistake using the jodit editor
-  - integrate jodit editor
+  - integrate jodit editor for freely.
+  https://github.com/user-attachments/assets/99fbd187-4719-4acd-bcad-81e137df6a75
 
 ## How to run
 Go to the project directory
