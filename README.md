@@ -4,15 +4,15 @@ When users upload the pdf, it is converted into a text file transfer to the open
 This mistake hightlighted with the red border to the dashboard to edit effiiciently.
 
 📚 Table of Contents
-- [About](#about)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Screenshots](#screenshots)
-- [API Documentation](#api-documentation)  
-- [Contact](#contact)
+- [About] (#about)
+- [Features] (#features)
+- [Tech Stack] (#tech-stack)
+- [Installation] (#installation)
+- [Usage] (#usage)
+- [Configuration] (#configuration)
+- [Screenshots] (#screenshots)
+- [API Documentation] (#api-documentation)  
+- [Contact] (#contact)
 
 ## 🧩 About {#about}
 The motivation behind this project was to address the tediousness and limitations of editing PDF files online. Many existing tools lack advanced error detection, intelligent correction, or a smooth editing experience. This online PDF editor leverages AI to automatically find and highlight mistakes in your documents, enabling hassle-free edits and improvements. The key goals were to create a user-friendly, fast, and powerful platform that streamlines document refinement and ensures high-quality output with minimal effort from users.
