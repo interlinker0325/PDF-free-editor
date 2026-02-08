@@ -1,4 +1,4 @@
-# 🧭Adlyceum : Online PDF Editor [Project ID: P-364]
+# Adlyceum : Online PDF Editor [Project ID: P-364]
 Ai based online **free pdf editor** to cut the chase for users and edit efficiently according to their needs using **openAI** and mathpix, **langchain**, **jodit editor**.
 When users upload the pdf, it is converted into a text file transfer to the openAI to detect the mistake section like outdated terms and grammatical issues.
 This mistake hightlighted with the red border to the dashboard to edit effiiciently.
@@ -14,21 +14,21 @@ This mistake hightlighted with the red border to the dashboard to edit effiicien
 - [API Documentation](#api-documentation)
 - [Contact](#contact)
 
-## 🧩 About {#about}
+## About {#about}
 The motivation behind this project was to address the tediousness and limitations of editing PDF files online. Many existing tools lack advanced error detection, intelligent correction, or a smooth editing experience. This online PDF editor leverages AI to automatically find and highlight mistakes in your documents, enabling hassle-free edits and improvements. The key goals were to create a user-friendly, fast, and powerful platform that streamlines document refinement and ensures high-quality output with minimal effort from users.
 
-## ✨ Features {#feature}
+## Features {#feature}
 1. Upload and download PDF files easily.
 2. Detect document mistakes automatically using AI (OpenAI).
 3. Seamlessly edit your PDF online with the built-in Jodit editor.
 
-## 🧠 Tech Stack {#tech-stack}
+## Tech Stack {#tech-stack}
 Languages: Python, JavaScript, TypeScript
 Frameworks: Next, Flask
 Database: DatoCMS database, MongoDB
 Tools: Docker, GitHub Actions, Jodit Editor
 
-## ⚙️ Installation {#installation}
+## Installation {#installation}
 - Clone the repository
 ```bash
   git clone https://github.com/interlinker0325/PDF-free-editor
@@ -42,7 +42,7 @@ Tools: Docker, GitHub Actions, Jodit Editor
   npm install   
 ```
 
-## 🚀 Usage {#usage}
+## Usage {#usage}
 # Start the development server
 ```bash
   npm start    
@@ -50,7 +50,7 @@ Tools: Docker, GitHub Actions, Jodit Editor
 Then open your browser and go to:
 👉 [http://localhost:3000](http://localhost:3000)
 
-## 🧾 Configuration {#configuration}
+## Configuration {#configuration}
 Describe any required environment variables or configuration options, for example:
 
 Create a .env file with:
@@ -71,7 +71,7 @@ NEXT_PUBLIC_WINDOWS_SERVER_URL="https://adlyceum.com"
 ```
 
 
-## 🖼 Screenshots {#screenshots}
+## Screenshots {#screenshots}
 - pdf, microsoft word, google docs, text file
 
   https://github.com/user-attachments/assets/65ea27d6-4454-4c7f-8206-e3db84afef98
@@ -87,7 +87,7 @@ NEXT_PUBLIC_WINDOWS_SERVER_URL="https://adlyceum.com"
   
   https://github.com/user-attachments/assets/99fbd187-4719-4acd-bcad-81e137df6a75
 
-## 📜 API Documentation : {#api-documentation}
+## API Documentation : {#api-documentation}
 https://docs.mathpix.com/
 
 
