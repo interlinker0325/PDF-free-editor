@@ -1,9 +1,7 @@
 node_modules
 .next
 uploads
-.env
 .mathpix
-.vscode
 /codealike.json
 /.idea/Adlyceum.iml
 /.idea/aws.xml
@@ -12,3 +10,4 @@ uploads
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/workspace.xml
+config.bat

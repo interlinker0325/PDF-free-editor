@@ -77,15 +77,15 @@ NEXT_PUBLIC_WINDOWS_SERVER_URL="https://adlyceum.com"
 
   https://github.com/user-attachments/assets/65ea27d6-4454-4c7f-8206-e3db84afef98
 
--  detect the mistake using openAI like this.
-
 - You can edit using Ai automatically
+  
   https://github.com/user-attachments/assets/3c959f76-914c-47cf-9ecc-3d3a6a0a6154
 
 - edit the mistake using the jodit editor
+  
   https://github.com/user-attachments/assets/99fbd187-4719-4acd-bcad-81e137df6a75
 
-## API Documentation : {#api-documentation}
+## API Documentation :
 https://docs.mathpix.com/
 
 
