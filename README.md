@@ -4,31 +4,32 @@ When users upload the pdf, it is converted into a text file transfer to the open
 This mistake hightlighted with the red border to the dashboard to edit effiiciently.
 
 ## 📚 Table of Contents
-- [About](##about)
-- [Features](##features)
-- [Tech Stack](##tech-stack)
-- [Installation](##installation)
-- [Usage](##usage)
-- [Configuration](##configuration)
-- [Screenshots](##screenshots)
-- [API Documentation](##api-documentation)  
-- [Contact](##contact)
 
-## 🧩 About 
+- [About](#about)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Screenshots](#screenshots)
+- [API Documentation](#api-documentation)  
+- [Contact](#contact)
+
+## About 
 The motivation behind this project was to address the tediousness and limitations of editing PDF files online. Many existing tools lack advanced error detection, intelligent correction, or a smooth editing experience. This online PDF editor leverages AI to automatically find and highlight mistakes in your documents, enabling hassle-free edits and improvements. The key goals were to create a user-friendly, fast, and powerful platform that streamlines document refinement and ensures high-quality output with minimal effort from users.
 
-## ✨ Features 
+## Features 
 1. Upload and download PDF files easily.
 2. Detect document mistakes automatically using AI (OpenAI).
 3. Seamlessly edit your PDF online with the built-in Jodit editor.
 
-## 🧠 Tech Stack 
+## Tech Stack 
 Languages: Python, JavaScript, TypeScript
 Frameworks: Next, Flask
 Database: DatoCMS database, MongoDB
 Tools: Docker, GitHub Actions, Jodit Editor
 
-## ⚙️ Installation
+## Installation
 - Clone the repository
 ```bash
   git clone https://github.com/interlinker0325/PDF-free-editor
@@ -42,7 +43,7 @@ Tools: Docker, GitHub Actions, Jodit Editor
   npm install   
 ```
 
-## 🚀 Usage
+## Usage
 # Start the development server
 ```bash
   npm start    
@@ -50,7 +51,7 @@ Tools: Docker, GitHub Actions, Jodit Editor
 Then open your browser and go to:
 👉 [http://localhost:3000](http://localhost:3000)
 
-## 🧾 Configuration 
+## Configuration 
 Describe any required environment variables or configuration options, for example:
 
 Create a .env file with:
@@ -71,7 +72,7 @@ NEXT_PUBLIC_WINDOWS_SERVER_URL="https://adlyceum.com"
 ```
 
 
-## 🖼 Screenshots 
+## Screenshots 
 - pdf, microsoft word, google docs, text file
 
   https://github.com/user-attachments/assets/65ea27d6-4454-4c7f-8206-e3db84afef98
@@ -88,7 +89,7 @@ NEXT_PUBLIC_WINDOWS_SERVER_URL="https://adlyceum.com"
 https://docs.mathpix.com/
 
 
-## 📬 Contact 
+## Contact 
 Author: interlinker0325\
 Email: fenrow325@gmail.com\
 GitHub: @interlinker0325\
